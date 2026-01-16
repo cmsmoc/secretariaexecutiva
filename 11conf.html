@@ -1,0 +1,670 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guia Interativo - 11ª Conferência Municipal de Saúde</title>
+    <style>
+        :root {
+            --primary-green: #1d9c4f;
+            --primary-blue: #157BAB;
+            --primary-yellow: #FFCC29;
+            --black: #000000;
+            --white: #ffffff;
+            --gray-light: #f4f4f4;
+            --gray-border: #dddddd;
+            --font-main: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            font-family: var(--font-main);
+            background-color: var(--white);
+            color: var(--black);
+            line-height: 1.4;
+            overflow: hidden;
+        }
+
+        /* --- Global Progress Bar --- */
+        .global-progress-wrapper {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 8px;
+            background: var(--gray-light);
+            z-index: 1100;
+        }
+        .global-progress-bar {
+            height: 100%;
+            width: 0%;
+            background: var(--primary-green);
+            transition: width 0.5s cubic-bezier(0.1, 0.9, 0.2, 1);
+        }
+
+        /* --- UI de Navegação e Menu --- */
+        #menu-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+            background: var(--black);
+            color: var(--white);
+            border: none;
+            width: 50px;
+            height: 50px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            box-shadow: 5px 5px 0 var(--primary-yellow);
+        }
+
+        #sidebar {
+            position: fixed;
+            top: 0;
+            left: -100%;
+            width: 85%;
+            max-width: 350px;
+            height: 100%;
+            background: var(--black);
+            color: var(--white);
+            z-index: 999;
+            transition: 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+            padding: 60px 25px;
+            overflow-y: auto;
+        }
+
+        #sidebar.open { left: 0; }
+
+        .menu-title {
+            font-weight: 900;
+            text-transform: uppercase;
+            font-size: 1.5rem;
+            margin-bottom: 40px;
+            color: var(--primary-yellow);
+            line-height: 1;
+        }
+
+        .menu-link {
+            display: block;
+            padding: 18px 0;
+            color: var(--white);
+            text-decoration: none;
+            font-weight: 700;
+            border-bottom: 1px solid #333;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* --- Slider System --- */
+        .slider-container {
+            width: 100%;
+            height: 100vh;
+            display: flex;
+            transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .slide {
+            min-width: 100%;
+            height: 100%;
+            padding: 80px 25px 120px;
+            overflow-y: auto;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* --- Watermark / Background SVG --- */
+        .watermark {
+            position: absolute;
+            bottom: -30px;
+            right: -30px;
+            width: 350px;
+            height: 350px;
+            opacity: 0.04;
+            transform: rotate(-15deg);
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        /* --- Stage Progress Stats --- */
+        .stage-stats {
+            margin-bottom: 25px;
+            background: var(--gray-light);
+            padding: 15px;
+            border: 1px solid var(--gray-border);
+        }
+        .stage-bar-bg {
+            height: 4px;
+            background: #ddd;
+            width: 100%;
+            margin-top: 8px;
+        }
+        .stage-bar-fill {
+            height: 100%;
+            background: var(--primary-blue);
+            width: 0%;
+            transition: width 0.4s ease;
+        }
+        .stage-percent {
+            font-size: 0.75rem;
+            font-weight: 900;
+            text-transform: uppercase;
+            display: flex;
+            justify-content: space-between;
+        }
+        .stage-complete-badge {
+            display: none;
+            color: var(--primary-green);
+        }
+        .stage-stats.finished .stage-complete-badge { display: inline; }
+        .stage-stats.finished .stage-bar-fill { background: var(--primary-green); }
+
+        /* --- Swiss Elements --- */
+        .fase-indicator {
+            font-weight: 900;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 10px;
+            color: var(--primary-blue);
+        }
+
+        .slide-title {
+            font-size: 2.5rem;
+            font-weight: 900;
+            line-height: 0.95;
+            text-transform: uppercase;
+            margin-bottom: 15px;
+            letter-spacing: -1px;
+        }
+
+        .objective-box {
+            background-color: var(--primary-yellow);
+            padding: 12px 18px;
+            font-weight: 900;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            margin-bottom: 35px;
+            display: inline-block;
+            border: 2px solid var(--black);
+        }
+
+        /* --- Checklist Interativa (BIG Cards) --- */
+        .check-item {
+            display: flex;
+            align-items: center;
+            background: var(--white);
+            border: 2px solid var(--black);
+            padding: 25px;
+            margin-bottom: 15px;
+            cursor: pointer;
+            transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            box-shadow: 6px 6px 0 rgba(0,0,0,0.1);
+        }
+
+        .check-item:active {
+            transform: scale(0.98);
+            box-shadow: 2px 2px 0 rgba(0,0,0,0.1);
+        }
+
+        .check-item.done {
+            background: var(--primary-green);
+            border-color: var(--black);
+            color: var(--white);
+            box-shadow: none;
+            transform: translateX(5px);
+        }
+
+        .check-item input {
+            width: 32px;
+            height: 32px;
+            margin-right: 20px;
+            accent-color: var(--primary-yellow);
+            flex-shrink: 0;
+            cursor: pointer;
+        }
+
+        .check-text {
+            font-weight: 800;
+            font-size: 1.1rem;
+            line-height: 1.2;
+        }
+
+        .check-item.done .check-text {
+            text-decoration: line-through;
+            opacity: 0.9;
+        }
+
+        /* --- View: Lista Completa --- */
+        .list-view .check-item {
+            padding: 15px 20px;
+            font-size: 0.9rem;
+            border-width: 1px;
+            margin-bottom: 10px;
+        }
+        .item-number {
+            font-weight: 900;
+            margin-right: 15px;
+            color: var(--primary-blue);
+            font-size: 1.2rem;
+            min-width: 30px;
+        }
+        .list-view .check-item.done .item-number { color: var(--white); }
+
+        /* --- Controls --- */
+        .controls {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 90px;
+            background: var(--white);
+            border-top: 2px solid var(--black);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 25px;
+            z-index: 800;
+        }
+
+        .btn-nav {
+            background: var(--black);
+            color: var(--white);
+            border: none;
+            padding: 15px 25px;
+            font-weight: 900;
+            text-transform: uppercase;
+            font-size: 0.85rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .btn-nav:disabled { opacity: 0.2; }
+
+        .icon-large {
+            width: 70px;
+            height: 70px;
+            margin-bottom: 15px;
+            fill: var(--black);
+        }
+
+        @media (min-width: 1024px) {
+            .slide { padding: 80px 20% 120px; }
+            .slide-title { font-size: 4.5rem; }
+            .check-text { font-size: 1.3rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="global-progress-wrapper">
+        <div class="global-progress-bar" id="globalProgressBar"></div>
+    </div>
+
+    <svg style="display: none;">
+        <symbol id="icon-plan" viewBox="0 0 24 24"><path d="M19,3H5C3.89,3 3,3.89 3,5V19A2,2 0 0,0 5,21H19A2,2 0 0,0 21,19V5C21,3.89 20.1,3 19,3M19,19H5V5H19V19M7,10H9V17H7V10M11,7H13V17H11V7M15,13H17V17H15V13Z"/></symbol>
+        <symbol id="icon-org" viewBox="0 0 24 24"><path d="M12,15.5A2.5,2.5 0 0,1 14.5,18A2.5,2.5 0 0,1 12,20.5A2.5,2.5 0 0,1 9.5,18A2.5,2.5 0 0,1 12,15.5M12,2A2.5,2.5 0 0,1 14.5,4.5A2.5,2.5 0 0,1 12,7A2.5,2.5 0 0,1 9.5,4.5A2.5,2.5 0 0,1 12,2M12,8.5A2.5,2.5 0 0,1 14.5,11A2.5,2.5 0 0,1 12,13.5A2.5,2.5 0 0,1 9.5,11A2.5,2.5 0 0,1 12,8.5Z"/></symbol>
+        <symbol id="icon-mob" viewBox="0 0 24 24"><path d="M16,13C15.71,13 15.38,13 15.03,13.05C16.19,13.89 17,15 17,16.5V19H23V16.5C23,14.17 18.33,13 16,13M8,13C5.67,13 1,14.17 1,16.5V19H15V16.5C15,14.17 10.33,13 8,13M8,11A3,3 0 0,0 11,8A3,3 0 0,0 8,5A3,3 0 0,0 5,8A3,3 0 0,0 8,11M16,11A3,3 0 0,0 19,8A3,3 0 0,0 16,5A3,3 0 0,0 13,8A3,3 0 0,0 16,11Z"/></symbol>
+        <symbol id="icon-sys" viewBox="0 0 24 24"><path d="M13,9V3.5L18.5,9M6,2C4.89,2 4,2.89 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2H6M12,18H6V16H12V18M18,14H6V12H18V14M18,10H13V5H18V10Z"/></symbol>
+        <symbol id="icon-exec" viewBox="0 0 24 24"><path d="M12,12A9,9 0 0,0 3,21H21A9,9 0 0,0 12,12M12,2A5,5 0 0,0 7,7A5,5 0 0,0 12,12A5,5 0 0,0 17,7A5,5 0 0,0 12,2Z"/></symbol>
+        <symbol id="icon-post" viewBox="0 0 24 24"><path d="M21,7L9,19L3.5,13.5L4.91,12.09L9,16.17L19.59,5.59L21,7Z"/></symbol>
+        <symbol id="icon-home" viewBox="0 0 24 24"><path d="M12,3L20,9V21H15V14H9V21H4V9L12,3Z"/></symbol>
+    </svg>
+
+    <button id="menu-toggle" onclick="toggleMenu()">☰</button>
+
+    <div id="sidebar">
+        <div class="menu-title">11ª Conferência Municipal de Saúde</div>
+        <a href="#" class="menu-link" onclick="goToSlide(0); toggleMenu()">Início</a>
+        <a href="#" class="menu-link" onclick="goToSlide(1); toggleMenu()">1. Entendimento</a>
+        <a href="#" class="menu-link" onclick="goToSlide(2); toggleMenu()">2. Planejamento</a>
+        <a href="#" class="menu-link" onclick="goToSlide(3); toggleMenu()">3. Organização</a>
+        <a href="#" class="menu-link" onclick="goToSlide(4); toggleMenu()">4. Mobilização</a>
+        <a href="#" class="menu-link" onclick="goToSlide(5); toggleMenu()">5. Sistematização</a>
+        <a href="#" class="menu-link" onclick="goToSlide(6); toggleMenu()">6. Execução</a>
+        <a href="#" class="menu-link" onclick="goToSlide(7); toggleMenu()">7. Pós-Conferência</a>
+        <a href="#" class="menu-link" onclick="goToSlide(8); toggleMenu()">Mensagem Final</a>
+        <a href="#" class="menu-link" onclick="goToSlide(9); toggleMenu()" style="color: var(--primary-yellow)">Checklist Global</a>
+    </div>
+
+    <div class="slider-container" id="slider">
+        
+        <!-- SLIDE 0: CAPA -->
+        <section class="slide" style="background: var(--primary-green); color: white;">
+            <svg class="icon-large" style="fill: white;"><use href="#icon-home"></use></svg>
+            <div class="fase-indicator" style="color: var(--primary-yellow)">Montes Claros – MG</div>
+            <h1 class="slide-title">Orientação à Comissão Organizadora</h1>
+            <p style="font-weight: 800; margin-top: 20px; text-transform: uppercase;">11ª Conferência Municipal de Saúde</p>
+            <div style="margin-top: auto;">
+                <button class="btn-nav" style="background: var(--white); color: var(--black);" onclick="nextSlide()">Iniciar Guia →</button>
+            </div>
+            <svg class="watermark" style="fill: white;"><use href="#icon-home"></use></svg>
+        </section>
+
+        <!-- SLIDE 1: ENTENDIMENTO -->
+        <section class="slide">
+            <svg class="icon-large"><use href="#icon-org"></use></svg>
+            <div class="fase-indicator">Etapa 00</div>
+            <h1 class="slide-title">Entendimento Comum</h1>
+            <p style="margin-bottom: 25px; font-weight: 600;">O que estamos organizando?</p>
+            
+            <div class="checklist-group">
+                <label class="check-item" data-id="e0-1"><input type="checkbox"><div class="check-text">Avaliar a situação de saúde do município</div></label>
+                <label class="check-item" data-id="e0-2"><input type="checkbox"><div class="check-text">Debater políticas públicas de saúde</div></label>
+                <label class="check-item" data-id="e0-3"><input type="checkbox"><div class="check-text">Fortalecer o controle social</div></label>
+                <label class="check-item" data-id="e0-4"><input type="checkbox"><div class="check-text">Produzir propostas para o SUS municipal</div></label>
+            </div>
+            <svg class="watermark"><use href="#icon-org"></use></svg>
+        </section>
+
+        <!-- SLIDE 2: FASE 1 -->
+        <section class="slide" data-phase="1">
+            <svg class="icon-large"><use href="#icon-plan"></use></svg>
+            <div class="fase-indicator">Fase 01</div>
+            <h1 class="slide-title">Planejamento Institucional</h1>
+            
+            <div class="stage-stats" id="stats-f1">
+                <div class="stage-percent"><span>Progresso da Fase</span><span class="val">0%</span><span class="stage-complete-badge">✓ CONCLUÍDO</span></div>
+                <div class="stage-bar-bg"><div class="stage-bar-fill"></div></div>
+            </div>
+
+            <div class="objective-box">🎯 Objetivo: Criar base legal e organizacional</div>
+            
+            <div class="checklist-group">
+                <label class="check-item" data-id="f1-1"><input type="checkbox"><div class="check-text">Definir a natureza da Conferência</div></label>
+                <label class="check-item" data-id="f1-2"><input type="checkbox"><div class="check-text">Confirmar tema nacional e recorte municipal</div></label>
+                <label class="check-item" data-id="f1-3"><input type="checkbox"><div class="check-text">Definir objetivos e Ato de Convocação</div></label>
+                <label class="check-item" data-id="f1-4"><input type="checkbox"><div class="check-text">Publicação oficial da Comissão Organizadora</div></label>
+            </div>
+            <svg class="watermark"><use href="#icon-plan"></use></svg>
+        </section>
+
+        <!-- SLIDE 3: FASE 2 -->
+        <section class="slide" data-phase="2">
+            <svg class="icon-large"><use href="#icon-org"></use></svg>
+            <div class="fase-indicator">Fase 02</div>
+            <h1 class="slide-title">Organização Técnica</h1>
+            
+            <div class="stage-stats" id="stats-f2">
+                <div class="stage-percent"><span>Progresso da Fase</span><span class="val">0%</span><span class="stage-complete-badge">✓ CONCLUÍDO</span></div>
+                <div class="stage-bar-bg"><div class="stage-bar-fill"></div></div>
+            </div>
+
+            <div class="objective-box">🎯 Objetivo: Planejamento executável</div>
+            
+            <div class="checklist-group">
+                <label class="check-item" data-id="f2-1"><input type="checkbox"><div class="check-text">Estruturação das Subcomissões</div></label>
+                <label class="check-item" data-id="f2-2"><input type="checkbox"><div class="check-text">Elaboração do Regimento Interno</div></label>
+                <label class="check-item" data-id="f2-3"><input type="checkbox"><div class="check-text">Planejamento Orçamentário Realista</div></label>
+                <label class="check-item" data-id="f2-4"><input type="checkbox"><div class="check-text">Canais de comunicação e apoios institucionais</div></label>
+            </div>
+            <svg class="watermark"><use href="#icon-org"></use></svg>
+        </section>
+
+        <!-- SLIDE 4: FASE 3 -->
+        <section class="slide" data-phase="3">
+            <svg class="icon-large"><use href="#icon-mob"></use></svg>
+            <div class="fase-indicator">Fase 03</div>
+            <h1 class="slide-title">Mobilização e Pré-Conferências</h1>
+            
+            <div class="stage-stats" id="stats-f3">
+                <div class="stage-percent"><span>Progresso da Fase</span><span class="val">0%</span><span class="stage-complete-badge">✓ CONCLUÍDO</span></div>
+                <div class="stage-bar-bg"><div class="stage-bar-fill"></div></div>
+            </div>
+
+            <div class="objective-box">🎯 Objetivo: Garantir participação real</div>
+            
+            <div class="checklist-group">
+                <label class="check-item" data-id="f3-1"><input type="checkbox"><div class="check-text">Definição de territórios e calendários</div></label>
+                <label class="check-item" data-id="f3-2"><input type="checkbox"><div class="check-text">Produção de materiais e flyers</div></label>
+                <label class="check-item" data-id="f3-3"><input type="checkbox"><div class="check-text">Realização das Pré-Conferências</div></label>
+                <label class="check-item" data-id="f3-4"><input type="checkbox"><div class="check-text">Consolidação de propostas territoriais</div></label>
+            </div>
+            <svg class="watermark"><use href="#icon-mob"></use></svg>
+        </section>
+
+        <!-- SLIDE 5: FASE 4 -->
+        <section class="slide" data-phase="4">
+            <svg class="icon-large"><use href="#icon-sys"></use></svg>
+            <div class="fase-indicator">Fase 04</div>
+            <h1 class="slide-title">Sistematização</h1>
+            
+            <div class="stage-stats" id="stats-f4">
+                <div class="stage-percent"><span>Progresso da Fase</span><span class="val">0%</span><span class="stage-complete-badge">✓ CONCLUÍDO</span></div>
+                <div class="stage-bar-bg"><div class="stage-bar-fill"></div></div>
+            </div>
+
+            <div class="objective-box">🎯 Objetivo: Organizar a escuta</div>
+            
+            <div class="checklist-group">
+                <label class="check-item" data-id="f4-1"><input type="checkbox"><div class="check-text">Sistematização de propostas por eixos</div></label>
+                <label class="check-item" data-id="f4-2"><input type="checkbox"><div class="check-text">Preparação da Programação Final</div></label>
+                <label class="check-item" data-id="f4-3"><input type="checkbox"><div class="check-text">Definição de mesas e metodologia plenária</div></label>
+                <label class="check-item" data-id="f4-4"><input type="checkbox"><div class="check-text">Simulação do fluxo do evento</div></label>
+            </div>
+            <svg class="watermark"><use href="#icon-sys"></use></svg>
+        </section>
+
+        <!-- SLIDE 6: FASE 5 -->
+        <section class="slide" data-phase="5">
+            <svg class="icon-large"><use href="#icon-exec"></use></svg>
+            <div class="fase-indicator">Fase 05</div>
+            <h1 class="slide-title">Execução Final</h1>
+            
+            <div class="stage-stats" id="stats-f5">
+                <div class="stage-percent"><span>Progresso da Fase</span><span class="val">0%</span><span class="stage-complete-badge">✓ CONCLUÍDO</span></div>
+                <div class="stage-bar-bg"><div class="stage-bar-fill"></div></div>
+            </div>
+
+            <div class="objective-box">🎯 Objetivo: Realizar o evento com fluidez</div>
+            
+            <div class="checklist-group">
+                <label class="check-item" data-id="f5-1"><input type="checkbox"><div class="check-text">Credenciamento e Abertura Oficial</div></label>
+                <label class="check-item" data-id="f5-2"><input type="checkbox"><div class="check-text">Trabalhos em Grupo e Relatoria ativa</div></label>
+                <label class="check-item" data-id="f5-3"><input type="checkbox"><div class="check-text">Plenária Final e Votação de Diretrizes</div></label>
+                <label class="check-item" data-id="f5-4"><input type="checkbox"><div class="check-text">Consolidação das Deliberações</div></label>
+            </div>
+            <svg class="watermark"><use href="#icon-exec"></use></svg>
+        </section>
+
+        <!-- SLIDE 7: FASE 6 -->
+        <section class="slide" data-phase="6">
+            <svg class="icon-large"><use href="#icon-post"></use></svg>
+            <div class="fase-indicator">Fase 06</div>
+            <h1 class="slide-title">Pós-Conferência</h1>
+            
+            <div class="stage-stats" id="stats-f6">
+                <div class="stage-percent"><span>Progresso da Fase</span><span class="val">0%</span><span class="stage-complete-badge">✓ CONCLUÍDO</span></div>
+                <div class="stage-bar-bg"><div class="stage-bar-fill"></div></div>
+            </div>
+
+            <div class="objective-box">🎯 Objetivo: Efeitos reais e monitoramento</div>
+            
+            <div class="checklist-group">
+                <label class="check-item" data-id="f6-1"><input type="checkbox"><div class="check-text">Relatório Final e Aprovação pelo CMS</div></label>
+                <label class="check-item" data-id="f6-2"><input type="checkbox"><div class="check-text">Certificados e Devolutiva à sociedade</div></label>
+                <label class="check-item" data-id="f6-3"><input type="checkbox"><div class="check-text">Monitoramento das Deliberações no planejamento</div></label>
+            </div>
+            <svg class="watermark"><use href="#icon-post"></use></svg>
+        </section>
+
+        <!-- SLIDE 8: MENSAGEM FINAL -->
+        <section class="slide" style="background: var(--black); color: var(--white);">
+            <div style="margin: auto 0; text-align: center;">
+                <h1 class="slide-title" style="color: var(--primary-yellow);">A Conferência é um Processo</h1>
+                <p style="font-size: 1.2rem; margin-bottom: 20px;">Cada fase depende da anterior. Cada tarefa precisa de um responsável.</p>
+                <div style="background: var(--primary-green); padding: 30px; border: 2px solid var(--white);">
+                    <p style="font-weight: 900; text-transform: uppercase;">Organização é garantia de legitimidade.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- SLIDE 9: LISTA COMPLETA INTERATIVA -->
+        <section class="slide list-view">
+            <h1 class="slide-title">Checklist Global</h1>
+            <p style="margin-bottom: 30px; font-weight: 600;">Sincronizada em tempo real com as fases.</p>
+            <div id="full-checklist-container">
+                <!-- Populado via JS -->
+            </div>
+        </section>
+
+    </div>
+
+    <div class="controls">
+        <button class="btn-nav" id="btn-prev" onclick="prevSlide()" disabled>Anterior</button>
+        <div id="progress-info" style="font-weight: 900; font-size: 0.9rem;">1 / 10</div>
+        <button class="btn-nav" id="btn-next" onclick="nextSlide()">Próximo</button>
+    </div>
+
+    <script>
+        let currentSlide = 0;
+        const totalSlides = 10;
+        const slider = document.getElementById('slider');
+        const btnPrev = document.getElementById('btn-prev');
+        const btnNext = document.getElementById('btn-next');
+        const progressInfo = document.getElementById('progress-info');
+        const sidebar = document.getElementById('sidebar');
+        const globalProgressBar = document.getElementById('globalProgressBar');
+
+        // Navegação
+        function updateSlider() {
+            slider.style.transform = `translateX(-${currentSlide * 100}%)`;
+            btnPrev.disabled = currentSlide === 0;
+            btnNext.disabled = currentSlide === totalSlides - 1;
+            progressInfo.innerText = `${currentSlide + 1} / ${totalSlides}`;
+            if(currentSlide === 9) syncFullList(); // Garante refresh ao entrar na lista
+        }
+
+        function nextSlide() { if (currentSlide < totalSlides - 1) { currentSlide++; updateSlider(); } }
+        function prevSlide() { if (currentSlide > 0) { currentSlide--; updateSlider(); } }
+        function goToSlide(n) { currentSlide = n; updateSlider(); }
+        function toggleMenu() { sidebar.classList.toggle('open'); }
+
+        // --- Core Checklist System ---
+        function updateProgressVisuals() {
+            const allItems = document.querySelectorAll('.slide:not(.list-view) .check-item[data-id]');
+            const total = allItems.length;
+            const done = Array.from(allItems).filter(i => i.querySelector('input').checked).length;
+            
+            // Global Bar
+            const globalPercent = (done / total) * 100;
+            globalProgressBar.style.width = `${globalPercent}%`;
+
+            // Phase Progress Bars
+            document.querySelectorAll('section[data-phase]').forEach(section => {
+                const phaseId = section.getAttribute('data-phase');
+                const phaseItems = section.querySelectorAll('.check-item[data-id]');
+                const pTotal = phaseItems.length;
+                const pDone = Array.from(phaseItems).filter(i => i.querySelector('input').checked).length;
+                const pPercent = Math.round((pDone / pTotal) * 100);
+
+                const stats = document.getElementById(`stats-f${phaseId}`);
+                if(stats) {
+                    stats.querySelector('.val').innerText = `${pPercent}%`;
+                    stats.querySelector('.stage-bar-fill').style.width = `${pPercent}%`;
+                    if(pPercent === 100) stats.classList.add('finished');
+                    else stats.classList.remove('finished');
+                }
+            });
+        }
+
+        function saveState() {
+            const data = {};
+            document.querySelectorAll('.slide:not(.list-view) .check-item[data-id]').forEach(item => {
+                data[item.getAttribute('data-id')] = item.querySelector('input').checked;
+            });
+            localStorage.setItem('conf_v2_storage', JSON.stringify(data));
+        }
+
+        function loadState() {
+            const saved = JSON.parse(localStorage.getItem('conf_v2_storage') || '{}');
+            document.querySelectorAll('.check-item[data-id]').forEach(item => {
+                const id = item.getAttribute('data-id');
+                const cb = item.querySelector('input');
+                if(saved[id]) {
+                    cb.checked = true;
+                    item.classList.add('done');
+                }
+            });
+            updateProgressVisuals();
+            syncFullList();
+        }
+
+        // Sincronização e Renderização da Lista Global
+        function syncFullList() {
+            const container = document.getElementById('full-checklist-container');
+            container.innerHTML = '';
+            let counter = 1;
+
+            // Pega todos os itens das páginas individuais
+            document.querySelectorAll('.slide:not(.list-view):not(.intro-slide) .check-item[data-id]').forEach(original => {
+                const id = original.getAttribute('data-id');
+                const text = original.querySelector('.check-text').innerText;
+                const isChecked = original.querySelector('input').checked;
+                
+                const itemDiv = document.createElement('div');
+                itemDiv.className = `check-item ${isChecked ? 'done' : ''}`;
+                itemDiv.setAttribute('data-sync-id', id);
+                itemDiv.innerHTML = `
+                    <span class="item-number">${counter.toString().padStart(2, '0')}</span>
+                    <input type="checkbox" ${isChecked ? 'checked' : ''}>
+                    <div class="check-text">${text}</div>
+                `;
+
+                // Evento na lista global (Bidirecional)
+                itemDiv.onclick = (e) => {
+                    const cb = itemDiv.querySelector('input');
+                    if(e.target !== cb) cb.checked = !cb.checked;
+                    
+                    // Atualiza o original
+                    const originalItem = document.querySelector(`.slide:not(.list-view) .check-item[data-id="${id}"]`);
+                    originalItem.querySelector('input').checked = cb.checked;
+                    if(cb.checked) {
+                        originalItem.classList.add('done');
+                        itemDiv.classList.add('done');
+                    } else {
+                        originalItem.classList.remove('done');
+                        itemDiv.classList.remove('done');
+                    }
+                    saveState();
+                    updateProgressVisuals();
+                };
+
+                container.appendChild(itemDiv);
+                counter++;
+            });
+        }
+
+        // Listeners para os itens das páginas de etapa
+        document.querySelectorAll('.slide:not(.list-view) .check-item').forEach(item => {
+            item.onclick = (e) => {
+                const cb = item.querySelector('input');
+                if(!cb) return;
+                if(e.target !== cb) cb.checked = !cb.checked;
+
+                if(cb.checked) item.classList.add('done');
+                else item.classList.remove('done');
+
+                saveState();
+                updateProgressVisuals();
+                // Se a lista estiver visível ou montada, ela será atualizada no próximo sync
+            };
+        });
+
+        window.onload = loadState;
+    </script>
+</body>
+</html>
