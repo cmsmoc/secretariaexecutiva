@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edital 2023 - CMS Montes Claros</title>
+    <style>
+        /* SWISS DESIGN SYSTEM - CSS VARIABLES */
+        :root {
+            --swiss-green: #00843D;
+            --swiss-blue: #0055A4;
+            --swiss-yellow: #FFCD00;
+            --swiss-black: #1A1A1A;
+            --swiss-white: #FFFFFF;
+            --swiss-gray: #F4F4F4;
+            --swiss-border: #000000;
+            --transition: all 0.3s cubic-bezier(0.19, 1, 0.22, 1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+            background-color: var(--swiss-white);
+            color: var(--swiss-black);
+            line-height: 1.5;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* TYPOGRAPHY */
+        h1 { font-size: clamp(2.5rem, 10vw, 6rem); font-weight: 900; letter-spacing: -0.06em; line-height: 0.8; text-transform: uppercase; margin-bottom: 3rem; }
+        h2 { font-size: clamp(2rem, 5vw, 3.5rem); font-weight: 900; letter-spacing: -0.04em; text-transform: uppercase; margin-bottom: 2rem; line-height: 0.9; }
+        h3 { font-size: 1.4rem; font-weight: 800; text-transform: uppercase; letter-spacing: -0.02em; }
+        p { font-size: 1.1rem; color: var(--swiss-black); opacity: 0.9; }
+        .label { font-size: 0.8rem; font-weight: 900; text-transform: uppercase; letter-spacing: 0.2em; margin-bottom: 1rem; display: block; }
+
+        /* LAYOUT STRUCTURE - SINGLE COLUMN FOCUS */
+        .main-column {
+            max-width: 850px;
+            margin: 0 auto;
+            padding: 0 1.5rem;
+        }
+        
+        header {
+            padding: 6rem 0 4rem;
+            border-bottom: 10px solid var(--swiss-black);
+            margin-bottom: 4rem;
+        }
+
+        section {
+            padding: 6rem 0;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .section-header {
+            margin-bottom: 4rem;
+        }
+
+        /* NAVIGATION BAR */
+        .nav-bar {
+            position: sticky;
+            top: 0;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(15px);
+            z-index: 1000;
+            border-bottom: 2px solid var(--swiss-black);
+            padding: 1.2rem 0;
+        }
+
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--swiss-black);
+            font-weight: 900;
+            text-transform: uppercase;
+            font-size: 0.75rem;
+            margin-left: 1.5rem;
+            transition: var(--transition);
+            border-bottom: 2px solid transparent;
+        }
+
+        .nav-links a:hover { border-color: var(--swiss-black); }
+
+        /* CONTENT BLOCKS */
+        .info-block {
+            display: grid;
+            grid-template-columns: 80px 1fr;
+            gap: 2rem;
+            padding: 2.5rem;
+            border: 2px solid var(--swiss-black);
+            margin-bottom: -2px; /* Stack effect */
+            transition: var(--transition);
+            background: var(--swiss-white);
+            position: relative;
+        }
+
+        .info-block:hover {
+            background: var(--block-hover-bg, var(--swiss-gray));
+            transform: scale(1.02);
+            z-index: 10;
+            box-shadow: 20px 20px 0px var(--swiss-black);
+        }
+
+        .icon-container {
+            width: 80px;
+            height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .icon-container svg {
+            width: 60px;
+            height: 60px;
+            fill: currentColor;
+        }
+
+        /* VAGAS VISUALIZER */
+        .vagas-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .vaga-card {
+            border: 2px solid var(--swiss-black);
+            padding: 2rem;
+            text-align: center;
+        }
+
+        .vaga-card .number { font-size: 3rem; font-weight: 900; display: block; line-height: 1; }
+
+        /* ACCORDION REFINEMENT */
+        .accordion-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: var(--transition);
+            opacity: 0;
+        }
+
+        .info-block.active .accordion-content {
+            max-height: 1000px;
+            opacity: 1;
+            margin-top: 1.5rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid rgba(0,0,0,0.1);
+        }
+
+        /* TIMELINE */
+        .timeline-item {
+            display: grid;
+            grid-template-columns: 180px 1fr;
+            gap: 2rem;
+            padding: 2.5rem 0;
+            border-bottom: 2px solid var(--swiss-black);
+        }
+
+        .date-box { font-weight: 900; font-size: 1.2rem; color: var(--swiss-blue); text-transform: uppercase; line-height: 1; }
+
+        /* SPECIFIC THEMES */
+        .sec-vagas { --block-hover-bg: #E3F2FD; }
+        .sec-inscricoes { --block-hover-bg: #E8F5E9; }
+        .sec-etapas { --block-hover-bg: #FFFDE7; }
+
+        @media (max-width: 700px) {
+            .info-block { grid-template-columns: 1fr; text-align: center; padding: 2rem; }
+            .icon-container { margin: 0 auto; }
+            .timeline-item { grid-template-columns: 1fr; }
+            h1 { font-size: 3.5rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="nav-bar">
+        <div class="main-column nav-container">
+            <span style="font-weight: 900; letter-spacing: -0.05em;">CMS MOC 2023</span>
+            <div class="nav-links">
+                <a href="#vagas">Vagas</a>
+                <a href="#inscricoes">Inscrições</a>
+                <a href="#assembleia">Assembleia</a>
+                <a href="#etapas">Etapas</a>
+            </div>
+        </div>
+    </nav>
+
+    <header class="main-column">
+        <span class="label">Montes Claros / Minas Gerais</span>
+        <h1>Conselho Municipal de Saúde</h1>
+        <p style="font-size: 1.5rem; font-weight: 500; max-width: 100%;">Edital de convocação para eleição dos representantes da sociedade civil — Biênio 2023/2025.</p>
+    </header>
+
+    <main class="main-column">
+        
+        <!-- SEÇÃO 1: VAGAS -->
+        <section id="vagas" class="sec-vagas">
+            <div class="section-header">
+                <span class="label">Capítulo 01</span>
+                <h2>Das Vagas e Composição</h2>
+            </div>
+
+            <div class="info-block" style="background: var(--swiss-black); color: var(--swiss-white);">
+                <div class="icon-container">
+                    <svg viewBox="0 0 24 24"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5s-3 1.34-3 3 1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
+                </div>
+                <div>
+                    <h3>1.1 — Distribuição Total</h3>
+                    <p style="color: #ccc;">Serão distribuídas 32 (trinta e duas) vagas em observância à paridade legal da Resolução nº 453 do CNS.</p>
+                    <div class="vagas-grid">
+                        <div class="vaga-card" style="border-color: var(--swiss-yellow);">
+                            <span class="number">16</span>
+                            <span class="label">Usuários (50%)</span>
+                        </div>
+                        <div class="vaga-card">
+                            <span class="number">08</span>
+                            <span class="label">Trabalhadores</span>
+                        </div>
+                        <div class="vaga-card">
+                            <span class="number">08</span>
+                            <span class="label">Gestores/Prest.</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="info-block" onclick="this.classList.toggle('active')">
+                <div class="icon-container" style="color: var(--swiss-blue);">
+                    <svg viewBox="0 0 24 24"><path d="M12 2L1 21h22L12 2zm0 3.45l8.15 14.55H3.85L12 5.45zM11 11h2v4h-2v-4zm0 6h2v2h-2v-2z"/></svg>
+                </div>
+                <div>
+                    <span class="label">Item 1.2.5</span>
+                    <h3>Prestadores SUS</h3>
+                    <div class="accordion-content">
+                        <p>A indicação para prestadores deve seguir rigorosamente esta ordem:</p>
+                        <ul style="margin-top: 1rem; list-style: none;">
+                            <li style="padding: 0.5rem 0; border-bottom: 1px solid #ddd;"><strong>A)</strong> 01 vaga para prestadores 100% SUS</li>
+                            <li style="padding: 0.5rem 0; border-bottom: 1px solid #ddd;"><strong>B)</strong> 02 vagas para instituições Filantrópicas</li>
+                            <li style="padding: 0.5rem 0;"><strong>C)</strong> 01 vaga para prestadores Privados/Conveniados</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SEÇÃO 2: INSCRIÇÕES -->
+        <section id="inscricoes" class="sec-inscricoes">
+            <div class="section-header">
+                <span class="label">Capítulo 02</span>
+                <h2>Das Inscrições</h2>
+                <p>Período: 27/02/2023 a 27/03/2023.</p>
+            </div>
+
+            <!-- CNPJ -->
+            <div class="info-block">
+                <div class="icon-container" style="color: var(--swiss-green);">
+                    <svg viewBox="0 0 24 24"><path d="M19 3h-4.18C14.4 1.84 13.3 1 12 1c-1.3 0-2.4.84-2.82 2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 0c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zm2 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/></svg>
+                </div>
+                <div>
+                    <span class="label">2.1.1</span>
+                    <h3>Inscrição CNPJ</h3>
+                    <p>Cópia do comprovante de inscrição nacional de pessoa jurídica ativo e regular.</p>
+                </div>
+            </div>
+
+            <!-- ATA -->
+            <div class="info-block">
+                <div class="icon-container" style="color: var(--swiss-green);">
+                    <svg viewBox="0 0 24 24"><path d="M18 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 4h5v8l-2.5-1.5L6 12V4z"/></svg>
+                </div>
+                <div>
+                    <span class="label">2.1.2</span>
+                    <h3>Ata da Diretoria</h3>
+                    <p>Cópia da Ata da diretoria atual devidamente registrada em cartório competente.</p>
+                </div>
+            </div>
+
+            <!-- ATUAÇÃO -->
+            <div class="info-block">
+                <div class="icon-container" style="color: var(--swiss-green);">
+                    <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+                </div>
+                <div>
+                    <span class="label">2.1.3</span>
+                    <h3>Atuação Municipal</h3>
+                    <p>Comprovante de atuação de, no mínimo, dois anos no município de Montes Claros.</p>
+                </div>
+            </div>
+
+            <!-- MOVIMENTOS -->
+            <div class="info-block" style="border-top-width: 10px;">
+                <div class="icon-container" style="color: var(--swiss-blue);">
+                    <svg viewBox="0 0 24 24"><path d="M12 6c1.1 0 2 .9 2 2s-.9 2-2 2-2-.9-2-2 .9-2 2-2m0 10c2.7 0 5.8 1.29 6 2H6c.23-.71 3.31-2 6-2m0-12C9.79 4 8 5.79 8 8s1.79 4 4 4 4-1.79 4-4-1.79-4-4-4zm0 10c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+                </div>
+                <div>
+                    <span class="label">2.2</span>
+                    <h3>Movimentos Sociais</h3>
+                    <p>Ata de fundação ou comprovante de existência por instrumento público de comunicação com no mínimo dois anos.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- SEÇÃO 3: ASSEMBLEIA -->
+        <section id="assembleia">
+            <div class="section-header">
+                <span class="label">Capítulo 03</span>
+                <h2>Assembleia e Escolha</h2>
+            </div>
+
+            <div class="info-block">
+                <div class="icon-container">
+                    <svg viewBox="0 0 24 24"><path d="M12 22C6.477 22 2 17.523 2 12S6.477 2 12 2s10 4.477 10 10-4.477 10-10 10zm0-2a8 8 0 100-16 8 8 0 000 16zm-1-5h2v2h-2v-2zm0-8h2v6h-2V7z"/></svg>
+                </div>
+                <div>
+                    <span class="label">Regra 3.2</span>
+                    <h3>Vedação de Dupla Representação</h3>
+                    <p>É vedado ao cidadão representar mais de uma entidade junto à assembleia.</p>
+                </div>
+            </div>
+
+            <div class="info-block">
+                <div class="icon-container">
+                    <svg viewBox="0 0 24 24"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm-2 16l-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z"/></svg>
+                </div>
+                <div>
+                    <span class="label">Regra 3.4.1</span>
+                    <h3>Fiscalização do Ministério Público</h3>
+                    <p>Todo o processo poderá ser fiscalizado pelo MP a convite do Conselho.</p>
+                </div>
+            </div>
+
+            <div class="info-block">
+                <div class="icon-container">
+                    <svg viewBox="0 0 24 24"><path d="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"/></svg>
+                </div>
+                <div>
+                    <span class="label">Regra 3.3.3</span>
+                    <h3>Recondução</h3>
+                    <p>A entidade que desejar recondução deverá submeter-se a novo processo de escolha. Vedada a recondução automática.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- SEÇÃO 4: ETAPAS -->
+        <section id="etapas" class="sec-etapas">
+            <div class="section-header">
+                <span class="label">Capítulo 04</span>
+                <h2>Cronograma Oficial</h2>
+            </div>
+
+            <div class="timeline-item">
+                <div class="date-box">27 Fev — 27 Mar</div>
+                <div class="timeline-desc">
+                    <h3>Inscrições</h3>
+                    <p>Entrega de documentos na Secretaria Executiva do CMS.</p>
+                </div>
+            </div>
+
+            <div class="timeline-item">
+                <div class="date-box">29 Mar</div>
+                <div class="timeline-desc">
+                    <h3>Publicação</h3>
+                    <p>Divulgação das inscrições homologadas por segmento.</p>
+                </div>
+            </div>
+
+            <div class="timeline-item">
+                <div class="date-box">14 Abr — 19 Abr</div>
+                <div class="timeline-desc" style="background: var(--swiss-yellow); padding: 2rem; border: 2px solid #000;">
+                    <h3>Habilitação dos Conselheiros</h3>
+                    <p><strong>Aviso Crítico:</strong> Representantes dos usuários não poderão ter cargo ou função comissionada na administração municipal.</p>
+                    <ul style="margin-top: 1rem; font-size: 0.9rem;">
+                        <li>• RG e Comprovante de Residência</li>
+                        <li>• Ata de escolha da entidade</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="timeline-item" style="border: none;">
+                <div class="date-box">28 Abr</div>
+                <div class="timeline-desc">
+                    <h3>Posse</h3>
+                    <p>Plenária de homologação e posse nominal (16h às 18h).</p>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer style="background: var(--swiss-black); color: var(--swiss-white); padding: 6rem 0; margin-top: 6rem;">
+        <div class="main-column">
+            <span class="label" style="color: var(--swiss-yellow);">Disposições Finais</span>
+            <p style="font-size: 2rem; font-weight: 500; line-height: 1.2;">Casos omissos serão resolvidos pela Comissão ad referendum da Plenária do Conselho.</p>
+            <div style="margin-top: 4rem; border-top: 1px solid #444; padding-top: 2rem; font-size: 0.8rem; opacity: 0.6;">
+                © 2023 Conselho Municipal de Saúde de Montes Claros.
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Sistema de auto-inicialização para efeitos visuais simples
+        document.addEventListener('DOMContentLoaded', () => {
+            console.log("Portal Swiss Design Carregado.");
+        });
+    </script>
+</body>
+</html>
