@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <title>Pré-Conferências – 11ª Conferência Municipal de Saúde de Montes Claros</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- Tailwind CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Configuração básica Tailwind -->
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            susBlue: '#0B5ED7',
+            susGreen: '#198754',
+            susYellow: '#FFC107'
+          }
+        }
+      }
+    }
+  </script>
+</head>
+
+<body class="bg-gray-50 text-gray-800">
+
+  <!-- Cabeçalho -->
+  <header class="bg-susBlue text-white py-10 px-6">
+    <div class="max-w-6xl mx-auto">
+      <h1 class="text-3xl md:text-4xl font-bold">
+        11ª Conferência Municipal de Saúde
+      </h1>
+      <p class="text-lg mt-2">
+        Montes Claros – MG
+      </p>
+      <p class="mt-4 text-susYellow font-semibold">
+        Informações das Pré-Conferências
+      </p>
+    </div>
+  </header>
+
+  <!-- Conteúdo -->
+  <main class="max-w-6xl mx-auto px-6 py-12">
+    
+    <div id="loading" class="text-center text-gray-500">
+      Carregando informações das pré-conferências…
+    </div>
+
+    <div id="cards" class="grid gap-6 md:grid-cols-2 lg:grid-cols-3 hidden">
+      <!-- Cards gerados automaticamente -->
+    </div>
+
+  </main>
+
+  <!-- Rodapé -->
+  <footer class="bg-gray-100 text-center py-6 text-sm text-gray-600">
+    Conselho Municipal de Saúde de Montes Claros · SUS · Controle Social
+  </footer>
+
+  <!-- Script -->
+  <script>
+    const csvUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vT1QYVGTBNucVjwiDIazr3cKailQZ0hmR8hclCwURvwM2zCsIrwJHPjliAfofXp2TUSY4G-MH5BS8zO/pub?gid=1331650730&single=true&output=csv";
+
+    fetch(csvUrl)
+      .then(response => response.text())
+      .then(csvText => {
+        const rows = csvText.split("\n").map(row => row.split(","));
+        const headers = rows.shift().map(h => h.trim());
+
+        const cardsContainer = document.getElementById("cards");
+        const loading = document.getElementById("loading");
+
+        rows.forEach(row => {
+          if (row.length < headers.length) return;
+
+          const data = {};
+          headers.forEach((header, index) => {
+            data[header] = row[index]?.replace(/"/g, "").trim();
+          });
+
+          const card = document.createElement("div");
+          card.className = "bg-white border-l-4 border-susGreen rounded-lg shadow-sm p-6 flex flex-col justify-between";
+
+          card.innerHTML = `
+            <div>
+              <h2 class="text-xl font-bold text-susBlue mb-3">
+                ${data["TEMA"] || ""}
+              </h2>
+
+              <p class="mb-2">
+                <span class="font-semibold">📅 Data:</span> ${data["DATA"] || ""}
+              </p>
+
+              <p class="mb-2">
+                <span class="font-semibold">⏰ Horário:</span> ${data["HORA"] || ""}
+              </p>
+
+              <p class="mb-4">
+                <span class="font-semibold">📍 Local:</span> ${data["LOCAL"] || ""}
+              </p>
+            </div>
+
+            ${
+              data["LINK PARA LISTA DE PRESENÇA"]
+              ? `<a href="${data["LINK PARA LISTA DE PRESENÇA"]}" target="_blank"
+                   class="mt-4 inline-block text-center bg-susBlue text-white font-semibold py-2 px-4 rounded hover:bg-blue-800 transition">
+                   Lista de Presença
+                 </a>`
+              : ""
+            }
+          `;
+
+          cardsContainer.appendChild(card);
+        });
+
+        loading.classList.add("hidden");
+        cardsContainer.classList.remove("hidden");
+      })
+      .catch(error => {
+        document.getElementById("loading").innerText =
+          "Erro ao carregar os dados. Verifique a planilha.";
+        console.error(error);
+      });
+  </script>
+
+</body>
+</html>
