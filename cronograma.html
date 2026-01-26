@@ -2,170 +2,99 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
-  <title>11ª Conferência Municipal de Saúde – Cronograma</title>
-
-  <!-- Tailwind CDN -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>11ª Conferência Municipal de Saúde de Montes Claros – Pré-Conferências</title>
   <script src="https://cdn.tailwindcss.com"></script>
-
-  <style>
-    .gantt-bar {
-      height: 28px;
-      border-radius: 6px;
-    }
-  </style>
 </head>
+<body class="bg-gray-50 text-gray-900">
 
-<body class="bg-slate-50 text-slate-800">
+  <!-- Cabeçalho -->
+  <header class="bg-gradient-to-r from-green-700 via-blue-700 to-green-800 text-white py-10 shadow">
+    <div class="max-w-7xl mx-auto px-6">
+      <h1 class="text-3xl md:text-4xl font-bold mb-2">11ª Conferência Municipal de Saúde de Montes Claros – MG</h1>
+      <p class="text-lg md:text-xl font-light">Cronograma das Pré-Conferências | Brasil das Brasileiras e dos Brasileiros: SUS e Soberania</p>
+      <p class="mt-2 italic">Cuidar do Povo é Cuidar do Brasil!</p>
+    </div>
+  </header>
 
-  <div class="max-w-7xl mx-auto p-6">
+  <!-- Conteúdo -->
+  <main class="max-w-7xl mx-auto px-6 py-10">
+    <section class="mb-10">
+      <h2 class="text-2xl font-semibold mb-4">📅 Cronograma (estilo Gantt)</h2>
+      <p class="text-gray-600 mb-6">Os dados abaixo são atualizados automaticamente conforme a planilha oficial das Pré-Conferências.</p>
 
-    <!-- Cabeçalho -->
-    <header class="mb-8">
-      <h1 class="text-3xl font-bold text-emerald-700">
-        11ª Conferência Municipal de Saúde
-      </h1>
-      <p class="text-slate-600">
-        Cronograma Geral · Planejamento, Execução e Pós-Evento
-      </p>
+      <!-- Gantt -->
+      <div id="gantt" class="space-y-4"></div>
+    </section>
+  </main>
 
-      <!-- Botões -->
-      <div class="mt-4 flex gap-2">
-        <button id="btnLista"
-          class="px-4 py-2 rounded bg-emerald-600 text-white hover:bg-emerald-700">
-          📋 Visão Sequencial
-        </button>
-        <button id="btnGantt"
-          class="px-4 py-2 rounded bg-slate-200 hover:bg-slate-300">
-          📊 Visão Gantt
-        </button>
-      </div>
-    </header>
+  <!-- Rodapé -->
+  <footer class="bg-gray-900 text-gray-300 py-6">
+    <div class="max-w-7xl mx-auto px-6 text-sm text-center">
+      Conselho Municipal de Saúde de Montes Claros • 11ª Conferência Municipal de Saúde
+    </div>
+  </footer>
 
-    <!-- Conteúdo -->
-    <main>
-
-      <!-- LISTA -->
-      <section id="listaView"></section>
-
-      <!-- GANTT -->
-      <section id="ganttView" class="hidden"></section>
-
-    </main>
-  </div>
-
+  <!-- Script -->
   <script>
-    const fases = [
-      {
-        nome: "FASE 1 – Atos Institucionais e Estruturação",
-        periodo: "Jan–Fev/2026",
-        cor: "bg-blue-500",
-        tarefas: [
-          { n: 1, t: "Convocação Oficial da Conferência", d: "21/01/2026" },
-          { n: 2, t: "Publicação no Diário Oficial", d: "21–24/01/2026" },
-          { n: 6, t: "Instituição da Comissão Organizadora", d: "até 30/01/2026" },
-          { n: 9, t: "Aprovação do Regimento Interno", d: "até 10/02/2026" }
-        ]
-      },
-      {
-        nome: "FASE 2 – Planejamento Operacional e Comunicação",
-        periodo: "Fevereiro/2026",
-        cor: "bg-emerald-500",
-        tarefas: [
-          { n: 14, t: "Planejamento Orçamentário", d: "até 05/02/2026" },
-          { n: 18, t: "Criação da Identidade Visual", d: "até 05/02/2026" },
-          { n: 21, t: "Divulgação Institucional", d: "a partir de 10/02/2026" }
-        ]
-      },
-      {
-        nome: "FASE 3 – Pré-Conferências",
-        periodo: "Março/2026",
-        cor: "bg-yellow-500",
-        tarefas: [
-          { n: 25, t: "Realização das Pré-Conferências", d: "10–27/03/2026" },
-          { n: 31, t: "Consolidação dos Delegados", d: "até 31/03/2026" }
-        ]
-      },
-      {
-        nome: "FASE 4 – Preparação Final",
-        periodo: "Abril/2026",
-        cor: "bg-indigo-500",
-        tarefas: [
-          { n: 33, t: "Sistematização das Propostas", d: "01–05/04/2026" },
-          { n: 40, t: "Preparação do Credenciamento", d: "até 15/04/2026" }
-        ]
-      },
-      {
-        nome: "FASE 5 – Conferência Municipal",
-        periodo: "22–24/04/2026",
-        cor: "bg-red-500",
-        tarefas: [
-          { n: 45, t: "Credenciamento Geral", d: "22/04/2026" },
-          { n: 53, t: "Plenária Final", d: "24/04/2026" }
-        ]
-      },
-      {
-        nome: "FASE 6 – Pós-Conferência",
-        periodo: "Mai/2026",
-        cor: "bg-purple-500",
-        tarefas: [
-          { n: 57, t: "Elaboração do Relatório Final", d: "até 05/05/2026" },
-          { n: 63, t: "Avaliação Interna", d: "até 20/05/2026" }
-        ]
-      }
-    ];
+    const csvUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vT1QYVGTBNucVjwiDIazr3cKailQZ0hmR8hclCwURvwM2zCsIrwJHPjliAfofXp2TUSY4G-MH5BS8zO/pub?gid=1331650730&single=true&output=csv";
 
-    const listaView = document.getElementById("listaView");
-    const ganttView = document.getElementById("ganttView");
-
-    function renderLista() {
-      listaView.innerHTML = fases.map(f => `
-        <div class="mb-6 bg-white rounded-lg shadow p-4">
-          <h2 class="text-xl font-semibold text-slate-700">
-            ${f.nome}
-            <span class="text-sm text-slate-500">(${f.periodo})</span>
-          </h2>
-          <ul class="mt-3 space-y-2">
-            ${f.tarefas.map(t => `
-              <li class="flex justify-between border-b pb-1">
-                <span><strong>${t.n}.</strong> ${t.t}</span>
-                <span class="text-slate-500">${t.d}</span>
-              </li>
-            `).join("")}
-          </ul>
-        </div>
-      `).join("");
+    function parseCSV(text) {
+      const lines = text.trim().split("\n");
+      const headers = lines.shift().split(",").map(h => h.trim());
+      return lines.map(line => {
+        const values = line.split(",");
+        const obj = {};
+        headers.forEach((h, i) => obj[h] = values[i]?.replace(/"/g, '').trim());
+        return obj;
+      });
     }
 
-    function renderGantt() {
-      ganttView.innerHTML = `
-        <div class="space-y-4">
-          ${fases.map(f => `
-            <div>
-              <div class="flex justify-between mb-1">
-                <strong>${f.nome}</strong>
-                <span class="text-sm text-slate-500">${f.periodo}</span>
+    function formatDate(dateStr) {
+      const [year, month, day] = dateStr.split("-");
+      return `${day}/${month}/${year}`;
+    }
+
+    fetch(csvUrl)
+      .then(res => res.text())
+      .then(csv => {
+        const data = parseCSV(csv);
+        const gantt = document.getElementById("gantt");
+
+        data.forEach(item => {
+          const card = document.createElement("div");
+          card.className = "bg-white rounded-xl shadow-md p-6 border-l-8 border-green-600";
+
+          card.innerHTML = `
+            <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+              <div>
+                <h3 class="text-xl font-semibold text-green-800 mb-1">${item['TEMA']}</h3>
+                <p class="text-gray-700"><strong>📍 Local:</strong> ${item['LOCAL']}</p>
+                <p class="text-gray-700"><strong>🕒 Horário:</strong> ${item['HORA']}</p>
               </div>
-              <div class="w-full bg-slate-200 rounded">
-                <div class="gantt-bar ${f.cor} w-full"></div>
+              <div class="text-right">
+                <p class="text-lg font-bold text-blue-700">${formatDate(item['DATA'])}</p>
+                <a href="${item['LINK PARA LISTA DE PRESENÇA']}" target="_blank" class="inline-block mt-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">
+                  Lista de Presença
+                </a>
               </div>
             </div>
-          `).join("")}
-        </div>
-      `;
-    }
 
-    renderLista();
-    renderGantt();
+            <div class="mt-4">
+              <div class="h-3 bg-gray-200 rounded-full overflow-hidden">
+                <div class="h-3 bg-gradient-to-r from-green-500 to-blue-500 w-full"></div>
+              </div>
+              <p class="text-xs text-gray-500 mt-1">Evento único – visualização em linha do tempo</p>
+            </div>
+          `;
 
-    document.getElementById("btnLista").onclick = () => {
-      listaView.classList.remove("hidden");
-      ganttView.classList.add("hidden");
-    };
-
-    document.getElementById("btnGantt").onclick = () => {
-      ganttView.classList.remove("hidden");
-      listaView.classList.add("hidden");
-    };
+          gantt.appendChild(card);
+        });
+      })
+      .catch(err => {
+        document.getElementById("gantt").innerHTML = "<p class='text-red-600'>Erro ao carregar os dados da planilha.</p>";
+        console.error(err);
+      });
   </script>
 
 </body>
