@@ -2,163 +2,119 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
-  <title>11ª Conferência Municipal de Saúde – Planejamento</title>
+  <title>11ª Conferência Municipal de Saúde – Cronograma Completo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
+<body class="bg-slate-50 text-slate-800">
 
-<body class="bg-slate-100 text-slate-800">
+<header class="bg-emerald-800 text-white py-8 shadow">
+  <div class="max-w-7xl mx-auto px-6">
+    <h1 class="text-3xl font-bold">11ª Conferência Municipal de Saúde de Montes Claros – MG</h1>
+    <p class="mt-2 text-lg">Cronograma, checklist e pré-conferências</p>
+    <p class="mt-1 text-sm opacity-90">Convocação: 21/01/2026 · Pré-conferências: 10 a 27/03/2026 · Conferência: 22, 23 e 24/04/2026</p>
+  </div>
+</header>
 
-<div class="max-w-7xl mx-auto p-6">
-  <!-- Cabeçalho -->
-  <header class="mb-6">
-    <h1 class="text-3xl font-bold text-emerald-700">
-      11ª Conferência Municipal de Saúde
-    </h1>
-    <p class="text-slate-600">
-      Planejamento • Preparação • Execução • Pós-Evento
-    </p>
+<main class="max-w-7xl mx-auto px-6 py-10">
+  <h2 class="text-2xl font-semibold mb-6">📋 Cronograma Geral por Fases</h2>
+  <div id="cronograma" class="space-y-12"></div>
+</main>
 
-    <div class="mt-4">
-      <button onclick="setView('list')" class="px-4 py-2 bg-emerald-600 text-white rounded mr-2 hover:bg-emerald-700">
-        📋 Visualização Sequencial
-      </button>
-      <button onclick="setView('gantt')" class="px-4 py-2 bg-sky-600 text-white rounded hover:bg-sky-700">
-        📊 Visualização Gantt
-      </button>
-    </div>
-  </header>
-
-  <!-- LISTA -->
-  <section id="listView" class="space-y-6">
-
-    <!-- Fase -->
-    <div class="bg-white rounded shadow p-4">
-      <h2 class="text-xl font-semibold text-sky-700 mb-2">
-        🟦 FASE 1 – Atos Institucionais (Jan–Fev)
-      </h2>
-      <ul class="space-y-1 text-sm">
-        <li>✅ <strong>Convocação Oficial</strong> — 21/01/2026</li>
-        <li>Publicação no Diário Oficial — 21–24/01/2026</li>
-        <li>Definição de datas e locais — até 30/01/2026</li>
-        <li>Instituição da Comissão Organizadora — até 30/01/2026</li>
-        <li>Regimento Interno (elaboração e publicação) — até 15/02/2026</li>
-      </ul>
-    </div>
-
-    <div class="bg-white rounded shadow p-4">
-      <h2 class="text-xl font-semibold text-green-700 mb-2">
-        🟩 FASE 2 – Planejamento Operacional (Fev)
-      </h2>
-      <ul class="space-y-1 text-sm">
-        <li>Planejamento orçamentário — até 05/02/2026</li>
-        <li>Identidade visual e comunicação — até 10/02/2026</li>
-        <li>Criação de site / central informativa — até 10/02/2026</li>
-        <li>Formulários, inscrições e listas — até 20/02/2026</li>
-      </ul>
-    </div>
-
-    <div class="bg-white rounded shadow p-4">
-      <h2 class="text-xl font-semibold text-yellow-600 mb-2">
-        🟨 FASE 3 – Pré-Conferências (Março)
-      </h2>
-      <ul class="grid grid-cols-2 gap-2 text-sm">
-        <li>10/03 – Servidores Municipais</li>
-        <li>11/03 – Prestadores e PCDs</li>
-        <li>12/03 – Grande Renascença</li>
-        <li>13/03 – Grande Santos Reis</li>
-        <li>17/03 – Grande Delfino</li>
-        <li>18/03 – Grande Independência</li>
-        <li>19/03 – Grande Major Prates</li>
-        <li>20/03 – Grande Maracanã</li>
-        <li>23/03 – LGBTQIA+</li>
-        <li>24/03 – Zona Rural</li>
-        <li>25/03 – Igualdade Racial</li>
-        <li>26/03 – Saúde da Mulher</li>
-        <li>27/03 – População em Situação de Rua</li>
-      </ul>
-    </div>
-
-    <div class="bg-white rounded shadow p-4">
-      <h2 class="text-xl font-semibold text-red-600 mb-2">
-        🟥 FASE 5 – Conferência Municipal
-      </h2>
-      <p class="text-sm mb-2">📅 22, 23 e 24 de Abril de 2026</p>
-      <ul class="space-y-1 text-sm">
-        <li>22/04 – Credenciamento e abertura</li>
-        <li>23/04 – Grupos de trabalho</li>
-        <li>24/04 – Plenária Final e eleição de delegados</li>
-      </ul>
-    </div>
-
-    <div class="bg-white rounded shadow p-4">
-      <h2 class="text-xl font-semibold text-purple-700 mb-2">
-        🟪 FASE 6 – Pós-Conferência
-      </h2>
-      <ul class="space-y-1 text-sm">
-        <li>Relatório Final — até 15/05/2026</li>
-        <li>Certificados e envio à etapa estadual</li>
-        <li>Avaliação interna — até 20/05/2026</li>
-      </ul>
-    </div>
-
-  </section>
-
-  <!-- GANTT -->
-  <section id="ganttView" class="hidden">
-    <div class="bg-white rounded shadow p-6 space-y-4">
-
-      <h2 class="text-xl font-semibold text-slate-700 mb-4">
-        📊 Linha do Tempo Geral (Gantt Simplificado)
-      </h2>
-
-      <div class="space-y-3 text-sm">
-
-        <div>
-          <p class="mb-1">🟦 Atos Institucionais</p>
-          <div class="w-full bg-slate-200 rounded h-4">
-            <div class="bg-sky-600 h-4 rounded" style="width: 30%"></div>
-          </div>
-        </div>
-
-        <div>
-          <p class="mb-1">🟩 Planejamento Operacional</p>
-          <div class="w-full bg-slate-200 rounded h-4">
-            <div class="bg-green-600 h-4 rounded" style="width: 25%"></div>
-          </div>
-        </div>
-
-        <div>
-          <p class="mb-1">🟨 Pré-Conferências</p>
-          <div class="w-full bg-slate-200 rounded h-4">
-            <div class="bg-yellow-500 h-4 rounded" style="width: 20%"></div>
-          </div>
-        </div>
-
-        <div>
-          <p class="mb-1">🟥 Conferência Municipal</p>
-          <div class="w-full bg-slate-200 rounded h-4">
-            <div class="bg-red-600 h-4 rounded" style="width: 10%"></div>
-          </div>
-        </div>
-
-        <div>
-          <p class="mb-1">🟪 Pós-Conferência</p>
-          <div class="w-full bg-slate-200 rounded h-4">
-            <div class="bg-purple-600 h-4 rounded" style="width: 15%"></div>
-          </div>
-        </div>
-
-      </div>
-    </div>
-  </section>
-
-</div>
+<footer class="bg-slate-200 text-slate-700 py-6">
+  <div class="max-w-7xl mx-auto px-6 text-sm">Conselho Municipal de Saúde de Montes Claros · Secretaria Executiva · 2026</div>
+</footer>
 
 <script>
-  function setView(view) {
-    document.getElementById("listView").classList.toggle("hidden", view !== "list");
-    document.getElementById("ganttView").classList.toggle("hidden", view !== "gantt");
+// URL CORRIGIDA – mesma planilha informada pelo usuário (publicada como CSV)
+const CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vT1QYVGTBNucVjwiDIazr3cKailQZ0hmR8hclCwURvwM2zCsIrwJHPjliAfofXp2TUSY4G-MH5BS8zO/pub?gid=1331650730&single=true&output=csv";
+
+const ORDEM_FASES = [
+  "FASE 1 – ATOS INSTITUCIONAIS E ESTRUTURAÇÃO",
+  "FASE 2 – PLANEJAMENTO OPERACIONAL E COMUNICAÇÃO",
+  "FASE 3 – PRÉ-CONFERÊNCIAS",
+  "FASE 4 – PREPARAÇÃO FINAL",
+  "FASE 5 – CONFERÊNCIA MUNICIPAL",
+  "FASE 6 – PÓS-CONFERÊNCIA"
+];
+
+function parseCSV(text) {
+  const lines = text.split(/\r?\n/).filter(l => l.trim() !== "");
+  const headers = lines[0].split(",").map(h => h.replace(/"/g, '').trim());
+
+  return lines.slice(1).map(line => {
+    const values = line.split(",").map(v => v.replace(/"/g, '').trim());
+    const obj = {};
+    headers.forEach((h, i) => obj[h] = values[i] || "");
+    return obj;
+  });
+}
+
+async function carregarCronograma() {
+  const container = document.getElementById("cronograma");
+  container.innerHTML = "<p class='text-slate-500'>Carregando dados da planilha…</p>";
+
+  try {
+    const response = await fetch(CSV_URL, { cache: "no-store" });
+    if (!response.ok) throw new Error("Falha ao acessar a planilha");
+
+    const csv = await response.text();
+    const rows = parseCSV(csv);
+    container.innerHTML = "";
+
+    ORDEM_FASES.forEach(nomeFase => {
+      const itensFase = rows.filter(r => r.FASE === nomeFase);
+      if (itensFase.length === 0) return;
+
+      const section = document.createElement("section");
+      section.className = "bg-white rounded-xl shadow border border-slate-200";
+
+      section.innerHTML = `
+        <div class="px-6 py-4 border-b bg-slate-100 rounded-t-xl">
+          <h3 class="text-xl font-bold">${nomeFase}</h3>
+        </div>
+        <div class="overflow-x-auto">
+          <table class="w-full text-sm">
+            <thead class="bg-slate-50 text-slate-600">
+              <tr>
+                <th class="text-left px-4 py-2 w-16">Nº</th>
+                <th class="text-left px-4 py-2">Etapa / Ação</th>
+                <th class="text-left px-4 py-2 w-40">Data Prevista</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      `;
+
+      const tbody = section.querySelector("tbody");
+
+      itensFase.forEach(item => {
+        const tr = document.createElement("tr");
+        tr.className = "border-t hover:bg-emerald-50 transition";
+        tr.innerHTML = `
+          <td class="px-4 py-2 font-medium">${item['Nº'] || ''}</td>
+          <td class="px-4 py-2">${item['Etapa / Ação'] || ''}</td>
+          <td class="px-4 py-2">${item['Data Prevista'] || ''}</td>
+        `;
+        tbody.appendChild(tr);
+      });
+
+      container.appendChild(section);
+    });
+
+    if (container.innerHTML.trim() === "") {
+      container.innerHTML = "<p class='text-amber-600'>Nenhum dado encontrado na planilha para exibição.</p>";
+    }
+
+  } catch (error) {
+    container.innerHTML = "<p class='text-red-600 font-semibold'>Erro ao carregar os dados da planilha. Verifique se ela está publicada como CSV.</p>";
+    console.error(error);
   }
+}
+
+// inicialização
+carregarCronograma();
 </script>
 
 </body>
