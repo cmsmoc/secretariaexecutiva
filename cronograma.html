@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <title>11ª Conferência Municipal de Saúde – Cronograma</title>
+
+  <!-- Tailwind CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <style>
+    .gantt-bar {
+      height: 28px;
+      border-radius: 6px;
+    }
+  </style>
+</head>
+
+<body class="bg-slate-50 text-slate-800">
+
+  <div class="max-w-7xl mx-auto p-6">
+
+    <!-- Cabeçalho -->
+    <header class="mb-8">
+      <h1 class="text-3xl font-bold text-emerald-700">
+        11ª Conferência Municipal de Saúde
+      </h1>
+      <p class="text-slate-600">
+        Cronograma Geral · Planejamento, Execução e Pós-Evento
+      </p>
+
+      <!-- Botões -->
+      <div class="mt-4 flex gap-2">
+        <button id="btnLista"
+          class="px-4 py-2 rounded bg-emerald-600 text-white hover:bg-emerald-700">
+          📋 Visão Sequencial
+        </button>
+        <button id="btnGantt"
+          class="px-4 py-2 rounded bg-slate-200 hover:bg-slate-300">
+          📊 Visão Gantt
+        </button>
+      </div>
+    </header>
+
+    <!-- Conteúdo -->
+    <main>
+
+      <!-- LISTA -->
+      <section id="listaView"></section>
+
+      <!-- GANTT -->
+      <section id="ganttView" class="hidden"></section>
+
+    </main>
+  </div>
+
+  <script>
+    const fases = [
+      {
+        nome: "FASE 1 – Atos Institucionais e Estruturação",
+        periodo: "Jan–Fev/2026",
+        cor: "bg-blue-500",
+        tarefas: [
+          { n: 1, t: "Convocação Oficial da Conferência", d: "21/01/2026" },
+          { n: 2, t: "Publicação no Diário Oficial", d: "21–24/01/2026" },
+          { n: 6, t: "Instituição da Comissão Organizadora", d: "até 30/01/2026" },
+          { n: 9, t: "Aprovação do Regimento Interno", d: "até 10/02/2026" }
+        ]
+      },
+      {
+        nome: "FASE 2 – Planejamento Operacional e Comunicação",
+        periodo: "Fevereiro/2026",
+        cor: "bg-emerald-500",
+        tarefas: [
+          { n: 14, t: "Planejamento Orçamentário", d: "até 05/02/2026" },
+          { n: 18, t: "Criação da Identidade Visual", d: "até 05/02/2026" },
+          { n: 21, t: "Divulgação Institucional", d: "a partir de 10/02/2026" }
+        ]
+      },
+      {
+        nome: "FASE 3 – Pré-Conferências",
+        periodo: "Março/2026",
+        cor: "bg-yellow-500",
+        tarefas: [
+          { n: 25, t: "Realização das Pré-Conferências", d: "10–27/03/2026" },
+          { n: 31, t: "Consolidação dos Delegados", d: "até 31/03/2026" }
+        ]
+      },
+      {
+        nome: "FASE 4 – Preparação Final",
+        periodo: "Abril/2026",
+        cor: "bg-indigo-500",
+        tarefas: [
+          { n: 33, t: "Sistematização das Propostas", d: "01–05/04/2026" },
+          { n: 40, t: "Preparação do Credenciamento", d: "até 15/04/2026" }
+        ]
+      },
+      {
+        nome: "FASE 5 – Conferência Municipal",
+        periodo: "22–24/04/2026",
+        cor: "bg-red-500",
+        tarefas: [
+          { n: 45, t: "Credenciamento Geral", d: "22/04/2026" },
+          { n: 53, t: "Plenária Final", d: "24/04/2026" }
+        ]
+      },
+      {
+        nome: "FASE 6 – Pós-Conferência",
+        periodo: "Mai/2026",
+        cor: "bg-purple-500",
+        tarefas: [
+          { n: 57, t: "Elaboração do Relatório Final", d: "até 05/05/2026" },
+          { n: 63, t: "Avaliação Interna", d: "até 20/05/2026" }
+        ]
+      }
+    ];
+
+    const listaView = document.getElementById("listaView");
+    const ganttView = document.getElementById("ganttView");
+
+    function renderLista() {
+      listaView.innerHTML = fases.map(f => `
+        <div class="mb-6 bg-white rounded-lg shadow p-4">
+          <h2 class="text-xl font-semibold text-slate-700">
+            ${f.nome}
+            <span class="text-sm text-slate-500">(${f.periodo})</span>
+          </h2>
+          <ul class="mt-3 space-y-2">
+            ${f.tarefas.map(t => `
+              <li class="flex justify-between border-b pb-1">
+                <span><strong>${t.n}.</strong> ${t.t}</span>
+                <span class="text-slate-500">${t.d}</span>
+              </li>
+            `).join("")}
+          </ul>
+        </div>
+      `).join("");
+    }
+
+    function renderGantt() {
+      ganttView.innerHTML = `
+        <div class="space-y-4">
+          ${fases.map(f => `
+            <div>
+              <div class="flex justify-between mb-1">
+                <strong>${f.nome}</strong>
+                <span class="text-sm text-slate-500">${f.periodo}</span>
+              </div>
+              <div class="w-full bg-slate-200 rounded">
+                <div class="gantt-bar ${f.cor} w-full"></div>
+              </div>
+            </div>
+          `).join("")}
+        </div>
+      `;
+    }
+
+    renderLista();
+    renderGantt();
+
+    document.getElementById("btnLista").onclick = () => {
+      listaView.classList.remove("hidden");
+      ganttView.classList.add("hidden");
+    };
+
+    document.getElementById("btnGantt").onclick = () => {
+      ganttView.classList.remove("hidden");
+      listaView.classList.add("hidden");
+    };
+  </script>
+
+</body>
+</html>
