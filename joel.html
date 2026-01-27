@@ -7,13 +7,24 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
         body { font-family: 'Inter', sans-serif; background-color: #f8fafc; }
         .sticky-header { backdrop-filter: blur(8px); background-color: rgba(255, 255, 255, 0.9); }
         .item-row:hover { background-color: #f1f5f9; }
         .loader { border-top-color: #3b82f6; animation: spinner 1.5s linear infinite; }
         @keyframes spinner { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-        .line-clamp-2 { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+        
+        /* Custom Scrollbar para Timeline */
+        .custom-scrollbar::-webkit-scrollbar { height: 8px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: #f1f5f9; border-radius: 10px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+
+        .view-btn.active {
+            background-color: #4f46e5;
+            color: white;
+            box-shadow: 0 4px 6px -1px rgb(79 70 229 / 0.2);
+        }
     </style>
 </head>
 <body class="text-slate-800 antialiased">
@@ -25,40 +36,44 @@
                     <i data-lucide="calendar-check"></i>
                 </div>
                 <div>
-                    <h1 class="text-lg font-bold text-slate-900 leading-tight">Cronograma de Atividades</h1>
+                    <h1 class="text-lg font-bold text-slate-900 leading-tight">Painel de Acompanhamento</h1>
                     <p class="text-xs text-slate-500 font-medium uppercase tracking-wider">Joel Francisco Borges</p>
                 </div>
             </div>
-            <div class="hidden md:flex items-center gap-4 text-xs font-medium">
-                <span class="flex items-center gap-1 text-emerald-600 bg-emerald-50 px-2 py-1 rounded">
-                    <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span> Online
-                </span>
+
+            <!-- Alternador de Visualização -->
+            <div class="flex bg-slate-100 p-1 rounded-xl border border-slate-200">
+                <button onclick="changeView('list')" id="btn-list" class="view-btn active flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-bold transition-all">
+                    <i data-lucide="list" class="w-4 h-4"></i> <span class="hidden sm:inline">Lista</span>
+                </button>
+                <button onclick="changeView('grid')" id="btn-grid" class="view-btn flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-bold transition-all">
+                    <i data-lucide="layout-grid" class="w-4 h-4"></i> <span class="hidden sm:inline">Galeria</span>
+                </button>
+                <button onclick="changeView('timeline')" id="btn-timeline" class="view-btn flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-bold transition-all">
+                    <i data-lucide="clock" class="w-4 h-4"></i> <span class="hidden sm:inline">Timeline</span>
+                </button>
             </div>
         </div>
     </header>
 
-    <main class="container mx-auto px-4 py-8 max-w-5xl">
+    <main class="container mx-auto px-4 py-8 max-w-6xl">
         <!-- Dashboard de Resumo -->
-        <div id="stats-container" class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-10">
-            <!-- Stats dinâmicos -->
-        </div>
+        <div id="stats-container" class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-10"></div>
 
         <!-- Feedback Visual -->
         <div id="status-message" class="flex flex-col items-center justify-center py-24 text-slate-500">
             <div class="loader ease-linear rounded-full border-4 border-t-4 border-slate-200 h-12 w-12 mb-4"></div>
-            <p class="animate-pulse font-medium">Sincronizando com a planilha...</p>
+            <p class="animate-pulse font-medium">Sincronizando dados...</p>
         </div>
 
-        <!-- Conteúdo Principal -->
-        <div id="timeline-content" class="space-y-16 hidden">
-            <!-- Fases e tarefas aqui -->
-        </div>
+        <!-- Área de Conteúdo Dinâmico -->
+        <div id="main-content" class="hidden"></div>
     </main>
 
     <footer class="border-t border-slate-200 bg-white py-10 mt-20">
         <div class="container mx-auto px-4 text-center">
-            <p class="text-sm text-slate-400 font-medium">
-                Sincronizado automaticamente com Google Sheets • Painel de Acompanhamento 2024
+            <p class="text-sm text-slate-400 font-medium italic">
+                Dados atualizados via Cloud Sync • Google Sheets Integration
             </p>
         </div>
     </footer>
@@ -68,15 +83,35 @@
             CSV_URL: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRbGTMwjYj7m8CorXDXCvMYZMVTWzpsmUUa3xPxVaU6KQPduxg17Yo0jH7PWPTudXNp2tiidRHR5Dtw/pub?output=csv'
         };
 
-        // Normalizador de nomes de colunas para evitar erros de acentuação ou espaços
+        let APP_STATE = {
+            data: [],
+            currentView: 'list' // list, grid, timeline
+        };
+
+        // Normalização de chaves e dados
         function normalizeKey(key) {
             return key.toLowerCase()
-                .normalize("NFD").replace(/[\u0300-\u036f]/g, "") // Remove acentos
-                .replace(/\s+/g, '_') // Espaços para underscore
-                .replace(/^n$/, 'numero') // Atalho para numero
-                .replace(/^n_o$/, 'numero')
-                .replace('checkbox', 'check') // Sinônimo
+                .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+                .replace(/\s+/g, '_')
+                .replace(/^n$/, 'numero')
+                .replace('checkbox', 'check')
                 .trim();
+        }
+
+        function isDone(val) {
+            return ['true', 'x', '1', 'sim'].includes(String(val).toLowerCase());
+        }
+
+        // Parser de datas flexível
+        function parseDate(dateStr) {
+            if (!dateStr || dateStr.toLowerCase().includes('prazo')) return null;
+            // Extrai a última data se for um intervalo (ex: 21-28/01/2026 -> 28/01/2026)
+            const parts = dateStr.match(/(\d{1,2})\/(\d{1,2})\/(\d{4})/g);
+            if (parts && parts.length > 0) {
+                const [d, m, y] = parts[parts.length - 1].split('/');
+                return new Date(y, m - 1, d);
+            }
+            return null;
         }
 
         function parseCSV(csvText) {
@@ -84,194 +119,214 @@
             const lines = csvText.split(/\r?\n/);
             if (lines.length < 2) return [];
 
-            // Identifica as colunas dinamicamente
-            const rawHeaders = lines[0].split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
-            const headers = rawHeaders.map(h => normalizeKey(h.replace(/^"|"$/g, '')));
+            const headers = lines[0].split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/).map(h => normalizeKey(h.replace(/^"|"$/g, '')));
 
             for (let i = 1; i < lines.length; i++) {
                 const line = lines[i].trim();
                 if (!line) continue;
-                
-                // Divide por vírgula respeitando campos entre aspas
                 const values = line.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
                 const rowObj = {};
-                
                 headers.forEach((header, index) => {
                     let val = values[index] ? values[index].replace(/^"|"$/g, '').trim() : '';
                     rowObj[header] = val;
                 });
+                // Helpers de exibição
+                rowObj._done = isDone(rowObj.check);
+                rowObj._date = parseDate(rowObj.data_prevista || rowObj.data_prevista);
                 rows.push(rowObj);
             }
             return rows;
         }
 
         async function initApp() {
-            const container = document.getElementById('timeline-content');
-            const statusMsg = document.getElementById('status-message');
-
             try {
-                const response = await fetch(`${CONFIG.CSV_URL}&cachebuster=${Date.now()}`);
-                if (!response.ok) throw new Error();
-                
+                const response = await fetch(`${CONFIG.CSV_URL}&cache=${Date.now()}`);
                 const csvData = await response.text();
-                const rawData = parseCSV(csvData);
-
-                if (rawData.length === 0) {
-                    showError("Nenhum dado encontrado. Verifique a planilha.");
-                    return;
-                }
-
-                // Agrupamento por fase
-                const groupedData = rawData.reduce((acc, item) => {
-                    const fase = item.fase || 'Outros';
-                    if (!acc[fase]) acc[fase] = [];
-                    acc[fase].push(item);
-                    return acc;
-                }, {});
-
-                renderStats(rawData);
-                renderTimeline(groupedData);
-
-                statusMsg.classList.add('hidden');
-                container.classList.remove('hidden');
-                lucide.createIcons();
-
+                APP_STATE.data = parseCSV(csvData);
+                
+                document.getElementById('status-message').classList.add('hidden');
+                document.getElementById('main-content').classList.remove('hidden');
+                
+                renderStats();
+                renderCurrentView();
             } catch (error) {
                 console.error(error);
-                showError("Erro na conexão com os dados. Verifique a URL da planilha publicada.");
+                showError("Não foi possível carregar os dados.");
             }
         }
 
-        function isDone(val) {
-            const v = String(val).toLowerCase();
-            return ['true', 'x', '1', 'sim', 'vadeado'].includes(v);
+        function changeView(view) {
+            APP_STATE.currentView = view;
+            document.querySelectorAll('.view-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById(`btn-${view}`).classList.add('active');
+            renderCurrentView();
         }
 
-        function renderStats(data) {
-            const total = data.length;
-            const concluido = data.filter(i => isDone(i.check)).length;
-            const perc = Math.round((concluido / total) * 100) || 0;
-
-            document.getElementById('stats-container').innerHTML = `
-                <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
-                    <div class="flex items-center justify-between mb-2">
-                        <p class="text-xs font-bold text-slate-400 uppercase tracking-tighter">Status Geral</p>
-                        <i data-lucide="bar-chart-3" class="w-4 h-4 text-indigo-400"></i>
-                    </div>
-                    <p class="text-3xl font-black text-slate-900">${perc}%</p>
-                    <div class="w-full bg-slate-100 h-2 rounded-full mt-3 overflow-hidden">
-                        <div class="bg-indigo-600 h-full rounded-full transition-all duration-1000" style="width: ${perc}%"></div>
-                    </div>
-                </div>
-                <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
-                    <p class="text-xs font-bold text-slate-400 uppercase tracking-tighter mb-2">Total de Tarefas</p>
-                    <p class="text-3xl font-black text-slate-900">${total}</p>
-                    <p class="text-xs text-slate-400 mt-2 font-medium">Itens mapeados</p>
-                </div>
-                <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm border-l-4 border-l-emerald-500">
-                    <p class="text-xs font-bold text-slate-400 uppercase tracking-tighter mb-2 text-emerald-600">Concluídas</p>
-                    <p class="text-3xl font-black text-emerald-600">${concluido}</p>
-                    <p class="text-xs text-emerald-500 mt-2 font-medium">Meta em andamento</p>
-                </div>
-            `;
-        }
-
-        function renderTimeline(groupedData) {
-            const container = document.getElementById('timeline-content');
+        function renderCurrentView() {
+            const container = document.getElementById('main-content');
             container.innerHTML = '';
 
-            Object.entries(groupedData).forEach(([fase, itens]) => {
-                const totalFase = itens.length;
-                const concluidoFase = itens.filter(i => isDone(i.check)).length;
-                const percFase = Math.round((concluidoFase / totalFase) * 100);
+            if (APP_STATE.currentView === 'list') renderListView(container);
+            else if (APP_STATE.currentView === 'grid') renderGridView(container);
+            else if (APP_STATE.currentView === 'timeline') renderTimelineView(container);
+            
+            lucide.createIcons();
+        }
 
-                const section = document.createElement('section');
-                section.className = 'animate-in fade-in slide-in-from-bottom-6 duration-1000';
-                
+        // --- VISUALIZAÇÃO EM LISTA (Original Refinada) ---
+        function renderListView(container) {
+            const grouped = APP_STATE.data.reduce((acc, item) => {
+                const f = item.fase || 'Outros';
+                if (!acc[f]) acc[f] = [];
+                acc[f].push(item);
+                return acc;
+            }, {});
+
+            Object.entries(grouped).forEach(([fase, itens]) => {
+                const section = document.createElement('div');
+                section.className = 'mb-12';
                 section.innerHTML = `
-                    <div class="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-8 border-b border-slate-200 pb-4">
-                        <div>
-                            <div class="flex items-center gap-2 mb-1">
-                                <span class="bg-indigo-600 text-white text-[10px] font-bold px-2 py-0.5 rounded">FASE</span>
-                                <span class="text-sm font-bold text-indigo-600">${percFase}% Concluído</span>
-                            </div>
-                            <h2 class="text-3xl font-black text-slate-900 tracking-tight">${fase.toUpperCase()}</h2>
-                        </div>
-                        <div class="flex gap-2 text-xs font-bold">
-                            <span class="bg-white border border-slate-200 px-3 py-1.5 rounded-lg text-slate-500 shadow-sm">
-                                ${concluidoFase} / ${totalFase} TAREFAS
-                            </span>
-                        </div>
-                    </div>
-                    
+                    <h2 class="text-2xl font-black text-slate-800 mb-6 border-b pb-2 flex items-center gap-3">
+                        <span class="w-2 h-8 bg-indigo-600 rounded-full"></span> ${fase.toUpperCase()}
+                    </h2>
                     <div class="space-y-3">
-                        ${itens.map(item => {
-                            const done = isDone(item.check);
-                            // Mapeamento dinâmico baseado no seu CSV fornecido
-                            const num = item.numero || item.n || '?';
-                            const desc = item.descricao || item.descrição || 'Sem descrição';
-                            const data = item.data_prevista || item['data prevista'] || 'Prazo não definido';
-                            const etapa = item.etapa || 'Geral';
-
-                            return `
-                                <div class="item-row group bg-white border ${done ? 'border-slate-100' : 'border-slate-200'} p-5 rounded-2xl shadow-sm hover:shadow-md transition-all flex flex-col md:flex-row md:items-center gap-6 relative overflow-hidden">
-                                    ${done ? '<div class="absolute left-0 top-0 bottom-0 w-1 bg-emerald-500"></div>' : ''}
-                                    
-                                    <!-- Numero e Status -->
-                                    <div class="flex items-center gap-4 md:w-24 shrink-0">
-                                        <span class="w-10 h-10 rounded-xl ${done ? 'bg-emerald-50 text-emerald-600' : 'bg-slate-50 text-slate-400'} flex items-center justify-center text-sm font-black border border-slate-100 transition-colors">
-                                            ${num}
-                                        </span>
-                                        <div class="${done ? 'text-emerald-500' : 'text-slate-300'}">
-                                            <i data-lucide="${done ? 'check-circle-2' : 'circle'}" class="w-6 h-6"></i>
-                                        </div>
-                                    </div>
-
-                                    <!-- Conteúdo -->
-                                    <div class="flex-1">
-                                        <p class="text-[10px] font-black text-indigo-500 uppercase tracking-widest mb-1">${etapa}</p>
-                                        <h3 class="text-base font-semibold text-slate-800 leading-tight ${done ? 'line-through text-slate-400 opacity-60' : ''}">
-                                            ${desc}
-                                        </h3>
-                                    </div>
-
-                                    <!-- Data -->
-                                    <div class="md:w-48 shrink-0 flex items-center gap-3 bg-slate-50 md:bg-transparent p-3 md:p-0 rounded-xl">
-                                        <div class="bg-white p-2 rounded-lg border border-slate-100 md:hidden">
-                                            <i data-lucide="calendar" class="w-4 h-4 text-slate-400"></i>
-                                        </div>
-                                        <div class="hidden md:block text-slate-300">
-                                            <i data-lucide="calendar" class="w-5 h-5"></i>
-                                        </div>
-                                        <div>
-                                            <p class="text-[10px] font-bold text-slate-400 uppercase">Previsão</p>
-                                            <p class="text-sm font-bold text-slate-700">${data}</p>
-                                        </div>
-                                    </div>
-                                </div>
-                            `;
-                        }).join('')}
+                        ${itens.map(i => renderItemRow(i)).join('')}
                     </div>
                 `;
                 container.appendChild(section);
             });
         }
 
-        function showError(msg) {
-            const statusMsg = document.getElementById('status-message');
-            statusMsg.innerHTML = `
-                <div class="bg-white p-8 rounded-3xl border border-slate-200 shadow-xl text-center max-w-sm">
-                    <div class="bg-red-50 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-                        <i data-lucide="cloud-off" class="w-8 h-8 text-red-500"></i>
+        function renderItemRow(item) {
+            return `
+                <div class="bg-white border ${item._done ? 'border-slate-100' : 'border-slate-200'} p-4 rounded-xl flex items-center gap-4 hover:shadow-sm transition-all">
+                    <div class="w-8 h-8 rounded-lg ${item._done ? 'bg-emerald-50 text-emerald-600' : 'bg-slate-50 text-slate-400'} flex items-center justify-center text-xs font-bold border border-slate-100">
+                        ${item.numero || item.n || '?'}
                     </div>
-                    <h3 class="text-lg font-bold text-slate-900 mb-2">Conexão interrompida</h3>
-                    <p class="text-sm text-slate-500 mb-6">${msg}</p>
-                    <button onclick="location.reload()" class="w-full py-3 bg-slate-900 text-white rounded-xl font-bold hover:bg-slate-800 transition-all">
-                        Tentar reconectar
-                    </button>
+                    <div class="flex-1">
+                        <p class="text-[9px] font-bold text-indigo-500 uppercase">${item.etapa || 'Etapa'}</p>
+                        <h3 class="font-semibold text-slate-800 ${item._done ? 'line-through text-slate-400' : ''}">${item.descricao || item.descrição}</h3>
+                    </div>
+                    <div class="text-right">
+                        <p class="text-[9px] font-bold text-slate-400 uppercase">Previsão</p>
+                        <p class="text-xs font-bold text-slate-600">${item.data_prevista || '-'}</p>
+                    </div>
                 </div>
             `;
-            lucide.createIcons();
+        }
+
+        // --- VISUALIZAÇÃO EM GRADE (Galeria) ---
+        function renderGridView(container) {
+            const grid = document.createElement('div');
+            grid.className = 'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6';
+            
+            grid.innerHTML = APP_STATE.data.map(item => `
+                <div class="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm hover:shadow-md transition-all flex flex-col justify-between relative overflow-hidden">
+                    ${item._done ? '<div class="absolute top-0 right-0 bg-emerald-500 text-white px-3 py-1 text-[10px] font-bold rounded-bl-xl uppercase">Concluído</div>' : ''}
+                    <div>
+                        <div class="flex items-center gap-2 mb-4">
+                            <span class="text-[10px] font-bold px-2 py-0.5 bg-slate-100 text-slate-500 rounded uppercase tracking-tight">${item.fase}</span>
+                        </div>
+                        <h3 class="font-bold text-slate-900 leading-tight mb-2">${item.descricao || item.descrição}</h3>
+                        <p class="text-sm text-slate-500 line-clamp-2">${item.etapa || ''}</p>
+                    </div>
+                    <div class="mt-6 pt-4 border-t border-slate-100 flex items-center justify-between">
+                        <div class="flex items-center gap-2 text-slate-400">
+                            <i data-lucide="calendar" class="w-3.5 h-3.5"></i>
+                            <span class="text-xs font-bold">${item.data_prevista}</span>
+                        </div>
+                        <span class="text-xs font-black text-slate-300">#${item.numero}</span>
+                    </div>
+                </div>
+            `).join('');
+            container.appendChild(grid);
+        }
+
+        // --- VISUALIZAÇÃO EM TIMELINE (Panorâmica) ---
+        function renderTimelineView(container) {
+            const validItems = APP_STATE.data.filter(i => i._date).sort((a, b) => a._date - b._date);
+            if (validItems.length === 0) {
+                container.innerHTML = '<p class="text-center py-10 text-slate-400 font-medium">Datas não formatadas para gerar Timeline.</p>';
+                return;
+            }
+
+            const startDate = new Date(validItems[0]._date);
+            startDate.setDate(1); // Início do mês
+            const endDate = new Date(validItems[validItems.length - 1]._date);
+            endDate.setMonth(endDate.getMonth() + 1); // Fim do período
+
+            const totalMs = endDate - startDate;
+            const timelineWidth = Math.max(container.offsetWidth, 1200);
+
+            const timelineWrapper = document.createElement('div');
+            timelineWrapper.className = 'bg-white border border-slate-200 rounded-3xl p-8 shadow-sm overflow-x-auto custom-scrollbar';
+            
+            // Gerador de Meses no topo
+            let monthsHtml = '';
+            let current = new Date(startDate);
+            while (current < endDate) {
+                const left = ((current - startDate) / totalMs) * 100;
+                monthsHtml += `
+                    <div class="absolute top-0 border-l border-slate-200 h-full pl-2" style="left: ${left}%">
+                        <span class="text-[10px] font-black text-slate-400 uppercase tracking-widest">${current.toLocaleDateString('pt-BR', {month: 'short', year: '2-digit'})}</span>
+                    </div>
+                `;
+                current.setMonth(current.getMonth() + 1);
+            }
+
+            // Gerador de Pontos
+            const pointsHtml = validItems.map((item, idx) => {
+                const left = ((item._date - startDate) / totalMs) * 100;
+                const offset = (idx % 3) * 40; // Desenpila verticalmente
+                return `
+                    <div class="absolute group cursor-pointer" style="left: ${left}%; top: ${80 + offset}px">
+                        <div class="w-4 h-4 rounded-full ${item._done ? 'bg-emerald-500' : 'bg-indigo-600'} border-4 border-white shadow-sm hover:scale-125 transition-transform"></div>
+                        <!-- Tooltip -->
+                        <div class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 hidden group-hover:block w-48 z-10">
+                            <div class="bg-slate-900 text-white text-[10px] p-3 rounded-lg shadow-xl">
+                                <p class="font-bold opacity-70 mb-1">${item.data_prevista}</p>
+                                <p class="font-medium">${item.descricao}</p>
+                            </div>
+                            <div class="w-2 h-2 bg-slate-900 rotate-45 mx-auto -mt-1"></div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            timelineWrapper.innerHTML = `
+                <div class="relative" style="width: ${timelineWidth}px; min-height: 260px;">
+                    <div class="absolute top-10 left-0 w-full h-px bg-slate-200"></div>
+                    ${monthsHtml}
+                    <div class="absolute top-10 left-0 w-full h-1 bg-gradient-to-r from-indigo-500 to-indigo-300 rounded-full mt-24 opacity-10"></div>
+                    ${pointsHtml}
+                </div>
+            `;
+            container.appendChild(timelineWrapper);
+        }
+
+        function renderStats() {
+            const total = APP_STATE.data.length;
+            const done = APP_STATE.data.filter(i => i._done).length;
+            const perc = Math.round((done / total) * 100) || 0;
+
+            document.getElementById('stats-container').innerHTML = `
+                <div class="bg-white p-6 rounded-2xl border border-slate-200">
+                    <p class="text-xs font-black text-slate-400 uppercase tracking-widest mb-1">Status</p>
+                    <p class="text-3xl font-black text-slate-900">${perc}% <span class="text-xs text-slate-400 font-bold uppercase tracking-tight">Fiel</span></p>
+                </div>
+                <div class="bg-white p-6 rounded-2xl border border-slate-200">
+                    <p class="text-xs font-black text-slate-400 uppercase tracking-widest mb-1">Concluído</p>
+                    <p class="text-3xl font-black text-emerald-600">${done} <span class="text-xs text-slate-400 font-bold uppercase tracking-tight">/ ${total}</span></p>
+                </div>
+                <div class="bg-white p-6 rounded-2xl border border-slate-200">
+                    <p class="text-xs font-black text-slate-400 uppercase tracking-widest mb-1">Próximo Marco</p>
+                    <p class="text-sm font-bold text-slate-700 truncate">${APP_STATE.data.find(i => !i._done)?.descricao || 'Nenhum'}</p>
+                </div>
+            `;
+        }
+
+        function showError(msg) {
+            document.getElementById('status-message').innerHTML = `<p class="text-red-500 font-bold">${msg}</p>`;
         }
 
         window.addEventListener('DOMContentLoaded', initApp);
