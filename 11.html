@@ -8,7 +8,7 @@
 
 <body class="bg-slate-100 text-slate-800">
 
-<main class="max-w-7xl mx-auto p-6 space-y-12">
+<main class="max-w-7xl mx-auto p-6 space-y-14">
 
   <header class="text-center space-y-2">
     <h1 class="text-3xl font-bold">
@@ -24,73 +24,84 @@
 </main>
 
 <script>
-const fases = [
-  {
-    titulo: "🟦 FASE 1 – Atos Institucionais e Estruturação",
-    url: "https://docs.google.com/spreadsheets/d/e/2PACX-1vT-5x076YH0t-mm6JMJ0xRVys9MSgYmx__uofTX8JsbOxFH9LVUriyTMy-oUgiBN8D8hxC1MumyxccZ/pub?gid=1535549349&single=true&output=csv",
-    cor: "border-blue-500 bg-blue-50"
-  },
-  {
-    titulo: "🟩 FASE 2 – Planejamento Operacional e Comunicação",
-    url: "https://docs.google.com/spreadsheets/d/e/2PACX-1vT-5x076YH0t-mm6JMJ0xRVys9MSgYmx__uofTX8JsbOxFH9LVUriyTMy-oUgiBN8D8hxC1MumyxccZ/pub?gid=236489178&single=true&output=csv",
-    cor: "border-green-500 bg-green-50"
-  },
-  {
-    titulo: "🟨 PRÉ-CONFERÊNCIAS – Execução",
-    url: "https://docs.google.com/spreadsheets/d/e/2PACX-1vT-5x076YH0t-mm6JMJ0xRVys9MSgYmx__uofTX8JsbOxFH9LVUriyTMy-oUgiBN8D8hxC1MumyxccZ/pub?gid=167556386&single=true&output=csv",
-    cor: "border-yellow-500 bg-yellow-50"
-  },
-  {
-    titulo: "🟦 FASE 4 – Preparação Final",
-    url: "https://docs.google.com/spreadsheets/d/e/2PACX-1vT-5x076YH0t-mm6JMJ0xRVys9MSgYmx__uofTX8JsbOxFH9LVUriyTMy-oUgiBN8D8hxC1MumyxccZ/pub?gid=1219958470&single=true&output=csv",
-    cor: "border-indigo-500 bg-indigo-50"
-  },
-  {
-    titulo: "🟥 CONFERÊNCIA MUNICIPAL",
-    url: "https://docs.google.com/spreadsheets/d/e/2PACX-1vT-5x076YH0t-mm6JMJ0xRVys9MSgYmx__uofTX8JsbOxFH9LVUriyTMy-oUgiBN8D8hxC1MumyxccZ/pub?gid=1255324166&single=true&output=csv",
-    cor: "border-red-500 bg-red-50"
-  },
-  {
-    titulo: "🟪 PÓS-CONFERÊNCIA",
-    url: "https://docs.google.com/spreadsheets/d/e/2PACX-1vT-5x076YH0t-mm6JMJ0xRVys9MSgYmx__uofTX8JsbOxFH9LVUriyTMy-oUgiBN8D8hxC1MumyxccZ/pub?gid=1055030855&single=true&output=csv",
-    cor: "border-purple-500 bg-purple-50"
-  }
-];
+const CSV_URL =
+  "https://docs.google.com/spreadsheets/d/e/2PACX-1vT-5x076YH0t-mm6JMJ0xRVys9MSgYmx__uofTX8JsbOxFH9LVUriyTMy-oUgiBN8D8hxC1MumyxccZ/pub?gid=1535549349&single=true&output=csv";
 
-async function carregarFase(fase) {
-  const res = await fetch(fase.url);
+const CORES_FASE = {
+  1: "border-blue-500 bg-blue-50",
+  2: "border-green-500 bg-green-50",
+  3: "border-yellow-500 bg-yellow-50",
+  4: "border-indigo-500 bg-indigo-50",
+  5: "border-red-500 bg-red-50",
+  6: "border-purple-500 bg-purple-50"
+};
+
+async function carregarDados() {
+  const res = await fetch(CSV_URL);
   const text = await res.text();
-  const rows = text.trim().split("\n").map(r => r.split(","));
 
-  const headers = rows.shift();
+  const linhas = text.trim().split("\n").map(l => l.split(","));
+  const cabecalho = linhas.shift();
 
-  const table = `
-    <section class="rounded-xl border-l-8 ${fase.cor} p-6 shadow">
-      <h2 class="text-xl font-semibold mb-4">${fase.titulo}</h2>
+  const dados = linhas.map(linha => {
+    const obj = {};
+    cabecalho.forEach((h, i) => obj[h.trim()] = (linha[i] || "").trim());
+    return obj;
+  });
+
+  const fases = {};
+
+  dados.forEach(item => {
+    const fase = item.fase;
+    if (!fases[fase]) fases[fase] = [];
+    fases[fase].push(item);
+  });
+
+  Object.keys(fases)
+    .sort((a, b) => a - b)
+    .forEach(fase => renderizarFase(fase, fases[fase]));
+}
+
+function renderizarFase(fase, itens) {
+  const titulo = itens[0].etapa;
+  const cor = CORES_FASE[fase] || "border-slate-400 bg-slate-50";
+
+  const linhas = itens.map(i => `
+    <tr class="border-t">
+      <td class="p-2 text-center">${i.n || "—"}</td>
+      <td class="p-2">${i.descricao}</td>
+      <td class="p-2 whitespace-nowrap">${i.data_prevista}</td>
+    </tr>
+  `).join("");
+
+  const html = `
+    <section class="rounded-xl border-l-8 ${cor} p-6 shadow">
+      <h2 class="text-xl font-semibold mb-4">
+        ${fase} – ${titulo}
+      </h2>
 
       <div class="overflow-x-auto">
-        <table class="min-w-full border-collapse text-sm">
+        <table class="min-w-full text-sm border-collapse">
           <thead>
-            <tr>
-              ${headers.map(h => `<th class="text-left p-2 font-medium">${h}</th>`).join("")}
+            <tr class="text-left">
+              <th class="p-2 w-16">Nº</th>
+              <th class="p-2">Etapa / Ação</th>
+              <th class="p-2 w-40">Data</th>
             </tr>
           </thead>
           <tbody>
-            ${rows.map(r => `
-              <tr class="border-t">
-                ${r.map(c => `<td class="p-2">${c}</td>`).join("")}
-              </tr>
-            `).join("")}
+            ${linhas}
           </tbody>
         </table>
       </div>
     </section>
   `;
 
-  document.getElementById("fases").insertAdjacentHTML("beforeend", table);
+  document.getElementById("fases")
+    .insertAdjacentHTML("beforeend", html);
 }
 
-fases.forEach(carregarFase);
+carregarDados();
 </script>
 
 </body>
