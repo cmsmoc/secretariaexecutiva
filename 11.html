@@ -1,129 +1,556 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-br">
 <head>
-  <meta charset="UTF-8" />
-  <title>Pré-Conferências – 11ª Conferência Municipal de Saúde de Montes Claros</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-  <!-- Tailwind CDN -->
-  <script src="https://cdn.tailwindcss.com"></script>
-
-  <!-- Configuração básica Tailwind -->
-  <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          colors: {
-            susBlue: '#0B5ED7',
-            susGreen: '#198754',
-            susYellow: '#FFC107'
-          }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>11ª Conferência Municipal de Saúde - Cronograma</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #f8fafc;
+            overflow-x: hidden;
+            scroll-behavior: smooth;
         }
-      }
-    }
-  </script>
+        
+        .timeline-wrapper {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 600px;
+            width: 100%;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card-track {
+            display: flex;
+            transition: transform 0.7s cubic-bezier(0.19, 1, 0.22, 1);
+            position: absolute;
+            left: 50%;
+        }
+
+        .step-card {
+            transition: all 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+            min-width: 380px;
+            max-width: 380px;
+            transform-origin: center center;
+        }
+
+        .step-card.active {
+            transform: scale(1.05);
+            z-index: 50;
+            opacity: 1;
+            box-shadow: 0 40px 80px -15px rgba(0, 0, 0, 0.15);
+        }
+
+        .step-card.inactive {
+            transform: scale(0.75) translateY(20px);
+            opacity: 0.3;
+            filter: blur(2px);
+            pointer-events: none;
+        }
+
+        .view-content {
+            transition: opacity 0.5s ease, transform 0.5s ease;
+        }
+        
+        .hidden-view {
+            display: none;
+            opacity: 0;
+            transform: translateY(30px);
+        }
+
+        /* Dynamic Background Backgrounds */
+        .bg-phase-1 { background-color: #f0f7ff; } /* Blue */
+        .bg-phase-2 { background-color: #f0fdf4; } /* Green */
+        .bg-phase-3 { background-color: #fffbeb; } /* Yellow */
+        .bg-phase-4 { background-color: #eff6ff; } /* Blue alt */
+        .bg-phase-5 { background-color: #f1f5f9; } /* Slate/Black */
+        .bg-phase-6 { background-color: #faf5ff; } /* Purple/Blue */
+
+        .glass-header {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+        }
+
+        /* Time progress bar markers */
+        .time-dot {
+            transition: all 0.3s ease;
+        }
+        .time-dot.active {
+            transform: scale(1.8);
+            background-color: #2563eb;
+            box-shadow: 0 0 10px rgba(37, 99, 235, 0.5);
+        }
+        
+        .custom-scrollbar::-webkit-scrollbar { height: 4px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+    </style>
 </head>
+<body class="bg-slate-50 text-slate-900 transition-colors duration-700">
 
-<body class="bg-gray-50 text-gray-800">
-
-  <!-- Cabeçalho -->
-  <header class="bg-susBlue text-white py-10 px-6">
-    <div class="max-w-6xl mx-auto">
-      <h1 class="text-3xl md:text-4xl font-bold">
-        11ª Conferência Municipal de Saúde
-      </h1>
-      <p class="text-lg mt-2">
-        Montes Claros – MG
-      </p>
-      <p class="mt-4 text-susYellow font-semibold">
-        Informações das Pré-Conferências
-      </p>
-    </div>
-  </header>
-
-  <!-- Conteúdo -->
-  <main class="max-w-6xl mx-auto px-6 py-12">
-    
-    <div id="loading" class="text-center text-gray-500">
-      Carregando informações das pré-conferências…
-    </div>
-
-    <div id="cards" class="grid gap-6 md:grid-cols-2 lg:grid-cols-3 hidden">
-      <!-- Cards gerados automaticamente -->
-    </div>
-
-  </main>
-
-  <!-- Rodapé -->
-  <footer class="bg-gray-100 text-center py-6 text-sm text-gray-600">
-    Conselho Municipal de Saúde de Montes Claros · SUS · Controle Social
-  </footer>
-
-  <!-- Script -->
-  <script>
-    const csvUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vT1QYVGTBNucVjwiDIazr3cKailQZ0hmR8hclCwURvwM2zCsIrwJHPjliAfofXp2TUSY4G-MH5BS8zO/pub?gid=1331650730&single=true&output=csv";
-
-    fetch(csvUrl)
-      .then(response => response.text())
-      .then(csvText => {
-        const rows = csvText.split("\n").map(row => row.split(","));
-        const headers = rows.shift().map(h => h.trim());
-
-        const cardsContainer = document.getElementById("cards");
-        const loading = document.getElementById("loading");
-
-        rows.forEach(row => {
-          if (row.length < headers.length) return;
-
-          const data = {};
-          headers.forEach((header, index) => {
-            data[header] = row[index]?.replace(/"/g, "").trim();
-          });
-
-          const card = document.createElement("div");
-          card.className = "bg-white border-l-4 border-susGreen rounded-lg shadow-sm p-6 flex flex-col justify-between";
-
-          card.innerHTML = `
-            <div>
-              <h2 class="text-xl font-bold text-susBlue mb-3">
-                ${data["TEMA"] || ""}
-              </h2>
-
-              <p class="mb-2">
-                <span class="font-semibold">📅 Data:</span> ${data["DATA"] || ""}
-              </p>
-
-              <p class="mb-2">
-                <span class="font-semibold">⏰ Horário:</span> ${data["HORA"] || ""}
-              </p>
-
-              <p class="mb-4">
-                <span class="font-semibold">📍 Local:</span> ${data["LOCAL"] || ""}
-              </p>
+    <!-- Header -->
+    <header class="glass-header border-b border-slate-200 sticky top-0 z-[100] px-4 py-3">
+        <div class="max-w-7xl mx-auto flex flex-col lg:flex-row justify-between items-center gap-4">
+            <div class="flex items-center gap-3">
+                <div class="bg-blue-600 p-2.5 rounded-2xl text-white shadow-lg shadow-blue-200">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4.8 2.3A.3.3 0 1 0 5 2H4a2 2 0 0 0-2 2v5a2 2 0 0 0 2 2h1a.3.3 0 1 0 .2-.3Z"/><path d="M8.2 21.7a.3.3 0 1 0-.2.3h1a2 2 0 0 0 2-2v-5a2 2 0 0 0-2-2H8a.3.3 0 1 0-.2.3Z"/><path d="M15.8 2.3a.3.3 0 1 0 .2-.3h-1a2 2 0 0 0-2 2v5a2 2 0 0 0 2 2h1a.3.3 0 1 0 .2-.3Z"/><path d="M19.2 21.7a.3.3 0 1 0-.2.3h1a2 2 0 0 0 2-2v-5a2 2 0 0 0-2-2h-1a.3.3 0 1 0-.2.3Z"/><path d="M2 9v11a2 2 0 0 0 2 2h14"/><path d="M22 15V4a2 2 0 0 0-2-2H10"/></svg>
+                </div>
+                <div>
+                    <h1 class="text-xl font-extrabold tracking-tight text-slate-900">11ª CONFERÊNCIA MUNICIPAL DE SAÚDE</h1>
+                    <div class="flex items-center gap-2">
+                        <span class="inline-block w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
+                        <p class="text-slate-500 font-medium text-xs uppercase tracking-widest">Cronograma Estratégico 2026</p>
+                    </div>
+                </div>
             </div>
 
-            ${
-              data["LINK PARA LISTA DE PRESENÇA"]
-              ? `<a href="${data["LINK PARA LISTA DE PRESENÇA"]}" target="_blank"
-                   class="mt-4 inline-block text-center bg-susBlue text-white font-semibold py-2 px-4 rounded hover:bg-blue-800 transition">
-                   Lista de Presença
-                 </a>`
-              : ""
-            }
-          `;
+            <!-- View Toggles -->
+            <div class="flex bg-slate-200/50 p-1 rounded-2xl border border-slate-200">
+                <button onclick="setView('timeline')" id="btn-timeline" class="flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-bold transition-all btn-view-active">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+                    Timeline
+                </button>
+                <button onclick="setView('list')" id="btn-list" class="flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-bold text-slate-500 transition-all hover:text-slate-800">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+                    Lista
+                </button>
+                <button onclick="setView('grid')" id="btn-grid" class="flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-bold text-slate-500 transition-all hover:text-slate-800">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+                    Grade
+                </button>
+            </div>
+        </div>
+    </header>
 
-          cardsContainer.appendChild(card);
+    <!-- Phase Navigator -->
+    <div class="bg-white border-b border-slate-200 overflow-x-auto custom-scrollbar sticky top-[72px] z-40">
+        <nav id="phase-nav" class="max-w-7xl mx-auto flex gap-1 p-2 min-w-max px-4">
+            <!-- Injected by JS -->
+        </nav>
+    </div>
+
+    <!-- MAIN APP WRAPPER -->
+    <main id="app-main" class="relative min-h-[calc(100vh-140px)] transition-all duration-1000">
+
+        <!-- TIMELINE PROGRESS TOP BAR -->
+        <div id="timeline-progress-container" class="sticky top-[136px] z-30 h-10 w-full px-12 md:px-24 flex items-center bg-white/30 backdrop-blur-sm border-b border-slate-200/50">
+             <div class="relative w-full h-1 bg-slate-200 rounded-full">
+                 <div id="progress-line" class="absolute left-0 top-0 h-full bg-blue-600 rounded-full transition-all duration-700" style="width: 0%"></div>
+                 <div id="dots-container" class="absolute inset-0 w-full h-full">
+                     <!-- Dots injected by JS -->
+                 </div>
+             </div>
+        </div>
+
+        <!-- VIEW: TIMELINE -->
+        <section id="view-timeline" class="view-content flex flex-col items-center justify-center py-8">
+            <div class="relative w-full overflow-hidden flex items-center justify-center min-h-[550px]">
+                
+                <!-- Nav Controls -->
+                <div class="absolute inset-x-0 top-1/2 -translate-y-1/2 flex justify-between px-4 lg:px-24 pointer-events-none z-50">
+                    <button onclick="prevStep()" class="pointer-events-auto bg-white hover:bg-slate-50 text-blue-600 p-6 rounded-full shadow-2xl transition-all border border-slate-100 active:scale-90 group">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+                    </button>
+                    <button onclick="nextStep()" class="pointer-events-auto bg-white hover:bg-slate-50 text-blue-600 p-6 rounded-full shadow-2xl transition-all border border-slate-100 active:scale-90 group">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+                    </button>
+                </div>
+
+                <div id="card-track" class="card-track">
+                    <!-- Cards Injected by JS -->
+                </div>
+            </div>
+
+            <!-- Focus Info -->
+            <div class="mt-8 text-center px-4">
+                <div id="counter" class="text-slate-400 font-black text-[10px] tracking-[0.5em] mb-4 uppercase">ETAPA 01 DE 63</div>
+                <div class="inline-flex flex-col items-center px-10 py-6 bg-white rounded-[2.5rem] shadow-2xl border border-white/50 ring-1 ring-slate-200/20">
+                    <span id="current-phase-name" class="text-[10px] font-black tracking-[0.2em] text-blue-600 mb-2 uppercase">FASE 1</span>
+                    <h2 id="current-title-summary" class="text-xl font-extrabold text-slate-800 max-w-xl leading-snug">Carregando etapa...</h2>
+                </div>
+            </div>
+        </section>
+
+        <!-- VIEW: LIST -->
+        <section id="view-list" class="view-content hidden-view max-w-5xl mx-auto py-16 px-6">
+            <div id="list-container" class="space-y-16">
+                <!-- Grouped List Injected by JS -->
+            </div>
+        </section>
+
+        <!-- VIEW: GRID -->
+        <section id="view-grid" class="view-content hidden-view max-w-7xl mx-auto py-16 px-6">
+            <div id="grid-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+                <!-- Cards Injected by JS -->
+            </div>
+        </section>
+
+    </main>
+
+    <script>
+        const cronograma = [
+            // FASE 1
+            { id: 1, fase: 1, cor: 'blue', titulo: "Convocação Oficial da Conferência", data: "✅ 21/01/2026", icon: "megaphone", day: 21, month: 0 },
+            { id: 2, fase: 1, cor: 'blue', titulo: "Publicação da Convocação no Diário Oficial", data: "21–24/01/2026", icon: "scroll", day: 24, month: 0 },
+            { id: 3, fase: 1, cor: 'blue', titulo: "Confirmação das datas da Conferência Municipal", data: "21–24/01/2026", icon: "calendar-check", day: 24, month: 0 },
+            { id: 4, fase: 1, cor: 'blue', titulo: "Confirmação das datas das Pré-Conferências", data: "até 25/01/2026", icon: "clock", day: 25, month: 0 },
+            { id: 5, fase: 1, cor: 'blue', titulo: "Definição e confirmação do local da Conferência Municipal", data: "até 30/01/2026", icon: "map-pin", day: 30, month: 0 },
+            { id: 6, fase: 1, cor: 'blue', titulo: "Instituição da Comissão Organizadora (Portaria)", data: "até 30/01/2026", icon: "gavel", day: 30, month: 0 },
+            { id: 7, fase: 1, cor: 'blue', titulo: "Publicação da Comissão Organizadora", data: "até 05/02/2026", icon: "file-search", day: 5, month: 1 },
+            { id: 8, fase: 1, cor: 'blue', titulo: "Definição da Secretaria Executiva da Conferência", data: "até 05/02/2026", icon: "shield", day: 5, month: 1 },
+            { id: 9, fase: 1, cor: 'blue', titulo: "Elaboração e aprovação do Regimento Interno da Conferência", data: "até 10/02/2026", icon: "book-open", day: 10, month: 1 },
+            { id: 10, fase: 1, cor: 'blue', titulo: "Publicação do Regimento Interno", data: "até 15/02/2026", icon: "file-signature", day: 15, month: 1 },
+            { id: 11, fase: 1, cor: 'blue', titulo: "Definição do Tema, Eixos e Diretrizes", data: "até 10/02/2026", icon: "lightbulb", day: 10, month: 1 },
+            { id: 12, fase: 1, cor: 'blue', titulo: "Definição da metodologia geral da Conferência", data: "até 15/02/2026", icon: "settings", day: 15, month: 1 },
+            { id: 13, fase: 1, cor: 'blue', titulo: "Definição da metodologia das Pré-Conferências", data: "até 15/02/2026", icon: "git-branch", day: 15, month: 1 },
+            
+            // FASE 2
+            { id: 14, fase: 2, cor: 'green', titulo: "Planejamento orçamentário da Conferência", data: "até 05/02/2026", icon: "bank", day: 5, month: 1 },
+            { id: 15, fase: 2, cor: 'green', titulo: "Definição de fornecedores e estrutura logística", data: "até 10/02/2026", icon: "truck", day: 10, month: 1 },
+            { id: 16, fase: 2, cor: 'green', titulo: "Definição de alimentação, transporte e infraestrutura", data: "até 10/02/2026", icon: "coffee", day: 10, month: 1 },
+            { id: 17, fase: 2, cor: 'green', titulo: "Definição do canal oficial de comunicação", data: "até 05/02/2026", icon: "at-sign", day: 5, month: 1 },
+            { id: 18, fase: 2, cor: 'green', titulo: "Criação da identidade visual oficial", data: "até 05/02/2026", icon: "palette", day: 5, month: 1 },
+            { id: 19, fase: 2, cor: 'green', titulo: "Produção das artes de divulgação", data: "até 10/02/2026", icon: "image", day: 10, month: 1 },
+            { id: 20, fase: 2, cor: 'green', titulo: "Criação de página/site informativa", data: "até 10/02/2026", icon: "globe", day: 10, month: 1 },
+            { id: 21, fase: 2, cor: 'green', titulo: "Divulgação institucional da Conferência", data: "a partir de 10/02/2026", icon: "radio", day: 12, month: 1 },
+            { id: 22, fase: 2, cor: 'green', titulo: "Divulgação das Pré-Conferências", data: "a partir de 15/02/2026", icon: "megaphone", day: 15, month: 1 },
+            { id: 23, fase: 2, cor: 'green', titulo: "Definição de formulários e inscrições", data: "até 20/02/2026", icon: "clipboard-list", day: 20, month: 1 },
+            { id: 24, fase: 2, cor: 'green', titulo: "Preparação dos modelos de ata e relatórios", data: "até 20/02/2026", icon: "file-plus", day: 20, month: 1 },
+
+            // FASE 3
+            { id: 'p1', fase: 3, cor: 'yellow', titulo: "Pré-Conferência: Servidores Municipais", data: "10/03/2026", icon: "users", day: 10, month: 2 },
+            { id: 'p2', fase: 3, cor: 'yellow', titulo: "Pré-Conferência: Prestadores e PCDs", data: "11/03/2026", icon: "accessibility", day: 11, month: 2 },
+            { id: 'p3', fase: 3, cor: 'yellow', titulo: "Pré-Conferência: Região Grande Renascença", data: "12/03/2026", icon: "map-pin", day: 12, month: 2 },
+            { id: 'p4', fase: 3, cor: 'yellow', titulo: "Pré-Conferência: Região Grande Santos Reis", data: "13/03/2026", icon: "map-pin", day: 13, month: 2 },
+            { id: 'p5', fase: 3, cor: 'yellow', titulo: "Pré-Conferência: Região Grande Delfino", data: "17/03/2026", icon: "map-pin", day: 17, month: 2 },
+            { id: 'p6', fase: 3, cor: 'yellow', titulo: "Pré-Conferência: Região Grande Independência", data: "18/03/2026", icon: "map-pin", day: 18, month: 2 },
+            { id: 'p7', fase: 3, cor: 'yellow', titulo: "Pré-Conferência: Região Grande Major Prates", data: "19/03/2026", icon: "map-pin", day: 19, month: 2 },
+            { id: 'p8', fase: 3, cor: 'yellow', titulo: "Pré-Conferência: Região Grande Maracanã", data: "20/03/2026", icon: "map-pin", day: 20, month: 2 },
+            { id: 'p9', fase: 3, cor: 'yellow', titulo: "Pré-Conferência: População LGBTQIA+", data: "23/03/2026", icon: "heart", day: 23, month: 2 },
+            { id: 'p10', fase: 3, cor: 'yellow', titulo: "Pré-Conferência: Zona Rural", data: "24/03/2026", icon: "mountain", day: 24, month: 2 },
+            { id: 'p11', fase: 3, cor: 'yellow', titulo: "Pré-Conferência: Igualdade Racial", data: "25/03/2026", icon: "sun", day: 25, month: 2 },
+            { id: 'p12', fase: 3, cor: 'yellow', titulo: "Pré-Conferência: Saúde da Mulher", data: "26/03/2026", icon: "sparkles", day: 26, month: 2 },
+            { id: 'p13', fase: 3, cor: 'yellow', titulo: "Pré-Conferência: População Rua", data: "27/03/2026", icon: "hand", day: 27, month: 2 },
+            { id: 25, fase: 3, cor: 'yellow', titulo: "Realização das Pré-Conferências", data: "10 a 27/03/2026", icon: "play", day: 20, month: 2 },
+            { id: 26, fase: 3, cor: 'yellow', titulo: "Credenciamento nas Pré", data: "em cada data", icon: "badge", day: 20, month: 2 },
+            { id: 27, fase: 3, cor: 'yellow', titulo: "Registro das presenças", data: "em cada data", icon: "list", day: 20, month: 2 },
+            { id: 28, fase: 3, cor: 'yellow', titulo: "Registro das propostas", data: "em cada data", icon: "message-square", day: 20, month: 2 },
+            { id: 29, fase: 3, cor: 'yellow', titulo: "Eleição de delegados municipais", data: "em cada data", icon: "vote", day: 20, month: 2 },
+            { id: 30, fase: 3, cor: 'yellow', titulo: "Consolidação das propostas", data: "28–31/03/2026", icon: "git-pull-request", day: 30, month: 2 },
+            { id: 31, fase: 3, cor: 'yellow', titulo: "Lista de delegados eleitos", data: "até 31/03/2026", icon: "users-round", day: 31, month: 2 },
+            { id: 32, fase: 3, cor: 'yellow', titulo: "Validação documental", data: "até 02/04/2026", icon: "shield-check", day: 2, month: 3 },
+
+            // FASE 4
+            { id: 33, fase: 4, cor: 'blue', titulo: "Sistematização das propostas", data: "01–05/04/2026", icon: "layers", day: 4, month: 3 },
+            { id: 34, fase: 4, cor: 'blue', titulo: "Preparação do Caderno de Propostas", data: "até 05/04/2026", icon: "book", day: 5, month: 3 },
+            { id: 35, fase: 4, cor: 'blue', titulo: "Preparação da Programação Final", data: "até 05/04/2026", icon: "calendar", day: 5, month: 3 },
+            { id: 36, fase: 4, cor: 'blue', titulo: "Divulgação da Programação Oficial", data: "até 10/04/2026", icon: "share", day: 10, month: 3 },
+            { id: 37, fase: 4, cor: 'blue', titulo: "Metodologia da Plenária Final", data: "até 05/04/2026", icon: "settings-2", day: 5, month: 3 },
+            { id: 38, fase: 4, cor: 'blue', titulo: "Organização dos grupos de trabalho", data: "até 10/04/2026", icon: "network", day: 10, month: 3 },
+            { id: 39, fase: 4, cor: 'blue', titulo: "Preparação da equipe de apoio", data: "até 10/04/2026", icon: "support", day: 10, month: 3 },
+            { id: 40, fase: 4, cor: 'blue', titulo: "Preparação do credenciamento", data: "até 15/04/2026", icon: "id-card", day: 15, month: 3 },
+            { id: 41, fase: 4, cor: 'blue', titulo: "Preparação dos certificados", data: "até 15/04/2026", icon: "award", day: 15, month: 3 },
+            { id: 42, fase: 4, cor: 'blue', titulo: "Preparação de materiais e pastas", data: "até 15/04/2026", icon: "package", day: 15, month: 3 },
+            { id: 43, fase: 4, cor: 'blue', titulo: "Confirmação de estrutura e som", data: "até 18/04/2026", icon: "tv", day: 18, month: 3 },
+            { id: 44, fase: 4, cor: 'blue', titulo: "Reunião final da Comissão", data: "até 18/04/2026", icon: "users", day: 18, month: 3 },
+
+            // FASE 5
+            { id: 45, fase: 5, cor: 'black', titulo: "Credenciamento geral", data: "22/04/2026", icon: "fingerprint", day: 22, month: 3 },
+            { id: 46, fase: 5, cor: 'black', titulo: "Abertura oficial", data: "22/04/2026", icon: "star", day: 22, month: 3 },
+            { id: 47, fase: 5, cor: 'black', titulo: "Aprovação do Regimento", data: "22/04/2026", icon: "file-check", day: 22, month: 3 },
+            { id: 48, fase: 5, cor: 'black', titulo: "Mesa institucional", data: "22/04/2026", icon: "landmark", day: 22, month: 3 },
+            { id: 49, fase: 5, cor: 'black', titulo: "Plenária temática", data: "22/04/2026", icon: "presentation", day: 22, month: 3 },
+            { id: 50, fase: 5, cor: 'black', titulo: "Trabalhos em grupos", data: "23/04/2026", icon: "group", day: 23, month: 3 },
+            { id: 51, fase: 5, cor: 'black', titulo: "Relatoria ativa", data: "23/04/2026", icon: "pen", day: 23, month: 3 },
+            { id: 52, fase: 5, cor: 'black', titulo: "Consolidação deliberações", data: "24/04/2026", icon: "save", day: 24, month: 3 },
+            { id: 53, fase: 5, cor: 'black', titulo: "Plenária Final", data: "24/04/2026", icon: "microphone", day: 24, month: 3 },
+            { id: 54, fase: 5, cor: 'black', titulo: "Eleição etapa estadual", data: "24/04/2026", icon: "flag", day: 24, month: 3 },
+            { id: 55, fase: 5, cor: 'black', titulo: "Encerramento oficial", data: "24/04/2026", icon: "check-circle", day: 24, month: 3 },
+
+            // FASE 6
+            { id: 56, fase: 6, cor: 'blue', titulo: "Consolidação final", data: "até 28/04/2026", icon: "archive", day: 28, month: 3 },
+            { id: 57, fase: 6, cor: 'blue', titulo: "Elaboração Relatório Final", data: "até 05/05/2026", icon: "file-bar-chart", day: 5, month: 4 },
+            { id: 58, fase: 6, cor: 'blue', titulo: "Aprovação pelo CMS", data: "até 10/05/2026", icon: "thumbs-up", day: 10, month: 4 },
+            { id: 59, fase: 6, cor: 'blue', titulo: "Publicação Relatório Final", data: "até 15/05/2026", icon: "newspaper", day: 15, month: 4 },
+            { id: 60, fase: 6, cor: 'blue', titulo: "Emissão dos certificados", data: "até 15/05/2026", icon: "scroll", day: 15, month: 4 },
+            { id: 61, fase: 6, cor: 'blue', titulo: "Envio de dados etapa estadual", data: "até 20/05/2026", icon: "send", day: 20, month: 4 },
+            { id: 62, fase: 6, cor: 'blue', titulo: "Arquivamento institucional", data: "até 20/05/2026", icon: "inbox", day: 20, month: 4 },
+            { id: 63, fase: 6, cor: 'blue', titulo: "Avaliação da organização", data: "até 20/05/2026", icon: "star-half", day: 20, month: 4 },
+        ];
+
+        const phases = [
+            { id: 1, name: "Atos e Estrutura", color: "blue", emoji: "🟦", icon: "gavel", themeClass: "bg-phase-1" },
+            { id: 2, name: "Planejamento", color: "green", emoji: "🟩", icon: "clipboard-edit", themeClass: "bg-phase-2" },
+            { id: 3, name: "Pré-Conferências", color: "yellow", emoji: "🟨", icon: "map-pinned", themeClass: "bg-phase-3" },
+            { id: 4, name: "Preparação Final", color: "blue", emoji: "🟦", icon: "settings-2", themeClass: "bg-phase-4" },
+            { id: 5, name: "O Evento", color: "black", emoji: "🟥", icon: "calendar-heart", themeClass: "bg-phase-5" },
+            { id: 6, name: "Pós-Evento", color: "blue", emoji: "🟪", icon: "file-check", themeClass: "bg-phase-6" }
+        ];
+
+        let currentIndex = 0;
+        let currentView = 'timeline';
+
+        // Helpers para Datas Temporais
+        const startTimestamp = new Date(2026, 0, 21).getTime();
+        const endTimestamp = new Date(2026, 4, 20).getTime();
+        const totalDuration = endTimestamp - startTimestamp;
+
+        function getPositionPercent(month, day) {
+            const date = new Date(2026, month, day).getTime();
+            return ((date - startTimestamp) / totalDuration) * 100;
+        }
+
+        // Renderização Variada de Ícones
+        function getIconSVG(name, color = "currentColor", size = 24) {
+            const icons = {
+                "megaphone": `<path d="m3 11 18-5v12L3 13v-2z"/><path d="M11.6 16.8a3 3 0 1 1-5.8-1.6"/>`,
+                "scroll": `<path d="M19 17V5a2 2 0 0 0-2-2H4"/><path d="M8 21h12a2 2 0 0 0 2-2v-1a1 1 0 0 0-1-1H11a1 1 0 0 0-1 1v1a2 2 0 1 1-4 0V5a2 2 0 1 0-4 0v2"/>`,
+                "calendar-check": `<rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/><path d="m9 16 2 2 4-4"/>`,
+                "clock": `<circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>`,
+                "map-pin": `<path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/>`,
+                "gavel": `<path d="m14.5 12.5-8 8a2.11 2.11 0 1 1-3-3l8-8"/><path d="m16 16 2 2"/><path d="m2 2 16 16"/><path d="m14.5 6.5 3-3a2.11 2.11 0 1 1 3 3l-3 3"/>`,
+                "file-search": `<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="m22 22-3-3"/><circle cx="16" cy="16" r="3"/>`,
+                "shield": `<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>`,
+                "book-open": `<path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>`,
+                "lightbulb": `<path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A5 5 0 0 0 8 8c0 1.3.5 2.6 1.5 3.5.8.8 1.3 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/>`,
+                "bank": `<rect x="2" y="17" width="20" height="3" rx="1"/><path d="M19 17V7"/><path d="M5 17V7"/><path d="M2 7l10-5 10 5"/><path d="M7 17v-4"/><path d="M17 17v-4"/><path d="M12 17v-4"/>`,
+                "truck": `<rect x="1" y="3" width="15" height="13"/><polyline points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/>`,
+                "at-sign": `<circle cx="12" cy="12" r="4"/><path d="M16 8v5a3 3 0 0 0 6 0v-1a10 10 0 1 0-3.92 7.94"/>`,
+                "globe": `<circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20"/><path d="M2 12h20"/><path d="M12 2a14.5 14.5 0 0 1 0 20"/>`,
+                "heart": `<path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/>`,
+                "users": `<path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>`,
+                "settings": `<path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.72V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.17a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/>`,
+                "send": `<line x1="22" y1="2" x2="11" y2="13"/><path d="m22 2-7 20-4-9-9-4Z"/>`,
+                "default": `<circle cx="12" cy="12" r="10"/><path d="M12 8v8"/><path d="M8 12h8"/>`
+            };
+            const path = icons[name] || icons["default"];
+            return `<svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="${color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${path}</svg>`;
+        }
+
+        // 1. TIMELINE RENDERING
+        function createTimeline() {
+            const track = document.getElementById('card-track');
+            const dots = document.getElementById('dots-container');
+
+            cronograma.forEach((item, index) => {
+                const card = document.createElement('div');
+                card.className = `step-card p-12 rounded-[3rem] bg-white border border-slate-100 flex flex-col items-center text-center cursor-pointer select-none mx-6`;
+                
+                const theme = getThemeColors(item.cor);
+                card.onclick = () => jumpTo(index);
+
+                card.innerHTML = `
+                    <div class="mb-10 p-6 rounded-3xl ${theme.bgSoft} ${theme.text} transform group-hover:rotate-12 transition-transform shadow-inner">
+                        ${getIconSVG(item.icon, theme.stroke, 42)}
+                    </div>
+                    <div class="flex flex-col mb-10">
+                        <span class="text-[10px] font-black uppercase tracking-[0.5em] mb-4 opacity-40">ITEM ${item.id}</span>
+                        <div class="h-1 w-12 bg-slate-100 mx-auto mb-6"></div>
+                        <h3 class="text-xl md:text-2xl font-black leading-tight text-slate-800">${item.titulo}</h3>
+                    </div>
+                    <div class="mt-auto pt-8 border-t border-slate-50 w-full">
+                        <span class="text-4xl md:text-5xl font-black ${theme.text} tracking-tighter drop-shadow-sm">${item.data.replace('✅ ', '')}</span>
+                        <div class="mt-2 text-[10px] font-bold text-slate-400 uppercase tracking-widest">Cronograma Previsto</div>
+                    </div>
+                `;
+                track.appendChild(card);
+
+                // Progress Dot
+                const dot = document.createElement('div');
+                dot.className = `time-dot absolute top-1/2 -translate-y-1/2 w-2 h-2 rounded-full bg-slate-300 border border-white cursor-pointer z-20`;
+                dot.style.left = `${getPositionPercent(item.month, item.day)}%`;
+                dot.title = item.titulo;
+                dot.onclick = () => jumpTo(index);
+                dots.appendChild(dot);
+            });
+        }
+
+        // 2. LIST VIEW
+        function createList() {
+            const container = document.getElementById('list-container');
+            phases.forEach(phase => {
+                const phaseItems = cronograma.filter(i => i.fase === phase.id);
+                const section = document.createElement('div');
+                section.innerHTML = `
+                    <div class="flex items-center gap-6 mb-8 sticky top-[150px] bg-slate-50/80 py-4 backdrop-blur-md z-30">
+                        <div class="w-16 h-16 rounded-[2rem] flex items-center justify-center text-white shadow-2xl ${getPhaseBg(phase.color)}">
+                            ${getIconSVG(phase.icon, "white", 28)}
+                        </div>
+                        <div>
+                            <h2 class="text-3xl font-black text-slate-900 leading-none">FASE ${phase.id}</h2>
+                            <p class="text-slate-500 font-bold text-sm tracking-widest uppercase mt-1">${phase.name}</p>
+                        </div>
+                    </div>
+                    <div class="grid gap-4 pl-0 md:pl-20">
+                        ${phaseItems.map(item => `
+                            <div class="flex flex-col md:flex-row md:items-center justify-between p-6 bg-white rounded-3xl border border-slate-100 shadow-sm hover:shadow-xl hover:scale-[1.01] transition-all group">
+                                <div class="flex items-center gap-5">
+                                    <div class="p-3 rounded-2xl ${getThemeColors(item.cor).bgSoft} ${getThemeColors(item.cor).text}">
+                                        ${getIconSVG(item.icon, getThemeColors(item.cor).stroke, 20)}
+                                    </div>
+                                    <h4 class="font-bold text-slate-700 group-hover:text-blue-600 transition-colors">${item.titulo}</h4>
+                                </div>
+                                <div class="mt-4 md:mt-0 flex items-center gap-3">
+                                    <span class="text-xs font-black px-5 py-2 rounded-2xl ${getThemeColors(item.cor).bgSoft} ${getThemeColors(item.cor).text}">${item.data}</span>
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                `;
+                container.appendChild(section);
+            });
+        }
+
+        // 3. GRID VIEW
+        function createGrid() {
+            const container = document.getElementById('grid-container');
+            cronograma.forEach(item => {
+                const theme = getThemeColors(item.cor);
+                const card = document.createElement('div');
+                card.className = `p-8 bg-white rounded-[2.5rem] border border-slate-100 shadow-sm hover:-translate-y-3 hover:shadow-3xl transition-all group flex flex-col`;
+                card.innerHTML = `
+                    <div class="flex justify-between items-start mb-6">
+                        <div class="p-4 rounded-2xl ${theme.bgSoft} ${theme.text} group-hover:scale-110 transition-transform">
+                             ${getIconSVG(item.icon, theme.stroke, 28)}
+                        </div>
+                        <span class="text-[9px] font-black opacity-30 tracking-[0.3em] uppercase">FASE ${item.fase}</span>
+                    </div>
+                    <h4 class="font-black text-slate-800 mb-6 leading-tight flex-grow">${item.titulo}</h4>
+                    <div class="mt-auto pt-6 border-t border-slate-50">
+                        <div class="text-[10px] text-slate-400 font-bold uppercase tracking-widest mb-1">DATA PREVISTA</div>
+                        <div class="text-2xl font-black ${theme.text} tracking-tighter">${item.data.replace('✅ ', '')}</div>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        // Helpers
+        function getThemeColors(cor) {
+            const themes = {
+                blue: { text: 'text-blue-600', bgSoft: 'bg-blue-50', stroke: '#2563eb' },
+                green: { text: 'text-green-600', bgSoft: 'bg-green-50', stroke: '#16a34a' },
+                yellow: { text: 'text-yellow-600', bgSoft: 'bg-yellow-50', stroke: '#ca8a04' },
+                black: { text: 'text-slate-900', bgSoft: 'bg-slate-100', stroke: '#0f172a' }
+            };
+            return themes[cor] || themes.blue;
+        }
+
+        function getPhaseBg(color) {
+            const colors = { blue: 'bg-blue-600', green: 'bg-green-600', yellow: 'bg-yellow-500', black: 'bg-slate-900' };
+            return colors[color] || 'bg-slate-400';
+        }
+
+        function createPhaseNav() {
+            const nav = document.getElementById('phase-nav');
+            phases.forEach(phase => {
+                const btn = document.createElement('button');
+                btn.className = `phase-indicator flex items-center gap-3 px-6 py-3 rounded-2xl text-sm font-bold transition-all border-2 border-transparent hover:bg-slate-50`;
+                btn.innerHTML = `
+                    <span class="p-1.5 rounded-lg ${getPhaseBg(phase.color)} text-white">
+                        ${getIconSVG(phase.icon, "white", 16)}
+                    </span>
+                    <span class="text-slate-400 whitespace-nowrap">${phase.name}</span>
+                `;
+                btn.onclick = () => jumpToPhase(phase.id);
+                nav.appendChild(btn);
+            });
+        }
+
+        function setView(view) {
+            currentView = view;
+            document.querySelectorAll('[id^="btn-"]').forEach(btn => btn.classList.remove('btn-view-active', 'bg-blue-600', 'text-white'));
+            const activeBtn = document.getElementById(`btn-${view}`);
+            activeBtn.classList.add('bg-blue-600', 'text-white');
+
+            document.querySelectorAll('.view-content').forEach(s => s.classList.add('hidden-view'));
+            setTimeout(() => {
+                document.querySelectorAll('.view-content').forEach(s => s.style.display = 'none');
+                const target = document.getElementById(`view-${view}`);
+                target.style.display = view === 'grid' ? 'grid' : (view === 'list' ? 'block' : 'flex');
+                setTimeout(() => target.classList.remove('hidden-view'), 50);
+            }, 500);
+
+            if (view === 'timeline') updateSlider();
+            else document.getElementById('timeline-progress-container').style.display = 'none';
+        }
+
+        function updateSlider() {
+            if (currentView !== 'timeline') return;
+            document.getElementById('timeline-progress-container').style.display = 'flex';
+            
+            const cards = document.querySelectorAll('.step-card');
+            const dots = document.querySelectorAll('.time-dot');
+            const track = document.getElementById('card-track');
+            
+            const cardWidth = 380; 
+            const gap = 48; // mx-6 = 1.5rem + 1.5rem
+            const totalStep = cardWidth + gap;
+
+            const trackOffset = -(currentIndex * totalStep) - (cardWidth / 2);
+            track.style.transform = `translateX(${trackOffset}px)`;
+
+            cards.forEach((card, index) => {
+                card.classList.toggle('active', index === currentIndex);
+                card.classList.toggle('inactive', index !== currentIndex);
+            });
+
+            const item = cronograma[currentIndex];
+            const phase = phases.find(p => p.id === item.fase);
+            
+            // Dynamic Background Update
+            const appMain = document.body;
+            phases.forEach(p => appMain.classList.remove(p.themeClass));
+            appMain.classList.add(phase.themeClass);
+
+            // Progress Bar Update
+            const percent = getPositionPercent(item.month, item.day);
+            document.getElementById('progress-line').style.width = `${percent}%`;
+            dots.forEach((dot, idx) => dot.classList.toggle('active', idx === currentIndex));
+
+            // Info text update
+            document.getElementById('counter').innerText = `ETAPA ${String(currentIndex + 1).padStart(2, '0')} DE ${cronograma.length}`;
+            document.getElementById('current-phase-name').innerText = `FASE ${item.fase} - ${phase.name}`;
+            document.getElementById('current-title-summary').innerText = item.titulo;
+
+            // Nav highlight
+            document.querySelectorAll('.phase-indicator').forEach((btn, i) => {
+                const isActive = (i + 1) === item.fase;
+                btn.classList.toggle('bg-white', isActive);
+                btn.classList.toggle('shadow-xl', isActive);
+                btn.classList.toggle('scale-105', isActive);
+                btn.querySelector('span:last-child').className = isActive ? 'text-slate-900' : 'text-slate-400';
+            });
+        }
+
+        function nextStep() { if (currentIndex < cronograma.length - 1) { currentIndex++; updateSlider(); } }
+        function prevStep() { if (currentIndex > 0) { currentIndex--; updateSlider(); } }
+        function jumpTo(index) { currentIndex = index; if(currentView !== 'timeline') setView('timeline'); updateSlider(); }
+        function jumpToPhase(id) { 
+            const idx = cronograma.findIndex(i => i.fase === id);
+            if (idx !== -1) { currentIndex = idx; if(currentView !== 'timeline') setView('timeline'); updateSlider(); } 
+        }
+
+        document.addEventListener('keydown', (e) => {
+            if (currentView === 'timeline') {
+                if (e.key === 'ArrowRight') nextStep();
+                if (e.key === 'ArrowLeft') prevStep();
+            }
+            if (e.key >= '1' && e.key <= '6') jumpToPhase(parseInt(e.key));
         });
 
-        loading.classList.add("hidden");
-        cardsContainer.classList.remove("hidden");
-      })
-      .catch(error => {
-        document.getElementById("loading").innerText =
-          "Erro ao carregar os dados. Verifique a planilha.";
-        console.error(error);
-      });
-  </script>
-
+        window.onload = () => {
+            createTimeline();
+            createList();
+            createGrid();
+            createPhaseNav();
+            updateSlider();
+            setView('timeline');
+        };
+    </script>
 </body>
 </html>
