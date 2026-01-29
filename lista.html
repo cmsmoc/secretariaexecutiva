@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>Confirmação de Presença – CMS Montes Claros</title>
+
+<style>
+body {
+    font-family: Inter, Arial, sans-serif;
+    background: #f4f6f8;
+    margin: 0;
+    padding: 30px;
+}
+
+h1 {
+    font-size: 22px;
+    margin-bottom: 24px;
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 16px;
+}
+
+.card {
+    background: #ffffff;
+    border: 1px solid #dcdcdc;
+    border-radius: 8px;
+    padding: 16px;
+    transition: all 0.2s ease;
+}
+
+.card.active {
+    border-color: #000;
+}
+
+.name {
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.actions {
+    display: none;
+    margin-top: 12px;
+}
+
+.card.active .actions {
+    display: block;
+}
+
+button {
+    padding: 6px 12px;
+    margin-top: 8px;
+    margin-right: 6px;
+    border-radius: 4px;
+    border: 1px solid #000;
+    background: #fff;
+    cursor: pointer;
+}
+
+button.primary {
+    background: #000;
+    color: #fff;
+}
+
+select, input[type="text"] {
+    width: 100%;
+    padding: 6px;
+    margin-top: 8px;
+}
+
+.submit {
+    margin-top: 40px;
+}
+</style>
+</head>
+
+<body>
+
+<h1>Confirmação de Presença – Conselho Municipal de Saúde</h1>
+
+<form
+  action="https://docs.google.com/forms/d/e/1FAIpQLSf8OzdnyNoyaMWPUFKb189v5lRG5a4X9HKnwhZlc0CnM2vR_w/formResponse"
+  method="POST"
+>
+
+<!-- CAMPOS OCULTOS DO GOOGLE FORMS -->
+<input type="hidden" name="entry.1269404299" id="nome">
+<input type="hidden" name="entry.1651111226" id="presenca">
+<input type="hidden" name="entry.1304754079" id="justificativa">
+
+<div class="grid" id="lista"></div>
+
+<div class="submit">
+    <button type="submit" class="primary">Enviar</button>
+</div>
+
+</form>
+
+<script>
+const conselheiros = [
+"ALEXANDRE DOURADO",
+"AMANDA MENDES SOARES",
+"ANA MARIA PEREIRA DE SOUZA RODRIGUES",
+"ANDERSON ALVES SOARES",
+"ANDERSON LEONARDO ALVES PEREIRA",
+"ANIELLY COSTA SILVA",
+"CLÁUDIO LUÍS DE SOUZA SANTOS",
+"DALTON CALDEIRA ROCHA",
+"DAMÁZIO WLADIMIR SILVA",
+"DANIELLA CRISTINA MARTINS DIAS VELOSO",
+"DANIELLE SANTOS SOUSA",
+"EDMILSON ALVES DA SILVA",
+"EDUARDO LUIZ DA SILVA",
+"EMANUELA TOMAS DA SILVA CONCEIÇÃO",
+"ERNANDES RODRIGUES MORAES",
+"FABIANA PEREIRA MORI",
+"FARLEY SINDEAUX RIBEIRO",
+"FERNANDO ANTÔNIO DIAS DE ANDRADE",
+"GERALDO DA COSTA SILVA",
+"JÚLIO CÉSAR ARAÚJO LOPES",
+"WASHINGTON LUIS CARVALHO SOUTO",
+"WILHAS FERREIRA"
+];
+
+const motivos = [
+"Compromisso profissional inadiável",
+"Atividade laboral previamente agendada",
+"Escala de trabalho / plantão",
+"Reunião de trabalho convocada de última hora",
+"Compromisso de saúde previamente marcado",
+"Acompanhamento de familiar em atendimento de saúde",
+"Condição de saúde que impossibilitou o comparecimento",
+"Demanda familiar urgente",
+"Compromisso pessoal inadiável",
+"Problemas de deslocamento / transporte",
+"Motivo de força maior",
+"Outro"
+];
+
+const lista = document.getElementById("lista");
+
+conselheiros.forEach(nome => {
+    const card = document.createElement("div");
+    card.className = "card";
+
+    card.innerHTML = `
+        <div class="name">${nome}</div>
+        <div class="actions">
+            <button type="button" onclick="confirmar('${nome}')">Confirmar presença</button>
+            <button type="button" onclick="justificar('${nome}')">Justificar ausência</button>
+            <div class="justificativa"></div>
+        </div>
+    `;
+
+    card.querySelector(".name").onclick = () => {
+        document.querySelectorAll(".card").forEach(c => c.classList.remove("active"));
+        card.classList.add("active");
+        document.getElementById("nome").value = nome;
+    };
+
+    lista.appendChild(card);
+});
+
+function confirmar(nome) {
+    document.getElementById("nome").value = nome;
+    document.getElementById("presenca").value = "Confirmo Presença";
+    document.getElementById("justificativa").value = "";
+
+    limparJustificativas();
+}
+
+function justificar(nome) {
+    document.getElementById("nome").value = nome;
+    document.getElementById("presenca").value = "Quero justificar ausência";
+
+    limparJustificativas();
+
+    const container = document.querySelector(".card.active .justificativa");
+
+    container.innerHTML = `
+        <select onchange="selecionarMotivo(this)">
+            <option value="">Selecione o motivo</option>
+            ${motivos.map(m => `<option value="${m}">${m}</option>`).join("")}
+        </select>
+        <input type="text" placeholder="Descreva o motivo..." style="display:none;"
+               oninput="document.getElementById('justificativa').value=this.value">
+    `;
+}
+
+function selecionarMotivo(select) {
+    const input = select.nextElementSibling;
+
+    if (select.value === "Outro") {
+        input.style.display = "block";
+        document.getElementById("justificativa").value = "";
+    } else {
+        input.style.display = "none";
+        document.getElementById("justificativa").value = select.value;
+    }
+}
+
+function limparJustificativas() {
+    document.querySelectorAll(".justificativa").forEach(j => j.innerHTML = "");
+}
+</script>
+
+</body>
+</html>
