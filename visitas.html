@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Relatório de Monitoramento - Horário Estendido</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #f8fafc; }
+        .card-shadow { box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06); }
+        .status-badge { @apply px-2 py-1 rounded-full text-xs font-semibold; }
+        .loading-spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #3b82f6;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+    </style>
+</head>
+<body class="text-slate-800">
+
+    <div id="app" class="min-h-screen flex flex-col">
+        <!-- Header -->
+        <header class="bg-blue-700 text-white p-6 shadow-lg">
+            <div class="container mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
+                <div>
+                    <h1 class="text-2xl font-bold flex items-center gap-2">
+                        🏥 Monitoramento: Saúde na Hora
+                    </h1>
+                    <p class="text-blue-100 text-sm">Conselho de Saúde - Avaliação de Horário Estendido</p>
+                </div>
+                <div class="flex items-center gap-3">
+                    <input type="text" id="searchInput" placeholder="Buscar unidade..." 
+                           class="px-4 py-2 rounded-lg text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-400 w-full md:w-64">
+                    <button onclick="loadData()" class="bg-blue-800 hover:bg-blue-900 px-4 py-2 rounded-lg transition-colors flex items-center gap-2">
+                        🔄 Atualizar
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="container mx-auto p-4 md:p-6 flex-grow">
+            
+            <!-- Summary Stats -->
+            <div id="statsGrid" class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+                <!-- Dynamically filled -->
+            </div>
+
+            <!-- Error Message -->
+            <div id="errorMessage" class="hidden bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-6" role="alert">
+                <strong class="font-bold">Erro!</strong>
+                <span class="block sm:inline" id="errorText">Não foi possível carregar os dados da planilha.</span>
+            </div>
+
+            <!-- Loading State -->
+            <div id="loadingState" class="flex flex-col items-center justify-center py-20">
+                <div class="loading-spinner mb-4"></div>
+                <p class="text-slate-500 animate-pulse">Carregando dados das visitas...</p>
+            </div>
+
+            <!-- List of Visits -->
+            <div id="visitsContainer" class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <!-- Dynamically filled with cards -->
+            </div>
+        </main>
+
+        <!-- Footer -->
+        <footer class="bg-white border-t border-slate-200 p-6 mt-10">
+            <div class="container mx-auto text-center text-slate-500 text-sm">
+                Desenvolvido para acompanhamento das unidades de saúde. Dados atualizados via Google Sheets.
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        const CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQSyPSsBbsf_30JG9lmDUPMWLPPy8Y81lEmZ7XxgbhutjYznqgfaCG82BkD9QWnxWuE1wtG-xLMEMAh/pub?gid=2136996853&single=true&output=csv';
+        
+        let allData = [];
+
+        async function loadData() {
+            const loading = document.getElementById('loadingState');
+            const container = document.getElementById('visitsContainer');
+            const stats = document.getElementById('statsGrid');
+            const error = document.getElementById('errorMessage');
+
+            loading.classList.remove('hidden');
+            container.innerHTML = '';
+            stats.innerHTML = '';
+            error.classList.add('hidden');
+
+            try {
+                const response = await fetch(CSV_URL);
+                if (!response.ok) throw new Error('Erro na requisição');
+                
+                const csvText = await response.text();
+                const rows = parseCSV(csvText);
+                
+                // Remove header row
+                const headers = rows[0];
+                allData = rows.slice(1).map(row => {
+                    let obj = {};
+                    headers.forEach((header, i) => {
+                        obj[header] = row[i];
+                    });
+                    return obj;
+                }).filter(item => item['🔠 Nome da Unidade:']); // Filter empty rows
+
+                renderDashboard(allData);
+            } catch (err) {
+                console.error(err);
+                document.getElementById('errorText').innerText = 'Falha ao acessar o link do CSV. Verifique se a planilha está publicada na web.';
+                error.classList.remove('hidden');
+            } finally {
+                loading.classList.add('hidden');
+            }
+        }
+
+        function parseCSV(text) {
+            // Simple robust CSV parser that handles commas inside quotes
+            const result = [];
+            let row = [];
+            let col = '';
+            let inQuotes = false;
+
+            for (let i = 0; i < text.length; i++) {
+                const char = text[i];
+                const nextChar = text[i + 1];
+
+                if (char === '"' && inQuotes && nextChar === '"') {
+                    col += '"';
+                    i++;
+                } else if (char === '"') {
+                    inQuotes = !inQuotes;
+                } else if (char === ',' && !inQuotes) {
+                    row.push(col.trim());
+                    col = '';
+                } else if ((char === '\r' || char === '\n') && !inQuotes) {
+                    if (col || row.length > 0) {
+                        row.push(col.trim());
+                        result.push(row);
+                    }
+                    row = [];
+                    col = '';
+                    if (char === '\r' && nextChar === '\n') i++;
+                } else {
+                    col += char;
+                }
+            }
+            if (col || row.length > 0) {
+                row.push(col.trim());
+                result.push(row);
+            }
+            return result;
+        }
+
+        function renderDashboard(data) {
+            const container = document.getElementById('visitsContainer');
+            const stats = document.getElementById('statsGrid');
+            
+            // 1. Render Stats
+            const totalVisits = data.length;
+            const uniqueUnits = [...new Set(data.map(d => d['🔠 Nome da Unidade:']))].length;
+            const recentDate = data.reduce((max, d) => d['📅 Data da Visita:'] > max ? d['📅 Data da Visita:'] : max, '');
+
+            stats.innerHTML = `
+                <div class="bg-white p-6 rounded-xl card-shadow border-l-4 border-blue-500">
+                    <p class="text-xs font-bold uppercase text-slate-400 tracking-wider">Total de Visitas</p>
+                    <p class="text-3xl font-bold text-slate-800">${totalVisits}</p>
+                </div>
+                <div class="bg-white p-6 rounded-xl card-shadow border-l-4 border-green-500">
+                    <p class="text-xs font-bold uppercase text-slate-400 tracking-wider">Unidades Visitadas</p>
+                    <p class="text-3xl font-bold text-slate-800">${uniqueUnits}</p>
+                </div>
+                <div class="bg-white p-6 rounded-xl card-shadow border-l-4 border-orange-500">
+                    <p class="text-xs font-bold uppercase text-slate-400 tracking-wider">Última Atualização</p>
+                    <p class="text-xl font-bold text-slate-800">${recentDate || 'N/A'}</p>
+                </div>
+            `;
+
+            // 2. Render Cards
+            renderList(data);
+        }
+
+        function renderList(data) {
+            const container = document.getElementById('visitsContainer');
+            container.innerHTML = '';
+
+            if (data.length === 0) {
+                container.innerHTML = '<div class="col-span-full text-center py-10 text-slate-400 font-medium italic">Nenhuma visita encontrada.</div>';
+                return;
+            }
+
+            data.forEach((visit, index) => {
+                const card = document.createElement('div');
+                card.className = 'bg-white rounded-2xl overflow-hidden card-shadow border border-slate-100 flex flex-col transform transition hover:scale-[1.01]';
+                
+                // Helper for status colors
+                const getStatusColor = (val) => {
+                    if (!val) return 'bg-slate-100 text-slate-500';
+                    const lower = val.toLowerCase();
+                    if (lower.includes('sim') || lower.includes('adequado') || lower.includes('bom')) return 'bg-green-100 text-green-700';
+                    if (lower.includes('não') || lower.includes('inadequado') || lower.includes('barreiras')) return 'bg-red-100 text-red-700';
+                    return 'bg-blue-100 text-blue-700';
+                };
+
+                card.innerHTML = `
+                    <div class="bg-slate-50 p-5 border-b border-slate-100">
+                        <div class="flex justify-between items-start mb-2">
+                            <h3 class="text-xl font-bold text-blue-900">${visit['🔠 Nome da Unidade:']}</h3>
+                            <span class="text-xs bg-blue-100 text-blue-600 font-bold px-2 py-1 rounded">Visitado em: ${visit['📅 Data da Visita:']}</span>
+                        </div>
+                        <p class="text-sm text-slate-500 flex items-center gap-1">📍 ${visit['📍 Endereço:']}</p>
+                        <p class="text-xs text-slate-400 mt-2 italic font-medium">Equipe: ${visit['👥 Equipe Responsável:']}</p>
+                    </div>
+                    
+                    <div class="p-6 grid grid-cols-1 md:grid-cols-2 gap-6 flex-grow">
+                        <!-- Ambiência -->
+                        <div>
+                            <h4 class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-3">🏥 Estrutura e Ambiência</h4>
+                            <ul class="space-y-2 text-sm">
+                                <li class="flex justify-between">
+                                    <span>♿ Acesso fácil?</span>
+                                    <span class="status-badge ${getStatusColor(visit['🏥 Estrutura e Ambiência [♿ Acesso fácil? Há barreiras arquitetônicas? ]'])}">${visit['🏥 Estrutura e Ambiência [♿ Acesso fácil? Há barreiras arquitetônicas? ]']}</span>
+                                </li>
+                                <li class="flex justify-between">
+                                    <span>💡 Iluminação:</span>
+                                    <span class="status-badge ${getStatusColor(visit['🏥 Estrutura e Ambiência [💡 Iluminação adequada?]'])}">${visit['🏥 Estrutura e Ambiência [💡 Iluminação adequada?]']}</span>
+                                </li>
+                                <li class="flex justify-between">
+                                    <span>🔐 Segurança:</span>
+                                    <span class="status-badge ${getStatusColor(visit['🏥 Estrutura e Ambiência [🔐 Condições de segurança? (vigia, câmeras, controle de acesso)]'])}">${visit['🏥 Estrutura e Ambiência [🔐 Condições de segurança? (vigia, câmeras, controle de acesso)]']}</span>
+                                </li>
+                                <li class="flex justify-between">
+                                    <span>🪧 Placa visível:</span>
+                                    <span class="status-badge ${getStatusColor(visit['🏥 Estrutura e Ambiência [🪧 Placa de identificação da unidade visível?]'])}">${visit['🏥 Estrutura e Ambiência [🪧 Placa de identificação da unidade visível?]']}</span>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <!-- Divulgação -->
+                        <div>
+                            <h4 class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-3">📢 Divulgação</h4>
+                            <ul class="space-y-2 text-sm">
+                                <li class="flex flex-col gap-1">
+                                    <span class="text-slate-500 italic text-[11px]">Existe informativo "Saúde na Hora"?</span>
+                                    <span class="status-badge text-center ${getStatusColor(visit['📢 Divulgação e Informação sobre Horário Estendido/Saúde na Hora [👀Existe cartaz/informativo sobre o “Saúde na Hora” ou horário estendido? ]'])}">
+                                        ${visit['📢 Divulgação e Informação sobre Horário Estendido/Saúde na Hora [👀Existe cartaz/informativo sobre o “Saúde na Hora” ou horário estendido? ]']}
+                                    </span>
+                                </li>
+                                <li class="flex flex-col gap-1">
+                                    <span class="text-slate-500 italic text-[11px]">Comunidade conhece?</span>
+                                    <span class="status-badge text-center ${getStatusColor(visit['📢 Divulgação e Informação sobre Horário Estendido/Saúde na Hora [🧾 A comunidade tem conhecimento do funcionamento diferenciado?]'])}">
+                                        ${visit['📢 Divulgação e Informação sobre Horário Estendido/Saúde na Hora [🧾 A comunidade tem conhecimento do funcionamento diferenciado?]']}
+                                    </span>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <!-- RH e Trabalho -->
+                        <div class="md:col-span-2 bg-slate-50 p-4 rounded-lg">
+                            <h4 class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-3">🧑‍🔧 Recursos Humanos e Atendimento</h4>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+                                <div>
+                                    <p class="font-semibold text-blue-800">👩‍⚕️ Equipe Presente:</p>
+                                    <p class="text-slate-600 mb-2">${visit['Recursos Humanos - Categorias profissionais presentes no horário estendido 👩🏼‍🔬👩🏾‍⚕️👨🏻‍⚕️:']}</p>
+                                    <p class="font-semibold text-blue-800">⏰ Forma de Atendimento:</p>
+                                    <p class="text-slate-600">${visit['⏰ Forma de Atendimento no Horário Estendido:']}</p>
+                                </div>
+                                <div>
+                                    <p class="font-semibold text-blue-800">📊 Percepção de Demanda:</p>
+                                    <p class="text-slate-600">${visit['📊 Percepção de Demanda [👥 Há procura da comunidade nesse horário?]']}</p>
+                                    <p class="font-semibold text-blue-800 mt-2">⏳ Fila/Ociosidade:</p>
+                                    <p class="text-slate-600">${visit['📊 Percepção de Demanda [⏳ Existe fila de espera ou ociosidade? ]']}</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Observações -->
+                        <div class="md:col-span-2">
+                            <h4 class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-1">📝 Observações Gerais</h4>
+                            <p class="text-sm text-slate-600 bg-yellow-50 p-3 rounded-lg border-l-4 border-yellow-200 min-h-[50px]">
+                                ${visit['📝 Observações Gerais:'] || '<span class="text-slate-300">Sem observações.</span>'}
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="bg-slate-100 p-3 text-[10px] text-slate-400 text-center uppercase tracking-tighter">
+                        Registro: ${visit['Carimbo de data/hora']}
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        // Search Filter Logic
+        document.getElementById('searchInput').addEventListener('input', (e) => {
+            const term = e.target.value.toLowerCase();
+            const filtered = allData.filter(visit => 
+                visit['🔠 Nome da Unidade:'].toLowerCase().includes(term) ||
+                visit['📍 Endereço:'].toLowerCase().includes(term) ||
+                visit['👥 Equipe Responsável:'].toLowerCase().includes(term)
+            );
+            renderList(filtered);
+        });
+
+        // Initial Load
+        window.onload = loadData;
+    </script>
+</body>
+</html>
