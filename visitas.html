@@ -19,24 +19,34 @@
             animation: spin 1s linear infinite;
         }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        
+        /* Modal transitions */
+        .modal-backdrop { background-color: rgba(0, 0, 0, 0.5); backdrop-filter: blur(4px); }
+        .tab-active { @apply border-b-4 border-white font-bold; }
     </style>
 </head>
 <body class="text-slate-800">
 
     <div id="app" class="min-h-screen flex flex-col">
-        <!-- Header -->
-        <header class="bg-blue-700 text-white p-6 shadow-lg">
-            <div class="container mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
-                <div>
-                    <h1 class="text-2xl font-bold flex items-center gap-2">
-                        🏥 Monitoramento: Saúde na Hora
-                    </h1>
-                    <p class="text-blue-100 text-sm">Conselho de Saúde - Avaliação de Horário Estendido</p>
-                </div>
-                <div class="flex items-center gap-3">
-                    <input type="text" id="searchInput" placeholder="Buscar unidade..." 
-                           class="px-4 py-2 rounded-lg text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-400 w-full md:w-64">
-                    <button onclick="loadData()" class="bg-blue-800 hover:bg-blue-900 px-4 py-2 rounded-lg transition-colors flex items-center gap-2">
+        
+        <!-- Imagem de Topo Principal -->
+        <div class="w-full overflow-hidden bg-white">
+            <img src="https://i.ibb.co/7dBtCCGf/Form-Header-28.png" alt="Cabeçalho de Visitas" class="w-full h-auto object-contain">
+        </div>
+
+        <!-- Header & Nav -->
+        <header class="bg-blue-700 text-white shadow-lg sticky top-0 z-40">
+            <div class="container mx-auto px-6 py-3 flex flex-col md:flex-row justify-between items-center gap-4">
+                
+                <nav class="flex gap-8 h-full">
+                    <button onclick="switchView('home')" id="btnHome" class="py-2 px-1 tab-active transition-all text-lg">🏠 Início</button>
+                    <button onclick="switchView('report')" id="btnReport" class="py-2 px-1 border-b-4 border-transparent hover:border-blue-300 transition-all text-lg">📋 Relatório Completo</button>
+                </nav>
+
+                <div class="flex items-center gap-3 w-full md:w-auto">
+                    <input type="text" id="searchInput" placeholder="Buscar unidade ou equipe..." 
+                           class="px-4 py-2 rounded-lg text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-400 flex-grow md:w-64 text-sm">
+                    <button onclick="loadData()" class="bg-blue-800 hover:bg-blue-900 px-4 py-2 rounded-lg transition-colors text-sm flex items-center gap-2 whitespace-nowrap">
                         🔄 Atualizar
                     </button>
                 </div>
@@ -54,43 +64,69 @@
             <!-- Error Message -->
             <div id="errorMessage" class="hidden bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-6" role="alert">
                 <strong class="font-bold">Erro!</strong>
-                <span class="block sm:inline" id="errorText">Não foi possível carregar os dados da planilha.</span>
+                <span class="block sm:inline" id="errorText">Não foi possível carregar os dados.</span>
             </div>
 
             <!-- Loading State -->
             <div id="loadingState" class="flex flex-col items-center justify-center py-20">
                 <div class="loading-spinner mb-4"></div>
-                <p class="text-slate-500 animate-pulse">Carregando dados das visitas...</p>
+                <p class="text-slate-500 animate-pulse">Buscando informações atualizadas...</p>
             </div>
 
-            <!-- List of Visits -->
-            <div id="visitsContainer" class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                <!-- Dynamically filled with cards -->
-            </div>
+            <!-- View: Home (Gallery) -->
+            <section id="viewHome" class="view-section">
+                <h2 class="text-xl font-bold text-slate-600 mb-6 flex items-center gap-2">
+                    <span class="w-2 h-8 bg-blue-500 rounded-full"></span> 
+                    Galeria de Visitas
+                </h2>
+                <div id="galleryContainer" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <!-- Simple Cards -->
+                </div>
+            </section>
+
+            <!-- View: Report (Full List) -->
+            <section id="viewReport" class="view-section hidden">
+                <h2 class="text-xl font-bold text-slate-600 mb-6 flex items-center gap-2">
+                    <span class="w-2 h-8 bg-green-500 rounded-full"></span> 
+                    Dados Consolidados de Visitas
+                </h2>
+                <div id="reportContainer" class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                    <!-- Detailed Cards -->
+                </div>
+            </section>
         </main>
 
         <!-- Footer -->
-        <footer class="bg-white border-t border-slate-200 p-6 mt-10">
-            <div class="container mx-auto text-center text-slate-500 text-sm">
-                Desenvolvido para acompanhamento das unidades de saúde. Dados atualizados via Google Sheets.
-            </div>
+        <footer class="bg-white border-t border-slate-200 p-8 mt-10 text-center text-slate-500 text-sm">
+            <p class="font-bold mb-2">Conselho de Saúde</p>
+            <p>Monitoramento de Unidades com Horário Estendido</p>
+            <p class="mt-4 text-[10px] uppercase tracking-widest">Sincronizado via Google Sheets API</p>
         </footer>
+    </div>
+
+    <!-- Modal Backdrop -->
+    <div id="modalContainer" class="fixed inset-0 z-50 hidden modal-backdrop flex items-center justify-center p-4">
+        <div class="bg-white w-full max-w-4xl max-h-[90vh] rounded-2xl shadow-2xl overflow-y-auto relative">
+            <button onclick="closeModal()" class="absolute top-4 right-4 bg-slate-100 hover:bg-slate-200 p-2 rounded-full text-slate-600 transition-colors z-10">
+                ✕
+            </button>
+            <div id="modalContent">
+                <!-- Filled via JS -->
+            </div>
+        </div>
     </div>
 
     <script>
         const CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQSyPSsBbsf_30JG9lmDUPMWLPPy8Y81lEmZ7XxgbhutjYznqgfaCG82BkD9QWnxWuE1wtG-xLMEMAh/pub?gid=2136996853&single=true&output=csv';
         
         let allData = [];
+        let currentView = 'home';
 
         async function loadData() {
             const loading = document.getElementById('loadingState');
-            const container = document.getElementById('visitsContainer');
-            const stats = document.getElementById('statsGrid');
             const error = document.getElementById('errorMessage');
 
             loading.classList.remove('hidden');
-            container.innerHTML = '';
-            stats.innerHTML = '';
             error.classList.add('hidden');
 
             try {
@@ -100,215 +136,266 @@
                 const csvText = await response.text();
                 const rows = parseCSV(csvText);
                 
-                // Remove header row
                 const headers = rows[0];
-                allData = rows.slice(1).map(row => {
-                    let obj = {};
+                allData = rows.slice(1).map((row, index) => {
+                    let obj = { _originalIndex: index };
                     headers.forEach((header, i) => {
                         obj[header] = row[i];
                     });
                     return obj;
-                }).filter(item => item['🔠 Nome da Unidade:']); // Filter empty rows
+                }).filter(item => item['🔠 Nome da Unidade:']);
 
-                renderDashboard(allData);
+                updateStats(allData);
+                renderCurrentView();
             } catch (err) {
                 console.error(err);
-                document.getElementById('errorText').innerText = 'Falha ao acessar o link do CSV. Verifique se a planilha está publicada na web.';
+                document.getElementById('errorText').innerText = 'Falha ao carregar a planilha pública.';
                 error.classList.remove('hidden');
             } finally {
                 loading.classList.add('hidden');
             }
         }
 
-        function parseCSV(text) {
-            // Simple robust CSV parser that handles commas inside quotes
-            const result = [];
-            let row = [];
-            let col = '';
-            let inQuotes = false;
-
-            for (let i = 0; i < text.length; i++) {
-                const char = text[i];
-                const nextChar = text[i + 1];
-
-                if (char === '"' && inQuotes && nextChar === '"') {
-                    col += '"';
-                    i++;
-                } else if (char === '"') {
-                    inQuotes = !inQuotes;
-                } else if (char === ',' && !inQuotes) {
-                    row.push(col.trim());
-                    col = '';
-                } else if ((char === '\r' || char === '\n') && !inQuotes) {
-                    if (col || row.length > 0) {
-                        row.push(col.trim());
-                        result.push(row);
-                    }
-                    row = [];
-                    col = '';
-                    if (char === '\r' && nextChar === '\n') i++;
-                } else {
-                    col += char;
-                }
-            }
-            if (col || row.length > 0) {
-                row.push(col.trim());
-                result.push(row);
-            }
-            return result;
-        }
-
-        function renderDashboard(data) {
-            const container = document.getElementById('visitsContainer');
-            const stats = document.getElementById('statsGrid');
+        function switchView(view) {
+            currentView = view;
+            document.getElementById('viewHome').classList.toggle('hidden', view !== 'home');
+            document.getElementById('viewReport').classList.toggle('hidden', view !== 'report');
             
-            // 1. Render Stats
-            const totalVisits = data.length;
-            const uniqueUnits = [...new Set(data.map(d => d['🔠 Nome da Unidade:']))].length;
-            const recentDate = data.reduce((max, d) => d['📅 Data da Visita:'] > max ? d['📅 Data da Visita:'] : max, '');
-
-            stats.innerHTML = `
-                <div class="bg-white p-6 rounded-xl card-shadow border-l-4 border-blue-500">
-                    <p class="text-xs font-bold uppercase text-slate-400 tracking-wider">Total de Visitas</p>
-                    <p class="text-3xl font-bold text-slate-800">${totalVisits}</p>
-                </div>
-                <div class="bg-white p-6 rounded-xl card-shadow border-l-4 border-green-500">
-                    <p class="text-xs font-bold uppercase text-slate-400 tracking-wider">Unidades Visitadas</p>
-                    <p class="text-3xl font-bold text-slate-800">${uniqueUnits}</p>
-                </div>
-                <div class="bg-white p-6 rounded-xl card-shadow border-l-4 border-orange-500">
-                    <p class="text-xs font-bold uppercase text-slate-400 tracking-wider">Última Atualização</p>
-                    <p class="text-xl font-bold text-slate-800">${recentDate || 'N/A'}</p>
-                </div>
-            `;
-
-            // 2. Render Cards
-            renderList(data);
+            document.getElementById('btnHome').classList.toggle('tab-active', view === 'home');
+            document.getElementById('btnReport').classList.toggle('tab-active', view === 'report');
+            
+            renderCurrentView();
         }
 
-        function renderList(data) {
-            const container = document.getElementById('visitsContainer');
+        function renderCurrentView() {
+            const term = document.getElementById('searchInput').value.toLowerCase();
+            const filtered = allData.filter(v => 
+                v['🔠 Nome da Unidade:'].toLowerCase().includes(term) ||
+                v['👥 Equipe Responsável:'].toLowerCase().includes(term)
+            );
+
+            if (currentView === 'home') renderGallery(filtered);
+            else renderFullReport(filtered);
+        }
+
+        function renderGallery(data) {
+            const container = document.getElementById('galleryContainer');
             container.innerHTML = '';
 
-            if (data.length === 0) {
-                container.innerHTML = '<div class="col-span-full text-center py-10 text-slate-400 font-medium italic">Nenhuma visita encontrada.</div>';
-                return;
-            }
-
-            data.forEach((visit, index) => {
+            data.forEach((visit) => {
                 const card = document.createElement('div');
-                card.className = 'bg-white rounded-2xl overflow-hidden card-shadow border border-slate-100 flex flex-col transform transition hover:scale-[1.01]';
+                card.className = 'bg-white p-6 rounded-2xl border border-slate-200 card-shadow cursor-pointer hover:border-blue-400 hover:bg-blue-50 transition-all group flex flex-col min-h-[200px]';
+                card.onclick = () => openModal(visit._originalIndex);
                 
-                // Helper for status colors
-                const getStatusColor = (val) => {
-                    if (!val) return 'bg-slate-100 text-slate-500';
-                    const lower = val.toLowerCase();
-                    if (lower.includes('sim') || lower.includes('adequado') || lower.includes('bom')) return 'bg-green-100 text-green-700';
-                    if (lower.includes('não') || lower.includes('inadequado') || lower.includes('barreiras')) return 'bg-red-100 text-red-700';
-                    return 'bg-blue-100 text-blue-700';
-                };
-
                 card.innerHTML = `
-                    <div class="bg-slate-50 p-5 border-b border-slate-100">
-                        <div class="flex justify-between items-start mb-2">
-                            <h3 class="text-xl font-bold text-blue-900">${visit['🔠 Nome da Unidade:']}</h3>
-                            <span class="text-xs bg-blue-100 text-blue-600 font-bold px-2 py-1 rounded">Visitado em: ${visit['📅 Data da Visita:']}</span>
-                        </div>
-                        <p class="text-sm text-slate-500 flex items-center gap-1">📍 ${visit['📍 Endereço:']}</p>
-                        <p class="text-xs text-slate-400 mt-2 italic font-medium">Equipe: ${visit['👥 Equipe Responsável:']}</p>
-                    </div>
-                    
-                    <div class="p-6 grid grid-cols-1 md:grid-cols-2 gap-6 flex-grow">
-                        <!-- Ambiência -->
-                        <div>
-                            <h4 class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-3">🏥 Estrutura e Ambiência</h4>
-                            <ul class="space-y-2 text-sm">
-                                <li class="flex justify-between">
-                                    <span>♿ Acesso fácil?</span>
-                                    <span class="status-badge ${getStatusColor(visit['🏥 Estrutura e Ambiência [♿ Acesso fácil? Há barreiras arquitetônicas? ]'])}">${visit['🏥 Estrutura e Ambiência [♿ Acesso fácil? Há barreiras arquitetônicas? ]']}</span>
-                                </li>
-                                <li class="flex justify-between">
-                                    <span>💡 Iluminação:</span>
-                                    <span class="status-badge ${getStatusColor(visit['🏥 Estrutura e Ambiência [💡 Iluminação adequada?]'])}">${visit['🏥 Estrutura e Ambiência [💡 Iluminação adequada?]']}</span>
-                                </li>
-                                <li class="flex justify-between">
-                                    <span>🔐 Segurança:</span>
-                                    <span class="status-badge ${getStatusColor(visit['🏥 Estrutura e Ambiência [🔐 Condições de segurança? (vigia, câmeras, controle de acesso)]'])}">${visit['🏥 Estrutura e Ambiência [🔐 Condições de segurança? (vigia, câmeras, controle de acesso)]']}</span>
-                                </li>
-                                <li class="flex justify-between">
-                                    <span>🪧 Placa visível:</span>
-                                    <span class="status-badge ${getStatusColor(visit['🏥 Estrutura e Ambiência [🪧 Placa de identificação da unidade visível?]'])}">${visit['🏥 Estrutura e Ambiência [🪧 Placa de identificação da unidade visível?]']}</span>
-                                </li>
-                            </ul>
-                        </div>
-
-                        <!-- Divulgação -->
-                        <div>
-                            <h4 class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-3">📢 Divulgação</h4>
-                            <ul class="space-y-2 text-sm">
-                                <li class="flex flex-col gap-1">
-                                    <span class="text-slate-500 italic text-[11px]">Existe informativo "Saúde na Hora"?</span>
-                                    <span class="status-badge text-center ${getStatusColor(visit['📢 Divulgação e Informação sobre Horário Estendido/Saúde na Hora [👀Existe cartaz/informativo sobre o “Saúde na Hora” ou horário estendido? ]'])}">
-                                        ${visit['📢 Divulgação e Informação sobre Horário Estendido/Saúde na Hora [👀Existe cartaz/informativo sobre o “Saúde na Hora” ou horário estendido? ]']}
-                                    </span>
-                                </li>
-                                <li class="flex flex-col gap-1">
-                                    <span class="text-slate-500 italic text-[11px]">Comunidade conhece?</span>
-                                    <span class="status-badge text-center ${getStatusColor(visit['📢 Divulgação e Informação sobre Horário Estendido/Saúde na Hora [🧾 A comunidade tem conhecimento do funcionamento diferenciado?]'])}">
-                                        ${visit['📢 Divulgação e Informação sobre Horário Estendido/Saúde na Hora [🧾 A comunidade tem conhecimento do funcionamento diferenciado?]']}
-                                    </span>
-                                </li>
-                            </ul>
-                        </div>
-
-                        <!-- RH e Trabalho -->
-                        <div class="md:col-span-2 bg-slate-50 p-4 rounded-lg">
-                            <h4 class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-3">🧑‍🔧 Recursos Humanos e Atendimento</h4>
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
-                                <div>
-                                    <p class="font-semibold text-blue-800">👩‍⚕️ Equipe Presente:</p>
-                                    <p class="text-slate-600 mb-2">${visit['Recursos Humanos - Categorias profissionais presentes no horário estendido 👩🏼‍🔬👩🏾‍⚕️👨🏻‍⚕️:']}</p>
-                                    <p class="font-semibold text-blue-800">⏰ Forma de Atendimento:</p>
-                                    <p class="text-slate-600">${visit['⏰ Forma de Atendimento no Horário Estendido:']}</p>
-                                </div>
-                                <div>
-                                    <p class="font-semibold text-blue-800">📊 Percepção de Demanda:</p>
-                                    <p class="text-slate-600">${visit['📊 Percepção de Demanda [👥 Há procura da comunidade nesse horário?]']}</p>
-                                    <p class="font-semibold text-blue-800 mt-2">⏳ Fila/Ociosidade:</p>
-                                    <p class="text-slate-600">${visit['📊 Percepção de Demanda [⏳ Existe fila de espera ou ociosidade? ]']}</p>
-                                </div>
+                    <div class="flex flex-col h-full">
+                        <div class="mb-4">
+                            <h3 class="text-2xl font-black text-slate-800 group-hover:text-blue-700 leading-tight mb-2 transition-colors">${visit['🔠 Nome da Unidade:']}</h3>
+                            <div class="flex items-center gap-2">
+                                <span class="bg-blue-600 text-white text-xs font-bold px-2 py-1 rounded">DATA DA VISITA</span>
+                                <span class="text-lg font-bold text-slate-600">${visit['📅 Data da Visita:']}</span>
                             </div>
                         </div>
-
-                        <!-- Observações -->
-                        <div class="md:col-span-2">
-                            <h4 class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-1">📝 Observações Gerais</h4>
-                            <p class="text-sm text-slate-600 bg-yellow-50 p-3 rounded-lg border-l-4 border-yellow-200 min-h-[50px]">
-                                ${visit['📝 Observações Gerais:'] || '<span class="text-slate-300">Sem observações.</span>'}
-                            </p>
+                        <div class="text-sm text-slate-600 mb-6 flex-grow">
+                            <p class="font-bold text-blue-800 uppercase text-[11px] tracking-wider mb-1">Equipe Responsável:</p>
+                            <p class="leading-relaxed font-medium">${visit['👥 Equipe Responsável:']}</p>
                         </div>
-                    </div>
-
-                    <div class="bg-slate-100 p-3 text-[10px] text-slate-400 text-center uppercase tracking-tighter">
-                        Registro: ${visit['Carimbo de data/hora']}
+                        <div class="flex justify-between items-center mt-auto pt-4 border-t border-slate-100">
+                            <span class="text-sm font-bold text-blue-600 flex items-center gap-1">
+                                Ver Detalhes ➔
+                            </span>
+                            <span class="text-xs font-bold text-slate-300">#${visit._originalIndex + 1}</span>
+                        </div>
                     </div>
                 `;
                 container.appendChild(card);
             });
         }
 
-        // Search Filter Logic
-        document.getElementById('searchInput').addEventListener('input', (e) => {
-            const term = e.target.value.toLowerCase();
-            const filtered = allData.filter(visit => 
-                visit['🔠 Nome da Unidade:'].toLowerCase().includes(term) ||
-                visit['📍 Endereço:'].toLowerCase().includes(term) ||
-                visit['👥 Equipe Responsável:'].toLowerCase().includes(term)
-            );
-            renderList(filtered);
-        });
+        function renderFullReport(data) {
+            const container = document.getElementById('reportContainer');
+            container.innerHTML = '';
+            data.forEach(visit => {
+                container.appendChild(createFullDetailCard(visit));
+            });
+        }
 
-        // Initial Load
+        function createFullDetailCard(visit, isModal = false) {
+            const card = document.createElement('div');
+            card.className = isModal ? '' : 'bg-white rounded-2xl overflow-hidden card-shadow border border-slate-100 flex flex-col';
+            
+            const getStatusColor = (val) => {
+                if (!val) return 'bg-slate-100 text-slate-500';
+                const lower = val.toLowerCase();
+                if (lower.includes('sim') || lower.includes('adequado') || lower.includes('bom')) return 'bg-green-100 text-green-700';
+                if (lower.includes('não') || lower.includes('inadequado') || lower.includes('barreiras')) return 'bg-red-100 text-red-700';
+                return 'bg-blue-100 text-blue-700';
+            };
+
+            card.innerHTML = `
+                <div class="${isModal ? 'bg-blue-50' : 'bg-slate-50'} p-6 border-b border-slate-100">
+                    <div class="flex justify-between items-start mb-2">
+                        <h3 class="text-2xl font-bold text-blue-900">${visit['🔠 Nome da Unidade:']}</h3>
+                        <span class="text-xs bg-blue-200 text-blue-700 font-bold px-3 py-1 rounded-full">Visita: ${visit['📅 Data da Visita:']}</span>
+                    </div>
+                    <p class="text-sm text-slate-600 flex items-center gap-1 font-medium">📍 ${visit['📍 Endereço:']}</p>
+                    <p class="text-sm text-blue-700 mt-2 font-bold">Equipe: ${visit['👥 Equipe Responsável:']}</p>
+                </div>
+                
+                <div class="p-6 grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <!-- Seção Ambiência -->
+                    <div class="space-y-4">
+                        <h4 class="text-xs font-black text-slate-400 uppercase tracking-widest border-b pb-1">🏥 Estrutura e Ambiência</h4>
+                        <ul class="space-y-3 text-sm">
+                            <li class="flex justify-between items-center gap-4">
+                                <span class="text-slate-500 font-medium">Acesso fácil / Barreiras:</span>
+                                <span class="status-badge shrink-0 ${getStatusColor(visit['🏥 Estrutura e Ambiência [♿ Acesso fácil? Há barreiras arquitetônicas? ]'])}">${visit['🏥 Estrutura e Ambiência [♿ Acesso fácil? Há barreiras arquitetônicas? ]']}</span>
+                            </li>
+                            <li class="flex justify-between items-center gap-4">
+                                <span class="text-slate-500 font-medium">Iluminação adequada:</span>
+                                <span class="status-badge shrink-0 ${getStatusColor(visit['🏥 Estrutura e Ambiência [💡 Iluminação adequada?]'])}">${visit['🏥 Estrutura e Ambiência [💡 Iluminação adequada?]']}</span>
+                            </li>
+                            <li class="flex justify-between items-center gap-4">
+                                <span class="text-slate-500 font-medium">Segurança:</span>
+                                <span class="status-badge shrink-0 ${getStatusColor(visit['🏥 Estrutura e Ambiência [🔐 Condições de segurança? (vigia, câmeras, controle de acesso)]'])}">${visit['🏥 Estrutura e Ambiência [🔐 Condições de segurança? (vigia, câmeras, controle de acesso)]']}</span>
+                            </li>
+                            <li class="flex justify-between items-center gap-4">
+                                <span class="text-slate-500 font-medium">Placa visível:</span>
+                                <span class="status-badge shrink-0 ${getStatusColor(visit['🏥 Estrutura e Ambiência [🪧 Placa de identificação da unidade visível?]'])}">${visit['🏥 Estrutura e Ambiência [🪧 Placa de identificação da unidade visível?]']}</span>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Divulgação -->
+                    <div class="space-y-4">
+                        <h4 class="text-xs font-black text-slate-400 uppercase tracking-widest border-b pb-1">📢 Divulgação e Informação</h4>
+                        <div class="space-y-3">
+                            <div>
+                                <p class="text-[11px] text-slate-400 uppercase font-bold mb-1">Informativo Saúde na Hora:</p>
+                                <div class="p-2 rounded text-sm ${getStatusColor(visit['📢 Divulgação e Informação sobre Horário Estendido/Saúde na Hora [👀Existe cartaz/informativo sobre o “Saúde na Hora” ou horário estendido? ]'])}">
+                                    ${visit['📢 Divulgação e Informação sobre Horário Estendido/Saúde na Hora [👀Existe cartaz/informativo sobre o “Saúde na Hora” ou horário estendido? ]']}
+                                </div>
+                            </div>
+                            <div>
+                                <p class="text-[11px] text-slate-400 uppercase font-bold mb-1">Conhecimento da Comunidade:</p>
+                                <div class="p-2 rounded text-sm ${getStatusColor(visit['📢 Divulgação e Informação sobre Horário Estendido/Saúde na Hora [🧾 A comunidade tem conhecimento do funcionamento diferenciado?]'])}">
+                                    ${visit['📢 Divulgação e Informação sobre Horário Estendido/Saúde na Hora [🧾 A comunidade tem conhecimento do funcionamento diferenciado?]']}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- RH e Funcionamento -->
+                    <div class="md:col-span-2 bg-slate-50 p-6 rounded-xl border border-slate-100">
+                        <h4 class="text-xs font-black text-slate-400 uppercase tracking-widest mb-4 italic">⚙️ Atendimento e Recursos Humanos</h4>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-6">
+                            <div class="space-y-4">
+                                <div>
+                                    <p class="text-[11px] text-slate-400 font-bold uppercase">Categorias Profissionais:</p>
+                                    <p class="text-sm font-semibold text-slate-700 mt-1">${visit['Recursos Humanos - Categorias profissionais presentes no horário estendido 👩🏼‍🔬👩🏾‍⚕️👨🏻‍⚕️:']}</p>
+                                </div>
+                                <div>
+                                    <p class="text-[11px] text-slate-400 font-bold uppercase">Forma de Atendimento:</p>
+                                    <p class="text-sm font-semibold text-slate-700 mt-1">${visit['⏰ Forma de Atendimento no Horário Estendido:']}</p>
+                                </div>
+                            </div>
+                            <div class="space-y-4">
+                                <div>
+                                    <p class="text-[11px] text-slate-400 font-bold uppercase">Demanda Percebida:</p>
+                                    <p class="text-sm font-semibold text-slate-700 mt-1">${visit['📊 Percepção de Demanda [👥 Há procura da comunidade nesse horário?]']}</p>
+                                </div>
+                                <div>
+                                    <p class="text-[11px] text-slate-400 font-bold uppercase">Fila ou Ociosidade:</p>
+                                    <p class="text-sm font-semibold text-slate-700 mt-1">${visit['📊 Percepção de Demanda [⏳ Existe fila de espera ou ociosidade? ]']}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Observações -->
+                    <div class="md:col-span-2">
+                        <h4 class="text-xs font-black text-slate-400 uppercase tracking-widest mb-2">📝 Observações Gerais</h4>
+                        <div class="bg-yellow-50 p-5 rounded-lg border-l-8 border-yellow-300 text-sm text-slate-700 leading-relaxed font-medium">
+                            ${visit['📝 Observações Gerais:'] || 'Nenhuma observação extra registrada.'}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-slate-800 p-3 text-[10px] text-white text-center uppercase tracking-widest mt-auto font-bold">
+                    ID Registro: ${visit._originalIndex + 1} | Registrado em: ${visit['Carimbo de data/hora']}
+                </div>
+            `;
+            return card;
+        }
+
+        function openModal(originalIndex) {
+            const visit = allData.find(v => v._originalIndex === originalIndex);
+            if (!visit) return;
+            
+            const modal = document.getElementById('modalContainer');
+            const content = document.getElementById('modalContent');
+            
+            content.innerHTML = '';
+            content.appendChild(createFullDetailCard(visit, true));
+            
+            modal.classList.remove('hidden');
+            document.body.style.overflow = 'hidden'; 
+        }
+
+        function closeModal() {
+            document.getElementById('modalContainer').classList.add('hidden');
+            document.body.style.overflow = 'auto'; 
+        }
+
+        function updateStats(data) {
+            const stats = document.getElementById('statsGrid');
+            const total = data.length;
+            const unique = [...new Set(data.map(d => d['🔠 Nome da Unidade:']))].length;
+            const recent = data.reduce((max, d) => d['📅 Data da Visita:'] > max ? d['📅 Data da Visita:'] : max, '');
+
+            stats.innerHTML = `
+                <div class="bg-white p-6 rounded-xl card-shadow border-l-4 border-blue-600">
+                    <p class="text-[11px] font-black uppercase text-slate-400 tracking-wider">Total de Visitas</p>
+                    <p class="text-4xl font-black text-slate-800">${total}</p>
+                </div>
+                <div class="bg-white p-6 rounded-xl card-shadow border-l-4 border-green-600">
+                    <p class="text-[11px] font-black uppercase text-slate-400 tracking-wider">Unidades Diferentes</p>
+                    <p class="text-4xl font-black text-slate-800">${unique}</p>
+                </div>
+                <div class="bg-white p-6 rounded-xl card-shadow border-l-4 border-orange-500">
+                    <p class="text-[11px] font-black uppercase text-slate-400 tracking-wider">Última Visita em</p>
+                    <p class="text-2xl font-black text-slate-800">${recent || '--/--/--'}</p>
+                </div>
+            `;
+        }
+
+        function parseCSV(text) {
+            const result = [];
+            let row = [];
+            let col = '';
+            let inQuotes = false;
+            for (let i = 0; i < text.length; i++) {
+                const char = text[i];
+                const nextChar = text[i + 1];
+                if (char === '"' && inQuotes && nextChar === '"') { col += '"'; i++; }
+                else if (char === '"') inQuotes = !inQuotes;
+                else if (char === ',' && !inQuotes) { row.push(col.trim()); col = ''; }
+                else if ((char === '\r' || char === '\n') && !inQuotes) {
+                    if (col || row.length > 0) { row.push(col.trim()); result.push(row); }
+                    row = []; col = '';
+                    if (char === '\r' && nextChar === '\n') i++;
+                } else col += char;
+            }
+            if (col || row.length > 0) { row.push(col.trim()); result.push(row); }
+            return result;
+        }
+
+        document.getElementById('searchInput').addEventListener('input', renderCurrentView);
+
+        document.getElementById('modalContainer').onclick = (e) => {
+            if (e.target.id === 'modalContainer') closeModal();
+        };
+
         window.onload = loadData;
     </script>
 </body>
