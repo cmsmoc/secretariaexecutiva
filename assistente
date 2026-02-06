@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Assistente Visual de Automação</title>
+    <title>A. L. E. X. - Assistente de Logística, Eficiência e eXecução</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
@@ -34,8 +34,13 @@
                         <i data-lucide="bot"></i>
                     </div>
                     <div>
-                        <h1 class="font-bold text-lg leading-tight">Assistente de Automação</h1>
-                        <p class="text-xs text-slate-500 uppercase tracking-wider">Google Workspace Docs + Sheets</p>
+                        <h1 class="font-bold text-xl leading-tight">A. L. E. X.</h1>
+                        <p class="text-[10px] text-slate-500 uppercase tracking-wider">
+                            <strong class="text-blue-600">A</strong>ssistente de 
+                            <strong class="text-blue-600">L</strong>ogística, 
+                            <strong class="text-blue-600">E</strong>ficiência e e
+                            <strong class="text-blue-600">X</strong>ecução
+                        </p>
                     </div>
                 </div>
                 <div class="text-right">
