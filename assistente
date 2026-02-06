@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Assistente Visual de Automação</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        body { font-family: 'Inter', sans-serif; }
+        .step-content { display: none; }
+        .step-content.active { display: block; }
+        .progress-bar { transition: width 0.4s ease-in-out; }
+        .glass-effect { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); }
+        .pulse { animation: pulse 2s infinite; }
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+        .sheet-cell {
+            @apply border border-slate-300 bg-white px-3 py-1 text-xs font-medium text-slate-600 min-w-[100px] text-center;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-900 min-h-screen flex flex-col">
+
+    <!-- Header & Progress -->
+    <header class="bg-white border-b sticky top-0 z-50">
+        <div class="max-w-4xl mx-auto px-6 py-4">
+            <div class="flex items-center justify-between mb-4">
+                <div class="flex items-center gap-2">
+                    <div class="bg-blue-600 p-2 rounded-lg text-white">
+                        <i data-lucide="bot"></i>
+                    </div>
+                    <div>
+                        <h1 class="font-bold text-lg leading-tight">Assistente de Automação</h1>
+                        <p class="text-xs text-slate-500 uppercase tracking-wider">Google Workspace Docs + Sheets</p>
+                    </div>
+                </div>
+                <div class="text-right">
+                    <span id="step-counter" class="text-sm font-semibold text-blue-600">Etapa 1 de 10</span>
+                </div>
+            </div>
+            <div class="w-full bg-slate-200 h-2 rounded-full overflow-hidden">
+                <div id="progress-indicator" class="progress-bar bg-blue-600 h-full w-[10%]"></div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="flex-grow flex items-center justify-center p-6">
+        <div class="max-w-4xl w-full bg-white rounded-2xl shadow-xl border border-slate-100 overflow-hidden min-h-[500px] flex flex-col">
+            
+            <div id="steps-container" class="p-8 flex-grow">
+                
+                <!-- ETAPA 1: O Problema -->
+                <section id="step-1" class="step-content active">
+                    <div class="flex flex-col items-center text-center mb-8">
+                        <div class="w-16 h-16 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center mb-4">
+                            <i data-lucide="alert-circle" size="32"></i>
+                        </div>
+                        <h2 class="text-2xl font-bold mb-2">O trabalho repetitivo termina aqui</h2>
+                        <p class="text-slate-600 max-w-lg">Automatize a geração de documentos a partir de planilhas de forma simples e guiada.</p>
+                    </div>
+                    <div class="space-y-4 max-w-md mx-auto">
+                        <label class="block font-medium">O que você quer automatizar?</label>
+                        <select id="doc-type" class="w-full p-3 border rounded-lg bg-slate-50 focus:ring-2 focus:ring-blue-500 outline-none">
+                            <option value="">Selecione uma opção...</option>
+                            <option value="Contrato">Contrato</option>
+                            <option value="Certificado">Certificado</option>
+                            <option value="Ofício">Ofício / Memorando</option>
+                            <option value="Relatório">Relatório</option>
+                        </select>
+                    </div>
+                </section>
+
+                <!-- ETAPA 2: Conceito -->
+                <section id="step-2" class="step-content">
+                    <h2 class="text-2xl font-bold mb-6 text-center">A Estrutura da Solução</h2>
+                    <div class="flex flex-col md:flex-row gap-4 items-center justify-center mb-8">
+                        <div class="flex-1 p-4 bg-green-50 rounded-xl border border-green-200 text-center">
+                            <i data-lucide="table" class="mx-auto mb-2 text-green-600"></i>
+                            <span class="text-sm font-bold block">PLANILHA</span>
+                            <span class="text-xs text-slate-500 italic">Onde você insere os dados</span>
+                        </div>
+                        <i data-lucide="arrow-right" class="hidden md:block text-slate-300"></i>
+                        <div class="flex-1 p-4 bg-blue-50 rounded-xl border border-blue-200 text-center">
+                            <i data-lucide="file-text" class="mx-auto mb-2 text-blue-600"></i>
+                            <span class="text-sm font-bold block">DOC TEMPLATE</span>
+                            <span class="text-xs text-slate-500 italic">O modelo com {{tags}}</span>
+                        </div>
+                        <i data-lucide="arrow-right" class="hidden md:block text-slate-300"></i>
+                        <div class="flex-1 p-4 bg-purple-50 rounded-xl border border-purple-200 text-center">
+                            <i data-lucide="mail" class="mx-auto mb-2 text-purple-600"></i>
+                            <span class="text-sm font-bold block">ENVIO / PDF</span>
+                            <span class="text-xs text-slate-500 italic">O resultado final automático</span>
+                        </div>
+                    </div>
+                    <p class="text-center text-slate-600 text-sm">O script que geraremos fará o papel de "mão invisível", unindo seus dados ao modelo.</p>
+                </section>
+
+                <!-- ETAPA 3: Criando o Template -->
+                <section id="step-3" class="step-content">
+                    <h2 class="text-2xl font-bold mb-4">Suas Variáveis (Tags)</h2>
+                    <p class="text-slate-600 mb-6 text-sm">Adicione as informações que mudam no documento (ex: NOME, CIDADE, DATA).</p>
+                    
+                    <div class="flex gap-2 mb-4">
+                        <input type="text" id="tag-input" placeholder="Ex: NOME_CLIENTE" class="flex-grow p-3 border rounded-lg uppercase font-mono">
+                        <button onclick="addTag()" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition">Adicionar</button>
+                    </div>
+                    <div id="tag-list" class="flex flex-wrap gap-2 mb-6 min-h-[40px]"></div>
+                </section>
+
+                <!-- ETAPA 4: Estrutura da Planilha -->
+                <section id="step-4" class="step-content">
+                    <h2 class="text-2xl font-bold mb-4">Mapeamento e Cabeçalho</h2>
+                    <p class="text-slate-600 mb-6 text-sm">Abaixo está o cabeçalho exato que você deve usar na <strong>Linha 1</strong> da sua planilha.</p>
+                    
+                    <div class="mb-8">
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="text-xs font-bold text-slate-500 uppercase">Prévia da Planilha (Linha 1)</span>
+                            <button onclick="copyHeader()" class="text-blue-600 text-xs font-bold hover:underline flex items-center gap-1">
+                                <i data-lucide="copy" size="12"></i> Copiar Cabeçalhos
+                            </button>
+                        </div>
+                        <div class="overflow-x-auto border rounded-lg shadow-sm">
+                            <div id="header-preview" class="flex bg-slate-100 min-w-max">
+                                <!-- Cabeçalhos gerados aqui -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="mapping-container" class="space-y-3 max-h-[200px] overflow-y-auto pr-2">
+                        <!-- Mapeamentos gerados aqui -->
+                    </div>
+                </section>
+
+                <!-- ETAPA 5: Controle e Segurança -->
+                <section id="step-5" class="step-content">
+                    <div class="text-center mb-8">
+                        <h2 class="text-2xl font-bold mb-2">Colunas Inteligentes</h2>
+                        <p class="text-slate-600">Por padrão, adicionamos colunas para rastreamento.</p>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="p-4 border rounded-xl bg-slate-50">
+                            <h4 class="font-bold text-sm mb-2 flex items-center gap-2"><i data-lucide="check-circle" class="text-green-600" size="16"></i> STATUS_ENVIO</h4>
+                            <p class="text-xs text-slate-500">O robô escreve "CONCLUÍDO" aqui para não repetir a mesma linha depois.</p>
+                        </div>
+                        <div class="p-4 border rounded-xl bg-slate-50">
+                            <h4 class="font-bold text-sm mb-2 flex items-center gap-2"><i data-lucide="link" class="text-blue-600" size="16"></i> LINK_ARQUIVO</h4>
+                            <p class="text-xs text-slate-500">O link direto para o Google Doc ou PDF gerado será salvo nesta coluna.</p>
+                        </div>
+                    </div>
+                    <div class="mt-4 p-4 bg-blue-50 border border-blue-100 rounded-lg text-sm italic">
+                        "Isso torna sua planilha um banco de dados organizado."
+                    </div>
+                </section>
+
+                <!-- ETAPA 6: Configurações -->
+                <section id="step-6" class="step-content">
+                    <h2 class="text-2xl font-bold mb-6">Identificadores do Google Drive</h2>
+                    <div class="space-y-6">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-bold mb-1">ID do Documento Modelo (Template)</label>
+                                <input type="text" id="template-id" placeholder="Ex: 1A2B3C4D..." class="w-full p-2 border rounded font-mono text-xs">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-bold mb-1">ID da Pasta de Destino</label>
+                                <input type="text" id="folder-id" placeholder="Ex: 9X8Y7Z..." class="w-full p-2 border rounded font-mono text-xs">
+                            </div>
+                        </div>
+                        <div class="bg-yellow-50 p-4 rounded-lg border border-yellow-100 flex gap-3">
+                            <i data-lucide="help-circle" class="text-yellow-600 flex-shrink-0"></i>
+                            <p class="text-xs text-yellow-800 leading-relaxed">O ID é o código longo que aparece na URL (barra de endereços) quando você abre o arquivo ou a pasta no navegador.</p>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- ETAPA 7: Script Gerado -->
+                <section id="step-7" class="step-content">
+                    <div class="flex justify-between items-center mb-4">
+                        <h2 class="text-2xl font-bold">Seu Script com Validação</h2>
+                        <button onclick="copyScript()" class="flex items-center gap-2 bg-slate-800 text-white px-3 py-1.5 rounded-lg text-sm hover:bg-slate-700">
+                            <i data-lucide="copy" size="16"></i> Copiar Script Completo
+                        </button>
+                    </div>
+                    <pre id="script-output" class="bg-slate-900 text-slate-300 p-4 rounded-xl overflow-x-auto text-[10px] leading-tight max-h-[350px] font-mono border-4 border-slate-800"></pre>
+                </section>
+
+                <!-- ETAPA 8: Operacionalização -->
+                <section id="step-8" class="step-content">
+                    <h2 class="text-2xl font-bold mb-6 text-center">Como instalar no Google Sheets</h2>
+                    <div class="space-y-4 max-w-xl mx-auto">
+                        <div class="flex gap-4 items-center">
+                            <div class="w-10 h-10 rounded-full bg-blue-600 text-white flex items-center justify-center font-bold">1</div>
+                            <p class="text-sm">Na sua planilha, clique em <strong>Extensões > Apps Script</strong>.</p>
+                        </div>
+                        <div class="flex gap-4 items-center">
+                            <div class="w-10 h-10 rounded-full bg-blue-600 text-white flex items-center justify-center font-bold">2</div>
+                            <p class="text-sm">Cole o código, salve e <strong>atualize a página da planilha</strong>.</p>
+                        </div>
+                        <div class="flex gap-4 items-center">
+                            <div class="w-10 h-10 rounded-full bg-blue-600 text-white flex items-center justify-center font-bold">3</div>
+                            <p class="text-sm">Um novo menu <strong>🚀 Automação</strong> aparecerá no topo da sua planilha!</p>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- ETAPA 9: Funções do Menu -->
+                <section id="step-9" class="step-content">
+                    <h2 class="text-2xl font-bold mb-4 text-center">Recurso de Integridade</h2>
+                    <div class="bg-blue-50 p-6 rounded-2xl border border-blue-100 mb-6">
+                        <div class="flex gap-4 mb-4">
+                            <div class="bg-blue-600 text-white p-2 rounded-lg">
+                                <i data-lucide="shield-check"></i>
+                            </div>
+                            <div>
+                                <h3 class="font-bold">Validação Automática</h3>
+                                <p class="text-sm text-slate-600">Agora o script faz uma checagem antes de rodar.</p>
+                            </div>
+                        </div>
+                        <ul class="text-xs space-y-2 text-slate-700">
+                            <li class="flex items-center gap-2"><i data-lucide="check" size="14" class="text-green-600"></i> Verifica se todas as tags {{X}} têm colunas na planilha.</li>
+                            <li class="flex items-center gap-2"><i data-lucide="check" size="14" class="text-green-600"></i> Alerta se houver colunas na planilha que não estão sendo usadas no Doc.</li>
+                            <li class="flex items-center gap-2"><i data-lucide="check" size="14" class="text-green-600"></i> Pede sua permissão final antes de gastar tempo gerando arquivos.</li>
+                        </ul>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-left">
+                        <div class="p-4 border rounded-xl shadow-sm">
+                            <span class="block font-bold text-blue-600 mb-1">Gerar Docs</span>
+                            <p class="text-[10px] text-slate-600">Cria arquivos editáveis.</p>
+                        </div>
+                        <div class="p-4 border rounded-xl shadow-sm">
+                            <span class="block font-bold text-red-600 mb-1">Gerar PDFs</span>
+                            <p class="text-[10px] text-slate-600">Cria arquivos não editáveis.</p>
+                        </div>
+                        <div class="p-4 border rounded-xl shadow-sm">
+                            <span class="block font-bold text-purple-600 mb-1">Enviar E-mail</span>
+                            <p class="text-[10px] text-slate-600">Gera e envia por e-mail.</p>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- ETAPA 10: Fim -->
+                <section id="step-10" class="step-content text-center">
+                    <div class="w-20 h-20 bg-green-100 text-green-600 rounded-full flex items-center justify-center mx-auto mb-6 pulse">
+                        <i data-lucide="party-popper" size="40"></i>
+                    </div>
+                    <h2 class="text-3xl font-bold mb-2">Pronto para Voar!</h2>
+                    <p class="text-slate-600 mb-8">Sua automação profissional está configurada.</p>
+                    <button onclick="window.location.reload()" class="bg-slate-900 text-white px-8 py-3 rounded-xl font-bold hover:bg-slate-800 transition">
+                        Criar Outra Automação
+                    </button>
+                </section>
+
+            </div>
+
+            <!-- Navigation Footer -->
+            <footer class="p-6 border-t bg-slate-50 flex items-center justify-between">
+                <button id="prev-btn" onclick="changeStep(-1)" class="flex items-center gap-2 px-6 py-2.5 font-semibold text-slate-500 hover:text-slate-800 disabled:opacity-30">
+                    <i data-lucide="arrow-left" size="18"></i> Anterior
+                </button>
+                <button id="next-btn" onclick="changeStep(1)" class="bg-blue-600 text-white flex items-center gap-2 px-8 py-2.5 rounded-xl font-bold hover:bg-blue-700 shadow-lg transition-all active:scale-95">
+                    Próximo <i data-lucide="arrow-right" size="18"></i>
+                </button>
+            </footer>
+
+        </div>
+    </main>
+
+    <div id="toast" class="fixed bottom-6 left-1/2 -translate-x-1/2 bg-slate-800 text-white px-6 py-3 rounded-full text-sm font-medium shadow-2xl opacity-0 pointer-events-none transition-all z-[100]">
+        Ação realizada!
+    </div>
+
+    <script>
+        let currentStep = 1;
+        const totalSteps = 10;
+        let tags = [];
+        const mandatoryHeaders = ["EMAIL", "STATUS_ENVIO", "DATA_CONCLUSAO", "LINK_ARQUIVO"];
+
+        lucide.createIcons();
+
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            toast.innerText = message;
+            toast.classList.remove('opacity-0', 'translate-y-4');
+            toast.classList.add('opacity-100', 'translate-y-0');
+            setTimeout(() => {
+                toast.classList.add('opacity-0', 'translate-y-4');
+                toast.classList.remove('opacity-100', 'translate-y-0');
+            }, 3000);
+        }
+
+        function copyTextToClipboard(text, successMessage) {
+            const textArea = document.createElement("textarea");
+            textArea.value = text;
+            textArea.style.position = "fixed";
+            textArea.style.left = "-9999px";
+            textArea.style.top = "0";
+            document.body.appendChild(textArea);
+            textArea.focus();
+            textArea.select();
+            try {
+                const successful = document.execCommand('copy');
+                if (successful) showToast(successMessage);
+            } catch (err) {
+                console.error('Erro ao copiar', err);
+            }
+            document.body.removeChild(textArea);
+        }
+
+        function changeStep(delta) {
+            if (delta > 0) {
+                if (currentStep === 1 && !document.getElementById('doc-type').value) {
+                    showToast("Por favor, selecione o tipo de documento.");
+                    return;
+                }
+                if (currentStep === 3 && tags.length === 0) {
+                    showToast("Adicione pelo menos uma tag variável.");
+                    return;
+                }
+            }
+
+            document.getElementById(`step-${currentStep}`).classList.remove('active');
+            currentStep += delta;
+            document.getElementById(`step-${currentStep}`).classList.add('active');
+            
+            document.getElementById('step-counter').innerText = `Etapa ${currentStep} de ${totalSteps}`;
+            document.getElementById('progress-indicator').style.width = `${(currentStep / totalSteps) * 100}%`;
+
+            if (currentStep === 4) renderMappingAndHeader();
+            if (currentStep === 7) generateFinalScript();
+
+            document.getElementById('prev-btn').disabled = currentStep === 1;
+            document.getElementById('next-btn').style.display = currentStep === 10 ? 'none' : 'flex';
+            
+            lucide.createIcons();
+            window.scrollTo(0,0);
+        }
+
+        function addTag() {
+            const input = document.getElementById('tag-input');
+            const val = input.value.trim().toUpperCase().replace(/\s+/g, '_').normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+            
+            if (val && !tags.includes(val) && !mandatoryHeaders.includes(val)) {
+                tags.push(val);
+                renderTags();
+                input.value = '';
+            } else if (mandatoryHeaders.includes(val)) {
+                showToast("Esta tag já está incluída como coluna obrigatória.");
+            }
+        }
+
+        function removeTag(tag) {
+            tags = tags.filter(t => t !== tag);
+            renderTags();
+        }
+
+        function renderTags() {
+            const list = document.getElementById('tag-list');
+            list.innerHTML = tags.map(t => `
+                <div class="bg-blue-100 text-blue-700 px-3 py-1.5 rounded-full flex items-center gap-2 text-xs font-mono border border-blue-200">
+                    {{${t}}}
+                    <button onclick="removeTag('${t}')" class="hover:text-red-500"><i data-lucide="x" size="12"></i></button>
+                </div>
+            `).join('');
+            lucide.createIcons();
+        }
+
+        function renderMappingAndHeader() {
+            const headerPreview = document.getElementById('header-preview');
+            const mappingContainer = document.getElementById('mapping-container');
+            const allHeaders = [...tags, ...mandatoryHeaders];
+            headerPreview.innerHTML = allHeaders.map(h => `<div class="sheet-cell">${h}</div>`).join('');
+            mappingContainer.innerHTML = tags.map(t => `
+                <div class="flex items-center gap-4 bg-slate-50 p-3 rounded-lg border border-slate-200">
+                    <span class="w-1/3 text-xs font-mono font-bold text-blue-600">{{${t}}}</span>
+                    <input type="text" data-tag="${t}" value="${t}" class="mapping-input flex-grow p-1.5 text-xs border rounded bg-white">
+                </div>
+            `).join('');
+        }
+
+        function copyHeader() {
+            const allHeaders = [...tags, ...mandatoryHeaders].join('\t');
+            copyTextToClipboard(allHeaders, "Cabeçalhos copiados! Use Ctrl+V na Linha 1 da planilha.");
+        }
+
+        function generateFinalScript() {
+            const mappingsArr = [];
+            document.querySelectorAll('.mapping-input').forEach(input => {
+                mappingsArr.push({ tag: input.dataset.tag, col: input.value });
+            });
+
+            const templateId = document.getElementById('template-id').value || 'ID_DO_MODELO';
+            const folderId = document.getElementById('folder-id').value || 'ID_DA_PASTA';
+            const docType = document.getElementById('doc-type').value;
+
+            const script = `/**
+ * AUTOMAÇÃO DE DOCUMENTOS PROFISSIONAL COM VALIDAÇÃO
+ * Configurado para: ${docType}
+ */
+
+function onOpen() {
+  const ui = SpreadsheetApp.getUi();
+  ui.createMenu('🚀 Automação')
+    .addItem('1. Gerar Documentos (Docs)', 'menuGerarDocs')
+    .addItem('2. Gerar em PDF', 'menuGerarPDFs')
+    .addSeparator()
+    .addItem('3. Enviar por E-mail (PDF)', 'menuEnviarEmails')
+    .addToUi();
+}
+
+function menuGerarDocs() { processarLote('DOC'); }
+function menuGerarPDFs() { processarLote('PDF'); }
+function menuEnviarEmails() { processarLote('EMAIL'); }
+
+function processarLote(modo) {
+  const templateId = '${templateId}';
+  const folderId = '${folderId}';
+  const planilha = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
+  const dados = planilha.getDataRange().getValues();
+  const cabecalho = dados[0];
+  const pastaDestino = DriveApp.getFolderById(folderId);
+
+  // Tags configuradas no assistente
+  const tagsEsperadas = [${mappingsArr.map(m => `"${m.tag}"`).join(', ')}];
+  const colunasMapeadas = {
+    ${mappingsArr.map(m => `"${m.tag}": "${m.col}"`).join(',\n    ')}
+  };
+
+  // Mapeamento automático de índices
+  const indices = {
+    ${mappingsArr.map(m => `"${m.tag}": cabecalho.indexOf("${m.col}")`).join(',\n    ')},
+    "EMAIL": cabecalho.indexOf("EMAIL"),
+    "STATUS": cabecalho.indexOf("STATUS_ENVIO"),
+    "DATA": cabecalho.indexOf("DATA_CONCLUSAO"),
+    "LINK": cabecalho.indexOf("LINK_ARQUIVO")
+  };
+
+  // --- NOVA CHECAGEM DE INTEGRIDADE ---
+  if (!verificarIntegridade(indices, tagsEsperadas, cabecalho, colunasMapeadas)) {
+    return; // Cancela se o usuário não confirmar no relatório
+  }
+
+  let processados = 0;
+  for (let i = 1; i < dados.length; i++) {
+    const linha = dados[i];
+    if (linha[indices.STATUS] === "CONCLUÍDO") continue;
+
+    try {
+      const nomeArquivo = "${docType} - " + (linha[0] || "Sem Nome");
+      const copia = DriveApp.getFileById(templateId).makeCopy(nomeArquivo, pastaDestino);
+      const doc = DocumentApp.openById(copia.getId());
+      const corpo = doc.getBody();
+
+      // Substituir Tags
+      ${mappingsArr.map(m => `corpo.replaceText('{{${m.tag}}}', linha[indices["${m.tag}"]]);`).join('\n      ')}
+
+      doc.saveAndClose();
+      let linkFinal = copia.getUrl();
+      let arquivoParaEmail = copia;
+
+      if (modo === 'PDF' || modo === 'EMAIL') {
+        const pdfBlob = copia.getAs('application/pdf');
+        const pdfFile = pastaDestino.createFile(pdfBlob);
+        linkFinal = pdfFile.getUrl();
+        arquivoParaEmail = pdfFile;
+        copia.setTrashed(true);
+      }
+
+      if (modo === 'EMAIL') {
+        const email = linha[indices.EMAIL];
+        if (validarEmail(email)) {
+          GmailApp.sendEmail(email, "Seu ${docType} está pronto", "Olá,\\nSegue em anexo o documento gerado.\\n\\nAtenciosamente.", {
+            attachments: [arquivoParaEmail.getBlob()]
+          });
+        } else {
+          throw new Error("E-mail inválido ou vazio");
+        }
+      }
+
+      planilha.getRange(i + 1, indices.STATUS + 1).setValue("CONCLUÍDO");
+      planilha.getRange(i + 1, indices.DATA + 1).setValue(new Date());
+      planilha.getRange(i + 1, indices.LINK + 1).setValue(linkFinal);
+      processados++;
+
+    } catch (e) {
+      planilha.getRange(i + 1, indices.STATUS + 1).setValue("ERRO: " + e.message);
+    }
+  }
+
+  SpreadsheetApp.getUi().alert('Processamento concluído! ' + processados + ' documento(s) gerado(s).');
+}
+
+/**
+ * Realiza a checagem entre tags do Doc e Colunas da Planilha
+ */
+function verificarIntegridade(indices, tags, cabecalho, mapa) {
+  let erros = [];
+  let avisos = [];
+  const obrigatorias = ["EMAIL", "STATUS_ENVIO", "DATA_CONCLUSAO", "LINK_ARQUIVO"];
+
+  // 1. Procurar Tags que não têm colunas correspondentes
+  tags.forEach(t => {
+    if (indices[t] === -1) {
+      erros.push("❌ A Tag {{" + t + "}} espera uma coluna chamada '" + mapa[t] + "' que não existe.");
+    }
+  });
+
+  // 2. Procurar Colunas obrigatórias faltantes
+  obrigatorias.forEach(obj => {
+    if (cabecalho.indexOf(obj) === -1) {
+      erros.push("❌ A Coluna obrigatória '" + obj + "' está faltando.");
+    }
+  });
+
+  // 3. Procurar colunas na planilha que não são usadas (Avisos)
+  cabecalho.forEach(col => {
+    let usada = false;
+    for(let key in mapa) if(mapa[key] === col) usada = true;
+    if(obrigatorias.indexOf(col) !== -1) usada = true;
+    
+    if(!usada && col !== "") {
+      avisos.push("⚠️ A coluna '" + col + "' existe na planilha, mas não será usada no Documento.");
+    }
+  });
+
+  if (erros.length > 0 || avisos.length > 0) {
+    let relatorio = "RELATÓRIO DE PRÉ-EXECUÇÃO\\n\\n";
+    if (erros.length > 0) relatorio += erros.join("\\n") + "\\n\\n";
+    if (avisos.length > 0) relatorio += avisos.join("\\n") + "\\n\\n";
+    
+    relatorio += "Deseja prosseguir mesmo assim?";
+    
+    const ui = SpreadsheetApp.getUi();
+    const response = ui.alert('Checagem de Integridade', relatorio, ui.ButtonSet.YES_NO);
+    return response === ui.Button.YES;
+  }
+  
+  return true; // Tudo perfeito
+}
+
+function validarEmail(email) {
+  return /\\S+@\\S+\\.\\S+/.test(email);
+}
+`;
+            document.getElementById('script-output').innerText = script;
+        }
+
+        function copyScript() {
+            const code = document.getElementById('script-output').innerText;
+            copyTextToClipboard(code, "Script copiado! Agora cole-o no Google Apps Script.");
+        }
+    </script>
+</body>
+</html>
