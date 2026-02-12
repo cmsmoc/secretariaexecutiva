@@ -25,11 +25,39 @@
             border-bottom: 2px solid #1a73e8;
             padding-bottom: 20px;
             margin-bottom: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+        }
+        .header-content {
+            flex: 1;
+        }
+        .header-kicker {
+            font-size: 13px;
+            font-weight: 700;
+            color: #5f6368;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 5px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
         }
         h1 {
             color: #1a73e8;
             margin: 0;
-            font-size: 24px;
+            font-size: 28px;
+            line-height: 1.2;
+        }
+        .header-desc {
+            margin-top: 10px;
+            color: #444;
+            font-size: 15px;
+        }
+        .header-img {
+            max-width: 220px;
+            height: auto;
         }
         h2 {
             font-size: 18px;
@@ -107,14 +135,31 @@
             border-bottom: 1px solid #eee;
             padding-bottom: 20px;
         }
+        /* Mobile adjustment */
+        @media (max-width: 600px) {
+            header {
+                flex-direction: column-reverse;
+                align-items: flex-start;
+            }
+            .header-img {
+                max-width: 150px;
+                margin-bottom: 15px;
+            }
+        }
     </style>
 </head>
 <body>
 
 <div class="container">
     <header>
-        <h1>🧠 CMS Inteligente - Guia de Implementação</h1>
-        <p>Siga os passos abaixo para instalar o módulo AutoDoc e utilitários na sua Planilha Google.</p>
+       
+        <div class="header-content">
+             <img src="https://i.ibb.co/KpxYywZ7/Logotipo-CMSMOCSec.png" alt="Logotipo Institucional" class="header-img">
+            <div class="header-kicker">🧠 CMS Inteligente</div>
+            <h1>Guia de Implementação do Módulo AutoDoc CMS</h1>
+            <p class="header-desc">Siga o passo a passo para instalar o sistema de automação e utilitários na sua Planilha Google.</p>
+        </div>
+        
     </header>
 
     <div class="note">
@@ -908,67 +953,4 @@ function replaceTags(text, row, headerMap) {
       loadSaved();
     &lt;/script&gt;
   &lt;/body&gt;
-&lt;/html&gt;</pre>
-        </div>
-
-        <p>Abaixo, veja como deve ficar após salvar o código:</p>
-        <img src="https://i.ibb.co/rR8Qwzt8/Captura-de-tela-2026-02-12-140941.png" alt="Sidebar Salvo" class="tutorial-img">
-    </div>
-
-    <div class="step-block">
-        <h2>Passo 4: Finalizar e Testar</h2>
-        <ol>
-            <li>No Apps Script, clique no ícone de <strong>Salvar</strong> (Disquete).</li>
-            <li>Volte para a sua Planilha Google.</li>
-            <li>Recarregue a página (F5).</li>
-            <li>Após alguns segundos, o menu <strong>🧠 CMS Inteligente</strong> aparecerá na barra superior.
-                <img src="https://i.ibb.co/2YkYFXrb/Captura-de-tela-2026-02-12-141241.png" alt="Menu CMS" class="tutorial-img">
-            </li>
-        </ol>
-    </div>
-
-    <div class="step-block">
-        <h2>Passo 5: Primeira Execução e Autorização</h2>
-        <p>A primeira vez que você rodar o sistema AutoDoc, você precisará autorizá-lo para que ele possa acessar seu Google Drive e enviar e-mails.</p>
-        
-        <h3>1. Solicitação de Autorização</h3>
-        <p>Ao tentar rodar uma automação, o Google pedirá permissão:</p>
-        <img src="https://i.ibb.co/Q3sJtnzd/Captura-de-tela-2026-02-12-141252.png" alt="Pedido Autorização" class="tutorial-img">
-        
-        <h3>2. Escolha sua conta</h3>
-        <img src="https://i.ibb.co/8nM0pSjh/Captura-de-tela-2026-02-12-141303.png" alt="Escolha Conta" class="tutorial-img">
-        
-        <h3>3. Permitir Acesso</h3>
-        <p>Clique em "Allow" (Permitir) para confirmar:</p>
-        <img src="https://i.ibb.co/s9LXNPvw/Captura-de-tela-2026-02-12-141339.png" alt="Permitir Acesso" class="tutorial-img">
-        
-        <h3>4. Pronto para Uso</h3>
-        <p>Uma vez autorizado, o sistema AutoDoc CMS já está pronto para utilizar:</p>
-        <img src="https://i.ibb.co/nqDJTskK/Captura-de-tela-2026-02-12-141357.png" alt="Sistema Pronto" class="tutorial-img">
-    </div>
-
-</div>
-
-<script>
-    function copyToClipboard(elementId, btn) {
-        var text = document.getElementById(elementId).innerText;
-        var elem = document.createElement("textarea");
-        document.body.appendChild(elem);
-        elem.value = text;
-        elem.select();
-        document.execCommand("copy");
-        document.body.removeChild(elem);
-        
-        var originalText = btn.innerText;
-        btn.innerText = "Copiado!";
-        btn.classList.add("copied");
-        
-        setTimeout(function() {
-            btn.innerText = originalText;
-            btn.classList.remove("copied");
-        }, 2000);
-    }
-</script>
-
-</body>
-</html>
+&lt;/html&gt;
