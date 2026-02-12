@@ -1,0 +1,974 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tutorial de Implementação - CMS Inteligente</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f4f6f8;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            padding: 40px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        header {
+            border-bottom: 2px solid #1a73e8;
+            padding-bottom: 20px;
+            margin-bottom: 30px;
+        }
+        h1 {
+            color: #1a73e8;
+            margin: 0;
+            font-size: 24px;
+        }
+        h2 {
+            font-size: 18px;
+            color: #5f6368;
+            margin-top: 30px;
+            border-left: 4px solid #1a73e8;
+            padding-left: 10px;
+        }
+        h3 {
+            font-size: 16px;
+            color: #202124;
+            margin-top: 20px;
+        }
+        ol {
+            padding-left: 20px;
+        }
+        li {
+            margin-bottom: 10px;
+        }
+        .code-container {
+            position: relative;
+            margin-top: 15px;
+            margin-bottom: 30px;
+        }
+        pre {
+            background-color: #282c34;
+            color: #abb2bf;
+            padding: 20px;
+            border-radius: 6px;
+            overflow-x: auto;
+            font-size: 13px;
+            font-family: 'Consolas', 'Monaco', monospace;
+            max-height: 500px;
+            border: 1px solid #ddd;
+        }
+        .copy-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background-color: #1a73e8;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: bold;
+            transition: background 0.2s;
+        }
+        .copy-btn:hover {
+            background-color: #135aba;
+        }
+        .copy-btn.copied {
+            background-color: #188038;
+        }
+        .note {
+            background-color: #e8f0fe;
+            color: #1967d2;
+            padding: 15px;
+            border-radius: 4px;
+            font-size: 14px;
+            margin-bottom: 20px;
+        }
+        .tutorial-img {
+            max-width: 100%;
+            height: auto;
+            border: 1px solid #dadce0;
+            border-radius: 6px;
+            margin: 15px 0;
+            display: block;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .step-block {
+            margin-bottom: 40px;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>🧠 CMS Inteligente - Guia de Implementação</h1>
+        <p>Siga os passos abaixo para instalar o módulo AutoDoc e utilitários na sua Planilha Google.</p>
+    </header>
+
+    <div class="note">
+        <strong>Pré-requisito:</strong> Você deve ter permissão de edição na Planilha Google onde deseja instalar o sistema.
+    </div>
+
+    <div class="step-block">
+        <h2>Passo 1: Preparar o Ambiente</h2>
+        <ol>
+            <li>Abra a sua Planilha Google.</li>
+            <li>No menu superior, clique em <strong>Extensões</strong> > <strong>Apps Script</strong>.
+                <img src="https://i.ibb.co/m7KBk5t/Print1.jpg" alt="Passo 1.2" class="tutorial-img">
+            </li>
+            <li>Uma nova aba será aberta com o editor de código.</li>
+        </ol>
+    </div>
+
+    <div class="step-block">
+        <h2>Passo 2: O Código Principal (Code.gs)</h2>
+        <ol>
+            <li>No editor que abriu, você verá um arquivo chamado <code>Código.gs</code> (ou <code>Code.gs</code>).</li>
+            <li>Apague <strong>todo</strong> o código que estiver lá dentro.
+                <img src="https://i.ibb.co/YTwgSFsS/Captura-de-tela-2026-02-12-134509.png" alt="Passo 2.2" class="tutorial-img">
+            </li>
+            <li>Copie o código abaixo e cole no editor:</li>
+        </ol>
+
+        <div class="code-container">
+            <button class="copy-btn" onclick="copyToClipboard('code-gs', this)">Copiar Código</button>
+            <pre id="code-gs">/**
+ * SCRIPT DE AUTOMAÇÃO CMS DIGITAL
+ * Módulo AutoDoc + Utilitários de Texto
+ */
+
+const CONFIG_SHEET_NAME = "_Config_Automações";
+
+// --- MENU DA PLANILHA ---
+function onOpen() {
+  SpreadsheetApp.getUi()
+    .createMenu('🧠 CMS Inteligente')
+    .addItem('🚀 Abrir AutoDoc', 'showSidebar')
+    .addSeparator()
+    .addSubMenu(SpreadsheetApp.getUi().createMenu('📝 Formatação de Texto')
+        .addItem('🔠 TUDO MAIÚSCULO', 'formatSelectedToUpper')
+        .addItem('Abc Primeira Letra (Nome Próprio)', 'formatSelectedToTitleCase'))
+    .addToUi();
+}
+
+function showSidebar() {
+  const html = HtmlService.createHtmlOutputFromFile('Sidebar')
+    .setTitle('Gerador de Documentos')
+    .setWidth(450);
+  SpreadsheetApp.getUi().showSidebar(html);
+}
+
+// --- FUNÇÕES DE FORMATAÇÃO DE TEXTO ---
+
+/**
+ * Converte seleção para MAIÚSCULAS
+ */
+function formatSelectedToUpper() {
+  const sheet = SpreadsheetApp.getActiveSheet();
+  const range = sheet.getActiveRange();
+  const values = range.getValues();
+  
+  const newValues = values.map(row => {
+    return row.map(cell => {
+      return (typeof cell === 'string') ? cell.toUpperCase() : cell;
+    });
+  });
+  
+  range.setValues(newValues);
+}
+
+/**
+ * Converte para Nome Próprio (Title Case) respeitando preposições
+ * Ex: "JOÃO DA SILVA" -> "João da Silva"
+ */
+function formatSelectedToTitleCase() {
+  const sheet = SpreadsheetApp.getActiveSheet();
+  const range = sheet.getActiveRange();
+  const values = range.getValues();
+  
+  // Lista de exceções (preposições que devem ficar minúsculas)
+  const exceptions = ['da', 'de', 'do', 'das', 'dos', 'e', 'em', 'na', 'no', 'nas', 'nos'];
+  
+  const newValues = values.map(row => {
+    return row.map(cell => {
+      if (typeof cell !== 'string' || cell === "") return cell;
+      
+      // Divide em palavras, converte tudo para minúsculo primeiro
+      const words = cell.toLowerCase().split(" ");
+      
+      const titleCaseWords = words.map((word, index) => {
+        // Se for a primeira palavra, sempre capitaliza
+        // Se NÃO estiver na lista de exceções, capitaliza
+        if (index === 0 || !exceptions.includes(word)) {
+          return word.charAt(0).toUpperCase() + word.slice(1);
+        }
+        // Se for exceção (da, de, do...), mantém minúsculo
+        return word;
+      });
+      
+      return titleCaseWords.join(" ");
+    });
+  });
+  
+  range.setValues(newValues);
+}
+
+// --- FUNÇÕES DE BUSCA ---
+function searchDriveFiles(query) {
+  let files = [];
+  const search = `title contains '${query}' and mimeType = 'application/vnd.google-apps.document' and trashed = false`;
+  const iter = DriveApp.searchFiles(search);
+  let limit = 10;
+  while (iter.hasNext() && limit > 0) {
+    let file = iter.next();
+    files.push({ id: file.getId(), name: file.getName(), url: file.getUrl() });
+    limit--;
+  }
+  return files;
+}
+
+function searchDriveFolders(query) {
+  let folders = [];
+  const search = `title contains '${query}' and mimeType = 'application/vnd.google-apps.folder' and trashed = false`;
+  const iter = DriveApp.searchFolders(search);
+  let limit = 10;
+  while (iter.hasNext() && limit > 0) {
+    let folder = iter.next();
+    folders.push({ id: folder.getId(), name: folder.getName(), url: folder.getUrl() });
+    limit--;
+  }
+  return folders;
+}
+
+// --- CONFIGURAÇÃO E SALVAMENTO ---
+
+function getSheetHeaders() {
+  const sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
+  const headers = sheet.getRange(1, 1, 1, sheet.getLastColumn()).getValues()[0];
+  return headers.filter(h => h !== "");
+}
+
+function getTemplateTags(docId) {
+  try {
+    const doc = DocumentApp.openById(docId);
+    const text = doc.getBody().getText();
+    const pattern = /{{(.*?)}}/g;
+    let match;
+    const tags = new Set();
+    while ((match = pattern.exec(text)) !== null) {
+      tags.add(match[1].trim());
+    }
+    return Array.from(tags);
+  } catch (e) {
+    throw new Error("Erro ao ler Template. Verifique o ID.");
+  }
+}
+
+function saveConfiguration(configData) {
+  const ss = SpreadsheetApp.getActiveSpreadsheet();
+  const sheet = ss.getActiveSheet();
+  
+  let configSheet = ss.getSheetByName(CONFIG_SHEET_NAME);
+  if (!configSheet) {
+    configSheet = ss.insertSheet(CONFIG_SHEET_NAME);
+    configSheet.hideSheet();
+    configSheet.appendRow(["Nome Automação", "Config JSON"]);
+  }
+  
+  const data = configSheet.getDataRange().getValues();
+  let found = false;
+  
+  for (let i = 1; i < data.length; i++) {
+    if (data[i][0] === configData.name) {
+      configSheet.getRange(i + 1, 2).setValue(JSON.stringify(configData));
+      found = true;
+      break;
+    }
+  }
+  if (!found) {
+    configSheet.appendRow([configData.name, JSON.stringify(configData)]);
+  }
+  
+  let msgExtra = "";
+  if (configData.sendEmail) {
+    const headers = sheet.getRange(1, 1, 1, sheet.getLastColumn()).getValues()[0];
+    const emailColIndex = findEmailColumn(headers);
+    
+    if (emailColIndex === -1) {
+      const newColIndex = sheet.getLastColumn() + 1;
+      sheet.getRange(1, newColIndex).setValue("Email para Envio");
+      sheet.getRange(1, newColIndex).setBackground("#fff2cc");
+      msgExtra = " ATENÇÃO: Criamos a coluna 'Email para Envio' na planilha. Preencha ela antes de rodar!";
+    }
+  }
+
+  return "Configuração salva! " + msgExtra;
+}
+
+function deleteConfiguration(name) {
+  const ss = SpreadsheetApp.getActiveSpreadsheet();
+  const sheet = ss.getSheetByName(CONFIG_SHEET_NAME);
+  if (!sheet) return;
+  const data = sheet.getDataRange().getValues();
+  for (let i = data.length - 1; i >= 1; i--) {
+    if (data[i][0] === name) {
+      sheet.deleteRow(i + 1);
+      return "Excluído.";
+    }
+  }
+  throw new Error("Não encontrado.");
+}
+
+function getSavedAutomations() {
+  const ss = SpreadsheetApp.getActiveSpreadsheet();
+  const configSheet = ss.getSheetByName(CONFIG_SHEET_NAME);
+  if (!configSheet) return [];
+  const data = configSheet.getDataRange().getValues();
+  const automations = [];
+  for (let i = 1; i < data.length; i++) {
+    if (data[i][0]) automations.push(JSON.parse(data[i][1]));
+  }
+  return automations;
+}
+
+// --- MOTOR DE EXECUÇÃO ---
+
+function runAutomationProcess(config) {
+  const ss = SpreadsheetApp.getActiveSpreadsheet();
+  const sheet = ss.getActiveSheet();
+  const headers = sheet.getRange(1, 1, 1, sheet.getLastColumn()).getValues()[0];
+  
+  const headerMap = {};
+  headers.forEach((h, i) => { if(h) headerMap[h.trim()] = i; });
+  
+  const colStatus = ensureColumn(sheet, headers, "Status Doc");
+  const colLink = ensureColumn(sheet, headers, "Link Arquivo");
+  
+  let colEmailStatus = -1;
+  let emailColIndex = -1;
+  
+  if (config.sendEmail) {
+    colEmailStatus = ensureColumn(sheet, headers, "Status Email");
+    emailColIndex = findEmailColumn(headers);
+  }
+  
+  const templateFile = DriveApp.getFileById(config.templateId);
+  const destinationFolder = DriveApp.getFolderById(config.folderId);
+  
+  let processedCount = 0;
+  const data = sheet.getDataRange().getValues();
+  
+  for (let i = 1; i < data.length; i++) {
+    const row = data[i];
+    const statusCell = sheet.getRange(i + 1, colStatus + 1);
+    
+    if (statusCell.getValue().toString().includes("Sucesso")) continue; 
+
+    try {
+      const fileName = replaceTags(config.fileNamePattern, row, headerMap);
+      const copyFile = templateFile.makeCopy(fileName, destinationFolder);
+      const copyDoc = DocumentApp.openById(copyFile.getId());
+      const copyBody = copyDoc.getBody();
+      
+      for (const [header, colIndex] of Object.entries(headerMap)) {
+        let val = row[colIndex];
+        if (val instanceof Date) val = Utilities.formatDate(val, ss.getSpreadsheetTimeZone(), "dd/MM/yyyy");
+        if (val === undefined) val = "";
+        copyBody.replaceText("{{" + header + "}}", val);
+      }
+      
+      copyDoc.saveAndClose();
+      let finalFileUrl = copyFile.getUrl();
+      let finalFile = copyFile;
+      
+      if (config.format === "pdf") {
+        const pdfBlob = copyFile.getAs(MimeType.PDF);
+        const pdfFile = destinationFolder.createFile(pdfBlob).setName(fileName);
+        finalFileUrl = pdfFile.getUrl();
+        finalFile = pdfFile;
+        copyFile.setTrashed(true);
+      }
+      
+      let emailStatusResult = "N/A";
+      if (config.sendEmail) {
+        if (emailColIndex > -1 && row[emailColIndex]) {
+          try {
+            MailApp.sendEmail({
+              to: row[emailColIndex],
+              subject: replaceTags(config.emailSubject, row, headerMap),
+              body: replaceTags(config.emailBody, row, headerMap),
+              attachments: [finalFile.getAs(MimeType.PDF)]
+            });
+            emailStatusResult = "Enviado";
+          } catch (e) {
+            emailStatusResult = "Erro: " + e.message;
+          }
+        } else {
+          emailStatusResult = "Email vazio";
+        }
+      }
+      
+      statusCell.setValue("Sucesso");
+      sheet.getRange(i + 1, colLink + 1).setValue(finalFileUrl);
+      if (config.sendEmail) {
+        sheet.getRange(i + 1, colEmailStatus + 1).setValue(emailStatusResult);
+      }
+      
+      processedCount++;
+      
+    } catch (err) {
+      statusCell.setValue("Erro: " + err.message);
+    }
+  }
+  
+  return `Concluído! ${processedCount} processados.`;
+}
+
+function ensureColumn(sheet, headers, colName) {
+  let index = headers.indexOf(colName);
+  if (index === -1) {
+    const lastCol = sheet.getLastColumn();
+    sheet.insertColumnAfter(lastCol);
+    sheet.getRange(1, lastCol + 1).setValue(colName);
+    return lastCol; 
+  }
+  return index;
+}
+
+function findEmailColumn(headersArray) {
+  for (let i = 0; i < headersArray.length; i++) {
+    const h = headersArray[i].toString().toLowerCase();
+    if (h.includes("e-mail") || h.includes("email")) return i;
+  }
+  return -1;
+}
+
+function replaceTags(text, row, headerMap) {
+  let newText = text;
+  for (const [header, colIndex] of Object.entries(headerMap)) {
+    const val = row[colIndex];
+    const regex = new RegExp("{{" + header + "}}", "gi");
+    newText = newText.replace(regex, (val === undefined ? "" : val));
+  }
+  return newText;
+}</pre>
+        </div>
+
+        <p>Após colar o código, clique no ícone de <strong>Salvar</strong> (Disquete):</p>
+        <img src="https://i.ibb.co/4wQm6NN7/Captura-de-tela-2026-02-12-134543.png" alt="Salvar Código" class="tutorial-img">
+    </div>
+
+    <div class="step-block">
+        <h2>Passo 3: A Interface Visual (Sidebar.html)</h2>
+        <ol>
+            <li>No Apps Script, ao lado de "Arquivos", clique no sinal de <strong>+</strong> e selecione <strong>HTML</strong>.
+                <img src="https://i.ibb.co/q35qxXyJ/Captura-de-tela-2026-02-12-134633.png" alt="Criar HTML" class="tutorial-img">
+            </li>
+            <li>Nomeie o arquivo exatamente como: <code>Sidebar</code> (Cuidado com a maiúscula).
+                <img src="https://i.ibb.co/BV3B4PsZ/Captura-de-tela-2026-02-12-140913.png" alt="Nomear Sidebar" class="tutorial-img">
+            </li>
+            <li>Apague o código padrão que aparecer.</li>
+            <li>Copie o código abaixo e cole:</li>
+        </ol>
+
+        <div class="code-container">
+            <button class="copy-btn" onclick="copyToClipboard('sidebar-html', this)">Copiar Código</button>
+            <pre id="sidebar-html">&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+  &lt;head&gt;
+    &lt;base target=&quot;_top&quot;&gt;
+    &lt;link rel=&quot;stylesheet&quot; href=&quot;https://ssl.gstatic.com/docs/script/css/add-ons1.css&quot;&gt;
+    &lt;style&gt;
+      body { padding: 15px; font-family: &#39;Google Sans&#39;, sans-serif; position: relative;}
+      
+      .step { display: none; }
+      .step.active { display: block; }
+      .branding { 
+  font-size: 15px; 
+  font-weight: 600; 
+  color: #1a73e8; 
+  margin-bottom: 15px; 
+  border-bottom: 1px solid #eee; 
+  padding-bottom:8px;
+}
+      input, select, textarea { width: 100%; box-sizing: border-box; margin-bottom: 5px; padding: 8px; border: 1px solid #dadce0; border-radius: 4px; }
+      label { font-weight: bold; font-size: 12px; display: block; margin-top: 12px; color: #3c4043;}
+      
+      .btn-bar { margin-top: 20px; display: flex; justify-content: space-between; }
+      button { cursor: pointer; }
+      
+      /* CARD VISUAL ATUALIZADO */
+      .card { border: 1px solid #e0e0e0; padding: 12px; margin-bottom: 10px; border-radius: 8px; background: #fff; box-shadow: 0 1px 2px rgba(0,0,0,0.05); }
+      .card h4 { margin: 0 0 5px 0; color: #1a73e8; font-size: 14px;}
+      .card-meta { font-size:11px; color:#666; margin-bottom: 8px; }
+      
+      .card-actions { display: flex; justify-content: space-between; align-items: center; border-top: 1px solid #f1f3f4; padding-top: 8px; margin-top: 5px;}
+      
+      /* Botões de Ação Pequenos */
+      .icon-btn { background: none; border: none; font-size: 16px; cursor: pointer; padding: 4px 8px; opacity: 0.6; }
+      .icon-btn:hover { opacity: 1; background: #f1f3f4; border-radius: 4px;}
+      .btn-run { background: #188038; color: white; border: none; padding: 6px 16px; border-radius: 4px; font-weight: bold; font-size: 12px; }
+      .btn-run:hover { background: #146c2e; }
+
+      .input-group { display: flex; gap: 5px; }
+      .input-group input { flex-grow: 1; background: #f8f9fa; color: #5f6368; }
+      .btn-search { background: #e8f0fe; color: #1967d2; border: none; border-radius: 4px; padding: 0 10px; font-weight: bold; font-size: 16px; cursor: pointer; }
+      
+      #search-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 100; align-items: center; justify-content: center; }
+      .modal-content { background: white; padding: 15px; width: 90%; max-height: 80%; border-radius: 8px; overflow-y: auto; }
+      .file-item { padding: 8px; border-bottom: 1px solid #eee; cursor: pointer; display: flex; align-items: center;}
+      .file-item:hover { background: #f1f3f4; }
+      .tag-list { background: #f8f9fa; padding: 10px; border-radius: 4px; font-size: 11px; font-family: monospace; border: 1px solid #dadce0; }
+    &lt;/style&gt;
+  &lt;/head&gt;
+  &lt;body&gt;
+    &lt;div class=&quot;branding&quot;&gt;
+  🧠 CMS Inteligente&lt;br&gt;
+  &lt;span style=&quot;font-size:12px; font-weight:normal; color:#5f6368;&quot;&gt;
+    Módulo AutoDoc v2.3
+  &lt;/span&gt;
+&lt;/div&gt;
+&lt;div id=&quot;step-about&quot; class=&quot;step&quot;&gt;
+ &lt;h3&gt;🧠 Sobre o Programa&lt;/h3&gt;
+
+&lt;div class=&quot;card&quot;&gt;
+  &lt;h4&gt;🚀 CMS Inteligente&lt;/h4&gt;
+  &lt;div class=&quot;card-meta&quot;&gt;Programa de Transformação Digital e Gestão Inteligente&lt;/div&gt;
+  &lt;p style=&quot;font-size:13px; line-height:1.5; color:#3c4043;&quot;&gt;
+    O &lt;b&gt;CMS Inteligente&lt;/b&gt; é um programa institucional de modernização administrativa 
+    voltado à estruturação de processos, padronização de fluxos e aplicação estratégica 
+    de tecnologia e Inteligência Artificial na gestão do Conselho.
+  &lt;/p&gt;
+  &lt;p style=&quot;font-size:13px; line-height:1.5; color:#3c4043;&quot;&gt;
+    A iniciativa integra organização de dados, automação e inteligência aplicada, 
+    promovendo eficiência operacional, rastreabilidade e governança da informação.
+  &lt;/p&gt;
+&lt;/div&gt;
+
+&lt;div class=&quot;card&quot;&gt;
+  &lt;h4&gt;⚙️ Módulo AutoDoc&lt;/h4&gt;
+  &lt;div class=&quot;card-meta&quot;&gt;Automação Documental Inteligente&lt;/div&gt;
+  &lt;p style=&quot;font-size:13px; line-height:1.5; color:#3c4043;&quot;&gt;
+    O &lt;b&gt;AutoDoc&lt;/b&gt; é o módulo responsável pela geração automatizada de documentos 
+    a partir de modelos padronizados e dados estruturados, integrando validação de tags, 
+    organização automática em pastas e envio opcional por e-mail.
+  &lt;/p&gt;
+  &lt;ul style=&quot;font-size:13px; color:#3c4043; padding-left:18px;&quot;&gt;
+    &lt;li&gt;✔️ Padronização documental inteligente&lt;/li&gt;
+    &lt;li&gt;✔️ Redução de erros e retrabalho&lt;/li&gt;
+    &lt;li&gt;✔️ Organização automática e rastreável&lt;/li&gt;
+    &lt;li&gt;✔️ Integração entre dados, modelo e envio&lt;/li&gt;
+    &lt;li&gt;✔️ Estrutura escalável para outros setores&lt;/li&gt;
+  &lt;/ul&gt;
+&lt;/div&gt;
+
+&lt;div class=&quot;card&quot;&gt;
+  &lt;h4&gt;🔄 Abordagem Estratégica&lt;/h4&gt;
+  &lt;p style=&quot;font-size:13px; line-height:1.5; color:#3c4043;&quot;&gt;
+    O programa adota uma lógica de &lt;b&gt;processos estruturados antes da automação&lt;/b&gt;, 
+    garantindo que a tecnologia seja aplicada como camada de inteligência sobre fluxos 
+    organizados e integrados.
+  &lt;/p&gt;
+  &lt;p style=&quot;font-size:13px; line-height:1.5; color:#3c4043;&quot;&gt;
+    A combinação entre organização humana e recursos de IA possibilita 
+    soluções personalizadas, adaptáveis às necessidades institucionais.
+  &lt;/p&gt;
+&lt;/div&gt;
+
+&lt;div class=&quot;card&quot;&gt;
+  &lt;h4&gt;🎯 Objetivo Institucional&lt;/h4&gt;
+  &lt;p style=&quot;font-size:13px; line-height:1.5; color:#3c4043;&quot;&gt;
+    Consolidar um modelo de gestão orientado por dados, fluxos integrados 
+    e inteligência aplicada, fortalecendo a governança administrativa 
+    e a eficiência dos processos internos.
+  &lt;/p&gt;
+&lt;/div&gt;
+
+&lt;div class=&quot;card&quot;&gt;
+  &lt;h4&gt;📌 Informações Técnicas&lt;/h4&gt;
+  &lt;div style=&quot;font-size:12px; color:#5f6368;&quot;&gt;
+    Programa: CMS Inteligente&lt;br&gt;
+    Módulo: AutoDoc – Automação Documental&lt;br&gt;
+    Versão: v3.0&lt;br&gt;
+    Plataforma: Google Workspace&lt;br&gt;
+    Desenvolvimento: Secretaria Executiva&lt;br&gt;
+    Ano: 2026
+  &lt;/div&gt;
+&lt;/div&gt;
+  &lt;/div&gt;
+
+  &lt;div class=&quot;btn-bar&quot;&gt;
+    &lt;button onclick=&quot;goToStep(&#39;home&#39;)&quot;&gt;Voltar&lt;/button&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+
+    &lt;div id=&quot;step-home&quot; class=&quot;step active&quot;&gt;
+      &lt;h3&gt;Minhas Automações&lt;/h3&gt;
+      
+
+      &lt;div id=&quot;saved-list&quot;&gt;Carregando...&lt;/div&gt;
+      &lt;br&gt;
+      &lt;button class=&quot;action&quot; style=&quot;width:100%; padding:10px; margin-bottom:5px; background:#177e40; border:1px dashed #999&quot; onclick=&quot;resetFormAndGoConfig()&quot;&gt;+ Criar Nova Configuração
+      &lt;/button&gt;
+    &lt;/div&gt;
+
+    &lt;div id=&quot;step-config&quot; class=&quot;step&quot;&gt;
+      &lt;h3&gt;1. Configurar Arquivos&lt;/h3&gt;
+      
+      &lt;label&gt;Nome desta Automação&lt;/label&gt;
+      &lt;input type=&quot;text&quot; id=&quot;config-name&quot; placeholder=&quot;Ex: Contratos 2026&quot;&gt;
+
+      &lt;label&gt;Arquivo Modelo (Doc)&lt;/label&gt;
+      &lt;div class=&quot;input-group&quot;&gt;
+        &lt;input type=&quot;text&quot; id=&quot;template-id&quot; placeholder=&quot;Use a busca &gt;&quot; readonly&gt;
+        &lt;button class=&quot;btn-search&quot; onclick=&quot;openSearch(&#39;file&#39;)&quot;&gt;🔍&lt;/button&gt;
+      &lt;/div&gt;
+      
+      &lt;label&gt;Pasta de Destino&lt;/label&gt;
+      &lt;div class=&quot;input-group&quot;&gt;
+        &lt;input type=&quot;text&quot; id=&quot;folder-id&quot; placeholder=&quot;Use a busca &gt;&quot; readonly&gt;
+        &lt;button class=&quot;btn-search&quot; onclick=&quot;openSearch(&#39;folder&#39;)&quot;&gt;🔍&lt;/button&gt;
+      &lt;/div&gt;
+      
+      &lt;div class=&quot;btn-bar&quot;&gt;
+        &lt;button onclick=&quot;goToStep(&#39;home&#39;)&quot;&gt;Cancelar&lt;/button&gt;
+        &lt;button class=&quot;create&quot; onclick=&quot;verifyTemplate()&quot;&gt;Verificar Tags &gt;&lt;/button&gt;
+      &lt;/div&gt;
+      &lt;div id=&quot;loading-tags&quot; style=&quot;display:none; color:#1967d2; margin-top:5px; font-size:12px&quot;&gt;Lendo template...&lt;/div&gt;
+    &lt;/div&gt;
+
+    &lt;div id=&quot;step-tags&quot; class=&quot;step&quot;&gt;
+      &lt;h3&gt;2. Verificação de Tags&lt;/h3&gt;
+      &lt;div id=&quot;tag-results&quot; class=&quot;tag-list&quot;&gt;&lt;/div&gt;
+      &lt;div class=&quot;btn-bar&quot;&gt;
+        &lt;button onclick=&quot;goToStep(&#39;config&#39;)&quot;&gt;Voltar&lt;/button&gt;
+        &lt;button class=&quot;create&quot; id=&quot;btn-next-options&quot; onclick=&quot;goToStep(&#39;options&#39;)&quot;&gt;Próximo &gt;&lt;/button&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+
+    &lt;div id=&quot;step-options&quot; class=&quot;step&quot;&gt;
+      &lt;h3&gt;3. Formatos e Envio&lt;/h3&gt;
+      
+      &lt;label&gt;Nome do Arquivo Gerado&lt;/label&gt;
+      &lt;input type=&quot;text&quot; id=&quot;file-name-pattern&quot; placeholder=&quot;Ex: Contrato - {{Nome}}&quot;&gt;
+      
+      &lt;label&gt;Formato Final&lt;/label&gt;
+      &lt;select id=&quot;file-format&quot;&gt;
+        &lt;option value=&quot;pdf&quot;&gt;PDF&lt;/option&gt;
+        &lt;option value=&quot;doc&quot;&gt;Google Doc&lt;/option&gt;
+      &lt;/select&gt;
+
+      &lt;div style=&quot;background:#f1f3f4; padding:10px; border-radius:4px; margin-top:10px&quot;&gt;
+        &lt;label style=&quot;margin-top:0&quot;&gt;
+          &lt;input type=&quot;checkbox&quot; id=&quot;send-email&quot; onchange=&quot;toggleEmailOptions()&quot; style=&quot;width:auto; margin-bottom:0&quot;&gt; Enviar por E-mail
+        &lt;/label&gt;
+        &lt;div id=&quot;email-options&quot; style=&quot;display:none; margin-top:10px&quot;&gt;
+          &lt;label&gt;Assunto&lt;/label&gt;
+          &lt;input type=&quot;text&quot; id=&quot;email-subject&quot; placeholder=&quot;Assunto do email&quot;&gt;
+          &lt;label&gt;Mensagem&lt;/label&gt;
+          &lt;textarea id=&quot;email-body&quot; rows=&quot;3&quot; placeholder=&quot;Use {{Tag}} no texto...&quot;&gt;&lt;/textarea&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+
+      &lt;div class=&quot;btn-bar&quot;&gt;
+        &lt;button onclick=&quot;goToStep(&#39;tags&#39;)&quot;&gt;Voltar&lt;/button&gt;
+        &lt;button class=&quot;share&quot; onclick=&quot;saveConfigOnly()&quot;&gt;💾 Salvar&lt;/button&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+
+    &lt;div id=&quot;step-run&quot; class=&quot;step&quot;&gt;
+      &lt;h3&gt;Processando...&lt;/h3&gt;
+      &lt;div id=&quot;run-status&quot;&gt;Iniciando...&lt;/div&gt;
+    &lt;/div&gt;
+
+    &lt;div id=&quot;search-modal&quot; style=&quot;display:none;&quot;&gt;
+      &lt;div class=&quot;modal-content&quot;&gt;
+        &lt;h3 id=&quot;search-title&quot;&gt;Buscar&lt;/h3&gt;
+        &lt;div class=&quot;input-group&quot;&gt;
+          &lt;input type=&quot;text&quot; id=&quot;search-query&quot; placeholder=&quot;Digite o nome...&quot;&gt;
+          &lt;button class=&quot;create&quot; onclick=&quot;performSearch()&quot;&gt;Ir&lt;/button&gt;
+        &lt;/div&gt;
+        &lt;div id=&quot;search-results&quot; style=&quot;margin-top:10px;&quot;&gt;&lt;/div&gt;
+        &lt;button onclick=&quot;closeSearch()&quot; style=&quot;margin-top:15px; width:100%; background:#eee; border:none;&quot;&gt;Cancelar&lt;/button&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+&lt;div style=&quot;margin-top:25px; text-align:center; font-size:10px; color:  ;&quot;&gt;
+  
+  &lt;img src=&quot;https://i.ibb.co/TxHFTCjv/Logotipo-CMSMOC-2025-A4.png&quot; 
+       style=&quot;height:60px; opacity:0.85; margin-bottom:6px;&quot; /&gt;
+  
+  &lt;div&gt;
+    Desenvolvido pela Secretaria Executiva
+  &lt;/div&gt;
+ &lt;button class=&quot;action&quot; style=&quot;margin-bottom:10px;&quot; onclick=&quot;goToStep(&#39;about&#39;)&quot;&gt;
+  ℹ️ Sobre o Sistema
+&lt;/button&gt;
+&lt;/div&gt;
+    &lt;script&gt;
+      let currentConfig = {};
+      let searchType = &#39;file&#39;;
+
+      function goToStep(stepId) {
+        document.querySelectorAll(&#39;.step&#39;).forEach(el =&gt; el.classList.remove(&#39;active&#39;));
+        document.getElementById(&#39;step-&#39; + stepId).classList.add(&#39;active&#39;);
+        if(stepId === &#39;home&#39;) loadSaved();
+      }
+
+      // --- NOVA FUNÇÃO: LIMPAR FORMULÁRIO ---
+      function resetFormAndGoConfig() {
+        document.getElementById(&#39;config-name&#39;).value = &#39;&#39;;
+        document.getElementById(&#39;template-id&#39;).value = &#39;&#39;;
+        document.getElementById(&#39;folder-id&#39;).value = &#39;&#39;;
+        document.getElementById(&#39;file-name-pattern&#39;).value = &#39;&#39;;
+        document.getElementById(&#39;send-email&#39;).checked = false;
+        document.getElementById(&#39;email-subject&#39;).value = &#39;&#39;;
+        document.getElementById(&#39;email-body&#39;).value = &#39;&#39;;
+        toggleEmailOptions();
+        goToStep(&#39;config&#39;);
+      }
+
+      // --- NOVA FUNÇÃO: EDITAR ---
+      function editConfig(config) {
+        // Preenche os campos com os dados salvos
+        document.getElementById(&#39;config-name&#39;).value = config.name;
+        document.getElementById(&#39;template-id&#39;).value = config.templateId;
+        document.getElementById(&#39;folder-id&#39;).value = config.folderId;
+        document.getElementById(&#39;file-name-pattern&#39;).value = config.fileNamePattern;
+        document.getElementById(&#39;file-format&#39;).value = config.format;
+        
+        document.getElementById(&#39;send-email&#39;).checked = config.sendEmail;
+        document.getElementById(&#39;email-subject&#39;).value = config.emailSubject || &#39;&#39;;
+        document.getElementById(&#39;email-body&#39;).value = config.emailBody || &#39;&#39;;
+        
+        toggleEmailOptions();
+        
+        // Vai para o passo 1
+        goToStep(&#39;config&#39;);
+        // Aviso visual opcional
+        alert(&quot;Modo de Edição: Faça suas alterações e clique em &#39;Verificar Tags&#39; para continuar.&quot;);
+      }
+
+      // --- NOVA FUNÇÃO: DELETAR ---
+      function deleteConfig(name) {
+        if(confirm(`Tem certeza que deseja EXCLUIR a automação &quot;${name}&quot;?`)) {
+          document.getElementById(&#39;saved-list&#39;).innerHTML = &#39;Excluindo...&#39;;
+          google.script.run
+            .withSuccessHandler(() =&gt; {
+              loadSaved(); // Recarrega a lista
+            })
+            .withFailureHandler(err =&gt; alert(&quot;Erro ao excluir: &quot; + err.message))
+            .deleteConfiguration(name);
+        }
+      }
+
+      function toggleEmailOptions() {
+        const check = document.getElementById(&#39;send-email&#39;).checked;
+        document.getElementById(&#39;email-options&#39;).style.display = check ? &#39;block&#39; : &#39;none&#39;;
+      }
+
+      // --- BUSCA ---
+      function openSearch(type) {
+        searchType = type;
+        document.getElementById(&#39;search-title&#39;).innerText = type === &#39;file&#39; ? &#39;Buscar Template&#39; : &#39;Buscar Pasta&#39;;
+        document.getElementById(&#39;search-results&#39;).innerHTML = &#39;&#39;;
+        document.getElementById(&#39;search-modal&#39;).style.display = &#39;flex&#39;;
+      }
+      function closeSearch() { document.getElementById(&#39;search-modal&#39;).style.display = &#39;none&#39;; }
+      function performSearch() {
+        const query = document.getElementById(&#39;search-query&#39;).value;
+        document.getElementById(&#39;search-results&#39;).innerHTML = &#39;Buscando...&#39;;
+        const handler = (results) =&gt; {
+          const container = document.getElementById(&#39;search-results&#39;);
+          container.innerHTML = &#39;&#39;;
+          if(results.length === 0) { container.innerHTML = &#39;Nada encontrado.&#39;; return; }
+          results.forEach(item =&gt; {
+            const div = document.createElement(&#39;div&#39;);
+            div.className = &#39;file-item&#39;;
+            div.innerHTML = `&lt;div&gt;&lt;b&gt;${item.name}&lt;/b&gt;&lt;/div&gt;`;
+            div.onclick = () =&gt; {
+              if(searchType === &#39;file&#39;) document.getElementById(&#39;template-id&#39;).value = item.id;
+              else document.getElementById(&#39;folder-id&#39;).value = item.id;
+              closeSearch();
+            };
+            container.appendChild(div);
+          });
+        };
+        if (searchType === &#39;file&#39;) google.script.run.withSuccessHandler(handler).searchDriveFiles(query);
+        else google.script.run.withSuccessHandler(handler).searchDriveFolders(query);
+      }
+
+      // --- VERIFICAÇÃO E SALVAMENTO ---
+      function verifyTemplate() {
+        const docId = document.getElementById(&#39;template-id&#39;).value;
+        const name = document.getElementById(&#39;config-name&#39;).value;
+        const folder = document.getElementById(&#39;folder-id&#39;).value;
+        
+        if(!docId || !name || !folder) { alert(&quot;Preencha todos os campos!&quot;); return; }
+        
+        document.getElementById(&#39;loading-tags&#39;).style.display = &#39;block&#39;;
+        currentConfig = { name, templateId: docId, folderId: folder };
+        
+        google.script.run.withSuccessHandler(showTags).getTemplateTags(docId);
+      }
+
+      function showTags(tags) {
+        document.getElementById(&#39;loading-tags&#39;).style.display = &#39;none&#39;;
+        goToStep(&#39;tags&#39;);
+        google.script.run.withSuccessHandler(headers =&gt; {
+          const div = document.getElementById(&#39;tag-results&#39;);
+          div.innerHTML = &#39;&#39;;
+          tags.forEach(tag =&gt; {
+            const ok = headers.includes(tag);
+            div.innerHTML += `&lt;div&gt;{{${tag}}} : ${ok ? &#39;&lt;span style=&quot;color:green&quot;&gt;OK&lt;/span&gt;&#39; : &#39;&lt;span style=&quot;color:red&quot;&gt;Falta na Planilha&lt;/span&gt;&#39;}&lt;/div&gt;`;
+          });
+        }).getSheetHeaders();
+      }
+
+      function saveConfigOnly() {
+        currentConfig.fileNamePattern = document.getElementById(&#39;file-name-pattern&#39;).value;
+        currentConfig.format = document.getElementById(&#39;file-format&#39;).value;
+        currentConfig.sendEmail = document.getElementById(&#39;send-email&#39;).checked;
+        currentConfig.emailSubject = document.getElementById(&#39;email-subject&#39;).value;
+        currentConfig.emailBody = document.getElementById(&#39;email-body&#39;).value;
+
+        if (!currentConfig.fileNamePattern) { alert(&quot;Defina o nome do arquivo.&quot;); return; }
+
+        google.script.run
+          .withSuccessHandler(msg =&gt; {
+            alert(msg);
+            goToStep(&#39;home&#39;);
+          })
+          .saveConfiguration(currentConfig);
+      }
+
+      // --- LISTAGEM COM BOTÕES DE AÇÃO ---
+      function loadSaved() {
+        document.getElementById(&#39;saved-list&#39;).innerHTML = &#39;Carregando...&#39;;
+        google.script.run.withSuccessHandler(automations =&gt; {
+            const container = document.getElementById(&#39;saved-list&#39;);
+            container.innerHTML = &#39;&#39;;
+            if (automations.length === 0) {
+              container.innerHTML = &#39;&lt;p&gt;Nenhuma configuração salva.&lt;/p&gt;&#39;;
+              return;
+            }
+            automations.forEach(auto =&gt; {
+              // Criação do Card com Botões
+              const div = document.createElement(&#39;div&#39;);
+              div.className = &#39;card&#39;;
+              
+              // Passando o objeto &#39;auto&#39; para o botão Edit via JSON.stringify pode ser complicado com aspas
+              // Vamos usar uma abordagem de guardar em variável global ou criar função anônima
+              
+              div.innerHTML = `
+                &lt;h4&gt;${auto.name}&lt;/h4&gt;
+                &lt;div class=&quot;card-meta&quot;&gt;Template: ...${auto.templateId.substr(-6)} | Formato: ${auto.format}&lt;/div&gt;
+                &lt;div class=&quot;card-actions&quot;&gt;
+                  &lt;div&gt;
+                    &lt;button class=&quot;icon-btn&quot; title=&quot;Editar&quot; id=&quot;btn-edit-${auto.name.replace(/\s/g, &#39;&#39;)}&quot;&gt;✏️&lt;/button&gt;
+                    &lt;button class=&quot;icon-btn&quot; title=&quot;Excluir&quot; onclick=&quot;deleteConfig(&#39;${auto.name}&#39;)&quot;&gt;🗑️&lt;/button&gt;
+                  &lt;/div&gt;
+                  &lt;button class=&quot;btn-run&quot; id=&quot;btn-run-${auto.name.replace(/\s/g, &#39;&#39;)}&quot;&gt;▶ RODAR&lt;/button&gt;
+                &lt;/div&gt;
+              `;
+              container.appendChild(div);
+
+              // Adiciona listeners (para evitar problemas de aspas no HTML inline)
+              document.getElementById(`btn-edit-${auto.name.replace(/\s/g, &#39;&#39;)}`).onclick = () =&gt; editConfig(auto);
+              document.getElementById(`btn-run-${auto.name.replace(/\s/g, &#39;&#39;)}`).onclick = () =&gt; triggerRun(auto);
+            });
+        }).getSavedAutomations();
+      }
+
+      function triggerRun(config) {
+        if(!confirm(`Deseja iniciar a geração de documentos para &quot;${config.name}&quot;?`)) return;
+        goToStep(&#39;run&#39;);
+        document.getElementById(&#39;run-status&#39;).innerText = &quot;Processando... aguarde.&quot;;
+        google.script.run
+          .withSuccessHandler(msg =&gt; {
+             document.getElementById(&#39;run-status&#39;).innerHTML = `&lt;h3 style=&quot;color:green&quot;&gt;Sucesso!&lt;/h3&gt;&lt;p&gt;${msg}&lt;/p&gt;&lt;button onclick=&quot;goToStep(&#39;home&#39;)&quot;&gt;Voltar&lt;/button&gt;`;
+          })
+          .withFailureHandler(err =&gt; {
+             document.getElementById(&#39;run-status&#39;).innerHTML = `&lt;h3 style=&quot;color:red&quot;&gt;Erro&lt;/h3&gt;&lt;p&gt;${err.message}&lt;/p&gt;&lt;button onclick=&quot;goToStep(&#39;home&#39;)&quot;&gt;Voltar&lt;/button&gt;`;
+          })
+          .runAutomationProcess(config);
+      }
+      
+      loadSaved();
+    &lt;/script&gt;
+  &lt;/body&gt;
+&lt;/html&gt;</pre>
+        </div>
+
+        <p>Abaixo, veja como deve ficar após salvar o código:</p>
+        <img src="https://i.ibb.co/rR8Qwzt8/Captura-de-tela-2026-02-12-140941.png" alt="Sidebar Salvo" class="tutorial-img">
+    </div>
+
+    <div class="step-block">
+        <h2>Passo 4: Finalizar e Testar</h2>
+        <ol>
+            <li>No Apps Script, clique no ícone de <strong>Salvar</strong> (Disquete).</li>
+            <li>Volte para a sua Planilha Google.</li>
+            <li>Recarregue a página (F5).</li>
+            <li>Após alguns segundos, o menu <strong>🧠 CMS Inteligente</strong> aparecerá na barra superior.
+                <img src="https://i.ibb.co/2YkYFXrb/Captura-de-tela-2026-02-12-141241.png" alt="Menu CMS" class="tutorial-img">
+            </li>
+        </ol>
+    </div>
+
+    <div class="step-block">
+        <h2>Passo 5: Primeira Execução e Autorização</h2>
+        <p>A primeira vez que você rodar o sistema AutoDoc, você precisará autorizá-lo para que ele possa acessar seu Google Drive e enviar e-mails.</p>
+        
+        <h3>1. Solicitação de Autorização</h3>
+        <p>Ao tentar rodar uma automação, o Google pedirá permissão:</p>
+        <img src="https://i.ibb.co/Q3sJtnzd/Captura-de-tela-2026-02-12-141252.png" alt="Pedido Autorização" class="tutorial-img">
+        
+        <h3>2. Escolha sua conta</h3>
+        <img src="https://i.ibb.co/8nM0pSjh/Captura-de-tela-2026-02-12-141303.png" alt="Escolha Conta" class="tutorial-img">
+        
+        <h3>3. Permitir Acesso</h3>
+        <p>Clique em "Allow" (Permitir) para confirmar:</p>
+        <img src="https://i.ibb.co/s9LXNPvw/Captura-de-tela-2026-02-12-141339.png" alt="Permitir Acesso" class="tutorial-img">
+        
+        <h3>4. Pronto para Uso</h3>
+        <p>Uma vez autorizado, o sistema AutoDoc CMS já está pronto para utilizar:</p>
+        <img src="https://i.ibb.co/nqDJTskK/Captura-de-tela-2026-02-12-141357.png" alt="Sistema Pronto" class="tutorial-img">
+    </div>
+
+</div>
+
+<script>
+    function copyToClipboard(elementId, btn) {
+        var text = document.getElementById(elementId).innerText;
+        var elem = document.createElement("textarea");
+        document.body.appendChild(elem);
+        elem.value = text;
+        elem.select();
+        document.execCommand("copy");
+        document.body.removeChild(elem);
+        
+        var originalText = btn.innerText;
+        btn.innerText = "Copiado!";
+        btn.classList.add("copied");
+        
+        setTimeout(function() {
+            btn.innerText = originalText;
+            btn.classList.remove("copied");
+        }, 2000);
+    }
+</script>
+
+</body>
+</html>
