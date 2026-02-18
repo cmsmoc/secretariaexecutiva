@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CMS - Dashboard da Presidência</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --navy-deep: #1e3a5f;
+            --navy-light: #2c5282;
+            --gold-primary: #c5a059;
+            --gold-gradient: linear-gradient(135deg, #f1d592 0%, #c5a059 50%, #ad8a46 100%);
+            --blue-gradient: linear-gradient(135deg, #2c5282 0%, #1a365d 100%);
+            --red-tag: #c53030;
+            --green-tag: #2f855a;
+            --yellow-tag: #b7791f;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #e2e8f0;
+            color: #2d3748;
+        }
+
+        /* Estilo do Header Superior */
+        .header-gradient {
+            background: linear-gradient(to right, #0f172a, #1e3a5f, #0f172a);
+            border-bottom: 2px solid var(--gold-primary);
+        }
+
+        /* Banner de Status Operacional */
+        .status-pill {
+            background: linear-gradient(to right, #f1f5f9, #cbd5e1);
+            border: 1px solid #94a3b8;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        /* Cards de KPI */
+        .kpi-card {
+            border-radius: 8px;
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.2s;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+        .kpi-card:hover { transform: translateY(-2px); }
+        
+        .bg-blue-kpi { background: var(--blue-gradient); color: white; }
+        .bg-gold-kpi { background: var(--gold-gradient); color: #1a365d; }
+
+        /* Estilo das Tabelas */
+        .table-header {
+            background: var(--navy-light);
+            color: white;
+            text-transform: uppercase;
+            font-size: 0.75rem;
+            letter-spacing: 0.05em;
+        }
+
+        /* Tags de Status */
+        .status-tag {
+            padding: 4px 12px;
+            border-radius: 4px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            display: inline-block;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .tag-atrasada { background-color: var(--red-tag); color: white; }
+        .tag-confirmada { background-color: #2a4365; color: white; }
+        .tag-revisao { background-color: #ed8936; color: white; }
+        .tag-agendada { background: var(--gold-gradient); color: #1a365d; }
+
+        /* Avisos e Timeline */
+        .notice-item {
+            background: #fffdf5;
+            border: 1px solid #e2e8f0;
+            border-left: 4px solid var(--navy-light);
+        }
+    </style>
+</head>
+<body class="min-h-screen pb-10">
+
+    <!-- Header Principal -->
+    <header class="header-gradient text-white px-8 py-4 shadow-xl mb-6">
+        <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
+            <div class="flex items-center gap-4">
+                <div class="w-12 h-12 bg-white rounded-md flex items-center justify-center p-1 shadow-inner">
+                   <!-- SVG Logo Placeholder -->
+                   <svg viewBox="0 0 100 100" class="w-full h-full text-navy-deep font-bold">
+                       <path d="M20 20 L80 20 L80 80 L20 80 Z" fill="none" stroke="currentColor" stroke-width="5"/>
+                       <text x="50" y="65" text-anchor="middle" font-size="40" fill="currentColor">CMS</text>
+                   </svg>
+                </div>
+                <div>
+                    <h1 class="text-2xl font-semibold tracking-tight uppercase">CMS <span class="font-light">Dashboard da Presidência</span></h1>
+                    <p class="text-[10px] text-gold-light uppercase tracking-widest opacity-80">Conselho Municipal de Saúde</p>
+                </div>
+            </div>
+            <div class="flex items-center gap-4 text-sm">
+                <span class="opacity-70">Bem-vindo, Sr. Presidente</span>
+                <span class="w-px h-4 bg-white/20"></span>
+                <div class="flex items-center gap-2">
+                   <span id="display-date" class="font-medium">11 de Fevereiro de 2026</span>
+                   <svg class="w-4 h-4 opacity-60" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M19 9l-7 7-7-7"></path></svg>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 space-y-6">
+
+        <!-- Status Pill -->
+        <div class="flex justify-center">
+            <div class="status-pill px-6 py-2 rounded-full flex items-center gap-3 shadow-sm border border-white/50">
+                <div class="w-3 h-3 bg-green-500 rounded-full shadow-[0_0_8px_rgba(34,197,94,0.6)]"></div>
+                <span class="text-sm font-bold text-slate-700 uppercase tracking-tight">Situação Operacional: <span class="text-navy-deep">Estável</span></span>
+                <div class="w-5 h-5 bg-gold-gradient rounded-sm flex items-center justify-center text-navy-deep text-[10px] font-bold">✓</div>
+            </div>
+        </div>
+
+        <!-- KPI Grid -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            <div class="kpi-card bg-blue-kpi p-6">
+                <div class="flex justify-between items-start">
+                    <div>
+                        <p class="text-xs font-bold uppercase tracking-wider opacity-80">Pendências Abertas</p>
+                        <p class="text-4xl font-bold mt-1">5</p>
+                    </div>
+                    <div class="w-10 h-10 bg-red-600 rounded-full flex items-center justify-center shadow-lg border-2 border-white/20">
+                        <span class="text-xl font-black">!</span>
+                    </div>
+                </div>
+            </div>
+            <div class="kpi-card bg-gold-kpi p-6">
+                <div class="flex justify-between items-start text-navy-deep">
+                    <div>
+                        <p class="text-xs font-bold uppercase tracking-wider opacity-80">Reuniões do Mês</p>
+                        <p class="text-4xl font-bold mt-1">3</p>
+                    </div>
+                    <svg class="w-10 h-10 opacity-30" fill="currentColor" viewBox="0 0 20 20"><path d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z"/></svg>
+                </div>
+            </div>
+            <div class="kpi-card bg-blue-kpi p-6">
+                <div class="flex justify-between items-start">
+                    <div>
+                        <p class="text-xs font-bold uppercase tracking-wider opacity-80">Ofícios Pendentes</p>
+                        <p class="text-4xl font-bold mt-1">2</p>
+                    </div>
+                    <svg class="w-10 h-10 opacity-30" fill="currentColor" viewBox="0 0 20 20"><path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z"/><path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z"/></svg>
+                </div>
+            </div>
+            <div class="kpi-card bg-gold-kpi p-6">
+                <div class="flex justify-between items-start text-navy-deep">
+                    <div>
+                        <p class="text-xs font-bold uppercase tracking-wider opacity-80">Câmaras Ativas</p>
+                        <p class="text-4xl font-bold mt-1">4</p>
+                    </div>
+                    <svg class="w-10 h-10 opacity-30" fill="currentColor" viewBox="0 0 20 20"><path d="M4 4a2 2 0 012-2h8a2 2 0 012 2v12a1 1 0 01-1 1H5a1 1 0 01-1-1V4z"/></svg>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tables Row -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            
+            <!-- Próximas Reuniões -->
+            <div class="bg-white rounded-lg shadow-md overflow-hidden border border-gray-200">
+                <div class="table-header py-3 px-4 font-bold">Próximas Reuniões</div>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left text-xs">
+                        <thead>
+                            <tr class="bg-gray-50 text-gray-400 font-bold border-b">
+                                <th class="p-4">Data</th>
+                                <th class="p-4">Tipo</th>
+                                <th class="p-4">Pauta Principal</th>
+                                <th class="p-4">Status</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y">
+                            <tr>
+                                <td class="p-4 font-medium text-gray-700">20/02/2026</td>
+                                <td class="p-4">Ordinária</td>
+                                <td class="p-4">Aprovação da ata anterior</td>
+                                <td class="p-4"><span class="status-tag tag-agendada">Agendada</span></td>
+                            </tr>
+                            <tr class="bg-gray-50/50">
+                                <td class="p-4 font-medium text-gray-700">25/02/2026</td>
+                                <td class="p-4">Câmara Técnica</td>
+                                <td class="p-4">Análise Relatório Financeiro</td>
+                                <td class="p-4"><span class="status-tag tag-confirmada">Confirmada</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Pendências Estratégicas -->
+            <div class="bg-white rounded-lg shadow-md overflow-hidden border border-gray-200">
+                <div class="table-header py-3 px-4 font-bold">Pendências Estratégicas</div>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left text-xs">
+                        <thead>
+                            <tr class="bg-gray-50 text-gray-400 font-bold border-b">
+                                <th class="p-4">Assunto</th>
+                                <th class="p-4">Responsável</th>
+                                <th class="p-4">Status</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y">
+                            <tr>
+                                <td class="p-4 font-medium text-gray-700">Resposta ao Ministério Público</td>
+                                <td class="p-4">Presidência</td>
+                                <td class="p-4"><span class="status-tag tag-atrasada">Atrasada</span></td>
+                            </tr>
+                            <tr class="bg-gray-50/50">
+                                <td class="p-4 font-medium text-gray-700">Publicação Ata 462</td>
+                                <td class="p-4">Secretaria</td>
+                                <td class="p-4"><span class="status-tag tag-revisao">Em Revisão</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Avisos Section -->
+        <div class="bg-white rounded-lg shadow-md overflow-hidden border border-gray-200">
+            <div class="bg-navy-deep py-3 px-4 flex items-baseline gap-2">
+                <span class="text-white font-bold uppercase text-sm">Avisos</span>
+                <span class="text-gold-primary font-bold uppercase text-sm italic">Importantes</span>
+            </div>
+            <div class="p-4 space-y-3">
+                <div class="notice-item p-4 rounded-r-md flex items-center gap-4">
+                    <div class="w-10 h-10 bg-navy-deep text-white flex items-center justify-center rounded-sm">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+                    </div>
+                    <div>
+                        <h4 class="font-bold text-navy-deep text-sm">Convite Conferência Estadual</h4>
+                        <p class="text-gray-500 text-xs">Inscrições abertas até 28/02 via portal oficial.</p>
+                    </div>
+                </div>
+                <div class="notice-item p-4 rounded-r-md flex items-center gap-4">
+                    <div class="w-10 h-10 bg-navy-deep text-white flex items-center justify-center rounded-sm">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                    </div>
+                    <div>
+                        <h4 class="font-bold text-navy-deep text-sm">Atualização Normativa SUS</h4>
+                        <p class="text-gray-500 text-xs">Nova resolução publicada referente ao repasse de verbas de média complexidade.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Linha do Tempo -->
+        <div class="bg-white rounded-lg shadow-md overflow-hidden border border-gray-200">
+            <div class="bg-navy-deep py-3 px-4 flex items-baseline gap-2">
+                <span class="text-white font-bold uppercase text-sm">Linha do Tempo</span>
+                <span class="text-gold-primary font-bold uppercase text-sm italic">Recentes</span>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-px bg-gray-200">
+                <div class="bg-white p-4 flex items-center gap-4">
+                    <div class="text-navy-deep"><svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20"><path d="M9 2a2 2 0 00-2 2v8a2 2 0 002 2h6a2 2 0 002-2V6.414L13.586 3H9z"/></svg></div>
+                    <div class="text-xs">
+                        <span class="font-bold text-gray-500">05/02/2026</span>
+                        <span class="mx-2 font-black text-navy-deep uppercase">Ata</span>
+                        <span class="text-gray-600">Ata 462 Publicada no Diário Oficial</span>
+                    </div>
+                </div>
+                <div class="bg-white p-4 flex items-center gap-4">
+                    <div class="text-navy-deep"><svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20"><path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z"/><path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z"/></svg></div>
+                    <div class="text-xs">
+                        <span class="font-bold text-gray-500">06/02/2026</span>
+                        <span class="mx-2 font-black text-navy-deep uppercase">Ofício</span>
+                        <span class="text-gray-600">Ofício 14/2026 Enviado à Secretaria Municipal</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <script>
+        // Formatação da Data Atual
+        function updateDate() {
+            const now = new Date();
+            const options = { day: 'numeric', month: 'long', year: 'numeric' };
+            const formattedDate = now.toLocaleDateString('pt-BR', options);
+            document.getElementById('display-date').textContent = formattedDate;
+        }
+        updateDate();
+    </script>
+</body>
+</html>
