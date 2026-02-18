@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Gerencial - Saúde Municipal</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #f8fafc; }
+        .tab-active { @apply border-b-2 border-blue-600 text-blue-600; }
+        .glass-card { @apply bg-white border border-slate-200 rounded-2xl shadow-sm overflow-hidden; }
+        .metric-up { @apply text-green-600 bg-green-50; }
+        .metric-down { @apply text-red-600 bg-red-50; }
+        .metric-neutral { @apply text-amber-600 bg-amber-50; }
+    </style>
+</head>
+<body class="min-h-screen text-slate-900">
+
+    <!-- Sidebar/Nav -->
+    <nav class="bg-white border-b border-slate-200 sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16 items-center">
+                <div class="flex items-center gap-2">
+                    <div class="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center text-white font-bold">S</div>
+                    <span class="font-bold text-lg tracking-tight">Monitoramento APS</span>
+                </div>
+                <div class="hidden md:flex gap-8 text-sm font-medium">
+                    <button onclick="switchTab('telemed')" id="btn-telemed" class="py-5 px-1 tab-active transition-all">SUS Digital / Telemedicina</button>
+                    <button onclick="switchTab('bucal')" id="btn-bucal" class="py-5 px-1 text-slate-500 hover:text-blue-600 transition-all">Saúde Bucal</button>
+                </div>
+                <div class="text-xs font-semibold text-slate-400 bg-slate-100 px-3 py-1 rounded-full uppercase">Ciclo 2025</div>
+            </div>
+        </div>
+    </nav>
+
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        
+        <!-- SECTION: TELEMEDICINA -->
+        <div id="section-telemed" class="space-y-8">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <!-- KPI 1 -->
+                <div class="glass-card p-6">
+                    <div class="flex justify-between items-start mb-4">
+                        <span class="p-2 bg-blue-50 text-blue-600 rounded-xl">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z"></path></svg>
+                        </span>
+                        <span class="text-[10px] font-bold text-green-600 bg-green-50 px-2 py-1 rounded-md tracking-wider">META ALCANÇADA</span>
+                    </div>
+                    <h3 class="text-slate-500 text-xs font-bold uppercase mb-1">Capacitações Realizadas</h3>
+                    <div class="flex items-baseline gap-2">
+                        <span class="text-3xl font-bold">09</span>
+                        <span class="text-slate-400 text-sm">/ de 04</span>
+                    </div>
+                </div>
+
+                <!-- KPI 2 -->
+                <div class="glass-card p-6 border-l-4 border-l-amber-400">
+                    <div class="flex justify-between items-start mb-4">
+                        <span class="p-2 bg-amber-50 text-amber-600 rounded-xl">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z"></path></svg>
+                        </span>
+                        <span class="text-[10px] font-bold text-amber-600 bg-amber-50 px-2 py-1 rounded-md tracking-wider">EM AGUARDO (PAC)</span>
+                    </div>
+                    <h3 class="text-slate-500 text-xs font-bold uppercase mb-1">Kits Telessaúde</h3>
+                    <div class="flex items-baseline gap-2">
+                        <span class="text-3xl font-bold text-slate-800">01</span>
+                        <span class="text-slate-400 text-sm">/ de 11</span>
+                    </div>
+                </div>
+
+                <!-- KPI 3 -->
+                <div class="glass-card p-6 border-l-4 border-l-red-400">
+                    <div class="flex justify-between items-start mb-4">
+                        <span class="p-2 bg-red-50 text-red-600 rounded-xl">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
+                        </span>
+                        <span class="text-[10px] font-bold text-red-600 bg-red-50 px-2 py-1 rounded-md tracking-wider">BLOQUEADO</span>
+                    </div>
+                    <h3 class="text-slate-500 text-xs font-bold uppercase mb-1">Contratação TI</h3>
+                    <div class="flex items-baseline gap-2">
+                        <span class="text-3xl font-bold text-slate-800">0%</span>
+                        <span class="text-slate-400 text-sm">Realizado</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <div class="glass-card p-8">
+                    <h4 class="text-slate-800 font-bold mb-6">Eficiência de Implementação (SUS Digital)</h4>
+                    <div class="h-[300px]">
+                        <canvas id="chartTelemed"></canvas>
+                    </div>
+                </div>
+                <div class="glass-card p-8 bg-slate-900 text-white border-none">
+                    <h4 class="font-bold mb-4">Análise Crítica: Telemedicina</h4>
+                    <ul class="space-y-4 text-sm text-slate-300">
+                        <li class="flex gap-3">
+                            <span class="text-green-400 font-bold">✓</span>
+                            <span>Capacitações superaram a meta em 225%, indicando alta maturidade técnica das equipes.</span>
+                        </li>
+                        <li class="flex gap-3 border-t border-slate-800 pt-4">
+                            <span class="text-amber-400 font-bold">!</span>
+                            <span>Dependência crítica do NOVO PAC: O corte de 11 para 1 kit atrasa a escala tecnológica.</span>
+                        </li>
+                        <li class="flex gap-3 border-t border-slate-800 pt-4">
+                            <span class="text-red-400 font-bold">⚠</span>
+                            <span>Vulnerabilidade técnica: A ausência de um analista de sistemas sobrecarrega a coordenação.</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- SECTION: SAÚDE BUCAL -->
+        <div id="section-bucal" class="hidden space-y-8">
+            <!-- Top Summary Cards -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                <div class="glass-card p-5 border-b-4 border-b-blue-600">
+                    <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">Escovação Dental</p>
+                    <p class="text-2xl font-bold">51,4% <span class="text-[10px] text-green-500">↑ 1140%</span></p>
+                </div>
+                <div class="glass-card p-5 border-b-4 border-b-indigo-600">
+                    <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">Próteses (Ano)</p>
+                    <p class="text-2xl font-bold">1.437 <span class="text-[10px] text-slate-400">Total</span></p>
+                </div>
+                <div class="glass-card p-5 border-b-4 border-b-teal-600">
+                    <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">Cobertura CEO</p>
+                    <p class="text-2xl font-bold">90,9% <span class="text-[10px] text-green-500">Meta: 70%</span></p>
+                </div>
+                <div class="glass-card p-5 border-b-4 border-b-violet-600">
+                    <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">Hospitais Ref.</p>
+                    <p class="text-2xl font-bold">02 <span class="text-[10px] text-blue-500">+100%</span></p>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <div class="glass-card p-6 lg:col-span-2">
+                    <h4 class="text-slate-800 font-bold mb-6">Produção de Próteses Dentárias por RDQA</h4>
+                    <div class="h-[350px]">
+                        <canvas id="chartProteses"></canvas>
+                    </div>
+                </div>
+                <div class="glass-card p-6">
+                    <h4 class="text-slate-800 font-bold mb-6 text-center">Perfil de Qualidade</h4>
+                    <div class="h-[350px]">
+                        <canvas id="chartRadarBucal"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Detailed Data List (Table replacement) -->
+            <div class="glass-card">
+                <div class="px-6 py-4 bg-slate-50 border-b border-slate-200">
+                    <h3 class="font-bold text-slate-700">Consolidado de Indicadores - Saúde Bucal</h3>
+                </div>
+                <div class="divide-y divide-slate-100">
+                    <div class="p-4 flex flex-col md:flex-row md:items-center justify-between gap-4">
+                        <div class="max-w-md">
+                            <p class="font-bold text-sm">1ª Consulta Odontológica Programática</p>
+                            <p class="text-xs text-slate-500 italic">Meta trimestral de 3% e anual de 9%.</p>
+                        </div>
+                        <div class="flex items-center gap-6">
+                            <div class="text-center">
+                                <p class="text-xs text-slate-400 uppercase">Realizado</p>
+                                <p class="font-bold text-green-600">11,16%</p>
+                            </div>
+                            <div class="h-8 w-px bg-slate-200"></div>
+                            <span class="text-[10px] font-bold bg-green-100 text-green-700 px-2 py-1 rounded uppercase">Meta Alcançada</span>
+                        </div>
+                    </div>
+                    <div class="p-4 flex flex-col md:flex-row md:items-center justify-between gap-4">
+                        <div class="max-w-md">
+                            <p class="font-bold text-sm">Prevenção de Câncer de Boca</p>
+                            <p class="text-xs text-slate-500 italic">100% das ESF realizando ações de diagnóstico.</p>
+                        </div>
+                        <div class="flex items-center gap-6">
+                            <div class="text-center">
+                                <p class="text-xs text-slate-400 uppercase">Realizado</p>
+                                <p class="font-bold text-blue-600">100%</p>
+                            </div>
+                            <div class="h-8 w-px bg-slate-200"></div>
+                            <span class="text-[10px] font-bold bg-blue-100 text-blue-700 px-2 py-1 rounded uppercase">137 Equipes Ativas</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // Tab Management Logic
+        function switchTab(tab) {
+            const telemedSection = document.getElementById('section-telemed');
+            const bucalSection = document.getElementById('section-bucal');
+            const btnTelemed = document.getElementById('btn-telemed');
+            const btnBucal = document.getElementById('btn-bucal');
+
+            if (tab === 'telemed') {
+                telemedSection.classList.remove('hidden');
+                bucalSection.classList.add('hidden');
+                btnTelemed.classList.add('tab-active');
+                btnTelemed.classList.remove('text-slate-500');
+                btnBucal.classList.remove('tab-active');
+                btnBucal.classList.add('text-slate-500');
+            } else {
+                telemedSection.classList.add('hidden');
+                bucalSection.classList.remove('hidden');
+                btnBucal.classList.add('tab-active');
+                btnBucal.classList.remove('text-slate-500');
+                btnTelemed.classList.remove('tab-active');
+                btnTelemed.classList.add('text-slate-500');
+            }
+        }
+
+        // Charts Initialization
+        window.onload = function() {
+            // Chart Telemed: Meta vs Real
+            new Chart(document.getElementById('chartTelemed'), {
+                type: 'bar',
+                data: {
+                    labels: ['Capacitação', 'Kits (PAC)', 'Contratação TI'],
+                    datasets: [{
+                        label: 'Meta Planejada',
+                        data: [4, 11, 1],
+                        backgroundColor: '#e2e8f0',
+                        borderRadius: 8
+                    }, {
+                        label: 'Executado 2025',
+                        data: [9, 1, 0],
+                        backgroundColor: ['#22c55e', '#f59e0b', '#ef4444'],
+                        borderRadius: 8
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { position: 'bottom' } },
+                    scales: { y: { beginAtZero: true }, x: { grid: { display: false } } }
+                }
+            });
+
+            // Chart Saúde Bucal: Próteses
+            new Chart(document.getElementById('chartProteses'), {
+                type: 'line',
+                data: {
+                    labels: ['1º RDQA', '2º RDQA', '3º RDQA'],
+                    datasets: [{
+                        label: 'Próteses Entregues',
+                        data: [340, 506, 591],
+                        borderColor: '#4f46e5',
+                        backgroundColor: 'rgba(79, 70, 229, 0.1)',
+                        fill: true,
+                        tension: 0.4,
+                        pointRadius: 6,
+                        pointBackgroundColor: '#fff',
+                        pointBorderWidth: 2
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: { y: { beginAtZero: true } }
+                }
+            });
+
+            // Chart Radar Bucal: Desempenho
+            new Chart(document.getElementById('chartRadarBucal'), {
+                type: 'radar',
+                data: {
+                    labels: ['Cobertura ESB', 'Câncer Boca', 'Cobertura CEO', 'Consulta Prog.', 'Adesão PCD'],
+                    datasets: [{
+                        label: 'Atingimento Meta (%)',
+                        data: [100, 100, 91, 111, 100],
+                        borderColor: '#7c3aed',
+                        backgroundColor: 'rgba(124, 58, 237, 0.2)',
+                        pointBackgroundColor: '#7c3aed'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        r: { beginAtZero: true, max: 120, ticks: { display: false } }
+                    }
+                }
+            });
+        };
+    </script>
+</body>
+</html>
