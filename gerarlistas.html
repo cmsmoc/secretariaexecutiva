@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gerador de Lista de Presença - Conselheiros</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .result-container {
+            background: #ffffff;
+            border: 1px solid #e5e7eb;
+            padding: 1.5rem;
+            border-radius: 0.5rem;
+            font-family: 'Montserrat', sans-serif;
+            line-height: 1.5;
+            min-height: 80px;
+            color: #1a1a1a;
+        }
+        .result-container b { font-weight: bold; }
+        .result-container i { font-style: italic; }
+    </style>
+</head>
+<body class="bg-gray-50 min-h-screen p-4 md:p-8">
+    <div class="max-w-5xl mx-auto bg-white shadow-xl rounded-lg overflow-hidden">
+        <header class="bg-indigo-700 text-white p-6">
+            <h1 class="text-2xl font-bold">Processador de Frequência Profissional</h1>
+            <p class="text-indigo-100 text-sm">Geração de listas formatadas com nomes em iniciais maiúsculas e siglas atualizadas.</p>
+        </header>
+
+        <main class="p-6 space-y-6">
+            <section>
+                <label class="block text-sm font-semibold text-gray-700 mb-2">Cole os dados da planilha aqui:</label>
+                <textarea id="csvInput" class="w-full h-40 p-4 border border-gray-300 rounded-md focus:ring-2 focus:ring-indigo-500 focus:outline-none font-mono text-sm" placeholder="Nome	Presença	Justificativa..."></textarea>
+                <div class="mt-4 flex gap-4">
+                    <button onclick="processarDados()" class="bg-indigo-600 hover:bg-indigo-700 text-white px-8 py-2 rounded-md font-bold transition shadow-sm">GERAR LISTAS</button>
+                    <button onclick="limpar()" class="bg-gray-100 hover:bg-gray-200 text-gray-600 px-6 py-2 rounded-md font-medium transition">Limpar Tudo</button>
+                </div>
+            </section>
+
+            <section class="space-y-8">
+                <div>
+                    <div class="flex justify-between items-center mb-2">
+                        <h2 class="text-md font-bold text-gray-800 uppercase tracking-wider">Lista de Presentes (Formatada)</h2>
+                        <button onclick="copyRichText('resultPresentes')" class="text-xs bg-indigo-50 text-indigo-700 border border-indigo-200 px-4 py-1.5 rounded-full hover:bg-indigo-100 font-bold transition">COPIAR PARA DOCS</button>
+                    </div>
+                    <div id="resultPresentes" class="result-container" contenteditable="true">Os resultados aparecerão aqui...</div>
+                </div>
+
+                <div>
+                    <div class="flex justify-between items-center mb-2">
+                        <h2 class="text-md font-bold text-gray-800 uppercase tracking-wider">Lista de Ausentes (Formatada)</h2>
+                        <button onclick="copyRichText('resultAusentes')" class="text-xs bg-indigo-50 text-indigo-700 border border-indigo-200 px-4 py-1.5 rounded-full hover:bg-indigo-100 font-bold transition">COPIAR PARA DOCS</button>
+                    </div>
+                    <div id="resultAusentes" class="result-container" contenteditable="true">Os resultados aparecerão aqui...</div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script>
+        const baseConselheiros = [
+            { segmento: "TRABALHADOR", entidade: "ABO", cadeira: "SUPLENTE", nome: "MARIANA CRISTINA MEIRA CAMBUÍ" },
+            { segmento: "TRABALHADOR", entidade: "ABO", cadeira: "TITULAR", nome: "SHEILLA SILVA MENDES" },
+            { segmento: "USUÁRIO", entidade: "ADEMOC", cadeira: "SUPLENTE", nome: "JÚNEO DE JESUS SOUZA" },
+            { segmento: "USUÁRIO", entidade: "ADEMOC", cadeira: "TITULAR", nome: "Fernando Antônio Dias de Andrade" },
+            { segmento: "GESTOR/PRESTADOR", entidade: "APAE", cadeira: "SUPLENTE", nome: "EMILLE EUNICE ANTUNES DIAS MATOS" },
+            { segmento: "USUÁRIO", entidade: "AM-PMS", cadeira: "TITULAR", nome: "ANA MARIA PEREIRA DE SOUZA RODRIGUES" },
+            { segmento: "USUÁRIO", entidade: "AM-PMS", cadeira: "SUPLENTE", nome: "ROGÉRIO GONÇALVES" },
+            { segmento: "USUÁRIO", entidade: "ADM", cadeira: "SUPLENTE", nome: "JÚLIO CÉSAR PEREIRA" },
+            { segmento: "USUÁRIO", entidade: "ADM", cadeira: "TITULAR", nome: "MÁRCIO CARDOSO DA SILVA" },
+            { segmento: "USUÁRIO", entidade: "CA", cadeira: "SUPLENTE", nome: "FABIANA PEREIRA MORI" },
+            { segmento: "USUÁRIO", entidade: "CA", cadeira: "TITULAR", nome: "MARILDA BATISTA DA SILVA" },
+            { segmento: "USUÁRIO", entidade: "ANDA", cadeira: "TITULAR", nome: "FARLEY SINDEAUX RIBEIRO" },
+            { segmento: "USUÁRIO", entidade: "ANDA", cadeira: "SUPLENTE", nome: "JAMILSON GANDRA MOREIRA" },
+            { segmento: "USUÁRIO", entidade: "Associação Presente", cadeira: "SUPLENTE", nome: "JAQUELINE RODRIGUES AGUIAR DE CARVALHO" },
+            { segmento: "USUÁRIO", entidade: "Associação Presente", cadeira: "TITULAR", nome: "SANDRA SIMONE MENDES GONÇALVES CARNIELLE" },
+            { segmento: "GESTOR/PRESTADOR", entidade: "CODEVASF", cadeira: "TITULAR", nome: "--" },
+            { segmento: "GESTOR/PRESTADOR", entidade: "CODEVASF", cadeira: "SUPLENTE", nome: "LUCIMERE MARTA DE SOUZA AMORIM" },
+            { segmento: "USUÁRIO", entidade: "CLS", cadeira: "TITULAR", nome: "AMANDA MENDES SOARES" },
+            { segmento: "USUÁRIO", entidade: "CLS", cadeira: "SUPLENTE", nome: "DANIELLE SANTOS SOUSA" },
+            { segmento: "USUÁRIO", entidade: "CLS", cadeira: "TITULAR", nome: "EMANUELA TOMAS DA SILVA CONCEIÇÃO" },
+            { segmento: "USUÁRIO", entidade: "CLS", cadeira: "TITULAR", nome: "JOEL FRANCISCO BORGES" },
+            { segmento: "USUÁRIO", entidade: "CLS", cadeira: "SUPLENTE", nome: "TEREZINHA RAMOS CORDEIRO" },
+            { segmento: "USUÁRIO", entidade: "CLS", cadeira: "SUPLENTE", nome: "WILHAS FERREIRA" },
+            { segmento: "USUÁRIO", entidade: "CMSSVP", cadeira: "SUPLENTE", nome: "JOSÉ DOS REIS RODRIGUES" },
+            { segmento: "USUÁRIO", entidade: "CMSSVP", cadeira: "TITULAR", nome: "JOSÉ GERALDO RAMOS" },
+            { segmento: "TRABALHADOR", entidade: "COREN-MG", cadeira: "SUPLENTE", nome: "JÚLIO CÉSAR ARAÚJO LOPES" },
+            { segmento: "TRABALHADOR", entidade: "COREN-MG", cadeira: "TITULAR", nome: "ERNANDES RODRIGUES MORAES" },
+            { segmento: "TRABALHADOR", entidade: "COREN-MG", cadeira: "TITULAR", nome: "FERNANDA FAGUNDES AZEVEDO SINDEAUX" },
+            { segmento: "TRABALHADOR", entidade: "COREN-MG", cadeira: "SUPLENTE", nome: "RICARDO SOARES DE OLIVEIRA" },
+            { segmento: "USUÁRIO", entidade: "CUT", cadeira: "TITULAR", nome: "EDMILSON ALVES DA SILVA" },
+            { segmento: "USUÁRIO", entidade: "CUT", cadeira: "SUPLENTE", nome: "GERALDO DA COSTA SILVA" },
+            { segmento: "USUÁRIO", entidade: "Diocese", cadeira: "SUPLENTE", nome: "FELIPE SOARES AMARAL" },
+            { segmento: "USUÁRIO", entidade: "Diocese", cadeira: "TITULAR", nome: "MARIA DOS REIS RIBEIRO DIAS" },
+            { segmento: "GESTOR/PRESTADOR", entidade: "Vovó Clarice", cadeira: "SUPLENTE", nome: "PATRICIA ANTUNES DOS SANTOS" },
+            { segmento: "USUÁRIO", entidade: "Fundação Sara", cadeira: "TITULAR", nome: "ROSANA SOARES RUAS" },
+            { segmento: "USUÁRIO", entidade: "Fundação Sara", cadeira: "SUPLENTE", nome: "SANDRA VANELLE FONSECA" },
+            { segmento: "GESTOR/PRESTADOR", entidade: "GRAPPA", cadeira: "TITULAR", nome: "MAURINA DA SILVA CARVALHO" },
+            { segmento: "GESTOR/PRESTADOR", entidade: "HDG", cadeira: "TITULAR", nome: "HERICK RODRIGUES ARAÚJO" },
+            { segmento: "GESTOR/PRESTADOR", entidade: "HUCF", cadeira: "TITULAR", nome: "DALTON CALDEIRA ROCHA" },
+            { segmento: "GESTOR/PRESTADOR", entidade: "HUCF", cadeira: "SUPLENTE", nome: "HENRIQUE ANDRADE BARBOSA" },
+            { segmento: "GESTOR/PRESTADOR", entidade: "HSC", cadeira: "TITULAR", nome: "NAYRA CRISTINE LACERDA LOURES" },
+            { segmento: "USUÁRIO", entidade: "Lar SVP", cadeira: "TITULAR", nome: "ANDERSON LEONARDO ALVES PEREIRA" },
+            { segmento: "USUÁRIO", entidade: "Lar SVP", cadeira: "SUPLENTE", nome: "ANIELLY COSTA SILVA" },
+            { segmento: "USUÁRIO", entidade: "ROTARY", cadeira: "TITULAR", nome: "RAFAEL CARVALHO MACIEL" },
+            { segmento: "USUÁRIO", entidade: "ROTARY", cadeira: "SUPLENTE", nome: "THIAGO HENRIQUE ALVES DE SOUZA" },
+            { segmento: "TRABALHADOR", entidade: "SIND-SAÚDE", cadeira: "TITULAR", nome: "ANDERSON ALVES SOARES" },
+            { segmento: "TRABALHADOR", entidade: "SIND-SAÚDE", cadeira: "SUPLENTE", nome: "IMACULADA CONCEIÇÃO BARBOSA" },
+            { segmento: "TRABALHADOR", entidade: "SIND-SAÚDE", cadeira: "SUPLENTE", nome: "MARIA LEONIDES DE QUEIROZ OLIVEIRA" },
+            { segmento: "TRABALHADOR", entidade: "SIND-SAÚDE", cadeira: "TITULAR", nome: "VALDECI ALVES COSTA" },
+            { segmento: "USUÁRIO", entidade: "STR", cadeira: "TITULAR", nome: "NAIARA OLIVEIRA SILVA" },
+            { segmento: "USUÁRIO", entidade: "STR", cadeira: "SUPLENTE", nome: "RUTH ALVES XAVIER SILVA" },
+            { segmento: "TRABALHADOR", entidade: "SIEESS-MG", cadeira: "SUPLENTE", nome: "IVANY REIS SANTANA" },
+            { segmento: "TRABALHADOR", entidade: "SIEESS-MG", cadeira: "TITULAR", nome: "WASHINGTON LUIS CARVALHO SOUTO" },
+            { segmento: "TRABALHADOR", entidade: "SEEMG", cadeira: "TITULAR", nome: "CLÁUDIO LUÍS DE SOUZA SANTOS" },
+            { segmento: "TRABALHADOR", entidade: "SEEMG", cadeira: "SUPLENTE", nome: "MÔNICA DE FÁTIMA FERNANDES FERREIRA" },
+            { segmento: "TRABALHADOR", entidade: "SINDITRAUX", cadeira: "TITULAR", nome: "DAMÁZIO WLADIMIR SILVA" },
+            { segmento: "TRABALHADOR", entidade: "SINDITRAUX", cadeira: "SUPLENTE", nome: "MARCOS BORGES OLIVEIRA" },
+            { segmento: "GESTOR/PRESTADOR", entidade: "SMS-MOC", cadeira: "SUPLENTE", nome: "DANIELLA CRISTINA MARTINS DIAS VELOSO" },
+            { segmento: "GESTOR/PRESTADOR", entidade: "SMS-MOC", cadeira: "TITULAR", nome: "EDUARDO LUIZ DA SILVA" },
+            { segmento: "GESTOR/PRESTADOR", entidade: "SMS-MOC", cadeira: "TITULAR", nome: "MARIA CLARA LELIS RAMOS CARDOSO" },
+            { segmento: "GESTOR/PRESTADOR", entidade: "SMS-MOC", cadeira: "SUPLENTE", nome: "RAIMARA GONÇALVES PEREIRA" },
+            { segmento: "GESTOR/PRESTADOR", entidade: "SRS", cadeira: "TITULAR", nome: "RAFAELA DE SOUZA FREITAS" },
+            { segmento: "GESTOR/PRESTADOR", entidade: "GESTOR/PRESTADOR", cadeira: "SUPLENTE", nome: "AGNA SOARES DA SILVA MENEZES" },
+            { segmento: "GESTOR/PRESTADOR", entidade: "GESTOR/PRESTADOR", cadeira: "SUPLENTE", nome: "KELLY MENDES FAGUNDES" }
+        ];
+
+        function formatarNomeProprio(nome) {
+            const excessoes = ['de', 'da', 'do', 'dos', 'das', 'e'];
+            return nome.toLowerCase().split(' ').map((palavra, index) => {
+                if (excessoes.includes(palavra) && index !== 0) return palavra;
+                return palavra.charAt(0).toUpperCase() + palavra.slice(1);
+            }).join(' ');
+        }
+
+        function normalizarParaBusca(txt) {
+            return txt.normalize("NFD").replace(/[\u0300-\u036f]/g, "").trim().toUpperCase();
+        }
+
+        function processarDados() {
+            const input = document.getElementById('csvInput').value.trim();
+            if (!input) return;
+
+            const linhas = input.split('\n');
+            const presentesT = [];
+            const presentesS = [];
+            const ausentes = [];
+
+            linhas.forEach((linha, index) => {
+                if (index === 0 && linha.includes("VOCÊ É CONSELHEIRO")) return;
+                const colunas = linha.split('\t');
+                if (colunas.length < 2) return;
+
+                const nomeInput = colunas[0].trim();
+                const status = colunas[1].toLowerCase();
+                const justificativa = colunas[2] ? colunas[2].trim() : "Não informada";
+
+                const conselheiro = baseConselheiros.find(c => normalizarParaBusca(c.nome) === normalizarParaBusca(nomeInput));
+
+                if (conselheiro) {
+                    const dadosFormatados = {
+                        ...conselheiro,
+                        nomeExibicao: formatarNomeProprio(conselheiro.nome),
+                        motivo: justificativa
+                    };
+
+                    if (status.includes("presença") || status.includes("confirmo")) {
+                        if (conselheiro.cadeira === "TITULAR") presentesT.push(dadosFormatados);
+                        else presentesS.push(dadosFormatados);
+                    } else {
+                        ausentes.push(dadosFormatados);
+                    }
+                }
+            });
+
+            gerarHtmlPresentes(presentesT, presentesS);
+            gerarHtmlAusentes(ausentes);
+        }
+
+        function gerarHtmlPresentes(titulares, suplentes) {
+            titulares.sort((a, b) => a.nomeExibicao.localeCompare(b.nomeExibicao));
+            suplentes.sort((a, b) => a.nomeExibicao.localeCompare(b.nomeExibicao));
+
+            const format = (c) => `<b>${c.nomeExibicao}</b> (${c.entidade})`;
+            
+            let html = `<i>Titulares</i> — ${titulares.map(format).join('; ')}`;
+            html += ` ● <i>Suplentes</i> — ${suplentes.map(format).join('; ')}`;
+
+            document.getElementById('resultPresentes').innerHTML = html;
+        }
+
+        function gerarHtmlAusentes(ausentes) {
+            const itens = ausentes.map(a => {
+                const cargo = a.cadeira.charAt(0).toUpperCase() + a.cadeira.slice(1).toLowerCase();
+                const seg = a.segmento.charAt(0).toUpperCase() + a.segmento.slice(1).toLowerCase();
+                const mot = a.motivo.charAt(0).toUpperCase() + a.motivo.slice(1).toLowerCase();
+                return `<b>${cargo}: ${a.nomeExibicao}</b>, ${a.entidade}. ${seg}. <i>Motivo:</i> ${mot}`;
+            });
+
+            document.getElementById('resultAusentes').innerHTML = itens.join('; ');
+        }
+
+        async function copyRichText(id) {
+            const el = document.getElementById(id);
+            const range = document.createRange();
+            range.selectNode(el);
+            window.getSelection().removeAllRanges();
+            window.getSelection().addRange(range);
+            
+            try {
+                document.execCommand('copy');
+                window.getSelection().removeAllRanges();
+                alert("Copiado com formatação! Agora cole no Docs.");
+            } catch (err) {
+                console.error('Erro ao copiar', err);
+            }
+        }
+
+        function limpar() {
+            document.getElementById('csvInput').value = '';
+            document.getElementById('resultPresentes').innerHTML = '';
+            document.getElementById('resultAusentes').innerHTML = '';
+        }
+    </script>
+</body>
+</html>
