@@ -80,15 +80,18 @@
   .header-form-banner {
     display: block;
     width: 100%;
-    /* remova a linha max-height: 120px */
-}
+    overflow: hidden;
+    max-height: 120px;
+  }
 
   .header-form-banner img {
     width: 100%;
-    height: auto;        /* ← era 120px fixo */
-    object-fit: unset;   /* ← era cover (que corta) */
+    height: 120px;
+    object-fit: cover;
+    object-position: center;
     display: block;
-}
+    transition: opacity 0.2s;
+  }
 
   .header-form-banner:hover img { opacity: 0.9; }
 
@@ -180,11 +183,103 @@
     background: var(--gray-light);
   }
 
+  /* ─── QUORUM BANNER ──────────────────────────────── */
+  .quorum-banner {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 12px 20px;
+    border-radius: var(--card-radius);
+    margin-bottom: 20px;
+    border: 2px solid transparent;
+    transition: all 0.3s;
+  }
+  .quorum-banner.has-quorum {
+    background: var(--green-pale);
+    border-color: #a8d8b8;
+  }
+  .quorum-banner.no-quorum {
+    background: #fff8e8;
+    border-color: #f0d880;
+  }
+  .quorum-icon {
+    font-size: 22px;
+    flex-shrink: 0;
+    line-height: 1;
+  }
+  .quorum-text { flex: 1; }
+  .quorum-title {
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 2px;
+  }
+  .quorum-banner.has-quorum .quorum-title { color: var(--green); }
+  .quorum-banner.no-quorum  .quorum-title { color: var(--yellow-dark); }
+  .quorum-detail {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    color: var(--gray-mid);
+  }
+  .quorum-counter {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 28px;
+    font-weight: 700;
+    line-height: 1;
+  }
+  .quorum-banner.has-quorum .quorum-counter { color: var(--green); }
+  .quorum-banner.no-quorum  .quorum-counter { color: var(--yellow-dark); }
+  .quorum-of {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    color: var(--gray-mid);
+    text-align: center;
+    display: block;
+  }
+
+  /* Progress dots */
+  .quorum-dots {
+    display: flex;
+    gap: 3px;
+    flex-wrap: wrap;
+    margin-top: 5px;
+  }
+  .q-dot {
+    width: 10px; height: 10px;
+    border-radius: 2px;
+    flex-shrink: 0;
+  }
+  .q-dot.filled { background: var(--green-light); }
+  .q-dot.empty  { background: #ddd; }
+
+  /* ─── FILTER ROWS ─────────────────────────────────── */
+  .filters-wrap {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 20px;
+  }
+  .filter-row {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+  .filter-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 9px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--gray-mid);
+    width: 60px;
+    flex-shrink: 0;
+  }
+
   /* Segment filter tabs */
   .segment-tabs {
     display: flex;
     gap: 6px;
-    margin-bottom: 20px;
     flex-wrap: wrap;
   }
 
@@ -204,6 +299,27 @@
   }
   .seg-tab.active, .seg-tab:hover { border-color: var(--blue); color: var(--blue); background: var(--blue-pale); }
   .seg-tab.active { font-weight: 700; }
+
+  /* Status filter tabs */
+  .status-tab {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 4px 10px;
+    border-radius: 3px;
+    border: 1px solid var(--gray-light);
+    background: var(--white);
+    cursor: pointer;
+    transition: all 0.15s;
+    color: var(--gray-mid);
+  }
+  .status-tab:hover { opacity: 0.8; }
+  .status-tab.active[data-st="ALL"]       { border-color: var(--gray-dark); color: var(--gray-dark); background: var(--gray-pale); }
+  .status-tab.active[data-st="present"]   { border-color: var(--green); color: var(--green); background: var(--green-pale); }
+  .status-tab.active[data-st="justified"] { border-color: var(--yellow-dark); color: var(--yellow-dark); background: #fdf3c0; }
+  .status-tab.active[data-st="pending"]   { border-color: #999; color: #666; background: var(--gray-pale); }
 
   /* GRID of cards */
   .councilors-grid {
@@ -472,7 +588,7 @@
     <span class="last-updated" id="lastUpdated">—</span>
   </div>
   <a href="https://forms.gle/95cYeTUK7M8UHcou9" target="_blank" class="header-form-banner" title="Registrar presença / justificar ausência">
-    <img src="https://i.ibb.co/ymmsYHxj/Form-Header-33.png" alt="Registrar presença — clique para acessar o formulário">
+    <img src="https://i.ibb.co/7x9Jxsq9/BANNERcliq.png" alt="Registrar presença — clique para acessar o formulário">
   </a>
 </header>
 
@@ -517,11 +633,40 @@
       <h2>Conselheiros</h2>
       <div class="section-line"></div>
     </div>
-    <div class="segment-tabs" id="segmentTabs">
-      <button class="seg-tab active" data-seg="ALL" onclick="filterSegment(this,'ALL')">Todos</button>
-      <button class="seg-tab" data-seg="USUARIO" onclick="filterSegment(this,'USUARIO')">Usuário</button>
-      <button class="seg-tab" data-seg="TRABALHADOR" onclick="filterSegment(this,'TRABALHADOR')">Trabalhador</button>
-      <button class="seg-tab" data-seg="GESTOR" onclick="filterSegment(this,'GESTOR')">Gestor/Prestador</button>
+    <!-- Quorum banner -->
+    <div class="quorum-banner no-quorum" id="quorumBanner">
+      <div class="quorum-icon" id="quorumIcon">⏳</div>
+      <div class="quorum-text">
+        <div class="quorum-title" id="quorumTitle">Calculando quórum...</div>
+        <div class="quorum-detail" id="quorumDetail">Aguarde</div>
+        <div class="quorum-dots" id="quorumDots"></div>
+      </div>
+      <div style="text-align:center">
+        <div class="quorum-counter" id="quorumCount">—</div>
+        <span class="quorum-of">de 11</span>
+      </div>
+    </div>
+
+    <!-- Filters -->
+    <div class="filters-wrap">
+      <div class="filter-row">
+        <span class="filter-label">Segmento</span>
+        <div class="segment-tabs" id="segmentTabs">
+          <button class="seg-tab active" data-seg="ALL" onclick="filterSeg(this,'ALL')">Todos</button>
+          <button class="seg-tab" data-seg="USUARIO" onclick="filterSeg(this,'USUARIO')">Usuário</button>
+          <button class="seg-tab" data-seg="TRABALHADOR" onclick="filterSeg(this,'TRABALHADOR')">Trabalhador</button>
+          <button class="seg-tab" data-seg="GESTOR" onclick="filterSeg(this,'GESTOR')">Gestor/Prestador</button>
+        </div>
+      </div>
+      <div class="filter-row">
+        <span class="filter-label">Status</span>
+        <div id="statusTabs">
+          <button class="status-tab active" data-st="ALL" onclick="filterSt(this,'ALL')">Todos</button>
+          <button class="status-tab" data-st="present" onclick="filterSt(this,'present')">✓ Presentes</button>
+          <button class="status-tab" data-st="justified" onclick="filterSt(this,'justified')">~ Justificados</button>
+          <button class="status-tab" data-st="pending" onclick="filterSt(this,'pending')">○ Sem resposta</button>
+        </div>
+      </div>
     </div>
     <div class="councilors-grid" id="councilorGrid"></div>
   </section>
@@ -547,7 +692,9 @@ const CSV_RESPONSES = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vS9aNnRE9
 const CSV_COUNCILORS = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vS9aNnRE9han1uOLOP5dvzxIb9ghEF6i2IvXHXHJNi6ZGlo2QKwDFJK0SH49Ah-KEmmEfMNbnwEIEy2/pub?gid=313670513&single=true&output=csv';
 
 let allCouncilors = [];
-let currentFilter = 'ALL';
+let currentSeg = 'ALL';
+let currentSt  = 'ALL';
+const QUORUM_NEEDED = 11;
 
 // ─── CSV PARSER ────────────────────────────────────────────
 function parseCSV(text) {
@@ -646,9 +793,10 @@ async function loadData() {
       if (!seenV.has(k)) { seenV.add(k); uniqueVisitors.push(v); }
     }
 
-    renderCouncilors(allCouncilors, currentFilter);
+    renderCouncilors(allCouncilors, currentSeg, currentSt);
     renderVisitors(uniqueVisitors);
     renderStats(allCouncilors, uniqueVisitors.length);
+    renderQuorum(allCouncilors);
 
     const now = new Date();
     document.getElementById('lastUpdated').textContent = 'Atualizado ' + now.toLocaleTimeString('pt-BR', {hour:'2-digit',minute:'2-digit'});
@@ -661,14 +809,65 @@ async function loadData() {
   }
 }
 
+// ─── QUORUM LOGIC ─────────────────────────────────────────
+function calcQuorum(councilors) {
+  // For each entity, check if titular is present → counts 1 vote.
+  // If titular is NOT present but suplente IS present → counts 1 vote.
+  // Never count both for same entity.
+  const entityMap = {}; // normEntity -> { titular: status, suplente: status }
+
+  for (const c of councilors) {
+    const key = norm(c.entity);
+    if (!key) continue;
+    if (!entityMap[key]) entityMap[key] = { titular: null, suplente: null };
+    const isTitular = norm(c.seat).includes('titular');
+    if (isTitular) {
+      entityMap[key].titular = c.status;
+    } else {
+      entityMap[key].suplente = c.status;
+    }
+  }
+
+  let votes = 0;
+  for (const e of Object.values(entityMap)) {
+    if (e.titular === 'present') {
+      votes++; // titular presente → conta
+    } else if (e.titular !== 'present' && e.suplente === 'present') {
+      votes++; // titular ausente mas suplente presente → suplente assume
+    }
+  }
+  return votes;
+}
+
+function renderQuorum(councilors) {
+  const votes = calcQuorum(councilors);
+  const has = votes >= QUORUM_NEEDED;
+  const banner = document.getElementById('quorumBanner');
+  banner.className = 'quorum-banner ' + (has ? 'has-quorum' : 'no-quorum');
+  document.getElementById('quorumIcon').textContent  = has ? '✅' : '⚠️';
+  document.getElementById('quorumTitle').textContent = has ? 'Quórum atingido' : 'Sem quórum para votação';
+  document.getElementById('quorumDetail').textContent = has
+    ? `${votes} entidades com representação presente — votação permitida`
+    : `Necessário ${QUORUM_NEEDED} entidades com representação presente (faltam ${QUORUM_NEEDED - votes})`;
+  document.getElementById('quorumCount').textContent = votes;
+
+  // Progress dots
+  const dots = document.getElementById('quorumDots');
+  dots.innerHTML = Array.from({length: QUORUM_NEEDED}, (_,i) =>
+    `<div class="q-dot ${i < votes ? 'filled' : 'empty'}"></div>`
+  ).join('');
+}
+
 // ─── RENDER COUNCILORS ──────────────────────────────────────
-function renderCouncilors(list, filter) {
+function renderCouncilors(list, segFilter, stFilter) {
   const grid = document.getElementById('councilorGrid');
-  const filtered = filter === 'ALL' ? list : list.filter(c => {
+
+  let filtered = list.filter(c => {
     const s = norm(c.segment);
-    if (filter === 'USUARIO') return s.includes('usuario') || s.includes('usuário');
-    if (filter === 'TRABALHADOR') return s.includes('trabalhador');
-    if (filter === 'GESTOR') return s.includes('gestor') || s.includes('prestador');
+    if (segFilter === 'USUARIO'     && !(s.includes('usuario') || s.includes('usuário'))) return false;
+    if (segFilter === 'TRABALHADOR' && !s.includes('trabalhador')) return false;
+    if (segFilter === 'GESTOR'      && !(s.includes('gestor') || s.includes('prestador'))) return false;
+    if (stFilter !== 'ALL' && c.status !== stFilter) return false;
     return true;
   });
 
@@ -676,13 +875,18 @@ function renderCouncilors(list, filter) {
   const order = { present: 0, justified: 1, pending: 2 };
   filtered.sort((a,b) => (order[a.status]||2) - (order[b.status]||2) || a.name.localeCompare(b.name, 'pt-BR'));
 
+  if (!filtered.length) {
+    grid.innerHTML = '<p style="color:var(--gray-mid);font-size:12px;padding:20px 0;font-style:italic;">Nenhum conselheiro encontrado para os filtros selecionados.</p>';
+    return;
+  }
+
   grid.innerHTML = filtered.map(c => {
     const segClass = norm(c.segment).includes('usuario') || norm(c.segment).includes('usuário') ? 'seg-USUARIO'
                    : norm(c.segment).includes('trabalhador') ? 'seg-TRABALHADOR' : 'seg-GESTOR';
     const segLabel = norm(c.segment).includes('usuario') || norm(c.segment).includes('usuário') ? 'Usuário'
                    : norm(c.segment).includes('trabalhador') ? 'Trabalhador' : 'Gestor/Prestador';
     const statusLabel = c.status === 'present' ? 'Presente' : c.status === 'justified' ? 'Justificado' : 'Sem resposta';
-    const seatText = c.seat ? c.seat : '';
+    const seatText = c.seat || '';
 
     return `
     <div class="c-card ${c.status}">
@@ -717,12 +921,19 @@ function renderStats(councilors, visitorCount) {
   document.getElementById('stat-visitors').textContent  = visitorCount;
 }
 
-// ─── FILTER ────────────────────────────────────────────────
-function filterSegment(btn, seg) {
+// ─── FILTERS ───────────────────────────────────────────────
+function filterSeg(btn, seg) {
   document.querySelectorAll('.seg-tab').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
-  currentFilter = seg;
-  renderCouncilors(allCouncilors, seg);
+  currentSeg = seg;
+  renderCouncilors(allCouncilors, currentSeg, currentSt);
+}
+
+function filterSt(btn, st) {
+  document.querySelectorAll('.status-tab').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  currentSt = st;
+  renderCouncilors(allCouncilors, currentSeg, currentSt);
 }
 
 function escHtml(s) {
