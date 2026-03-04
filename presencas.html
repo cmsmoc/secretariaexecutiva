@@ -80,18 +80,15 @@
   .header-form-banner {
     display: block;
     width: 100%;
-    overflow: hidden;
-    max-height: 120px;
-  }
+    /* remova a linha max-height: 120px */
+}
 
   .header-form-banner img {
     width: 100%;
-    height: 120px;
-    object-fit: cover;
-    object-position: center;
+    height: auto;        /* ← era 120px fixo */
+    object-fit: unset;   /* ← era cover (que corta) */
     display: block;
-    transition: opacity 0.2s;
-  }
+}
 
   .header-form-banner:hover img { opacity: 0.9; }
 
