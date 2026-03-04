@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fluxo CAPS/RAPS — Montes Claros/MG</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0b0f1a;
+    --surface: #131929;
+    --border: #1e2d4a;
+    --accent-blue: #3b82f6;
+    --accent-teal: #14b8a6;
+    --accent-amber: #f59e0b;
+    --accent-rose: #f43f5e;
+    --accent-purple: #a855f7;
+    --text: #e2e8f0;
+    --muted: #64748b;
+    --node-process: #1e3a5f;
+    --node-decision: #1a3a2a;
+    --node-end: #2d1b3d;
+    --node-start: #1a2a4a;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  header {
+    padding: 2rem 2rem 1rem;
+    text-align: center;
+    border-bottom: 1px solid var(--border);
+    background: linear-gradient(180deg, #0d1526 0%, var(--bg) 100%);
+  }
+
+  header h1 {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(1rem, 2.5vw, 1.4rem);
+    font-weight: 800;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: #fff;
+    line-height: 1.3;
+    max-width: 800px;
+    margin: 0 auto 0.5rem;
+  }
+
+  header p {
+    font-size: 0.78rem;
+    color: var(--muted);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  .legend {
+    display: flex;
+    gap: 1.5rem;
+    justify-content: center;
+    flex-wrap: wrap;
+    padding: 0.8rem 1rem;
+    border-bottom: 1px solid var(--border);
+    background: var(--surface);
+  }
+
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.72rem;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .legend-box {
+    width: 20px; height: 14px;
+    border-radius: 3px;
+    border: 1.5px solid;
+  }
+
+  .tabs {
+    display: flex;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 1rem;
+    background: var(--bg);
+  }
+
+  .tab-btn {
+    font-family: 'Syne', sans-serif;
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    padding: 0.5rem 1.2rem;
+    border-radius: 4px;
+    border: 1.5px solid var(--border);
+    background: transparent;
+    color: var(--muted);
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .tab-btn.active {
+    background: var(--accent-blue);
+    border-color: var(--accent-blue);
+    color: #fff;
+  }
+
+  .tab-btn:hover:not(.active) {
+    border-color: var(--accent-blue);
+    color: var(--accent-blue);
+  }
+
+  .canvas-wrapper {
+    position: relative;
+    width: 100%;
+    overflow: auto;
+    background: radial-gradient(ellipse at 30% 20%, #0d1e35 0%, var(--bg) 60%);
+  }
+
+  svg text {
+    font-family: 'DM Sans', sans-serif;
+    user-select: none;
+  }
+
+  /* Node styles */
+  .node-start rect { fill: #1a2a4a; stroke: #3b82f6; stroke-width: 2; }
+  .node-process rect { fill: #1e3a5f; stroke: #3b82f6; stroke-width: 1.5; }
+  .node-decision polygon { fill: #1a3a2a; stroke: #14b8a6; stroke-width: 1.5; }
+  .node-end ellipse { fill: #2d1b3d; stroke: #a855f7; stroke-width: 2; }
+  .node-end-fim ellipse { fill: #1a3020; stroke: #22c55e; stroke-width: 2; }
+  .node-special rect { fill: #2d2010; stroke: #f59e0b; stroke-width: 1.5; stroke-dasharray: 5,3; }
+  .node-upa rect { fill: #2a1520; stroke: #f43f5e; stroke-width: 1.5; }
+
+  .node text { fill: #e2e8f0; font-size: 10px; text-anchor: middle; dominant-baseline: middle; }
+  .node-start text { fill: #93c5fd; font-weight: 500; font-size: 10px; }
+  .node-decision text { fill: #5eead4; font-size: 9.5px; }
+  .node-end text, .node-end-fim text { fill: #c4b5fd; font-size: 12px; font-weight: 700; }
+  .node-end-fim text { fill: #86efac; }
+  .node-special text { fill: #fcd34d; font-size: 9px; }
+  .node-upa text { fill: #fda4af; }
+
+  .node { cursor: pointer; }
+  .node:hover rect, .node:hover polygon, .node:hover ellipse {
+    filter: brightness(1.25);
+    transition: filter 0.15s;
+  }
+
+  /* Edges */
+  .edge { fill: none; stroke-width: 1.5; }
+  .edge-yes { stroke: #22c55e; }
+  .edge-no { stroke: #f43f5e; }
+  .edge-default { stroke: #475569; }
+  .edge-label { font-size: 9px; fill: #94a3b8; font-family: 'Syne', sans-serif; font-weight: 600; letter-spacing: 0.05em; }
+  .edge-yes-label { fill: #22c55e; }
+  .edge-no-label { fill: #f43f5e; }
+
+  /* Time band labels */
+  .band-label {
+    font-family: 'Syne', sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+
+  /* Tooltip */
+  #tooltip {
+    position: fixed;
+    background: #1e293b;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 0.8rem 1rem;
+    font-size: 0.78rem;
+    color: var(--text);
+    max-width: 260px;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.15s;
+    z-index: 100;
+    line-height: 1.5;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+  }
+
+  #tooltip.visible { opacity: 1; }
+  #tooltip h3 { font-family: 'Syne', sans-serif; font-size: 0.82rem; font-weight: 700; margin-bottom: 0.3rem; color: #fff; }
+
+  .section-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 0.82rem;
+    font-weight: 700;
+    text-align: center;
+    color: var(--muted);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 0.5rem 0;
+  }
+
+  footer {
+    text-align: center;
+    padding: 1rem;
+    font-size: 0.68rem;
+    color: var(--muted);
+    border-top: 1px solid var(--border);
+    letter-spacing: 0.04em;
+  }
+
+  .zoom-controls {
+    position: absolute;
+    top: 12px;
+    right: 16px;
+    display: flex;
+    gap: 6px;
+    z-index: 10;
+  }
+
+  .zoom-btn {
+    width: 32px; height: 32px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    color: var(--text);
+    font-size: 1.1rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.15s;
+  }
+
+  .zoom-btn:hover { background: var(--border); }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Fluxo de Atendimento de Paciente Psiquiátrico<br>por Demanda Espontânea — CAPS / RAPS</h1>
+  <p>Município de Montes Claros / MG &nbsp;·&nbsp; Rede de Atenção Psicossocial</p>
+</header>
+
+<div class="legend">
+  <div class="legend-item"><div class="legend-box" style="background:#1e3a5f;border-color:#3b82f6"></div> Serviço / Processo</div>
+  <div class="legend-item"><div class="legend-box" style="background:#1a3a2a;border-color:#14b8a6;transform:rotate(45deg);border-radius:0"></div> &nbsp;Decisão</div>
+  <div class="legend-item"><div class="legend-box" style="background:#1a3020;border-color:#22c55e;border-radius:20px"></div> Fim do Fluxo</div>
+  <div class="legend-item"><div class="legend-box" style="background:#2d1b3d;border-color:#a855f7;border-radius:20px"></div> Nó de Referência</div>
+  <div class="legend-item"><div class="legend-box" style="background:#2d2010;border-color:#f59e0b;border-style:dashed"></div> Paciente Externo</div>
+  <div class="legend-item"><span style="color:#22c55e;font-weight:700">—</span>&nbsp;SIM &nbsp;&nbsp; <span style="color:#f43f5e;font-weight:700">—</span>&nbsp;NÃO</div>
+</div>
+
+<div class="canvas-wrapper" id="canvasWrapper">
+  <div class="zoom-controls">
+    <button class="zoom-btn" id="zoomIn">+</button>
+    <button class="zoom-btn" id="zoomOut">−</button>
+    <button class="zoom-btn" id="zoomReset" style="font-size:0.6rem;letter-spacing:0">⤢</button>
+  </div>
+  <svg id="flowSvg"></svg>
+</div>
+
+<div id="tooltip"></div>
+
+<footer>Elaboração: Equipe técnica da Coordenação Municipal de Saúde Mental da Prefeitura de Montes Claros/MG · Agosto 2024 &nbsp;|&nbsp; Visualização interativa gerada por IA</footer>
+
+<script>
+// ─── DATA ────────────────────────────────────────────────────────────────────
+const nodes = [
+  // START
+  { id: 'start', label: 'Identificada situação de\ncrise psiquiátrica\nna rede por livre demanda', type: 'start', x: 520, y: 60, w: 200, h: 52,
+    info: 'Ponto de entrada do fluxo. O paciente chega por demanda espontânea a qualquer ponto da rede.' },
+
+  // TIME SPLIT
+  { id: 'time_day', label: '07h às 19h', type: 'process', x: 240, y: 160, w: 140, h: 38,
+    info: 'Horário comercial. Todos os pontos da rede estão disponíveis: ESF, UPA, CAPS, Hospitais Gerais.' },
+  { id: 'time_night', label: 'Após 19h /\nFinais de Semana /\nFeriados', type: 'process', x: 780, y: 160, w: 150, h: 52,
+    info: 'Fora do horário comercial. O atendimento é direcionado para UPA/Alpheu de Quadros, SAMU e COBOM.' },
+
+  // DAY BRANCH ─ ESF
+  { id: 'esf', label: 'ESF', type: 'process', x: 60, y: 280, w: 80, h: 36,
+    info: 'Estratégia de Saúde da Família. Primeiro ponto de contato comunitário.' },
+  { id: 'esf_dec', label: 'Pode ser conduzido\nnesse local?', type: 'decision', x: 60, y: 370, w: 110, h: 52,
+    info: 'O profissional avalia se a situação pode ser manejada na ESF ou precisa de encaminhamento.' },
+  { id: 'esf_caps', label: 'CAPS', type: 'process', x: 60, y: 490, w: 80, h: 36,
+    info: 'Encaminhamento ao CAPS quando a ESF não tem condições de conduzir o caso.' },
+  { id: 'fim_esf', label: 'FIM', type: 'end-fim', x: 60, y: 580, w: 52, h: 36,
+    info: 'Fim do fluxo para esse paciente neste episódio.' },
+
+  // DAY BRANCH ─ UPA/ALPHEU
+  { id: 'upa_day', label: 'UPA / Alpheu\nde Quadros', type: 'upa', x: 220, y: 280, w: 120, h: 44,
+    info: 'Unidade de Pronto Atendimento Alpheu de Quadros. Atende urgências psiquiátricas durante o dia.' },
+  { id: 'upa_day_dec', label: 'Pode ser conduzido\nnesse local?', type: 'decision', x: 220, y: 370, w: 110, h: 52,
+    info: 'Avaliação se a UPA tem capacidade de manejar o caso.' },
+  { id: 'estab', label: 'Estabilização\ndo quadro', type: 'process', x: 220, y: 480, w: 120, h: 38,
+    info: 'O paciente é estabilizado clinicamente na UPA antes de decidir o próximo passo.' },
+  { id: 'seg_dec', label: 'Necessita de\nseguimento no CAPS?', type: 'decision', x: 220, y: 570, w: 120, h: 52,
+    info: 'Após estabilização, avalia-se se o paciente precisa de acompanhamento contínuo no CAPS.' },
+  { id: 'caps_upa', label: 'CAPS', type: 'process', x: 160, y: 680, w: 80, h: 36,
+    info: 'Referenciamento para acompanhamento no CAPS.' },
+  { id: 'esf_upa', label: 'ESF', type: 'process', x: 290, y: 680, w: 80, h: 36,
+    info: 'Retorno para acompanhamento na ESF quando não há necessidade de seguimento no CAPS.' },
+  { id: 'fim_caps_upa', label: 'FIM', type: 'end-fim', x: 160, y: 760, w: 52, h: 36,
+    info: 'Encerramento do episódio com seguimento no CAPS.' },
+  { id: 'fim_esf_upa', label: 'FIM', type: 'end-fim', x: 290, y: 760, w: 52, h: 36,
+    info: 'Encerramento do episódio com retorno à ESF.' },
+
+  // DAY BRANCH ─ CAPS
+  { id: 'caps', label: 'CAPS', type: 'process', x: 440, y: 280, w: 100, h: 36,
+    info: 'Centro de Atenção Psicossocial. Serviço especializado para transtornos mentais graves.' },
+  { id: 'caps_dec', label: 'Pode ser conduzido\nnesse local?', type: 'decision', x: 440, y: 370, w: 110, h: 52,
+    info: 'Avaliação da capacidade do CAPS de conduzir o caso naquele momento.' },
+  { id: 'fim_caps', label: 'FIM', type: 'end-fim', x: 390, y: 490, w: 52, h: 36,
+    info: 'O caso é resolvido no CAPS. Fim do fluxo.' },
+  { id: 'no2', label: '2', type: 'end', x: 500, y: 490, w: 44, h: 36,
+    info: 'Nó de referência 2: indica encaminhamento para outro ponto da rede não detalhado neste fluxo.' },
+
+  // DAY BRANCH ─ HOSPITAIS GERAIS
+  { id: 'hosp', label: 'Hospitais\nGerais', type: 'upa', x: 620, y: 280, w: 110, h: 44,
+    info: 'Hospitais gerais que podem receber casos psiquiátricos urgentes.' },
+  { id: 'hosp_dec', label: 'Pode ser conduzido\nno CAPS?', type: 'decision', x: 620, y: 370, w: 110, h: 52,
+    info: 'Avaliação se o caso pode ser transferido ao CAPS.' },
+  { id: 'no3', label: '3', type: 'end', x: 620, y: 490, w: 44, h: 36,
+    info: 'Nó de referência 3: caso não possa ser conduzido no CAPS, segue fluxo específico de hospital geral.' },
+
+  // SPECIAL ─ PATIENT FROM OUTSIDE
+  { id: 'ext', label: '* Paciente de fora da microrregião\nMunicípios pactuados em CIR:\n- Claro dos Poções\n- Glaucilândia\n- Itacambira\n- Juramento', type: 'special', x: 580, y: 570, w: 200, h: 72,
+    info: 'Pacientes oriundos de municípios pactuados na Comissão Intergestores Regional (CIR): Claro dos Poções, Glaucilândia, Itacambira e Juramento.' },
+  { id: 'no1', label: '1', type: 'end', x: 650, y: 690, w: 44, h: 36,
+    info: 'Nó de referência 1: fluxo específico para pacientes de fora da microrregião, com regulação entre municípios pactuados.' },
+
+  // NIGHT BRANCH
+  { id: 'upa_night', label: 'UPA / Alpheu\nde Quadros /\nSAMU / COBOM', type: 'upa', x: 820, y: 280, w: 130, h: 58,
+    info: 'Após 19h, o atendimento é realizado pela UPA, SAMU (192) e COBOM (Corpo de Bombeiros). São os serviços de urgência disponíveis fora do horário comercial.' },
+  { id: 'night_dec', label: 'Pode ser conduzido\nnesse local?', type: 'decision', x: 820, y: 390, w: 110, h: 52,
+    info: 'Avaliação se o caso pode ser manejado pelo serviço de urgência noturno/fim de semana.' },
+  { id: 'fim_night', label: 'FIM', type: 'end-fim', x: 770, y: 500, w: 52, h: 36,
+    info: 'Caso resolvido no serviço noturno. Fim do fluxo.' },
+  { id: 'no4', label: '4', type: 'end', x: 880, y: 500, w: 44, h: 36,
+    info: 'Nó de referência 4: encaminhamento para leito psiquiátrico ou outro serviço de referência quando não é possível conduzir no plantão.' },
+];
+
+const edges = [
+  { from: 'start', to: 'time_day', type: 'default' },
+  { from: 'start', to: 'time_night', type: 'default' },
+
+  // ESF
+  { from: 'time_day', to: 'esf', type: 'default' },
+  { from: 'esf', to: 'esf_dec', type: 'default' },
+  { from: 'esf_dec', to: 'fim_esf', label: 'SIM', type: 'yes' },
+  { from: 'esf_dec', to: 'esf_caps', label: 'NÃO', type: 'no' },
+  { from: 'esf_caps', to: 'caps', type: 'default' },
+
+  // UPA DAY
+  { from: 'time_day', to: 'upa_day', type: 'default' },
+  { from: 'upa_day', to: 'upa_day_dec', type: 'default' },
+  { from: 'upa_day_dec', to: 'caps', label: 'NÃO', type: 'no' },
+  { from: 'upa_day_dec', to: 'estab', label: 'SIM', type: 'yes' },
+  { from: 'estab', to: 'seg_dec', type: 'default' },
+  { from: 'seg_dec', to: 'caps_upa', label: 'SIM', type: 'yes' },
+  { from: 'seg_dec', to: 'esf_upa', label: 'NÃO', type: 'no' },
+  { from: 'caps_upa', to: 'fim_caps_upa', type: 'default' },
+  { from: 'esf_upa', to: 'fim_esf_upa', type: 'default' },
+
+  // CAPS
+  { from: 'time_day', to: 'caps', type: 'default' },
+  { from: 'caps', to: 'caps_dec', type: 'default' },
+  { from: 'caps_dec', to: 'fim_caps', label: 'SIM', type: 'yes' },
+  { from: 'caps_dec', to: 'no2', label: 'NÃO', type: 'no' },
+
+  // HOSPITALS
+  { from: 'time_day', to: 'hosp', type: 'default' },
+  { from: 'hosp', to: 'hosp_dec', type: 'default' },
+  { from: 'hosp_dec', to: 'no2', label: 'SIM', type: 'yes' },
+  { from: 'hosp_dec', to: 'no3', label: 'NÃO', type: 'no' },
+
+  // EXTERNAL
+  { from: 'hosp_dec', to: 'ext', type: 'default' },
+  { from: 'ext', to: 'no1', type: 'default' },
+
+  // NIGHT
+  { from: 'time_night', to: 'upa_night', type: 'default' },
+  { from: 'upa_night', to: 'night_dec', type: 'default' },
+  { from: 'night_dec', to: 'fim_night', label: 'SIM', type: 'yes' },
+  { from: 'night_dec', to: 'no4', label: 'NÃO', type: 'no' },
+];
+
+// ─── RENDER ──────────────────────────────────────────────────────────────────
+const SVG_W = 1060;
+const SVG_H = 830;
+
+const svg = d3.select('#flowSvg')
+  .attr('viewBox', `0 0 ${SVG_W} ${SVG_H}`)
+  .attr('width', SVG_W)
+  .attr('height', SVG_H);
+
+// defs: arrowheads
+const defs = svg.append('defs');
+['yes','no','default'].forEach(t => {
+  const col = t==='yes'?'#22c55e': t==='no'?'#f43f5e':'#475569';
+  defs.append('marker')
+    .attr('id', `arrow-${t}`)
+    .attr('markerWidth', 8).attr('markerHeight', 8)
+    .attr('refX', 6).attr('refY', 3)
+    .attr('orient', 'auto')
+    .append('path')
+    .attr('d', 'M0,0 L0,6 L8,3 z')
+    .attr('fill', col);
+});
+
+// Background time bands
+svg.append('rect').attr('x',0).attr('y',140).attr('width',740).attr('height',SVG_H-140)
+  .attr('fill','rgba(59,130,246,0.02)').attr('rx',0);
+svg.append('rect').attr('x',740).attr('y',140).attr('width',SVG_W-740).attr('height',SVG_H-140)
+  .attr('fill','rgba(244,63,94,0.025)').attr('rx',0);
+
+svg.append('line').attr('x1',740).attr('y1',140).attr('x2',740).attr('y2',SVG_H)
+  .attr('stroke','#1e2d4a').attr('stroke-width',1.5).attr('stroke-dasharray','6,4');
+
+svg.append('text').attr('x',370).attr('y',155).attr('class','band-label')
+  .attr('fill','rgba(59,130,246,0.5)').attr('text-anchor','middle')
+  .text('▸ HORÁRIO COMERCIAL  07H–19H');
+svg.append('text').attr('x',900).attr('y',155).attr('class','band-label')
+  .attr('fill','rgba(244,63,94,0.5)').attr('text-anchor','middle')
+  .text('▸ PLANTÃO / FERIADOS');
+
+// Tooltip
+const tooltip = document.getElementById('tooltip');
+function showTip(evt, d) {
+  tooltip.innerHTML = `<h3>${d.label.replace(/\n/g,' ')}</h3>${d.info}`;
+  tooltip.classList.add('visible');
+  moveTip(evt);
+}
+function moveTip(evt) {
+  let x = evt.clientX + 14, y = evt.clientY - 14;
+  if (x + 280 > window.innerWidth) x = evt.clientX - 280;
+  tooltip.style.left = x+'px';
+  tooltip.style.top = y+'px';
+}
+function hideTip() { tooltip.classList.remove('visible'); }
+
+// Node map
+const nodeMap = {};
+nodes.forEach(n => nodeMap[n.id] = n);
+
+// Draw edges
+const edgeG = svg.append('g').attr('class','edges');
+
+edges.forEach(e => {
+  const s = nodeMap[e.from], t = nodeMap[e.to];
+  if (!s || !t) return;
+
+  // Simple straight line with elbow
+  const sx = s.x, sy = s.y;
+  const tx = t.x, ty = t.y;
+
+  // Midpoint routing
+  const midY = (sy + ty) / 2;
+  let pathD;
+  if (Math.abs(sx - tx) < 10) {
+    pathD = `M${sx},${sy} L${tx},${ty}`;
+  } else {
+    pathD = `M${sx},${sy} L${sx},${midY} L${tx},${midY} L${tx},${ty}`;
+  }
+
+  const col = e.type==='yes'?'#22c55e': e.type==='no'?'#f43f5e':'#475569';
+
+  edgeG.append('path')
+    .attr('d', pathD)
+    .attr('class', `edge edge-${e.type}`)
+    .attr('marker-end', `url(#arrow-${e.type})`)
+    .attr('stroke', col);
+
+  if (e.label) {
+    const lx = (sx + tx) / 2;
+    const ly = midY - 6;
+    const labelClass = e.type==='yes'?'edge-yes-label':'edge-no-label';
+    edgeG.append('text')
+      .attr('x', lx).attr('y', ly)
+      .attr('class', `edge-label ${labelClass}`)
+      .attr('text-anchor','middle')
+      .text(e.label);
+  }
+});
+
+// Draw nodes
+const nodeG = svg.append('g').attr('class','nodes');
+
+nodes.forEach(d => {
+  const g = nodeG.append('g')
+    .attr('class', `node node-${d.type}`)
+    .attr('transform', `translate(${d.x},${d.y})`)
+    .on('mouseover', (evt) => showTip(evt, d))
+    .on('mousemove', moveTip)
+    .on('mouseout', hideTip);
+
+  const hw = d.w / 2, hh = d.h / 2;
+
+  if (d.type === 'decision') {
+    const pts = `0,${-hh} ${hw},0 0,${hh} ${-hw},0`;
+    g.append('polygon').attr('points', pts);
+  } else if (d.type === 'end' || d.type === 'end-fim') {
+    g.append('ellipse').attr('cx',0).attr('cy',0).attr('rx', hw).attr('ry', hh);
+  } else if (d.type === 'start') {
+    g.append('rect').attr('x',-hw).attr('y',-hh).attr('width',d.w).attr('height',d.h).attr('rx',6);
+  } else {
+    g.append('rect').attr('x',-hw).attr('y',-hh).attr('width',d.w).attr('height',d.h).attr('rx',4);
+  }
+
+  // Multi-line text
+  const lines = d.label.split('\n');
+  const lineH = 12;
+  const totalH = (lines.length - 1) * lineH;
+  lines.forEach((ln, i) => {
+    g.append('text')
+      .attr('x', 0)
+      .attr('y', -totalH/2 + i * lineH)
+      .text(ln);
+  });
+});
+
+// ─── ZOOM ────────────────────────────────────────────────────────────────────
+let scale = 1;
+const wrapper = document.getElementById('canvasWrapper');
+
+function setZoom(s) {
+  scale = Math.max(0.4, Math.min(2.5, s));
+  document.getElementById('flowSvg').style.transform = `scale(${scale})`;
+  document.getElementById('flowSvg').style.transformOrigin = 'top left';
+}
+
+document.getElementById('zoomIn').onclick = () => setZoom(scale + 0.15);
+document.getElementById('zoomOut').onclick = () => setZoom(scale - 0.15);
+document.getElementById('zoomReset').onclick = () => setZoom(1);
+
+// Touch/wheel zoom
+wrapper.addEventListener('wheel', e => {
+  if (e.ctrlKey || e.metaKey) {
+    e.preventDefault();
+    setZoom(scale - e.deltaY * 0.001);
+  }
+}, { passive: false });
+</script>
+</body>
+</html>
