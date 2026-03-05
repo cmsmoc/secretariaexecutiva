@@ -718,10 +718,12 @@
 
 <script>
 // ─── CONSTANTS ────────────────────────────────────────────
-const CSV_RESPONSES = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQiHSlrHALyJy6PT4jTKnQMymu9vqHLtjmb5BObK6coHNyFhXU9AX1b2sPKY2IsznqFti_TOv--G-kV/pub?gid=796640931&single=true&output=csv';
-const CSV_COUNCILORS = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vS9aNnRE9han1uOLOP5dvzxIb9ghEF6i2IvXHXHJNi6ZGlo2QKwDFJK0SH49Ah-KEmmEfMNbnwEIEy2/pub?gid=313670513&single=true&output=csv';
+const CSV_RESPONSES    = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQiHSlrHALyJy6PT4jTKnQMymu9vqHLtjmb5BObK6coHNyFhXU9AX1b2sPKY2IsznqFti_TOv--G-kV/pub?gid=796640931&single=true&output=csv';
+const CSV_COUNCILORS   = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vS9aNnRE9han1uOLOP5dvzxIb9ghEF6i2IvXHXHJNi6ZGlo2QKwDFJK0SH49Ah-KEmmEfMNbnwEIEy2/pub?gid=313670513&single=true&output=csv';
+const CSV_DECLARATIONS = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQiHSlrHALyJy6PT4jTKnQMymu9vqHLtjmb5BObK6coHNyFhXU9AX1b2sPKY2IsznqFti_TOv--G-kV/pub?gid=1915662372&single=true&output=csv';
 
 let allCouncilors = [];
+let declMap = {};
 let currentSeg = 'ALL';
 let currentSt  = 'ALL';
 const QUORUM_NEEDED = 11;
@@ -764,10 +766,20 @@ async function fetchCSV(url) {
 async function loadData() {
   document.getElementById('loadingOverlay').style.display = 'flex';
   try {
-    const [respRows, councRows] = await Promise.all([
+    const [respRows, councRows, declRows] = await Promise.all([
       fetchCSV(CSV_RESPONSES),
-      fetchCSV(CSV_COUNCILORS)
+      fetchCSV(CSV_COUNCILORS),
+      fetchCSV(CSV_DECLARATIONS)
     ]);
+
+    // Build declaration map: normName -> url
+    declMap = {};
+    for (const row of declRows) {
+      const dKeys = Object.keys(row);
+      const name = (row[dKeys[0]] || row['NOME'] || '').trim();
+      const link = (row[dKeys[1]] || row['LINK'] || '').trim();
+      if (name && link) declMap[norm(name)] = link;
+    }
 
     // --- Process responses ---
     // Deduplicate: for each counselor name, keep latest entry
@@ -785,9 +797,8 @@ async function loadData() {
       if (isNotCounselor) {
         const visitorName = (row[keys[4]] || '').trim();
         const visitorEntity = (row[keys[6]] || '').trim();
-        const visitorDecl = (row[keys[7]] || '').trim(); // ← col H para visitantes
         if (visitorName) {
-          visitors.push({ name: visitorName, entity: visitorEntity, declarationLink: visitorDecl });
+          visitors.push({ name: visitorName, entity: visitorEntity });
         }
       } else {
         const name = col1.trim();
@@ -815,14 +826,10 @@ async function loadData() {
       const seat    = (r[cKeys[3]] || r['TITULAR/SUPLENTE'] || r['CADEIRA'] || '').trim();
 
       const resp = responseMap[norm(name)];
-      let status = 'pending';
-      let declarationLink = '';
-      if (resp) {
-        status = resp.status;
-        declarationLink = resp.declarationLink || ''; // ← NEW
-      }
+      const status = resp ? resp.status : 'pending';
+      const declarationLink = declMap[norm(name)] || '';
 
-      return { name, segment, entity, seat, status, declarationLink }; // ← NEW field
+      return { name, segment, entity, seat, status, declarationLink };
     }).filter(c => c.name && c.name !== '');
 
     // Deduplicate visitors (keep unique names)
@@ -950,8 +957,8 @@ function renderVisitors(list) {
     return;
   }
   el.innerHTML = list.map(v => {
-    const declIcon = v.declarationLink
-      ? `<a class="decl-btn" href="${escHtml(v.declarationLink)}" target="_blank" rel="noopener noreferrer" title="Ver declaração de ${escHtml(v.name)}">📄</a>`
+    const declIcon = declMap[norm(v.name)]
+      ? `<a class="decl-btn" href="${escHtml(declMap[norm(v.name)])}" target="_blank" rel="noopener noreferrer" title="Ver declaração de ${escHtml(v.name)}">📄</a>`
       : '';
     return `
     <div class="visitor-card">
