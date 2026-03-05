@@ -1,0 +1,658 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ASPMOC — Portal de Transparência</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;600;700&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --vinho: #6B1C1C;
+    --vinho-escuro: #4A1212;
+    --vinho-medio: #7E2222;
+    --gold: #C9922A;
+    --gold-light: #F5E9D3;
+    --cream: #FDF8F3;
+    --text: #1E1410;
+    --text-muted: #7A6A62;
+    --border: #E8DDD6;
+    --white: #FFFFFF;
+    --success: #2A6A2A;
+    --success-bg: #F0F7F0;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--cream);
+    color: var(--text);
+    overflow-x: hidden;
+  }
+
+  /* NAV */
+  nav {
+    background: var(--vinho-escuro);
+    position: sticky; top: 0; z-index: 100;
+    box-shadow: 0 2px 16px rgba(0,0,0,0.3);
+  }
+  .nav-inner {
+    max-width: 1200px; margin: 0 auto;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 32px; height: 64px;
+  }
+  .nav-brand { display: flex; align-items: center; gap: 12px; }
+  .nav-brand img { height: 38px; filter: brightness(0) invert(1); }
+  .nav-brand-text { color: white; font-size: 15px; font-weight: 700; letter-spacing: 0.03em; }
+  .nav-brand-text span { display: block; font-size: 11px; font-weight: 400; opacity: 0.7; }
+  .nav-links { display: flex; gap: 4px; }
+  .nav-link {
+    color: rgba(255,255,255,0.8); padding: 8px 14px; border-radius: 6px;
+    font-size: 13px; font-weight: 500; cursor: pointer; transition: all 0.2s;
+    border: none; background: none; font-family: 'DM Sans', sans-serif;
+  }
+  .nav-link:hover, .nav-link.active { background: rgba(255,255,255,0.15); color: white; }
+
+  /* HERO */
+  .hero {
+    background: linear-gradient(135deg, var(--vinho-escuro) 0%, var(--vinho) 50%, var(--vinho-medio) 100%);
+    padding: 80px 32px 100px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+  }
+  .hero-logo { width: 90px; filter: brightness(0) invert(1); margin-bottom: 20px; position: relative; }
+  .hero h1 {
+    font-family: 'Lora', serif;
+    font-size: clamp(28px, 5vw, 48px);
+    color: white; font-weight: 700;
+    line-height: 1.2; margin-bottom: 12px; position: relative;
+  }
+  .hero h1 span { color: var(--gold); }
+  .hero p {
+    color: rgba(255,255,255,0.8); font-size: 16px; max-width: 600px; margin: 0 auto 32px;
+    position: relative;
+  }
+  .hero-stats {
+    display: flex; justify-content: center; gap: 48px; flex-wrap: wrap;
+    position: relative;
+  }
+  .hero-stat { text-align: center; }
+  .hero-stat .num { font-size: 36px; font-weight: 700; color: white; }
+  .hero-stat .lbl { font-size: 12px; color: rgba(255,255,255,0.6); text-transform: uppercase; letter-spacing: 0.08em; }
+  .hero-stat .num .plus { color: var(--gold); }
+
+  /* CONTAINER */
+  .container { max-width: 1200px; margin: 0 auto; padding: 0 32px; }
+
+  /* SECTIONS */
+  .section { padding: 64px 0; }
+  .section-header {
+    display: flex; align-items: center; gap: 16px; margin-bottom: 40px;
+  }
+  .section-icon {
+    width: 48px; height: 48px; background: var(--vinho); border-radius: 12px;
+    display: flex; align-items: center; justify-content: center; font-size: 22px; flex-shrink: 0;
+  }
+  .section-title { font-family: 'Lora', serif; font-size: 26px; font-weight: 700; color: var(--vinho); }
+  .section-sub { font-size: 14px; color: var(--text-muted); margin-top: 2px; }
+  .section-line { height: 3px; background: linear-gradient(90deg, var(--vinho), transparent); flex: 1; }
+
+  /* FINANCEIRO CARDS */
+  .fin-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 32px; }
+  .fin-card {
+    background: white; border-radius: 14px; padding: 24px;
+    border: 1px solid var(--border); text-align: center;
+    box-shadow: 0 2px 8px rgba(107,28,28,0.06);
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  .fin-card:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(107,28,28,0.1); }
+  .fin-card .fc-icon { font-size: 28px; margin-bottom: 8px; }
+  .fin-card .fc-label { font-size: 11px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.08em; font-weight: 600; }
+  .fin-card .fc-value { font-size: 22px; font-weight: 700; color: var(--vinho); margin-top: 6px; }
+  .fin-card .fc-period { font-size: 12px; color: var(--text-muted); margin-top: 4px; }
+
+  /* CHART */
+  .chart-container {
+    background: white; border-radius: 14px; padding: 24px 20px 16px;
+    border: 1px solid var(--border); margin-bottom: 24px;
+    box-shadow: 0 2px 8px rgba(107,28,28,0.06);
+  }
+  .chart-title { font-size: 14px; font-weight: 700; color: var(--vinho); margin-bottom: 16px; }
+  .bar-chart { display: flex; align-items: flex-end; gap: 6px; height: 140px; }
+  .bar-group { flex: 1; display: flex; gap: 3px; align-items: flex-end; flex-direction: column; }
+  .bar-col { flex: 1; display: flex; gap: 3px; align-items: flex-end; }
+  .bar-item { flex: 1; border-radius: 4px 4px 0 0; min-height: 4px; cursor: pointer; transition: opacity 0.2s; }
+  .bar-item:hover { opacity: 0.8; }
+  .bar-receita { background: var(--vinho); }
+  .bar-despesa { background: var(--gold); }
+  .bar-labels { display: flex; gap: 6px; margin-top: 6px; }
+  .bar-label { flex: 1; text-align: center; font-size: 10px; color: var(--text-muted); }
+  .chart-legend { display: flex; gap: 20px; font-size: 12px; margin-top: 8px; color: var(--text-muted); }
+  .leg { display: flex; align-items: center; gap: 6px; }
+  .leg-dot { width: 10px; height: 10px; border-radius: 2px; }
+
+  /* TABELA */
+  .tbl-wrap { overflow-x: auto; }
+  table { width: 100%; border-collapse: collapse; font-size: 14px; }
+  thead th {
+    background: var(--vinho); color: white; padding: 12px 16px; text-align: left;
+    font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em;
+  }
+  tbody td { padding: 12px 16px; border-bottom: 1px solid var(--border); color: var(--text); }
+  tbody tr:hover td { background: var(--gold-light); }
+  tbody tr:last-child td { border-bottom: none; }
+
+  /* ASSEMBLEIAS */
+  .assembly-list { display: flex; flex-direction: column; gap: 16px; }
+  .assembly-card {
+    background: white; border-radius: 14px; padding: 24px;
+    border: 1px solid var(--border); display: flex; gap: 20px; align-items: flex-start;
+    box-shadow: 0 2px 8px rgba(107,28,28,0.05);
+    transition: transform 0.2s;
+  }
+  .assembly-card:hover { transform: translateX(4px); }
+  .assembly-date {
+    background: var(--vinho); color: white; border-radius: 10px;
+    padding: 10px 14px; text-align: center; flex-shrink: 0; min-width: 60px;
+  }
+  .assembly-date .day { font-size: 22px; font-weight: 700; }
+  .assembly-date .month { font-size: 11px; font-weight: 600; text-transform: uppercase; opacity: 0.85; }
+  .assembly-info { flex: 1; }
+  .assembly-info h4 { font-size: 15px; font-weight: 700; color: var(--vinho); margin-bottom: 4px; }
+  .assembly-info .pauta { font-size: 13px; color: var(--text-muted); margin-bottom: 8px; line-height: 1.5; }
+  .assembly-meta { display: flex; gap: 12px; flex-wrap: wrap; }
+  .meta-tag {
+    display: flex; align-items: center; gap: 4px;
+    font-size: 12px; color: var(--text-muted); background: var(--cream); border-radius: 6px; padding: 3px 8px;
+  }
+  .status-tag {
+    padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 700;
+  }
+  .status-realizada { background: var(--success-bg); color: var(--success); }
+  .status-agendada { background: #EEF4FF; color: #1A4EAD; }
+
+  /* CONVENIOS */
+  .conv-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; }
+  .conv-card {
+    background: white; border-radius: 14px; padding: 20px;
+    border: 1px solid var(--border);
+    box-shadow: 0 2px 8px rgba(107,28,28,0.05);
+    transition: all 0.2s;
+  }
+  .conv-card:hover { transform: translateY(-3px); box-shadow: 0 10px 24px rgba(107,28,28,0.1); }
+  .conv-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px; }
+  .conv-nome { font-size: 15px; font-weight: 700; color: var(--vinho); }
+  .conv-desconto {
+    background: var(--gold); color: white; font-size: 13px; font-weight: 700;
+    padding: 4px 10px; border-radius: 8px; flex-shrink: 0;
+  }
+  .conv-cat { font-size: 12px; color: var(--text-muted); margin-bottom: 8px; }
+  .conv-desc { font-size: 13px; color: #555; line-height: 1.5; }
+
+  /* NOTICIAS */
+  .news-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 20px; }
+  .news-card {
+    background: white; border-radius: 14px; overflow: hidden;
+    border: 1px solid var(--border); box-shadow: 0 2px 8px rgba(107,28,28,0.05);
+    transition: all 0.2s;
+  }
+  .news-card:hover { transform: translateY(-3px); box-shadow: 0 10px 24px rgba(107,28,28,0.1); }
+  .news-cat-bar { height: 4px; background: var(--vinho); }
+  .news-body { padding: 20px; }
+  .news-meta { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+  .news-date { font-size: 12px; color: var(--text-muted); }
+  .news-cat-tag { font-size: 11px; font-weight: 700; color: var(--vinho); background: var(--gold-light); padding: 3px 10px; border-radius: 20px; }
+  .news-title { font-size: 16px; font-weight: 700; color: var(--text); margin-bottom: 8px; line-height: 1.4; }
+  .news-resumo { font-size: 13px; color: var(--text-muted); line-height: 1.6; }
+  .news-destaque .news-cat-bar { background: var(--gold); height: 5px; }
+
+  /* FOOTER */
+  footer {
+    background: var(--vinho-escuro); color: rgba(255,255,255,0.7);
+    padding: 48px 32px 24px; margin-top: 64px;
+  }
+  .footer-inner { max-width: 1200px; margin: 0 auto; }
+  .footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 40px; margin-bottom: 40px; }
+  .footer-logo img { height: 50px; filter: brightness(0) invert(1); opacity: 0.9; margin-bottom: 12px; }
+  .footer-logo p { font-size: 13px; line-height: 1.7; }
+  .footer-col h4 { color: white; font-size: 14px; font-weight: 700; margin-bottom: 16px; }
+  .footer-col p, .footer-col a { font-size: 13px; line-height: 2; display: block; color: rgba(255,255,255,0.65); text-decoration: none; }
+  .footer-col a:hover { color: var(--gold); }
+  .footer-bottom { border-top: 1px solid rgba(255,255,255,0.1); padding-top: 20px; text-align: center; font-size: 12px; }
+
+  /* TABS */
+  .tabs { display: flex; gap: 4px; margin-bottom: 24px; flex-wrap: wrap; }
+  .tab {
+    padding: 8px 18px; border-radius: 8px; border: 1px solid var(--border);
+    background: white; color: var(--text-muted); font-size: 13px; font-weight: 600;
+    cursor: pointer; transition: all 0.2s; font-family: 'DM Sans', sans-serif;
+  }
+  .tab.active, .tab:hover { background: var(--vinho); color: white; border-color: var(--vinho); }
+
+  /* LOADING */
+  .loading-screen {
+    min-height: 100vh; display: flex; align-items: center; justify-content: center;
+    flex-direction: column; gap: 16px; background: var(--cream);
+  }
+  .spinner { width: 40px; height: 40px; border: 4px solid var(--border); border-top-color: var(--vinho); border-radius: 50%; animation: spin 0.8s linear infinite; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .loading-text { color: var(--text-muted); font-size: 14px; }
+
+  /* UTIL */
+  .text-right { text-align: right; }
+  .positivo { color: var(--success); font-weight: 700; }
+  .negativo { color: #B71C1C; font-weight: 700; }
+  .divider { height: 1px; background: var(--border); margin: 40px 0; }
+  .empty { text-align: center; padding: 60px 20px; color: var(--text-muted); font-size: 15px; }
+
+  @media (max-width: 768px) {
+    .nav-links { display: none; }
+    .hero { padding: 48px 20px 64px; }
+    .hero-stats { gap: 24px; }
+    .container { padding: 0 20px; }
+    .section { padding: 48px 0; }
+    .footer-grid { grid-template-columns: 1fr; }
+    .conv-grid, .news-grid { grid-template-columns: 1fr; }
+    .assembly-card { flex-direction: column; }
+  }
+</style>
+</head>
+<body>
+
+<div id="app">
+  <div class="loading-screen">
+    <img src="https://i.ibb.co/pB3mYTxC/image.png" style="height:70px;opacity:0.7">
+    <div class="spinner"></div>
+    <div class="loading-text">Carregando Portal de Transparência...</div>
+  </div>
+</div>
+
+<script>
+// ============================================================
+// CONFIGURAÇÃO - substitua pela URL da aba PUBLIC_API publicada
+// ============================================================
+const SHEET_URL = 'COLE_AQUI_A_URL_DA_ABA_PUBLIC_API_PUBLICADA';
+// Para testes locais, os dados demo abaixo são usados automaticamente
+// ============================================================
+
+const DEMO_DATA = {
+  config: {
+    site_titulo: 'ASPMOC — Portal de Transparência',
+    site_subtitulo: 'Associação dos Servidores Públicos Municipais Ativos e Inativos de Montes Claros',
+    presidente_nome: 'Joel Borges',
+    presidente_mandato: '2025-2027',
+    ano_fundacao: '1988',
+    total_associados: '320',
+    email_contato: 'contato@aspmoc.org.br',
+    telefone: '(38) 3221-0000',
+    endereco: 'Montes Claros - MG',
+    mostrar_financeiro: 'SIM',
+    mostrar_associados: 'SIM',
+    mostrar_convenios: 'SIM',
+    mostrar_assembleias: 'SIM',
+    mostrar_noticias: 'SIM',
+    logo_url: 'https://i.ibb.co/pB3mYTxC/image.png',
+  },
+  financeiro: [
+    {MES_ANO:'Jan/2025',RECEITA_MENSALIDADES:16200,RECEITA_CONVENIOS:920,RECEITA_OUTROS:340,DESPESA_ADMINISTRATIVA:4800,DESPESA_EVENTOS:700,DESPESA_JURIDICO:1500,DESPESA_OUTROS:450,SALDO:10010,PUBLICAR:'SIM'},
+    {MES_ANO:'Fev/2025',RECEITA_MENSALIDADES:15900,RECEITA_CONVENIOS:870,RECEITA_OUTROS:210,DESPESA_ADMINISTRATIVA:4600,DESPESA_EVENTOS:1100,DESPESA_JURIDICO:1500,DESPESA_OUTROS:380,SALDO:9400,PUBLICAR:'SIM'},
+    {MES_ANO:'Mar/2025',RECEITA_MENSALIDADES:16400,RECEITA_CONVENIOS:950,RECEITA_OUTROS:280,DESPESA_ADMINISTRATIVA:4900,DESPESA_EVENTOS:600,DESPESA_JURIDICO:1500,DESPESA_OUTROS:420,SALDO:10210,PUBLICAR:'SIM'},
+    {MES_ANO:'Abr/2025',RECEITA_MENSALIDADES:15800,RECEITA_CONVENIOS:910,RECEITA_OUTROS:190,DESPESA_ADMINISTRATIVA:4700,DESPESA_EVENTOS:900,DESPESA_JURIDICO:1500,DESPESA_OUTROS:390,SALDO:9410,PUBLICAR:'SIM'},
+    {MES_ANO:'Mai/2025',RECEITA_MENSALIDADES:16600,RECEITA_CONVENIOS:980,RECEITA_OUTROS:310,DESPESA_ADMINISTRATIVA:5100,DESPESA_EVENTOS:1400,DESPESA_JURIDICO:1500,DESPESA_OUTROS:460,SALDO:9430,PUBLICAR:'SIM'},
+    {MES_ANO:'Jun/2025',RECEITA_MENSALIDADES:16100,RECEITA_CONVENIOS:890,RECEITA_OUTROS:250,DESPESA_ADMINISTRATIVA:4650,DESPESA_EVENTOS:800,DESPESA_JURIDICO:1500,DESPESA_OUTROS:410,SALDO:9880,PUBLICAR:'SIM'},
+    {MES_ANO:'Jul/2025',RECEITA_MENSALIDADES:16300,RECEITA_CONVENIOS:940,RECEITA_OUTROS:290,DESPESA_ADMINISTRATIVA:4750,DESPESA_EVENTOS:650,DESPESA_JURIDICO:1500,DESPESA_OUTROS:430,SALDO:10200,PUBLICAR:'SIM'},
+    {MES_ANO:'Ago/2025',RECEITA_MENSALIDADES:16500,RECEITA_CONVENIOS:960,RECEITA_OUTROS:320,DESPESA_ADMINISTRATIVA:4820,DESPESA_EVENTOS:750,DESPESA_JURIDICO:1500,DESPESA_OUTROS:440,SALDO:10270,PUBLICAR:'SIM'},
+    {MES_ANO:'Set/2025',RECEITA_MENSALIDADES:15950,RECEITA_CONVENIOS:905,RECEITA_OUTROS:265,DESPESA_ADMINISTRATIVA:4680,DESPESA_EVENTOS:1050,DESPESA_JURIDICO:1500,DESPESA_OUTROS:400,SALDO:9490,PUBLICAR:'SIM'},
+    {MES_ANO:'Out/2025',RECEITA_MENSALIDADES:16700,RECEITA_CONVENIOS:990,RECEITA_OUTROS:330,DESPESA_ADMINISTRATIVA:5050,DESPESA_EVENTOS:880,DESPESA_JURIDICO:1500,DESPESA_OUTROS:470,SALDO:10120,PUBLICAR:'SIM'},
+    {MES_ANO:'Nov/2025',RECEITA_MENSALIDADES:16250,RECEITA_CONVENIOS:935,RECEITA_OUTROS:275,DESPESA_ADMINISTRATIVA:4720,DESPESA_EVENTOS:1200,DESPESA_JURIDICO:1500,DESPESA_OUTROS:415,SALDO:9625,PUBLICAR:'SIM'},
+    {MES_ANO:'Dez/2025',RECEITA_MENSALIDADES:17100,RECEITA_CONVENIOS:1050,RECEITA_OUTROS:400,DESPESA_ADMINISTRATIVA:5200,DESPESA_EVENTOS:2100,DESPESA_JURIDICO:1500,DESPESA_OUTROS:500,SALDO:9250,PUBLICAR:'SIM'},
+  ],
+  associados: [
+    {MES_ANO:'Jan/2025',TOTAL_ATIVOS:286,TOTAL_INATIVOS:35,NOVOS_ASSOCIADOS:3,DESLIGAMENTOS:1,INADIMPLENTES:14,PUBLICAR:'SIM'},
+    {MES_ANO:'Mar/2025',TOTAL_ATIVOS:290,TOTAL_INATIVOS:35,NOVOS_ASSOCIADOS:5,DESLIGAMENTOS:1,INADIMPLENTES:12,PUBLICAR:'SIM'},
+    {MES_ANO:'Jun/2025',TOTAL_ATIVOS:295,TOTAL_INATIVOS:36,NOVOS_ASSOCIADOS:6,DESLIGAMENTOS:1,INADIMPLENTES:11,PUBLICAR:'SIM'},
+    {MES_ANO:'Set/2025',TOTAL_ATIVOS:302,TOTAL_INATIVOS:36,NOVOS_ASSOCIADOS:8,DESLIGAMENTOS:1,INADIMPLENTES:10,PUBLICAR:'SIM'},
+    {MES_ANO:'Dez/2025',TOTAL_ATIVOS:312,TOTAL_INATIVOS:36,NOVOS_ASSOCIADOS:11,DESLIGAMENTOS:1,INADIMPLENTES:9,PUBLICAR:'SIM'},
+  ],
+  assembleias: [
+    {DATA:'15/03/2025',TIPO:'Ordinária',PAUTA:'Prestação de contas 2024 / Eleição da diretoria',LOCAL:'Sede da ASPMOC - Av. Professora Portela, 350',PARTICIPANTES:87,ATA_LINK:'#',STATUS:'Realizada',PUBLICAR:'SIM'},
+    {DATA:'10/05/2025',TIPO:'Extraordinária',PAUTA:'Aprovação de novo convênio com plano de saúde',LOCAL:'Câmara Municipal de Montes Claros',PARTICIPANTES:62,ATA_LINK:'#',STATUS:'Realizada',PUBLICAR:'SIM'},
+    {DATA:'22/07/2025',TIPO:'Ordinária',PAUTA:'Balanço semestral / Projetos segundo semestre',LOCAL:'Sede da ASPMOC',PARTICIPANTES:94,ATA_LINK:'#',STATUS:'Realizada',PUBLICAR:'SIM'},
+    {DATA:'18/09/2025',TIPO:'Extraordinária',PAUTA:'Discussão sobre reajuste de mensalidades',LOCAL:'Online - Google Meet',PARTICIPANTES:73,ATA_LINK:'#',STATUS:'Realizada',PUBLICAR:'SIM'},
+    {DATA:'20/11/2025',TIPO:'Ordinária',PAUTA:'Prestação de contas 3º trimestre / Eleição conselho fiscal',LOCAL:'Sede da ASPMOC',PARTICIPANTES:101,ATA_LINK:'#',STATUS:'Realizada',PUBLICAR:'SIM'},
+    {DATA:'15/02/2026',TIPO:'Ordinária',PAUTA:'Planejamento anual 2026 / Aprovação orçamento',LOCAL:'Sede da ASPMOC',PARTICIPANTES:0,ATA_LINK:'',STATUS:'Agendada',PUBLICAR:'SIM'},
+    {DATA:'10/04/2026',TIPO:'Extraordinária',PAUTA:'Votação: ampliação de convênios educacionais',LOCAL:'A confirmar',PARTICIPANTES:0,ATA_LINK:'',STATUS:'Agendada',PUBLICAR:'SIM'},
+  ],
+  convenios: [
+    {NOME:'Unimed Montes Claros',CATEGORIA:'Saúde',DESCONTO:'15%',DESCRICAO:'Plano de saúde com desconto em consultas e exames',CONTATO:'(38) 3214-5000',ATIVO:'SIM',PUBLICAR:'SIM'},
+    {NOME:'Ótica Visão Clara',CATEGORIA:'Saúde',DESCONTO:'20%',DESCRICAO:'Óculos de grau e lentes de contato com desconto especial',CONTATO:'(38) 3221-1111',ATIVO:'SIM',PUBLICAR:'SIM'},
+    {NOME:'Farmácia São João',CATEGORIA:'Saúde',DESCONTO:'10%',DESCRICAO:'Desconto em medicamentos e produtos de higiene',CONTATO:'(38) 3222-3333',ATIVO:'SIM',PUBLICAR:'SIM'},
+    {NOME:'UNIMONTES - Pós-Grad',CATEGORIA:'Educação',DESCONTO:'25%',DESCRICAO:'Desconto em cursos de especialização e MBA',CONTATO:'(38) 3229-8000',ATIVO:'SIM',PUBLICAR:'SIM'},
+    {NOME:'Faculdade Funorte',CATEGORIA:'Educação',DESCONTO:'20%',DESCRICAO:'Graduação e pós-graduação presencial e EAD',CONTATO:'(38) 3224-4000',ATIVO:'SIM',PUBLICAR:'SIM'},
+    {NOME:'Academia FitLife',CATEGORIA:'Lazer',DESCONTO:'30%',DESCRICAO:'Musculação, natação e aulas coletivas',CONTATO:'(38) 3223-5050',ATIVO:'SIM',PUBLICAR:'SIM'},
+    {NOME:'Hotel Serra Verde',CATEGORIA:'Lazer',DESCONTO:'20%',DESCRICAO:'Hospedagem em Montes Claros e região',CONTATO:'(38) 3215-6060',ATIVO:'SIM',PUBLICAR:'SIM'},
+    {NOME:'Restaurante O Mineiro',CATEGORIA:'Alimentação',DESCONTO:'10%',DESCRICAO:'Almoço e jantar no buffet por quilo',CONTATO:'(38) 3221-7070',ATIVO:'SIM',PUBLICAR:'SIM'},
+    {NOME:'Auto Escola Direção Certa',CATEGORIA:'Serviços',DESCONTO:'15%',DESCRICAO:'CNH e habilitação com desconto',CONTATO:'(38) 3222-8080',ATIVO:'SIM',PUBLICAR:'SIM'},
+  ],
+  noticias: [
+    {DATA:'05/03/2026',TITULO:'ASPMOC lança Portal de Transparência Digital',RESUMO:'Portal online permite que associados acompanhem em tempo real as finanças e atividades da associação.',CATEGORIA:'Institucional',DESTAQUE:'SIM',PUBLICAR:'SIM'},
+    {DATA:'20/02/2026',TITULO:'Novos convênios de saúde aprovados em assembleia',RESUMO:'Assembleia extraordinária aprovou parcerias com três novas clínicas especializadas para associados.',CATEGORIA:'Saúde',DESTAQUE:'SIM',PUBLICAR:'SIM'},
+    {DATA:'10/01/2026',TITULO:'Encerramento do ano: 2025 foi de crescimento',RESUMO:'Relatório anual aponta crescimento de 12% no número de associados e superávit financeiro.',CATEGORIA:'Institucional',DESTAQUE:'NÃO',PUBLICAR:'SIM'},
+    {DATA:'01/11/2025',TITULO:'Conselho Fiscal divulga relatório trimestral',RESUMO:'Terceiro relatório do ano atesta regularidade nas contas e recomenda ampliação do fundo de reserva.',CATEGORIA:'Financeiro',DESTAQUE:'NÃO',PUBLICAR:'SIM'},
+  ],
+};
+
+// ============================================================
+
+const BRL = v => 'R$ ' + Number(v).toLocaleString('pt-BR', {minimumFractionDigits:2,maximumFractionDigits:2});
+let D = null;
+let convFiltro = 'Todos';
+
+async function loadData() {
+  if (SHEET_URL === 'COLE_AQUI_A_URL_DA_ABA_PUBLIC_API_PUBLICADA') {
+    D = DEMO_DATA;
+    renderApp();
+    return;
+  }
+  try {
+    const r = await fetch(SHEET_URL);
+    const text = await r.text();
+    D = JSON.parse(text);
+  } catch(e) {
+    D = DEMO_DATA;
+  }
+  renderApp();
+}
+
+function renderApp() {
+  const c = D.config;
+  document.title = c.site_titulo || 'ASPMOC';
+  document.getElementById('app').innerHTML = `
+    ${renderNav(c)}
+    ${renderHero(c)}
+    <main>
+      ${c.mostrar_noticias === 'SIM' ? renderNoticias() : ''}
+      ${c.mostrar_financeiro === 'SIM' ? renderFinanceiro() : ''}
+      ${c.mostrar_associados === 'SIM' ? renderAssociados() : ''}
+      ${c.mostrar_assembleias === 'SIM' ? renderAssembleias() : ''}
+      ${c.mostrar_convenios === 'SIM' ? renderConvenios() : ''}
+    </main>
+    ${renderFooter(c)}
+  `;
+  setTimeout(bindConvFiltro, 100);
+}
+
+function renderNav(c) {
+  const links = [
+    c.mostrar_noticias === 'SIM' ? 'Notícias' : '',
+    c.mostrar_financeiro === 'SIM' ? 'Financeiro' : '',
+    c.mostrar_associados === 'SIM' ? 'Associados' : '',
+    c.mostrar_assembleias === 'SIM' ? 'Assembleias' : '',
+    c.mostrar_convenios === 'SIM' ? 'Convênios' : '',
+  ].filter(Boolean);
+  return `<nav>
+    <div class="nav-inner">
+      <div class="nav-brand">
+        <img src="${c.logo_url}" alt="ASPMOC">
+        <div class="nav-brand-text">ASPMOC<span>Portal de Transparência</span></div>
+      </div>
+      <div class="nav-links">
+        ${links.map(l => `<button class="nav-link" onclick="scrollTo('${l.toLowerCase()}')">${l}</button>`).join('')}
+      </div>
+    </div>
+  </nav>`;
+}
+
+function scrollTo(id) {
+  const el = document.getElementById('sec-' + id);
+  if (el) el.scrollIntoView({behavior:'smooth', block:'start'});
+}
+
+function renderHero(c) {
+  const fin = D.financeiro;
+  const totalRec = fin.reduce((s,r) => s+Number(r.RECEITA_MENSALIDADES||0), 0);
+  const ult = D.associados[D.associados.length - 1] || {};
+  const totalAssoc = Number(ult.TOTAL_ATIVOS||0) + Number(ult.TOTAL_INATIVOS||0) || Number(c.total_associados);
+  const assembRealizadas = D.assembleias.filter(a=>a.STATUS==='Realizada').length;
+  const conveniosAtivos = D.convenios.filter(cv=>cv.ATIVO==='SIM').length;
+
+  return `<div class="hero">
+    <img class="hero-logo" src="${c.logo_url}" alt="ASPMOC">
+    <h1>Portal de <span>Transparência</span><br>da ASPMOC</h1>
+    <p>${c.site_subtitulo}</p>
+    <div class="hero-stats">
+      <div class="hero-stat"><div class="num">${totalAssoc}<span class="plus">+</span></div><div class="lbl">Associados</div></div>
+      <div class="hero-stat"><div class="num">${BRL(totalRec).replace('R$ ','R$')}</div><div class="lbl">Arrecadado em 2025</div></div>
+      <div class="hero-stat"><div class="num">${assembRealizadas}</div><div class="lbl">Assembleias</div></div>
+      <div class="hero-stat"><div class="num">${conveniosAtivos}</div><div class="lbl">Convênios</div></div>
+    </div>
+  </div>`;
+}
+
+function renderFinanceiro() {
+  const fin = D.financeiro;
+  const totalRec = fin.reduce((s,r) => s+Number(r.RECEITA_MENSALIDADES||0)+Number(r.RECEITA_CONVENIOS||0)+Number(r.RECEITA_OUTROS||0), 0);
+  const totalDesp = fin.reduce((s,r) => s+Number(r.DESPESA_ADMINISTRATIVA||0)+Number(r.DESPESA_EVENTOS||0)+Number(r.DESPESA_JURIDICO||0)+Number(r.DESPESA_OUTROS||0), 0);
+  const saldoTotal = totalRec - totalDesp;
+  const ult = fin[fin.length-1] || {};
+
+  // Bar chart
+  const maxVal = Math.max(...fin.map(r => Number(r.RECEITA_MENSALIDADES||0)+Number(r.RECEITA_CONVENIOS||0)+Number(r.RECEITA_OUTROS||0)));
+  const maxDesp = Math.max(...fin.map(r => Number(r.DESPESA_ADMINISTRATIVA||0)+Number(r.DESPESA_EVENTOS||0)+Number(r.DESPESA_JURIDICO||0)+Number(r.DESPESA_OUTROS||0)));
+  const maxV = Math.max(maxVal, maxDesp);
+  const bars = fin.map(r => {
+    const rec = Number(r.RECEITA_MENSALIDADES||0)+Number(r.RECEITA_CONVENIOS||0)+Number(r.RECEITA_OUTROS||0);
+    const desp = Number(r.DESPESA_ADMINISTRATIVA||0)+Number(r.DESPESA_EVENTOS||0)+Number(r.DESPESA_JURIDICO||0)+Number(r.DESPESA_OUTROS||0);
+    const rh = Math.max(4, (rec/maxV)*130);
+    const dh = Math.max(4, (desp/maxV)*130);
+    const mes = (r.MES_ANO||'').split('/')[0];
+    return `<div style="flex:1;display:flex;gap:3px;align-items:flex-end;flex-direction:column">
+      <div style="width:100%;display:flex;gap:3px;align-items:flex-end">
+        <div class="bar-item bar-receita" style="height:${rh}px" title="${mes}: Receita ${BRL(rec)}"></div>
+        <div class="bar-item bar-despesa" style="height:${dh}px" title="${mes}: Despesa ${BRL(desp)}"></div>
+      </div>
+    </div>`;
+  });
+  const labels = fin.map(r => `<div style="flex:1;text-align:center;font-size:10px;color:var(--text-muted)">${(r.MES_ANO||'').split('/')[0]}</div>`).join('');
+
+  return `<section class="section" id="sec-financeiro">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-icon">💰</div>
+      <div><div class="section-title">Transparência Financeira</div><div class="section-sub">Receitas, despesas e balanços mensais de 2025</div></div>
+      <div class="section-line"></div>
+    </div>
+    <div class="fin-grid">
+      <div class="fin-card"><div class="fc-icon">📥</div><div class="fc-label">Total Arrecadado</div><div class="fc-value">${BRL(totalRec)}</div><div class="fc-period">Jan–Dez/2025</div></div>
+      <div class="fin-card"><div class="fc-icon">📤</div><div class="fc-label">Total Despesas</div><div class="fc-value">${BRL(totalDesp)}</div><div class="fc-period">Jan–Dez/2025</div></div>
+      <div class="fin-card"><div class="fc-icon">${saldoTotal>=0?'✅':'⚠️'}</div><div class="fc-label">Superávit/Déficit</div><div class="fc-value" style="color:${saldoTotal>=0?'var(--success)':'#B71C1C'}">${BRL(saldoTotal)}</div><div class="fc-period">Resultado 2025</div></div>
+      <div class="fin-card"><div class="fc-icon">📊</div><div class="fc-label">Último Mês</div><div class="fc-value">${BRL(ult.SALDO||0)}</div><div class="fc-period">${ult.MES_ANO||''}</div></div>
+    </div>
+    <div class="chart-container">
+      <div class="chart-title">Receitas × Despesas por Mês</div>
+      <div class="bar-chart">${bars.join('')}</div>
+      <div style="display:flex;gap:4px;margin-top:4px">${labels}</div>
+      <div class="chart-legend"><div class="leg"><div class="leg-dot" style="background:var(--vinho)"></div>Receita</div><div class="leg"><div class="leg-dot" style="background:var(--gold)"></div>Despesa</div></div>
+    </div>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>Mês</th><th>Receita Total</th><th>Despesa Total</th><th>Saldo</th></tr></thead>
+        <tbody>${fin.map(r => {
+          const rec = Number(r.RECEITA_MENSALIDADES||0)+Number(r.RECEITA_CONVENIOS||0)+Number(r.RECEITA_OUTROS||0);
+          const desp = Number(r.DESPESA_ADMINISTRATIVA||0)+Number(r.DESPESA_EVENTOS||0)+Number(r.DESPESA_JURIDICO||0)+Number(r.DESPESA_OUTROS||0);
+          return `<tr><td>${r.MES_ANO}</td><td>${BRL(rec)}</td><td>${BRL(desp)}</td><td class="${Number(r.SALDO)>=0?'positivo':'negativo'}">${BRL(r.SALDO)}</td></tr>`;
+        }).join('')}</tbody>
+      </table>
+    </div>
+  </div>
+  </section>`;
+}
+
+function renderAssociados() {
+  const assoc = D.associados;
+  const ult = assoc[assoc.length-1] || {};
+  const total = Number(ult.TOTAL_ATIVOS||0)+Number(ult.TOTAL_INATIVOS||0);
+  return `<section class="section" style="background:white" id="sec-associados">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-icon">👥</div>
+      <div><div class="section-title">Quadro de Associados</div><div class="section-sub">Evolução e transparência no quadro associativo</div></div>
+      <div class="section-line"></div>
+    </div>
+    <div class="fin-grid">
+      <div class="fin-card"><div class="fc-icon">✅</div><div class="fc-label">Ativos</div><div class="fc-value">${ult.TOTAL_ATIVOS||'—'}</div><div class="fc-period">Servidores ativos</div></div>
+      <div class="fin-card"><div class="fc-icon">🏅</div><div class="fc-label">Inativos</div><div class="fc-value">${ult.TOTAL_INATIVOS||'—'}</div><div class="fc-period">Aposentados</div></div>
+      <div class="fin-card"><div class="fc-icon">👥</div><div class="fc-label">Total</div><div class="fc-value">${total}</div><div class="fc-period">${ult.MES_ANO||'Atual'}</div></div>
+      <div class="fin-card"><div class="fc-icon">⚠️</div><div class="fc-label">Inadimplentes</div><div class="fc-value">${ult.INADIMPLENTES||'—'}</div><div class="fc-period">${ult.MES_ANO||''}</div></div>
+    </div>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>Período</th><th>Ativos</th><th>Inativos</th><th>Total</th><th>Novos</th><th>Desligamentos</th><th>Inadimplentes</th></tr></thead>
+        <tbody>${assoc.map(r => `<tr>
+          <td>${r.MES_ANO}</td><td>${r.TOTAL_ATIVOS}</td><td>${r.TOTAL_INATIVOS}</td>
+          <td><strong>${Number(r.TOTAL_ATIVOS)+Number(r.TOTAL_INATIVOS)}</strong></td>
+          <td class="positivo">+${r.NOVOS_ASSOCIADOS}</td>
+          <td class="negativo">-${r.DESLIGAMENTOS}</td>
+          <td>${r.INADIMPLENTES}</td>
+        </tr>`).join('')}</tbody>
+      </table>
+    </div>
+  </div>
+  </section>`;
+}
+
+function renderAssembleias() {
+  const ass = D.assembleias;
+  return `<section class="section" id="sec-assembleias">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-icon">🏛️</div>
+      <div><div class="section-title">Assembleias</div><div class="section-sub">Histórico e agenda de reuniões da associação</div></div>
+      <div class="section-line"></div>
+    </div>
+    <div class="assembly-list">
+      ${ass.map(a => {
+        const [d,m,y] = (a.DATA||'').split('/');
+        const meses = ['','Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
+        const mesNome = meses[parseInt(m||0)] || (m||'');
+        return `<div class="assembly-card">
+          <div class="assembly-date"><div class="day">${d||'?'}</div><div class="month">${mesNome} ${y||''}</div></div>
+          <div class="assembly-info">
+            <h4>${a.TIPO} — ${a.STATUS === 'Agendada' ? '📅 Agendada' : '✅ Realizada'}</h4>
+            <div class="pauta">${a.PAUTA}</div>
+            <div class="assembly-meta">
+              ${a.LOCAL ? `<span class="meta-tag">📍 ${a.LOCAL}</span>` : ''}
+              ${a.PARTICIPANTES > 0 ? `<span class="meta-tag">👥 ${a.PARTICIPANTES} participantes</span>` : ''}
+              <span class="status-tag status-${a.STATUS.toLowerCase()}">${a.STATUS}</span>
+              ${a.ATA_LINK ? `<a href="${a.ATA_LINK}" target="_blank" class="meta-tag" style="color:var(--vinho);font-weight:700">📄 Ver Ata</a>` : ''}
+            </div>
+          </div>
+        </div>`;
+      }).join('')}
+    </div>
+  </div>
+  </section>`;
+}
+
+function renderConvenios() {
+  const cats = ['Todos', ...new Set(D.convenios.map(c=>c.CATEGORIA))];
+  return `<section class="section" style="background:white" id="sec-convênios">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-icon">🤝</div>
+      <div><div class="section-title">Convênios e Benefícios</div><div class="section-sub">Vantagens exclusivas para os associados</div></div>
+      <div class="section-line"></div>
+    </div>
+    <div class="tabs" id="conv-tabs">
+      ${cats.map(c => `<button class="tab${c==='Todos'?' active':''}" data-cat="${c}" onclick="filtrarConv('${c}')">${c}</button>`).join('')}
+    </div>
+    <div class="conv-grid" id="conv-grid">
+      ${renderConvCards('Todos')}
+    </div>
+  </div>
+  </section>`;
+}
+
+function renderConvCards(filtro) {
+  const lista = filtro === 'Todos' ? D.convenios : D.convenios.filter(c=>c.CATEGORIA===filtro);
+  return lista.map(c => `<div class="conv-card">
+    <div class="conv-header">
+      <div class="conv-nome">${c.NOME}</div>
+      <div class="conv-desconto">${c.DESCONTO}</div>
+    </div>
+    <div class="conv-cat">${c.CATEGORIA} • ${c.CONTATO}</div>
+    <div class="conv-desc">${c.DESCRICAO}</div>
+  </div>`).join('');
+}
+
+function filtrarConv(cat) {
+  document.querySelectorAll('#conv-tabs .tab').forEach(t => t.classList.toggle('active', t.dataset.cat === cat));
+  document.getElementById('conv-grid').innerHTML = renderConvCards(cat);
+}
+
+function bindConvFiltro() { /* tabs já usam onclick inline */ }
+
+function renderNoticias() {
+  const nots = D.noticias;
+  return `<section class="section" id="sec-notícias">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-icon">📰</div>
+      <div><div class="section-title">Notícias e Comunicados</div><div class="section-sub">Acompanhe as novidades da ASPMOC</div></div>
+      <div class="section-line"></div>
+    </div>
+    <div class="news-grid">
+      ${nots.map(n => `<div class="news-card${n.DESTAQUE==='SIM'?' news-destaque':''}">
+        <div class="news-cat-bar"></div>
+        <div class="news-body">
+          <div class="news-meta">
+            <div class="news-date">📅 ${n.DATA}</div>
+            <div class="news-cat-tag">${n.CATEGORIA}</div>
+          </div>
+          <div class="news-title">${n.TITULO}</div>
+          <div class="news-resumo">${n.RESUMO}</div>
+        </div>
+      </div>`).join('')}
+    </div>
+  </div>
+  </section>`;
+}
+
+function renderFooter(c) {
+  return `<footer>
+    <div class="footer-inner">
+      <div class="footer-grid">
+        <div class="footer-logo">
+          <img src="${c.logo_url}" alt="ASPMOC">
+          <p>Associação dos Servidores Públicos Municipais Ativos e Inativos de Montes Claros. Transparência e participação ao alcance de todos os associados.</p>
+        </div>
+        <div class="footer-col">
+          <h4>Contato</h4>
+          <p>📧 ${c.email_contato}</p>
+          <p>📞 ${c.telefone}</p>
+          <p>📍 ${c.endereco}</p>
+        </div>
+        <div class="footer-col">
+          <h4>Gestão</h4>
+          <p>Presidente: ${c.presidente_nome}</p>
+          <p>Mandato: ${c.presidente_mandato}</p>
+          <p>Fundada em ${c.ano_fundacao}</p>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>© ${new Date().getFullYear()} ASPMOC — Portal de Transparência • Dados atualizados pela administração da associação</p>
+      </div>
+    </div>
+  </footer>`;
+}
+
+loadData();
+</script>
+</body>
+</html>
