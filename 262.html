@@ -619,7 +619,7 @@
     <span class="last-updated" id="lastUpdated">—</span>
   </div>
   <a href="https://forms.gle/95cYeTUK7M8UHcou9" target="_blank" class="header-form-banner" title="Registrar presença / justificar ausência">
-    <img src="https://i.ibb.co/C3fLsNGj/Form-Header-29.png" alt="262º REP">
+    <img src="https://i.ibb.co/7x9Jxsq9/BANNERcliq.png" alt="Registrar presença — clique para acessar o formulário">
   </a>
 </header>
 
@@ -787,8 +787,9 @@ async function loadData() {
       if (isNotCounselor) {
         const visitorName = (row[keys[4]] || '').trim();
         const visitorEntity = (row[keys[6]] || '').trim();
+        const visitorDecl = (row[keys[7]] || '').trim(); // ← col H para visitantes
         if (visitorName) {
-          visitors.push({ name: visitorName, entity: visitorEntity });
+          visitors.push({ name: visitorName, entity: visitorEntity, declarationLink: visitorDecl });
         }
       } else {
         const name = col1.trim();
@@ -950,11 +951,19 @@ function renderVisitors(list) {
     el.innerHTML = '<div class="empty-visitors">Nenhum visitante registrado</div>';
     return;
   }
-  el.innerHTML = list.map(v => `
+  el.innerHTML = list.map(v => {
+    const declIcon = v.declarationLink
+      ? `<a class="decl-btn" href="${escHtml(v.declarationLink)}" target="_blank" rel="noopener noreferrer" title="Ver declaração de ${escHtml(v.name)}">📄</a>`
+      : '';
+    return `
     <div class="visitor-card">
-      <div class="visitor-name">${escHtml(v.name)}</div>
+      <div style="display:flex;align-items:flex-start;gap:6px;">
+        <div class="visitor-name" style="flex:1">${escHtml(v.name)}</div>
+        ${declIcon}
+      </div>
       ${v.entity ? `<div class="visitor-entity">${escHtml(v.entity)}</div>` : ''}
-    </div>`).join('');
+    </div>`;
+  }).join('');
 }
 
 // ─── RENDER STATS ─────────────────────────────────────────
