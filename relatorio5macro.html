@@ -1,0 +1,860 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>Relatório de Avaliação — 5ª Conferência Macrorregional Norte · CMS Montes Claros</title>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700;900&family=Open+Sans:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --cms-blue:   #1B6CB5;
+  --cms-navy:   #0D2E5A;
+  --cms-green:  #1E8A4A;
+  --cms-yellow: #F5C400;
+  --cms-white:  #FFFFFF;
+  --cms-off:    #F7F8FA;
+  --cms-ink:    #111827;
+  --cms-muted:  #6B7280;
+  --cms-border: #E5E7EB;
+}
+
+/* ── PRINT BASE ── */
+@page {
+  size: A4;
+  margin: 0;
+}
+
+@media print {
+  .no-print { display: none !important; }
+  body { background: white; }
+  .page { page-break-after: always; }
+  .page:last-child { page-break-after: avoid; }
+  .avoid-break { page-break-inside: avoid; }
+  a { text-decoration: none; color: inherit; }
+}
+
+body {
+  font-family: 'Open Sans', sans-serif;
+  background: #e5e7eb;
+  color: var(--cms-ink);
+  line-height: 1.6;
+}
+
+/* ── PRINT BUTTON ── */
+.print-bar {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 999;
+  background: var(--cms-navy);
+  padding: 10px 40px;
+  display: flex; align-items: center; justify-content: space-between;
+}
+.print-bar span {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 11px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase;
+  color: rgba(255,255,255,0.55);
+}
+.print-btn {
+  background: var(--cms-yellow); color: var(--cms-navy);
+  border: none; cursor: pointer; border-radius: 6px;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 11px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase;
+  padding: 8px 20px;
+}
+.print-btn:hover { opacity: 0.85; }
+
+/* ── PAGE ── */
+.page {
+  width: 210mm;
+  min-height: 297mm;
+  background: white;
+  margin: 60px auto 24px;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 4px 40px rgba(0,0,0,0.15);
+}
+
+/* ── STRIPE ── */
+.stripe {
+  height: 5px;
+  background: linear-gradient(to right, #F5C400 33.3%, #1E8A4A 33.3% 66.6%, #1B6CB5 66.6%);
+}
+
+/* ── COVER PAGE ── */
+.cover {
+  background: var(--cms-navy);
+  min-height: 297mm;
+  display: flex;
+  flex-direction: column;
+  padding: 0;
+  position: relative;
+  overflow: hidden;
+}
+.cover::before {
+  content: '';
+  position: absolute;
+  top: -100px; right: -100px;
+  width: 500px; height: 500px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(27,108,181,0.25) 0%, transparent 65%);
+}
+.cover::after {
+  content: '';
+  position: absolute;
+  bottom: 60px; left: -80px;
+  width: 320px; height: 320px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(245,196,0,0.08) 0%, transparent 65%);
+}
+.cover-stripe { height: 6px; background: linear-gradient(to right, #F5C400 33.3%, #1E8A4A 33.3% 66.6%, #1B6CB5 66.6%); }
+.cover-inner {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 52px 52px 48px;
+  position: relative; z-index: 1;
+}
+.cover-top {}
+.cover-eyebrow {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 10px; font-weight: 700; letter-spacing: 3px; text-transform: uppercase;
+  color: var(--cms-yellow);
+  margin-bottom: 28px;
+}
+.cover-rule { width: 48px; height: 3px; background: var(--cms-yellow); margin-bottom: 32px; }
+.cover-title {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 52px; font-weight: 900;
+  letter-spacing: -2px; line-height: 0.92;
+  color: white;
+  margin-bottom: 16px;
+}
+.cover-title em { color: var(--cms-yellow); font-style: normal; display: block; }
+.cover-subtitle {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 16px; font-weight: 600; color: rgba(255,255,255,0.6);
+  margin-top: 20px; letter-spacing: -0.3px;
+}
+.cover-desc {
+  margin-top: 32px;
+  padding: 20px 24px;
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 8px;
+  max-width: 380px;
+}
+.cover-desc p { font-size: 13px; color: rgba(255,255,255,0.5); line-height: 1.7; font-weight: 300; }
+.cover-meta {
+  display: flex; flex-direction: column; gap: 6px;
+}
+.cover-meta-row {
+  display: flex; align-items: center; gap: 16px;
+}
+.cover-meta-divider { height: 1px; background: rgba(255,255,255,0.1); margin: 8px 0; }
+.cover-meta-label {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 9px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase;
+  color: rgba(255,255,255,0.35); min-width: 80px;
+}
+.cover-meta-value {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 12px; font-weight: 600; color: rgba(255,255,255,0.75);
+}
+.cover-meta-value.yellow { color: var(--cms-yellow); }
+
+/* ── CONTENT PAGES ── */
+.page-header {
+  background: var(--cms-navy);
+  padding: 24px 40px;
+  display: flex; align-items: center; justify-content: space-between;
+}
+.page-header-left {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 10px; font-weight: 700; letter-spacing: 2.5px; text-transform: uppercase;
+  color: rgba(255,255,255,0.45);
+}
+.page-header-right {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 10px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase;
+  color: var(--cms-yellow);
+}
+.page-body { padding: 40px 40px 32px; }
+.page-footer-bar {
+  position: absolute; bottom: 0; left: 0; right: 0;
+  padding: 14px 40px;
+  display: flex; align-items: center; justify-content: space-between;
+  border-top: 1px solid var(--cms-border);
+}
+.page-footer-bar span {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 9px; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase;
+  color: var(--cms-muted);
+}
+
+/* ── TYPOGRAPHY ── */
+.section-eyebrow {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 9px; font-weight: 700; letter-spacing: 3px; text-transform: uppercase;
+  color: var(--cms-blue); margin-bottom: 6px;
+}
+.section-title {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 28px; font-weight: 900; letter-spacing: -1px; line-height: 1.0;
+  color: var(--cms-navy); margin-bottom: 24px;
+}
+.section-title span { color: var(--cms-blue); }
+p { font-size: 13px; color: #374151; line-height: 1.75; margin-bottom: 12px; }
+p:last-child { margin-bottom: 0; }
+
+/* ── STAT CARDS ── */
+.stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 28px; }
+.stat-card {
+  background: var(--cms-off);
+  border-radius: 10px;
+  padding: 18px 16px;
+  border: 1px solid var(--cms-border);
+  text-align: center;
+}
+.stat-card.blue { background: var(--cms-navy); border-color: var(--cms-navy); }
+.stat-card.green { background: #f0faf4; border-color: #b7e4c7; }
+.stat-number {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 38px; font-weight: 900; letter-spacing: -2px;
+  color: var(--cms-navy); line-height: 1;
+  margin-bottom: 4px;
+}
+.stat-card.blue .stat-number { color: var(--cms-yellow); }
+.stat-card.green .stat-number { color: var(--cms-green); }
+.stat-label {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 9px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase;
+  color: var(--cms-muted); line-height: 1.3;
+}
+.stat-card.blue .stat-label { color: rgba(255,255,255,0.55); }
+
+/* ── BAR CHART ── */
+.chart-row {
+  display: flex; align-items: center; gap: 12px; margin-bottom: 10px;
+}
+.chart-label { font-size: 12px; font-weight: 600; color: var(--cms-ink); min-width: 70px; }
+.chart-bar-wrap { flex: 1; background: var(--cms-off); border-radius: 4px; height: 28px; overflow: hidden; }
+.chart-bar { height: 100%; border-radius: 4px; display: flex; align-items: center; padding-left: 10px; }
+.chart-bar span { font-family: 'Montserrat', sans-serif; font-size: 11px; font-weight: 700; color: white; letter-spacing: 0.5px; }
+.chart-pct { font-family: 'Montserrat', sans-serif; font-size: 12px; font-weight: 700; color: var(--cms-muted); min-width: 36px; text-align: right; }
+
+/* ── ISSUE CARDS ── */
+.issues-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 24px; }
+.issue-card {
+  border-radius: 10px;
+  border: 1px solid var(--cms-border);
+  overflow: hidden;
+}
+.issue-header {
+  padding: 12px 16px;
+  display: flex; align-items: center; gap: 10px;
+}
+.issue-header.red { background: #FEE2E2; }
+.issue-header.orange { background: #FEF3C7; }
+.issue-header.blue { background: #DBEAFE; }
+.issue-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+.issue-dot.red { background: #DC2626; }
+.issue-dot.orange { background: #D97706; }
+.issue-dot.blue { background: var(--cms-blue); }
+.issue-title {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 11px; font-weight: 700; letter-spacing: 0.5px;
+  color: var(--cms-ink);
+}
+.issue-count {
+  margin-left: auto;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 16px; font-weight: 900;
+  color: var(--cms-navy);
+}
+.issue-body { padding: 12px 16px; background: white; font-size: 12px; color: var(--cms-muted); line-height: 1.6; }
+
+/* ── QUOTE ── */
+.quote-block {
+  border-left: 3px solid var(--cms-blue);
+  padding: 12px 18px;
+  background: var(--cms-off);
+  border-radius: 0 8px 8px 0;
+  margin: 14px 0;
+}
+.quote-block p { font-size: 12.5px; color: #374151; font-style: italic; margin-bottom: 6px; }
+.quote-source {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 9px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase;
+  color: var(--cms-blue);
+}
+.quote-block.green { border-color: var(--cms-green); }
+.quote-block.yellow { border-color: var(--cms-yellow); }
+.quote-block.yellow p { color: var(--cms-ink); font-style: normal; }
+
+/* ── HIGHLIGHT BOX ── */
+.highlight {
+  background: var(--cms-navy);
+  border-radius: 10px;
+  padding: 20px 24px;
+  margin: 20px 0;
+}
+.highlight p { color: rgba(255,255,255,0.75); font-size: 13px; margin-bottom: 6px; }
+.highlight-title {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 15px; font-weight: 700; color: white; margin-bottom: 8px;
+}
+.highlight-accent { color: var(--cms-yellow) !important; font-weight: 700; }
+
+/* ── DONUT (CSS) ── */
+.donut-wrap { display: flex; align-items: center; gap: 24px; margin: 16px 0; }
+.donut {
+  width: 80px; height: 80px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 18px; font-weight: 900;
+  color: white; flex-shrink: 0;
+}
+.donut-legend { flex: 1; }
+.donut-legend-item { display: flex; align-items: center; gap: 8px; margin-bottom: 5px; }
+.donut-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+.donut-legend-item span { font-size: 12px; color: var(--cms-muted); }
+.donut-legend-item strong { font-size: 12px; font-weight: 700; color: var(--cms-ink); }
+
+/* ── LIST ── */
+ul.cms-list { list-style: none; padding: 0; }
+ul.cms-list li {
+  display: flex; gap: 10px; align-items: flex-start;
+  padding: 8px 0; border-bottom: 1px solid var(--cms-border);
+  font-size: 12.5px; color: #374151; line-height: 1.55;
+}
+ul.cms-list li:last-child { border-bottom: none; }
+ul.cms-list li::before {
+  content: '●'; color: var(--cms-yellow); font-size: 8px; margin-top: 5px; flex-shrink: 0;
+}
+
+/* ── MUNIC TABLE ── */
+.muni-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+.muni-table thead tr { background: var(--cms-navy); }
+.muni-table th { padding: 9px 12px; text-align: left; font-family: 'Montserrat', sans-serif; font-size: 9px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: rgba(255,255,255,0.8); }
+.muni-table td { padding: 8px 12px; border-top: 1px solid var(--cms-border); color: #374151; }
+.muni-table tbody tr:nth-child(even) td { background: var(--cms-off); }
+.muni-badge {
+  display: inline-block; padding: 2px 8px; border-radius: 4px;
+  font-family: 'Montserrat', sans-serif; font-size: 9px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase;
+}
+.muni-badge.high { background: #DBEAFE; color: var(--cms-navy); }
+.muni-badge.mid { background: var(--cms-off); color: var(--cms-muted); border: 1px solid var(--cms-border); }
+
+/* ── DIVIDER ── */
+.divider { height: 1px; background: var(--cms-border); margin: 24px 0; }
+.divider-bold { height: 3px; background: var(--cms-blue); margin: 20px 0 24px; }
+
+/* ── SPACING UTIL ── */
+.mt-sm { margin-top: 12px; }
+.mt-md { margin-top: 24px; }
+.mb-sm { margin-bottom: 12px; }
+.mb-md { margin-bottom: 24px; }
+.pb-footer { padding-bottom: 48px; }
+</style>
+</head>
+<body>
+
+<!-- PRINT BAR -->
+<div class="print-bar no-print">
+  <span>CMS Montes Claros · Relatório de Avaliação · 5ª Conferência Macrorregional</span>
+  <button class="print-btn" onclick="window.print()">⎙ Imprimir / Salvar PDF</button>
+</div>
+
+<!-- ══════════════════════════════════════════
+     PÁGINA 1 · CAPA
+══════════════════════════════════════════ -->
+<div class="page">
+  <div class="cover">
+    <div class="cover-stripe"></div>
+    <div class="cover-inner">
+      <div class="cover-top">
+        <p class="cover-eyebrow">Conselho Municipal de Saúde · Montes Claros — MG</p>
+        <div class="cover-rule"></div>
+        <h1 class="cover-title">RELATÓRIO<br>DE<br><em>AVALIAÇÃO</em></h1>
+        <p class="cover-subtitle">5ª Conferência Macrorregional Norte<br>Etapa Macrorregional · Montes Claros</p>
+        <div class="cover-desc">
+          <p>Análise sistematizada de 109 respostas ao formulário de avaliação, coletadas entre 13 e 13 de maio de 2025, abrangendo 65 municípios da macrorregião Norte de Minas Gerais.</p>
+        </div>
+      </div>
+      <div class="cover-meta">
+        <div class="cover-meta-row">
+          <span class="cover-meta-label">Conferência</span>
+          <span class="cover-meta-value yellow">5ª Conferência Macrorregional Norte</span>
+        </div>
+        <div class="cover-meta-row">
+          <span class="cover-meta-label">Tema</span>
+          <span class="cover-meta-value">Saúde do Trabalhador e da Trabalhadora</span>
+        </div>
+        <div class="cover-meta-divider"></div>
+        <div class="cover-meta-row">
+          <span class="cover-meta-label">Respostas</span>
+          <span class="cover-meta-value">109 participantes</span>
+        </div>
+        <div class="cover-meta-row">
+          <span class="cover-meta-label">Municípios</span>
+          <span class="cover-meta-value">65 municípios representados</span>
+        </div>
+        <div class="cover-meta-row">
+          <span class="cover-meta-label">Período</span>
+          <span class="cover-meta-value">13 abr – 13 mai 2025</span>
+        </div>
+        <div class="cover-meta-divider"></div>
+        <div class="cover-meta-row">
+          <span class="cover-meta-label">Elaboração</span>
+          <span class="cover-meta-value">CMS Montes Claros · 2025</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     PÁGINA 2 · NÚMEROS GERAIS
+══════════════════════════════════════════ -->
+<div class="page">
+  <div class="stripe"></div>
+  <div class="page-header">
+    <span class="page-header-left">5ª Conferência Macrorregional Norte</span>
+    <span class="page-header-right">Resultados Gerais</span>
+  </div>
+  <div class="page-body pb-footer">
+
+    <p class="section-eyebrow">01 · Visão Geral</p>
+    <h2 class="section-title">Panorama da<br><span>avaliação</span></h2>
+
+    <!-- KPI cards -->
+    <div class="stats-grid">
+      <div class="stat-card blue avoid-break">
+        <div class="stat-number">109</div>
+        <div class="stat-label">Respostas<br>coletadas</div>
+      </div>
+      <div class="stat-card avoid-break">
+        <div class="stat-number">65</div>
+        <div class="stat-label">Municípios<br>representados</div>
+      </div>
+      <div class="stat-card green avoid-break">
+        <div class="stat-number">91%</div>
+        <div class="stat-label">Se sentiram<br>acolhidos</div>
+      </div>
+      <div class="stat-card avoid-break">
+        <div class="stat-number">57%</div>
+        <div class="stat-label">Avaliaram organização<br>como Excelente</div>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- Avaliação Organização -->
+    <p class="section-eyebrow mt-md">Organização Geral do Evento</p>
+    <div class="mt-sm mb-md avoid-break">
+      <div class="chart-row">
+        <span class="chart-label">Excelente</span>
+        <div class="chart-bar-wrap">
+          <div class="chart-bar" style="width:56.9%;background:var(--cms-navy);">
+            <span>62 respostas</span>
+          </div>
+        </div>
+        <span class="chart-pct">57%</span>
+      </div>
+      <div class="chart-row">
+        <span class="chart-label">Boa</span>
+        <div class="chart-bar-wrap">
+          <div class="chart-bar" style="width:33%;background:var(--cms-blue);">
+            <span>36 respostas</span>
+          </div>
+        </div>
+        <span class="chart-pct">33%</span>
+      </div>
+      <div class="chart-row">
+        <span class="chart-label">Regular</span>
+        <div class="chart-bar-wrap">
+          <div class="chart-bar" style="width:10.1%;background:#D97706;">
+            <span>11</span>
+          </div>
+        </div>
+        <span class="chart-pct">10%</span>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- Estrutura Física -->
+    <p class="section-eyebrow mt-md">Estrutura Física (local, alimentação etc.)</p>
+    <div class="mt-sm mb-md avoid-break">
+      <div class="chart-row">
+        <span class="chart-label">Excelente</span>
+        <div class="chart-bar-wrap">
+          <div class="chart-bar" style="width:70%;background:var(--cms-green);">
+            <span>76 respostas</span>
+          </div>
+        </div>
+        <span class="chart-pct">70%</span>
+      </div>
+      <div class="chart-row">
+        <span class="chart-label">Boa</span>
+        <div class="chart-bar-wrap">
+          <div class="chart-bar" style="width:20.2%;background:#3B82F6;">
+            <span>22 respostas</span>
+          </div>
+        </div>
+        <span class="chart-pct">20%</span>
+      </div>
+      <div class="chart-row">
+        <span class="chart-label">Regular/Ruim</span>
+        <div class="chart-bar-wrap">
+          <div class="chart-bar" style="width:9.2%;background:#DC2626;">
+            <span>10</span>
+          </div>
+        </div>
+        <span class="chart-pct">9%</span>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- Acolhimento -->
+    <p class="section-eyebrow mt-md">Sentiu-se acolhido(a) e ouvido(a)?</p>
+    <div class="mt-sm avoid-break">
+      <div class="chart-row">
+        <span class="chart-label">Sim</span>
+        <div class="chart-bar-wrap">
+          <div class="chart-bar" style="width:90.8%;background:var(--cms-green);">
+            <span>99 respostas</span>
+          </div>
+        </div>
+        <span class="chart-pct">91%</span>
+      </div>
+      <div class="chart-row">
+        <span class="chart-label">Parcialmente</span>
+        <div class="chart-bar-wrap">
+          <div class="chart-bar" style="width:8.3%;background:#D97706;">
+            <span>9</span>
+          </div>
+        </div>
+        <span class="chart-pct">8%</span>
+      </div>
+      <div class="chart-row">
+        <span class="chart-label">Não</span>
+        <div class="chart-bar-wrap">
+          <div class="chart-bar" style="width:0.9%;background:#DC2626;">
+            <span>1</span>
+          </div>
+        </div>
+        <span class="chart-pct">1%</span>
+      </div>
+    </div>
+
+  </div>
+  <div class="page-footer-bar">
+    <span>Conselho Municipal de Saúde · Montes Claros — MG</span>
+    <span>Pág. 2</span>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     PÁGINA 3 · PONTOS CRÍTICOS
+══════════════════════════════════════════ -->
+<div class="page">
+  <div class="stripe"></div>
+  <div class="page-header">
+    <span class="page-header-left">5ª Conferência Macrorregional Norte</span>
+    <span class="page-header-right">Pontos Críticos</span>
+  </div>
+  <div class="page-body pb-footer">
+
+    <p class="section-eyebrow">02 · Principais Problemas Apontados</p>
+    <h2 class="section-title">O que precisa<br><span>melhorar</span></h2>
+
+    <p>A análise qualitativa das respostas abertas identificou quatro categorias centrais de críticas, ordenadas por frequência de menções.</p>
+
+    <div class="issues-grid mt-md avoid-break">
+      <div class="issue-card">
+        <div class="issue-header red">
+          <div class="issue-dot red"></div>
+          <span class="issue-title">Pagamento de Diárias</span>
+          <span class="issue-count">19</span>
+        </div>
+        <div class="issue-body">Problema mais grave e recorrente. Delegados de municípios distantes relataram não ter recebido diárias, incorrendo em dívidas pessoais para comparecer ao evento.</div>
+      </div>
+      <div class="issue-card">
+        <div class="issue-header orange">
+          <div class="issue-dot orange"></div>
+          <span class="issue-title">Lanche e Alimentação</span>
+          <span class="issue-count">26</span>
+        </div>
+        <div class="issue-body">Lanche em quantidade insuficiente, refrigerantes quentes, ausência de opções saudáveis e falta de água no último dia. Contraditório para conferência de saúde.</div>
+      </div>
+      <div class="issue-card">
+        <div class="issue-header orange">
+          <div class="issue-dot orange"></div>
+          <span class="issue-title">Horários e Pontualidade</span>
+          <span class="issue-count">24</span>
+        </div>
+        <div class="issue-body">Atraso na abertura, demora após intervalos, palestrantes ultrapassando o tempo e cronograma não cumprido prejudicaram especialmente delegados de municípios distantes.</div>
+      </div>
+      <div class="issue-card">
+        <div class="issue-header blue">
+          <div class="issue-dot blue"></div>
+          <span class="issue-title">Processo de Votação</span>
+          <span class="issue-count">14</span>
+        </div>
+        <div class="issue-body">Eleição de delegados considerada desorganizada e sem critérios claros. Aclamação questionada, contagem de votos imprecisa e percepção de injustiça no processo.</div>
+      </div>
+    </div>
+
+    <!-- Citações -->
+    <div class="mt-md avoid-break">
+      <p class="section-eyebrow">Vozes dos participantes</p>
+      <div class="quote-block mt-sm">
+        <p>"Ainda não recebi e não deram previsão. Acredito que uma resposta adequada e a resolução desse problema seria o certo a fazer."</p>
+        <span class="quote-source">Delegada · Glaucilândia</span>
+      </div>
+      <div class="quote-block">
+        <p>"Lanche horrível — um evento para trabalhador da saúde servir refrigerante quente e salgado frio."</p>
+        <span class="quote-source">Delegado · São Francisco</span>
+      </div>
+      <div class="quote-block">
+        <p>"Aclamação foi muito falha e injusta. Fui muito prejudicado com a contagem dos votos. Fiquei decepcionado."</p>
+        <span class="quote-source">Delegado · Nova Porteirinha</span>
+      </div>
+    </div>
+
+    <!-- Outros pontos -->
+    <div class="mt-md avoid-break">
+      <p class="section-eyebrow">Outros pontos levantados</p>
+      <ul class="cms-list mt-sm">
+        <li>Credenciamento lento e com filas (5 menções) — sugestão de fila por ordem alfabética ou município</li>
+        <li>Ausência de opções de almoço próximas ao local do evento para participantes de outros municípios</li>
+        <li>Dificuldade de acesso para pessoas com deficiência visual: material sem PDF acessível, sem Braille, sem audiodescrição</li>
+        <li>Lista de presença passada no início facilitando evasão antes do encerramento</li>
+        <li>Excesso de falas políticas na abertura, atrasando o início das atividades</li>
+        <li>Pouca divulgação nos municípios menores da macrorregião</li>
+      </ul>
+    </div>
+
+  </div>
+  <div class="page-footer-bar">
+    <span>Conselho Municipal de Saúde · Montes Claros — MG</span>
+    <span>Pág. 3</span>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     PÁGINA 4 · PONTOS POSITIVOS
+══════════════════════════════════════════ -->
+<div class="page">
+  <div class="stripe"></div>
+  <div class="page-header">
+    <span class="page-header-left">5ª Conferência Macrorregional Norte</span>
+    <span class="page-header-right">Destaques Positivos</span>
+  </div>
+  <div class="page-body pb-footer">
+
+    <p class="section-eyebrow">03 · O que funcionou bem</p>
+    <h2 class="section-title">Acertos a<br><span>preservar</span></h2>
+
+    <p>Apesar das críticas pontuais, a grande maioria dos participantes expressou satisfação geral com o evento. Os seguintes elementos receberam elogios espontâneos e consistentes.</p>
+
+    <div class="mt-md avoid-break">
+      <div class="highlight">
+        <p class="highlight-title">Palestrantes e conteúdo programático</p>
+        <p>O item mais elogiado da conferência. Participantes de múltiplos municípios destacaram a qualidade dos palestrantes, a relevância dos temas abordados e a <span class="highlight-accent">palestra de Farley</span> sobre dificuldades de acesso como especialmente impactante.</p>
+      </div>
+    </div>
+
+    <div class="mt-sm avoid-break">
+      <p class="section-eyebrow">Elementos muito bem avaliados</p>
+      <ul class="cms-list mt-sm">
+        <li><strong>Divisão por eixos temáticos:</strong> organização dos grupos de debate foi considerada eficiente e bem estruturada pela maioria dos participantes</li>
+        <li><strong>Equipe de logística e recepção:</strong> elogios explícitos à limpeza, cordialidade, credenciamento ágil e distribuição de materiais</li>
+        <li><strong>Ações de saúde no local</strong> (Saúde aos Montes): massagem, auriculoterapia e serviços de PIC foram muito bem recebidos como diferencial</li>
+        <li><strong>Disponibilização contínua de água</strong> durante o evento (até o penúltimo dia) foi destacada como cuidado positivo</li>
+        <li><strong>Espaço físico:</strong> local espaçoso, bem climatizado e adequado ao volume de participantes</li>
+        <li><strong>Abertura à participação:</strong> 91% dos participantes sentiram-se acolhidos e ouvidos nos debates</li>
+        <li><strong>Respeito às propostas municipais:</strong> a redação original dos municípios foi preservada nas discussões dos eixos</li>
+      </ul>
+    </div>
+
+    <div class="mt-md avoid-break">
+      <p class="section-eyebrow">Vozes positivas</p>
+      <div class="quote-block green mt-sm">
+        <p>"Gostaria de parabenizar a equipe de logística pelo excelente trabalho. A limpeza, o credenciamento ágil, a distribuição dos materiais e a presença de pessoas sorridentes fizeram toda a diferença."</p>
+        <span class="quote-source">Delegada · Montes Claros</span>
+      </div>
+      <div class="quote-block green">
+        <p>"As discussões das propostas respeitando a redação do município de origem foi um ponto que gostei muito."</p>
+        <span class="quote-source">Delegada · Juramento</span>
+      </div>
+      <div class="quote-block green">
+        <p>"Superou as minhas expectativas. O evento foi muito bem conduzido."</p>
+        <span class="quote-source">Delegada · Januária</span>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="avoid-break">
+      <p class="section-eyebrow">Nota geral estimada</p>
+      <div class="stats-grid mt-sm" style="grid-template-columns: repeat(3,1fr);">
+        <div class="stat-card green">
+          <div class="stat-number">90%</div>
+          <div class="stat-label">Satisfação<br>Estrutura Física</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number">90%</div>
+          <div class="stat-label">Organização<br>Excelente ou Boa</div>
+        </div>
+        <div class="stat-card blue">
+          <div class="stat-number">91%</div>
+          <div class="stat-label">Sentiram-se<br>Acolhidos</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+  <div class="page-footer-bar">
+    <span>Conselho Municipal de Saúde · Montes Claros — MG</span>
+    <span>Pág. 4</span>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     PÁGINA 5 · MUNICÍPIOS
+══════════════════════════════════════════ -->
+<div class="page">
+  <div class="stripe"></div>
+  <div class="page-header">
+    <span class="page-header-left">5ª Conferência Macrorregional Norte</span>
+    <span class="page-header-right">Participação por Município</span>
+  </div>
+  <div class="page-body pb-footer">
+
+    <p class="section-eyebrow">04 · Representatividade</p>
+    <h2 class="section-title">Municípios<br><span>presentes</span></h2>
+
+    <p>A conferência registrou participação de <strong>65 municípios</strong> distintos na avaliação, demonstrando ampla representatividade regional. Os municípios mais representados foram:</p>
+
+    <table class="muni-table mt-md avoid-break">
+      <thead>
+        <tr>
+          <th>Município</th>
+          <th>Respostas</th>
+          <th>Participação</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>Manga</td><td>12</td><td><span class="muni-badge high">Alta</span></td></tr>
+        <tr><td>Montes Claros</td><td>~16 (sede)</td><td><span class="muni-badge high">Alta</span></td></tr>
+        <tr><td>Januária</td><td>5</td><td><span class="muni-badge high">Alta</span></td></tr>
+        <tr><td>São Francisco</td><td>4</td><td><span class="muni-badge mid">Média</span></td></tr>
+        <tr><td>Taiobeiras</td><td>3</td><td><span class="muni-badge mid">Média</span></td></tr>
+        <tr><td>Japonvar</td><td>3</td><td><span class="muni-badge mid">Média</span></td></tr>
+        <tr><td>Salinas</td><td>2</td><td><span class="muni-badge mid">Média</span></td></tr>
+        <tr><td>Mirabela</td><td>3</td><td><span class="muni-badge mid">Média</span></td></tr>
+        <tr><td>Pirapora</td><td>2</td><td><span class="muni-badge mid">Média</span></td></tr>
+        <tr><td>Lontra</td><td>3</td><td><span class="muni-badge mid">Média</span></td></tr>
+        <tr><td>Demais 55 municípios</td><td>1 cada</td><td><span class="muni-badge mid">Individual</span></td></tr>
+      </tbody>
+    </table>
+
+    <div class="highlight mt-md avoid-break">
+      <p class="highlight-title">Observação sobre o município de Manga</p>
+      <p>O município de Manga aparece com 12 respostas registradas em nome da mesma delegada (Emília Torres da Silva Guedes), em diferentes datas, possivelmente por envio repetido do formulário. <span class="highlight-accent">Recomenda-se validar os dados de Manga</span> e implementar controle de duplicidade (por CPF ou e-mail) nos próximos formulários.</p>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="avoid-break">
+      <p class="section-eyebrow">Oportunidade de melhoria</p>
+      <div class="quote-block yellow mt-sm">
+        <p><strong>Divulgação nos municípios menores:</strong> participantes de cidades com menos representação sugeriram que a divulgação chegou tardiamente ou foi insuficiente. Municípios com 1 única resposta podem indicar subrepresentação, e não ausência de interesse.</p>
+      </div>
+      <div class="quote-block mt-sm">
+        <p>"Melhor divulgação do evento junto aos municípios menores da macrorregião."</p>
+        <span class="quote-source">Delegado · Lassance</span>
+      </div>
+      <div class="quote-block">
+        <p>"Mais municípios deveriam ter participado — a conferência é o momento mais importante para aprimoramento do SUS."</p>
+        <span class="quote-source">Delegada · Juramento</span>
+      </div>
+    </div>
+
+  </div>
+  <div class="page-footer-bar">
+    <span>Conselho Municipal de Saúde · Montes Claros — MG</span>
+    <span>Pág. 5</span>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     PÁGINA 6 · SUGESTÕES E CONCLUSÃO
+══════════════════════════════════════════ -->
+<div class="page">
+  <div class="stripe"></div>
+  <div class="page-header">
+    <span class="page-header-left">5ª Conferência Macrorregional Norte</span>
+    <span class="page-header-right">Conclusão</span>
+  </div>
+  <div class="page-body pb-footer">
+
+    <p class="section-eyebrow">05 · Síntese e Conclusão</p>
+    <h2 class="section-title">O que os dados<br><span>nos dizem</span></h2>
+
+    <p>A 5ª Conferência Macrorregional Norte foi avaliada de forma predominantemente positiva pelos participantes. O conteúdo programático, o espaço físico e o acolhimento nos debates foram os grandes pontos fortes. As críticas, embora consistentes, concentram-se em aspectos operacionais e administrativos que podem ser plenamente corrigidos na próxima edição.</p>
+
+    <div class="divider-bold"></div>
+
+    <div class="grid avoid-break" style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px;">
+      <div>
+        <p class="section-eyebrow">Prioridades urgentes</p>
+        <ul class="cms-list mt-sm">
+          <li><strong>Resolver o passivo de diárias:</strong> comunicar prazo e garantir pagamento aos que ainda não receberam</li>
+          <li><strong>Reformular processo de eleição de delegados:</strong> criar regulamento claro, publicado com antecedência</li>
+          <li><strong>Garantir cronograma com disciplina:</strong> limitar fala de políticos na abertura, usar cronômetro para palestrantes</li>
+        </ul>
+      </div>
+      <div>
+        <p class="section-eyebrow">Melhorias para próxima edição</p>
+        <ul class="cms-list mt-sm">
+          <li><strong>Reformular o lanche:</strong> kits individuais, opções saudáveis, sem refrigerante como única bebida</li>
+          <li><strong>Acessibilidade:</strong> PDF acessível, Braille, audiodescrição, suporte para mobilidade reduzida</li>
+          <li><strong>Lista de presença ao final</strong> do evento para reduzir evasão antecipada</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="avoid-break">
+      <p class="section-eyebrow">Sugestões inovadoras dos participantes</p>
+      <ul class="cms-list mt-sm">
+        <li>Votação eletrônica para delegados, com uso de tecnologia para mais transparência e agilidade</li>
+        <li>Envio das apresentações e materiais por e-mail após o evento</li>
+        <li>Convidar gestores de saúde para participar ativamente da próxima conferência</li>
+        <li>Indicar opções de hospedagem e translado no ato da inscrição</li>
+        <li>Apostilas com fonte maior para pessoas com baixa visão</li>
+        <li>Refeição no local do evento (almoço) para delegados de outros municípios</li>
+        <li>Envolver mais jovens e estudantes — começar a formação de novos conselheiros</li>
+      </ul>
+    </div>
+
+    <div class="highlight mt-md avoid-break">
+      <p class="highlight-title">Balanço final</p>
+      <p>A conferência cumpriu seu papel institucional com qualidade. Os 90% de satisfação com a estrutura e os 91% de participantes que se sentiram acolhidos são indicadores sólidos. O desafio para a <span class="highlight-accent">11ª Conferência Municipal de Saúde</span> é manter esses acertos e atacar com resolução as falhas operacionais — especialmente a questão das diárias, que causou sofrimento real a delegados que viajaram longas distâncias para defender o SUS.</p>
+    </div>
+
+  </div>
+  <div class="page-footer-bar">
+    <span>Conselho Municipal de Saúde · Montes Claros — MG · Relatório de Avaliação · 2025</span>
+    <span>Pág. 6</span>
+  </div>
+</div>
+
+<script>
+// No additional script needed for print version
+</script>
+</body>
+</html>
