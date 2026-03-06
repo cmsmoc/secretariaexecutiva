@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ATA 463ª Reunião – CMS Montes Claros</title>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700;900&family=Open+Sans:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+/* ── TOKENS CMS ── */
+:root {
+  --cms-navy:   #0D2E5A;
+  --cms-blue:   #1B6CB5;
+  --cms-green:  #1E8A4A;
+  --cms-yellow: #F5C400;
+  --cms-white:  #FFFFFF;
+  --cms-off:    #F7F8FA;
+  --cms-ink:    #111827;
+  --cms-muted:  #6B7280;
+  --cms-border: #E5E7EB;
+  --font-d: 'Montserrat', Helvetica, sans-serif;
+  --font-b: 'Open Sans', Arial, sans-serif;
+  --r: 10px;
+  --shadow: 0 2px 10px rgba(0,0,0,.06);
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: var(--font-b); background: var(--cms-off); color: var(--cms-ink); line-height: 1.7; font-size: 15px; }
+
+/* ── STRIPE ── */
+.cms-stripe { height: 5px; background: linear-gradient(to right, #F5C400 33.3%, #1E8A4A 33.3% 66.6%, #1B6CB5 66.6%); }
+
+/* ── HEADER ── */
+.page-header { background: var(--cms-navy); color: white; padding: 0; position: relative; overflow: hidden; }
+.page-header::before { content: ''; position: absolute; right: -80px; top: -80px; width: 420px; height: 420px; border-radius: 50%; background: radial-gradient(circle, rgba(245,196,0,.12) 0%, transparent 65%); pointer-events: none; }
+.header-inner { position: relative; max-width: 960px; margin: 0 auto; padding: 52px 48px 44px; }
+.header-eyebrow {
+  font-family: var(--font-d);
+  font-size: 10px; font-weight: 700;
+  letter-spacing: 3px; text-transform: uppercase;
+  color: var(--cms-yellow); margin-bottom: 16px;
+  display: flex; align-items: center; gap: 10px;
+}
+.header-eyebrow::after { content: ''; flex: 1; height: 1px; background: rgba(245,196,0,.3); }
+.header-title {
+  font-family: var(--font-d);
+  font-size: clamp(36px, 5vw, 64px);
+  font-weight: 900; letter-spacing: -2px; line-height: 0.95;
+  margin-bottom: 8px; max-width: 640px;
+}
+.header-title em { color: var(--cms-yellow); font-style: normal; }
+.header-sub { font-size: 16px; color: rgba(255,255,255,.6); font-weight: 300; margin-bottom: 32px; }
+.header-chips { display: flex; flex-wrap: wrap; gap: 10px; }
+.chip {
+  display: flex; align-items: center; gap: 7px;
+  background: rgba(255,255,255,.08);
+  border: 1px solid rgba(255,255,255,.15);
+  border-radius: 8px; padding: 7px 14px;
+  font-size: 13px; color: rgba(255,255,255,.85);
+  font-family: var(--font-b);
+}
+
+/* ── NAV ── */
+.nav-bar { background: white; border-bottom: 1px solid var(--cms-border); position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 10px rgba(0,0,0,.06); }
+.nav-inner { max-width: 960px; margin: 0 auto; padding: 0 48px; display: flex; gap: 0; overflow-x: auto; scrollbar-width: none; }
+.nav-inner::-webkit-scrollbar { display: none; }
+.nav-a { padding: 14px 18px; font-size: 12px; font-weight: 700; font-family: var(--font-d); letter-spacing: 1px; text-transform: uppercase; color: var(--cms-muted); text-decoration: none; border-bottom: 2px solid transparent; white-space: nowrap; transition: all .2s; }
+.nav-a:hover, .nav-a.active { color: var(--cms-blue); border-bottom-color: var(--cms-yellow); }
+
+/* ── MAIN ── */
+.main { max-width: 960px; margin: 0 auto; padding: 52px 48px 80px; }
+@media (max-width: 680px) { .main { padding: 32px 20px; } .header-inner { padding: 40px 20px; } .nav-inner { padding: 0 20px; } }
+
+/* ── SECTION ── */
+.section { margin-bottom: 60px; scroll-margin-top: 70px; }
+.sec-eyebrow { font-family: var(--font-d); font-size: 10px; font-weight: 700; letter-spacing: 3px; text-transform: uppercase; color: var(--cms-blue); margin-bottom: 10px; }
+.sec-title { font-family: var(--font-d); font-size: clamp(22px, 3vw, 32px); font-weight: 900; letter-spacing: -1px; color: var(--cms-navy); margin-bottom: 24px; padding-bottom: 14px; border-bottom: 2px solid var(--cms-yellow); }
+.sec-title span { color: var(--cms-blue); }
+
+/* ── INFO TABLE ── */
+.info-table { width: 100%; border-collapse: collapse; background: white; border-radius: var(--r); overflow: hidden; border: 1px solid var(--cms-border); margin-bottom: 24px; box-shadow: var(--shadow); }
+.info-table td { padding: 12px 16px; border-top: 1px solid var(--cms-border); font-size: 14px; vertical-align: top; }
+.info-table tr:nth-child(even) td { background: var(--cms-off); }
+.info-table td:first-child { font-family: var(--font-d); font-weight: 700; color: var(--cms-navy); width: 200px; font-size: 12px; letter-spacing: .5px; text-transform: uppercase; }
+
+/* ── CARD ── */
+.card { background: white; border: 1px solid var(--cms-border); border-radius: var(--r); padding: 22px 26px; margin-bottom: 14px; box-shadow: var(--shadow); }
+.card.blue { border-left: 4px solid var(--cms-blue); }
+.card.yellow { border-left: 4px solid var(--cms-yellow); background: #FFFDF0; }
+.card.green { border-left: 4px solid var(--cms-green); background: #F0FBF4; }
+.card .card-label { font-family: var(--font-d); font-size: 10px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--cms-blue); margin-bottom: 8px; }
+.card p { font-size: 14.5px; line-height: 1.75; }
+
+/* ── FALA ── */
+.fala { background: white; border-left: 4px solid var(--cms-blue); border-radius: 0 var(--r) var(--r) 0; padding: 18px 22px; margin-bottom: 12px; border-top: 1px solid var(--cms-border); border-right: 1px solid var(--cms-border); border-bottom: 1px solid var(--cms-border); box-shadow: var(--shadow); }
+.fala-nome { font-family: var(--font-d); font-size: 11px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: var(--cms-blue); margin-bottom: 8px; }
+.fala p { font-size: 14.5px; line-height: 1.75; }
+
+/* ── SERVICES GRID ── */
+.services-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px,1fr)); gap: 12px; margin-bottom: 20px; }
+.service-card { background: white; border: 1px solid var(--cms-border); border-radius: var(--r); padding: 16px; box-shadow: var(--shadow); border-top: 3px solid var(--cms-blue); }
+.service-tag { display: inline-block; background: var(--cms-navy); color: white; font-family: var(--font-d); font-size: 9px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; border-radius: 4px; padding: 2px 8px; margin-bottom: 8px; }
+.service-name { font-family: var(--font-d); font-weight: 700; font-size: 14px; color: var(--cms-navy); margin-bottom: 4px; }
+.service-desc { font-size: 12.5px; color: var(--cms-muted); line-height: 1.55; }
+
+/* ── PROD TABLE ── */
+.prod-table { width: 100%; border-collapse: collapse; background: white; border-radius: var(--r); overflow: hidden; border: 1px solid var(--cms-border); margin-bottom: 20px; box-shadow: var(--shadow); font-size: 14px; }
+.prod-table thead tr { background: var(--cms-navy); }
+.prod-table th { color: white; padding: 10px 14px; text-align: left; font-weight: 600; font-size: 12px; letter-spacing: .5px; }
+.prod-table td { padding: 10px 14px; border-top: 1px solid var(--cms-border); }
+.prod-table tr:nth-child(even) td { background: var(--cms-off); }
+.prod-table tr.total td { background: #DBEAFE; font-weight: 700; color: var(--cms-navy); }
+
+/* ── NIVEL GRID ── */
+.nivel-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 12px; margin-bottom: 20px; }
+@media (max-width: 620px) { .nivel-grid { grid-template-columns: 1fr; } }
+.nivel { border-radius: var(--r); padding: 18px; text-align: center; }
+.nivel.n1 { background: #ECFDF5; border: 1px solid #A7F3D0; }
+.nivel.n2 { background: #FFFBEB; border: 1px solid #FCD34D; }
+.nivel.n3 { background: #FEF2F2; border: 1px solid #FCA5A5; }
+.nivel .nicon { font-size: 26px; margin-bottom: 6px; }
+.nivel .nlabel { font-family: var(--font-d); font-weight: 700; font-size: 13px; margin-bottom: 4px; color: var(--cms-navy); }
+.nivel .ndesc { font-size: 12.5px; color: #555; line-height: 1.5; }
+
+/* ── STATS GRID ── */
+.stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px,1fr)); gap: 12px; margin-bottom: 20px; }
+.stat-card { background: white; border: 1px solid var(--cms-border); border-radius: var(--r); padding: 18px 14px; text-align: center; box-shadow: var(--shadow); border-top: 3px solid var(--cms-border); }
+.stat-card.warn { border-top-color: var(--cms-yellow); }
+.stat-card.good { border-top-color: var(--cms-green); }
+.stat-card.info { border-top-color: var(--cms-blue); }
+.stat-card .sn { font-family: var(--font-d); font-size: 28px; font-weight: 900; line-height: 1; margin-bottom: 5px; color: var(--cms-navy); }
+.stat-card.warn .sn { color: #92400E; }
+.stat-card.good .sn { color: var(--cms-green); }
+.stat-card.info .sn { color: var(--cms-blue); }
+.stat-card .sl { font-size: 11px; color: var(--cms-muted); line-height: 1.4; }
+
+/* ── ENCAMINHAMENTOS ── */
+.enc-list { display: flex; flex-direction: column; gap: 9px; }
+.enc-item { display: flex; gap: 14px; align-items: flex-start; padding: 15px 18px; background: white; border: 1px solid var(--cms-border); border-radius: var(--r); transition: border-color .2s; box-shadow: var(--shadow); }
+.enc-item:hover { border-color: var(--cms-blue); }
+.enc-n { min-width: 28px; height: 28px; background: var(--cms-yellow); color: var(--cms-navy); border-radius: 6px; display: flex; align-items: center; justify-content: center; font-family: var(--font-d); font-size: 12px; font-weight: 900; flex-shrink: 0; }
+.enc-text { font-size: 14.5px; line-height: 1.7; }
+
+/* ── BALA ── */
+.bala-list { margin: 12px 0 20px 0; display: flex; flex-direction: column; gap: 8px; }
+.bala { display: flex; gap: 10px; align-items: flex-start; font-size: 14px; line-height: 1.65; }
+.bala::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: var(--cms-blue); margin-top: 7px; flex-shrink: 0; }
+
+/* ── ASSINATURA ── */
+.assinatura { text-align: center; margin-top: 48px; padding-top: 32px; border-top: 1px solid var(--cms-border); }
+
+/* ── FOOTER ── */
+.page-footer { background: var(--cms-navy); color: rgba(255,255,255,.55); text-align: center; padding: 28px 20px; font-size: 13px; font-family: var(--font-b); }
+.page-footer strong { color: rgba(255,255,255,.85); }
+
+/* ── BACK TOP ── */
+.back-top { position: fixed; bottom: 24px; right: 24px; background: var(--cms-navy); border: 2px solid var(--cms-yellow); color: var(--cms-yellow); width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 16px; text-decoration: none; box-shadow: 0 4px 16px rgba(0,0,0,.2); transition: background .2s; }
+.back-top:hover { background: var(--cms-yellow); color: var(--cms-navy); }
+</style>
+</head>
+<body>
+
+<div class="cms-stripe"></div>
+
+<header class="page-header">
+  <div class="header-inner">
+    <p class="header-eyebrow">Documento Oficial · Conselho Municipal de Saúde</p>
+    <h1 class="header-title">ATA DA <em>463ª</em><br>REUNIÃO ORDINÁRIA</h1>
+    <p class="header-sub">Conselho Municipal de Saúde de Montes Claros – MG</p>
+    <div class="header-chips">
+      <div class="chip">📅 04 de março de 2026</div>
+      <div class="chip">🕐 13h30 – 17h00</div>
+      <div class="chip">🏛 Plenário da Câmara Municipal</div>
+      <div class="chip">👤 Presidência: Cons. Joel Francisco Borges</div>
+    </div>
+  </div>
+</header>
+
+<nav class="nav-bar">
+  <div class="nav-inner">
+    <a class="nav-a active" href="#dados">Dados</a>
+    <a class="nav-a" href="#secretaria">Sec. Executiva</a>
+    <a class="nav-a" href="#conselheiros">Conselheiros</a>
+    <a class="nav-a" href="#raps">RAPs</a>
+    <a class="nav-a" href="#arboviroses">Arboviroses</a>
+    <a class="nav-a" href="#debates">Debates</a>
+    <a class="nav-a" href="#encaminhamentos">Encaminhamentos</a>
+    <a class="nav-a" href="#encerramento">Encerramento</a>
+  </div>
+</nav>
+
+<main class="main">
+
+  <!-- DADOS -->
+  <section class="section" id="dados">
+    <p class="sec-eyebrow">Seção 00</p>
+    <h2 class="sec-title">Dados da <span>Reunião</span></h2>
+    <table class="info-table">
+      <tr><td>Reunião</td><td>463ª Reunião Ordinária do Conselho Municipal de Saúde de Montes Claros – MG</td></tr>
+      <tr><td>Data</td><td>04 de março de 2026</td></tr>
+      <tr><td>Horário</td><td>13h30 às 17h00</td></tr>
+      <tr><td>Local</td><td>Plenário da Câmara Municipal de Vereadores — Rua Urbino Viana, 600, Vila Guilhermina</td></tr>
+      <tr><td>Presidência</td><td>Conselheiro Joel Francisco Borges (Vice-Presidente, presidindo na ausência do Presidente titular)</td></tr>
+      <tr><td>Subsecretário</td><td>João (Subsecretário Municipal de Saúde) — presente</td></tr>
+      <tr><td>Secretário Municipal de Saúde</td><td>Eduardo Luiz da Silva</td></tr>
+      <tr><td>Secretário Executivo do CMS</td><td>Alexandre Dourado</td></tr>
+      <tr><td>Pauta original</td><td>3.1 – Plano de Contingência das Arboviroses &nbsp;|&nbsp; 3.2 – Quadro de Acolhimento da Saúde Mental (RAPs)</td></tr>
+      <tr><td>Pauta efetiva</td><td>Invertida: RAPs apresentada primeiro; Arboviroses em seguida</td></tr>
+      <tr><td>Ausências justificadas</td><td>Cons. José Geraldo Ramos, Cláudio, Mariana, Amor da Mendes, Marilda Batista, José dos Reis, Jean Wilson, Henrique, Hernandes e Willias</td></tr>
+    </table>
+
+    <p class="sec-eyebrow" style="margin-top:32px;">Presentes identificados</p>
+    <div class="card blue" style="margin-top:10px;">
+      <p style="font-size:13.5px;line-height:2;column-count:2;column-gap:32px;">
+        Ana Maria Pereira de Souza Rodrigues · Anielly Costa Silva · Danielle Santos Sousa · Emanuela Tomás da Silva Conceição · Fernando Antônio Dias de Andrade · Joel Francisco Borges · Júlio César Araújo Lopes · Márcio Cardoso da Silva · Maria dos Reis Ribeiro Dias · Maurina da Silva Carvalho · Mônica de Fátima Fernandes Ferreira · Naiara Oliveira Silva · Nayra Cristine Lacerda Loures · Rafaela de Souza Freitas · Raimara Gonçalves Pereira · Rosana Soares Ruas · Sheilla Silva Mendes · Valdeci Alves Costa · Washington Luís Carvalho Souto
+      </p>
+    </div>
+  </section>
+
+  <!-- SECRETARIA EXECUTIVA -->
+  <section class="section" id="secretaria">
+    <p class="sec-eyebrow">Seção 01</p>
+    <h2 class="sec-title">Informes da <span>Secretaria Executiva</span></h2>
+    <div class="card blue">
+      <div class="card-label">Alexandre Dourado — Secretário Executivo</div>
+      <p><strong>Recadastramento das entidades:</strong> Todas as entidades estão sendo notificadas por e-mail. Os conselheiros receberão individualmente links para atualização de dados e assinaturas digitais. O formulário está disponível publicamente no site do Conselho, nos grupos de WhatsApp e redes sociais. Entidades novas que queiram participar da renovação do plenário têm formulário online próprio.</p>
+    </div>
+    <div class="card">
+      <div class="card-label">Atualização do Sistema Digital</div>
+      <p>O Conselho passa a ter acompanhamento em tempo real de presenças e justificativas. Será gerado um link único e permanente para cada conselheiro, funcionando como aplicativo no celular — atualizando automaticamente ao preenchimento dos formulários de presença.</p>
+    </div>
+    <div class="card">
+      <div class="card-label">Visibilidade — Instagram</div>
+      <p>Solicitou que conselheiros verifiquem se seguem o perfil oficial do Conselho no Instagram, para que possam ser marcados nas publicações institucionais, ampliando o alcance das informações do Conselho.</p>
+    </div>
+  </section>
+
+  <!-- CONSELHEIROS -->
+  <section class="section" id="conselheiros">
+    <p class="sec-eyebrow">Seção 02</p>
+    <h2 class="sec-title">Informes dos <span>Conselheiros</span></h2>
+
+    <div class="fala">
+      <div class="fala-nome">Conselheiro Washington Luís Carvalho Souto</div>
+      <p>Agradeceu ao Secretário Executivo <strong>Alexandre Dourado</strong> pela mudança da sede do Conselho para o espaço do Instituto. Cobrou formalmente a entrega das apresentações e contratos da Secretaria Municipal de Saúde, que deveriam ter sido encaminhados previamente ao Conselho com 48h de antecedência e ainda não o foram, classificando a omissão como falta de respeito à Secretaria Executiva e aos conselheiros.</p>
+    </div>
+
+    <div class="fala">
+      <div class="fala-nome">Conselheiro Joel Francisco Borges — Presidente da sessão · encaminhamento</div>
+      <p>Registrou o pedido formal do Conselheiro Washington Luís e determinou o encaminhamento à Secretaria Executiva para as providências cabíveis.</p>
+    </div>
+
+    <div class="fala">
+      <div class="fala-nome">Conselheiro Fernando Antônio Dias de Andrade — Questão de ordem</div>
+      <p>Pediu questão de ordem e sugeriu a convocação de <strong>reunião extraordinária</strong> para tratar com profundidade da demanda reprimida de cirurgias eletivas — em especial as cirurgias de redução de mamas, cuja fila de espera supera dois anos, com pacientes sendo orientados a buscar a Justiça. Mencionou também a urologia como demanda histórica. Propôs que os contratos com prestadores contemplem metas específicas para esses gargalos como condição de validação contratual.</p>
+    </div>
+
+    <div class="fala">
+      <div class="fala-nome">Conselheira Sheilla Silva Mendes — Prestadores e especialidades</div>
+      <p>Tratou das dificuldades de oferta em especialidades como cirurgia de cabeça e pescoço. Sugeriu a inclusão das sociedades médicas nas discussões sobre capacidade instalada e contratos, ressaltando as dificuldades históricas de manter equipes especializadas no município.</p>
+    </div>
+
+    <div class="fala">
+      <div class="fala-nome">Subsecretário João — Manifestação da gestão</div>
+      <p>Esclareceu que o <strong>Secretário Municipal de Saúde Eduardo Luiz da Silva</strong> já autorizou o envio das apresentações e contratos ao Conselho, bastando a solicitação formal da Secretaria Executiva (Alexandre Dourado), que ficará responsável por providenciar o encaminhamento. Sobre as cirurgias, afirmou que a capacidade de oferta está atrelada à dos prestadores, que programas estaduais e federais de redução de fila estão em andamento e que os editais do programa <em>Mais Saúde</em> estão em construção.</p>
+    </div>
+
+    <div class="fala">
+      <div class="fala-nome">Conselheiro Washington Luís Carvalho Souto — Complementação</div>
+      <p>Reforçou que o envio prévio dos documentos é fundamental para que os conselheiros possam analisá-los antes de qualquer deliberação — evitando que a plenária seja colocada em posição de referendar apresentações sem conhecimento prévio do conteúdo.</p>
+    </div>
+
+    <div class="fala">
+      <div class="fala-nome">Conselheiro Márcio Cardoso da Silva — Ética no uso de documentos</div>
+      <p>Alertou sobre o compartilhamento indevido de documentos oficiais do Conselho com terceiros para fins políticos. Citando a Lei Geral de Proteção de Dados (LGPD), pediu consciência ética especialmente dos novos conselheiros: documentos recebidos para estudo devem ser utilizados exclusivamente no âmbito do Conselho e não divulgados de forma a gerar ofensas à gestão ou a outros conselheiros.</p>
+    </div>
+
+    <div class="fala">
+      <div class="fala-nome">Conselheiro Joel Francisco Borges — Presidente da sessão · Prerrogativas e acordo</div>
+      <p>Concordou com a postura ética proposta, mas recordou que o envio de documentos com 48 horas de antecedência é <strong>prerrogativa regimental</strong> dos conselheiros — não favor —, e não exige requerimento formal para ser exercida. Propôs acordo bilateral: os conselheiros comprometem-se a não compartilhar documentos indevidamente; a Secretaria Executiva compromete-se a cumprir os prazos regimentais de envio. Declarou o tema superado e determinou o registro na ata.</p>
+    </div>
+  </section>
+
+  <!-- RAPS -->
+  <section class="section" id="raps">
+    <p class="sec-eyebrow">Seção 03 · Pauta 1</p>
+    <h2 class="sec-title">Rede de Atenção <span>Psicossocial — RAPs</span></h2>
+    <div class="card yellow">
+      <div class="card-label">Apresentadora</div>
+      <p><strong>Raimara Gonçalves Pereira</strong> — Assistente Social, Apoio Técnico da Coordenação de Saúde Mental do Município de Montes Claros</p>
+    </div>
+
+    <h3 style="font-family:var(--font-d);font-size:15px;color:var(--cms-navy);margin:24px 0 12px;font-weight:700;">Marco Regulatório</h3>
+    <div class="card">
+      <p>A política de saúde mental tem base na <strong>Lei 10.216/2001 (Lei Paulo Delgado)</strong>, que redireciona o modelo manicomial para uma rede substitutiva. A <strong>Portaria 3.088/2011</strong> institui a Rede de Atenção Psicossocial (RAPs), composta por serviços interligados de atenção primária, secundária e terciária, incluindo a rede de assistência social.</p>
+    </div>
+
+    <h3 style="font-family:var(--font-d);font-size:15px;color:var(--cms-navy);margin:24px 0 12px;font-weight:700;">Serviços da RAPs em Montes Claros</h3>
+    <div class="services-grid">
+      <div class="service-card">
+        <span class="service-tag">CAPS 3 · 24h</span>
+        <div class="service-name">Helena Marceiro</div>
+        <div class="service-desc">Transtornos graves/severos. 5 leitos de acolhimento noturno. Localizado próximo à rodoviária.</div>
+      </div>
+      <div class="service-card">
+        <span class="service-tag">CAPS AD3 · 24h</span>
+        <div class="service-name">Robson Chaves</div>
+        <div class="service-desc">Álcool e drogas — crises graves. Até 12 leitos de acolhimento noturno.</div>
+      </div>
+      <div class="service-card">
+        <span class="service-tag">CAPS AD2</span>
+        <div class="service-name">CAPS AD2</div>
+        <div class="service-desc">7h30–18h, seg–sex. Sem leitos próprios; articulação com CAPS AD3 para acolhimento noturno.</div>
+      </div>
+      <div class="service-card">
+        <span class="service-tag">CAPS Infanto-Juvenil</span>
+        <div class="service-name">Aquarela</div>
+        <div class="service-desc">7h30–18h, seg–sex. Acolhimento noturno via CAPS 3 quando necessário.</div>
+      </div>
+      <div class="service-card">
+        <span class="service-tag">SRT 1 e 2</span>
+        <div class="service-name">Serviços Residenciais Terapêuticos</div>
+        <div class="service-desc">SRT 1: 8 moradores · SRT 2: 9 moradores. Ex-internos de hospitais psiquiátricos. Autonomia e vida comunitária plena.</div>
+      </div>
+      <div class="service-card">
+        <span class="service-tag">Acolhimento</span>
+        <div class="service-name">Unidades de Acolhimento</div>
+        <div class="service-desc">Adulto (vinc. CAPS AD3) e Infanto-Juvenil. Permanência de até 6 meses, com revisão de projeto terapêutico.</div>
+      </div>
+      <div class="service-card">
+        <span class="service-tag">Hospitalar</span>
+        <div class="service-name">Leitos Hospitalares</div>
+        <div class="service-desc">HU: 6 leitos SM + 6 psiquiátricos. Hospital da Dutonia: 10 leitos SM. 2025: 406 + 440 leitos regulados.</div>
+      </div>
+      <div class="service-card">
+        <span class="service-tag">Rede de Apoio</span>
+        <div class="service-name">Outros Serviços</div>
+        <div class="service-desc">ESF, Consultório na Rua, SAMU, UPA 24h, Corpo de Bombeiros, Ambulatórios de Psiquiatria adulta e infanto-juvenil.</div>
+      </div>
+    </div>
+
+    <h3 style="font-family:var(--font-d);font-size:15px;color:var(--cms-navy);margin:24px 0 12px;font-weight:700;">Produção da RAPs em 2025</h3>
+    <table class="prod-table">
+      <thead><tr><th>Serviço</th><th>Atendimentos</th><th>Procedimentos</th></tr></thead>
+      <tbody>
+        <tr><td>CAPS 3 – Helena Marceiro</td><td>48.098</td><td>85.380</td></tr>
+        <tr><td>CAPS AD2</td><td>10.330</td><td>43.267</td></tr>
+        <tr><td>CAPS AD3 – Robson Chaves</td><td>47.703</td><td>99.954</td></tr>
+        <tr><td>CAPS Infanto-Juvenil (Aquarela)</td><td>9.813</td><td>46.165</td></tr>
+        <tr class="total"><td><strong>TOTAL</strong></td><td><strong>115.944</strong></td><td><strong>274.766</strong></td></tr>
+      </tbody>
+    </table>
+
+    <h3 style="font-family:var(--font-d);font-size:15px;color:var(--cms-navy);margin:24px 0 12px;font-weight:700;">Avanços e Novidades</h3>
+    <div class="card green">
+      <div class="card-label">PAC · 2 novos CAPS em construção</div>
+      <p>CAPS 3 (bairro Barraca/Ceres) e CAPS AD3 (bairro Canela), aprovados em 2024. O município passará de 5 para <strong>17 leitos de acolhimento</strong> na rede, com expectativa de redução expressiva de episódios de superlotação hospitalar.</p>
+    </div>
+    <div class="card">
+      <div class="card-label">Centro de Convivência e Cultura</div>
+      <p>Recurso aprovado. Será o último componente da RAPs a ser implantado em Montes Claros, completando a rede prevista na Portaria 3.088/2011.</p>
+    </div>
+    <div class="card">
+      <div class="card-label">Saúde Mental em Movimento</div>
+      <p>Programa de matriciamento que leva equipes interdisciplinares (com psiquiatra) às UBS para qualificação da atenção primária e discussão de casos — substituindo o plantão noturno do psiquiatra no CAPS 3 (avaliação apontou apenas 3 atendimentos em um ano de vigência).</p>
+    </div>
+    <div class="card">
+      <div class="card-label">Funcionamento em feriados e fluxos</div>
+      <p>Os CAPS passaram a funcionar em feriados nacionais (exceto municipais) por recomendação da SES-MG. Fluxos de atendimento e protocolo de estratificação de risco em saúde mental foram elaborados e estão sendo distribuídos a todos os serviços e portas hospitalares.</p>
+    </div>
+  </section>
+
+  <!-- MANIFESTAÇÕES RAPS -->
+  <section class="section" id="debates">
+    <p class="sec-eyebrow">Seção 04</p>
+    <h2 class="sec-title">Debates e <span>Manifestações</span></h2>
+
+    <p style="font-family:var(--font-d);font-size:12px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--cms-blue);margin:0 0 14px;">Sobre RAPs</p>
+
+    <div class="fala">
+      <div class="fala-nome">Conselheiro — equipes interdisciplinares e finais de semana</div>
+      <p>Indagou sobre a composição das equipes nos CAPS, o funcionamento nos fins de semana e a interlocução com os hospitais nesse período. Raimara confirmou equipe multiprofissional conforme portaria; aos finais de semana médico e equipe de enfermagem permanecem presentes, com meta de ampliar para equipe interdisciplinar completa. Confirmou o funcionamento dos SRTs, com 8 e 9 moradores respectivamente, operando com plena autonomia dos moradores.</p>
+    </div>
+    <div class="fala">
+      <div class="fala-nome">Conselheiro — demanda reprimida de psiquiatria</div>
+      <p>Propôs que a atenção primária encaminhe primeiramente ao CAPS (equipe multiprofissional) em vez de diretamente ao psiquiatra, reservando as consultas especializadas para casos que realmente necessitem. Raimara acolheu a proposta, destacando que o programa Saúde Mental em Movimento busca exatamente esse objetivo, qualificando os profissionais para o manejo inicial na atenção básica.</p>
+    </div>
+    <div class="fala">
+      <div class="fala-nome">Subsecretário João</div>
+      <p>Reconheceu que a RAPs de Montes Claros é uma das maiores redes de saúde mental do estado, mas ainda insuficiente para as demandas atuais. Destacou crescimento de crises, automutilação e dificuldades de acesso às portas hospitalares. Afirmou que os novos CAPS e o centro de convivência deverão avançar na resolubilidade. Ventilou a possibilidade futura de transferência da regulação dos leitos para a Central de Regulação Municipal, à medida que a rede amadureça.</p>
+    </div>
+
+    <p style="font-family:var(--font-d);font-size:12px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--cms-blue);margin:32px 0 14px;">Sobre Arboviroses</p>
+
+    <div class="fala">
+      <div class="fala-nome">Conselheiro Valdeci Alves Costa</div>
+      <p>Parabenizou a Secretaria de Saúde pela equipe e pela implementação tecnológica. Fez comparação histórica: em anos anteriores havia epidemias graves com pacientes nas avenidas; em 2025 o município passou as chuvas sem grandes surtos. Destacou a importância de reconhecer e divulgar os resultados positivos publicamente.</p>
+    </div>
+    <div class="fala">
+      <div class="fala-nome">Conselheiro — zona rural</div>
+      <p>Reconheceu o monitoramento familiar nas áreas rurais, citando as visitas de fumacê realizadas mais de quatro vezes em sua comunidade no ano anterior, com redução significativa de mosquitos. Solicitou continuidade das ações e parabenizou a equipe.</p>
+    </div>
+    <div class="fala">
+      <div class="fala-nome">Conselheiro — Propostas ao Plano de Contingência</div>
+      <p>Apresentou diagnóstico sobre o déficit de agentes de endemias: Montes Claros conta com 345 agentes, enquanto a recomendação do Ministério da Saúde é de 415 a 520 para a densidade urbana do município. Há 19 a 20 áreas descobertas em pelo menos um ciclo de trabalho. Apresentou propostas para incorporação ao plano: (1) integração dos ACS para comunicação de focos aos agentes de endemias; (2) equipe de educação e saúde fixa no CCZ como QG de inteligência social; (3) escolas municipais como pontos avançados com zeladores e diretores treinados; (4) equipe de intervenção rápida (agente + chaveiro + guarda municipal) para imóveis fechados após 3 visitas negativas consecutivas; (5) parceria com o Conselho Regional de Imobiliárias; (6) retomada da Lei Municipal 5.080/2018 sobre terrenos baldios; (7) horário estendido (18h–21h) para visitas a residências cujos moradores não estão em casa durante o expediente regular.</p>
+    </div>
+    <div class="fala">
+      <div class="fala-nome">Priscila Pimenta — Vigilância Epidemiológica · Resposta</div>
+      <p>Agradeceu as contribuições e confirmou que muitas propostas já estão em andamento. Convidou o conselheiro para participar do <strong>Comitê de Arboviroses</strong> (reuniões bimestrais), onde as propostas serão apresentadas formalmente e analisadas quanto à viabilidade jurídica e operacional para eventual inclusão no Plano 2027–2028.</p>
+    </div>
+  </section>
+
+  <!-- ARBOVIROSES -->
+  <section class="section" id="arboviroses">
+    <p class="sec-eyebrow">Seção 05 · Pauta 2</p>
+    <h2 class="sec-title">Plano de Contingência das <span>Arboviroses</span></h2>
+    <div class="card yellow">
+      <div class="card-label">Apresentadora · Caráter de informe — sem deliberação</div>
+      <p><strong>Priscila Pimenta</strong> — Vigilância Epidemiológica, Secretaria Municipal de Saúde de Montes Claros</p>
+    </div>
+
+    <h3 style="font-family:var(--font-d);font-size:15px;color:var(--cms-navy);margin:24px 0 12px;font-weight:700;">Contexto 2024 — Motivação do Plano</h3>
+    <div class="stats-grid">
+      <div class="stat-card warn"><div class="sn">37.387</div><div class="sl">Casos notificados<br>(dengue) 2024</div></div>
+      <div class="stat-card warn"><div class="sn">1.183</div><div class="sl">Casos<br>chikungunya</div></div>
+      <div class="stat-card warn"><div class="sn">876</div><div class="sl">Hospitalizações<br>em 2024</div></div>
+      <div class="stat-card warn"><div class="sn">7</div><div class="sl">Óbitos<br>em 2024</div></div>
+    </div>
+    <div class="card">
+      <p>Diante desse cenário, a gestão construiu um plano real e integrado, substituindo o modelo PMINAE. O plano foi elaborado em uma semana de trabalho intensivo com todos os atores da rede, <strong>aprovado pelo Conselho Municipal de Saúde</strong> e <strong>publicado em revista científica nacional</strong>, tornando-se referência para outros municípios de Minas Gerais.</p>
+    </div>
+
+    <h3 style="font-family:var(--font-d);font-size:15px;color:var(--cms-navy);margin:24px 0 12px;font-weight:700;">Três Níveis de Alerta</h3>
+    <div class="nivel-grid">
+      <div class="nivel n1"><div class="nicon">🟢</div><div class="nlabel">Nível 1 — Verde</div><div class="ndesc">Incidência estável. Menos de 20% RT-PCR+. Atenção primária e UPA dando conta da demanda.</div></div>
+      <div class="nivel n2"><div class="nicon">🟡</div><div class="nlabel">Nível 2 — Alerta</div><div class="ndesc">Aumento por 4 semanas consecutivas com ≥20% RT-PCR+. Ativa 2 unidades de apoio + 10 leitos de contingência + suspensão de eletivas.</div></div>
+      <div class="nivel n3"><div class="nicon">🔴</div><div class="nlabel">Nível 3 — Crítico</div><div class="ndesc">Superlotação da rede. Abertura de 13 leitos adicionais + mobilização máxima de toda a rede.</div></div>
+    </div>
+
+    <h3 style="font-family:var(--font-d);font-size:15px;color:var(--cms-navy);margin:24px 0 12px;font-weight:700;">Resultados — 2024 vs 2025</h3>
+    <table class="prod-table">
+      <thead><tr><th>Indicador</th><th>2024</th><th>2025</th><th>Variação</th></tr></thead>
+      <tbody>
+        <tr><td>Casos notificados</td><td>37.387</td><td>5.049</td><td style="color:var(--cms-green);font-weight:700;">▼ 86,5%</td></tr>
+        <tr><td>Casos confirmados</td><td>19.154</td><td>4.596</td><td style="color:var(--cms-green);font-weight:700;">▼ ~76%</td></tr>
+        <tr><td>Óbitos</td><td>7</td><td>0</td><td style="color:var(--cms-green);font-weight:700;">▼ 100%</td></tr>
+      </tbody>
+    </table>
+    <div class="card green">
+      <div class="card-label">2026 — Situação atual (até semana epidemiológica 8)</div>
+      <p>914 casos notificados; 30 confirmados. 4 hospitalizações ativas. O plano nunca chegou ao Nível 2 em 2025. Detecção da <strong>cepa 3 do Dengue vírus 3</strong> — população com menor imunidade contra esse sorotipo, podendo gerar casos mais graves. Chegada da <strong>vacina Qdenga</strong> (tetravalente, dose única) para trabalhadores da atenção primária de 15 a 59 anos, com expectativa de ampliação rápida ao público geral.</p>
+    </div>
+  </section>
+
+  <!-- ENCAMINHAMENTOS -->
+  <section class="section" id="encaminhamentos">
+    <p class="sec-eyebrow">Seção 06</p>
+    <h2 class="sec-title"><span>Encaminhamentos</span> da Reunião</h2>
+    <div class="enc-list">
+      <div class="enc-item"><span class="enc-n">1</span><span class="enc-text">A <strong>Secretaria Executiva (Alexandre Dourado)</strong> providenciará, junto à Secretaria Municipal de Saúde, o envio ao Conselho das apresentações e contratos com prestadores, conforme autorização do <strong>Secretário Municipal Eduardo Luiz da Silva</strong> e solicitação formal dos Conselheiros Washington Luís, Joel Francisco Borges e Fernando Antônio Dias de Andrade.</span></div>
+      <div class="enc-item"><span class="enc-n">2</span><span class="enc-text">Inclusão em <strong>pauta futura</strong> da apresentação, pela Secretaria Municipal de Saúde, do relatório de demanda reprimida de cirurgias eletivas (mama, urologia e outras especialidades), com tempo de espera por procedimento e estratégias de resolução. A possibilidade de <strong>reunião extraordinária</strong> sobre o tema foi registrada.</span></div>
+      <div class="enc-item"><span class="enc-n">3</span><span class="enc-text">A <strong>Diretoria do Conselho</strong> alinhará internamente o cumprimento do prazo regimental de <strong>48 horas de antecedência</strong> para envio de documentos aos conselheiros.</span></div>
+      <div class="enc-item"><span class="enc-n">4</span><span class="enc-text">Os <strong>Conselheiros</strong> realizarão atualização cadastral por meio do formulário online disponível no site do Conselho e aguardarão e-mail individual com link para assinatura digital.</span></div>
+      <div class="enc-item"><span class="enc-n">5</span><span class="enc-text">O <strong>conselheiro com propostas ao Plano de Contingência das Arboviroses</strong> será convidado a participar do Comitê de Arboviroses (reuniões bimestrais) para apresentação formal e análise de viabilidade jurídico-operacional das sugestões.</span></div>
+      <div class="enc-item"><span class="enc-n">6</span><span class="enc-text">A <strong>Secretaria de Saúde</strong> continuará distribuindo a <strong>vacina Qdenga</strong> para trabalhadores da atenção primária (15–59 anos) e aguarda ampliação do lote para o público geral.</span></div>
+      <div class="enc-item"><span class="enc-n">7</span><span class="enc-text">A <strong>Coordenação de Saúde Mental</strong> distribuirá os fluxos de atendimento e o protocolo de estratificação de risco em saúde mental para todos os serviços da RAPs e portas hospitalares do município.</span></div>
+      <div class="enc-item"><span class="enc-n">8</span><span class="enc-text"><strong>Convite geral:</strong> Pré-Conferência de Saúde da Mulher — terça-feira, <strong>10/03/2026</strong>, a partir das <strong>7h30</strong>, no SIMANS. Conselheiros deverão compartilhar o convite e os folders das conferências temáticas em suas redes e serviços.</span></div>
+    </div>
+  </section>
+
+  <!-- ENCERRAMENTO -->
+  <section class="section" id="encerramento">
+    <p class="sec-eyebrow">Seção 07</p>
+    <h2 class="sec-title">Encerramento</h2>
+    <div class="card">
+      <p>Não havendo mais nada a tratar, o <strong>Conselheiro Joel Francisco Borges</strong> declarou encerrada a 463ª Reunião Ordinária do Conselho Municipal de Saúde de Montes Claros, agradecendo a presença de todos os conselheiros, da gestão e do público. Foi registrado parabéns à <strong>Conselheira Maurina da Silva Carvalho</strong>, que celebrou seu aniversário nesta data. A Secretária Márcia relembrou o convite para a Pré-Conferência de Saúde da Mulher (10/03/2026) e solicitou que todos compartilhem os folders das conferências temáticas.</p>
+    </div>
+    <div class="assinatura">
+      <p style="font-size:13px;color:var(--cms-muted);margin-bottom:28px;">Ata lavrada com base em síntese da gravação oficial da sessão</p>
+      <div style="display:inline-block;border-top:2px solid var(--cms-navy);padding-top:14px;min-width:300px;text-align:center;">
+        <p style="font-family:var(--font-d);font-weight:700;font-size:16px;color:var(--cms-navy);">Conselheiro Joel Francisco Borges</p>
+        <p style="font-size:13px;color:var(--cms-muted);margin-top:4px;">Vice-Presidente — Conselho Municipal de Saúde de Montes Claros</p>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<div class="cms-stripe"></div>
+<footer class="page-footer">
+  <strong>Conselho Municipal de Saúde de Montes Claros – MG</strong><br>
+  463ª Reunião Ordinária · 04 de março de 2026 · Câmara Municipal de Vereadores
+</footer>
+
+<a href="#" class="back-top" title="Voltar ao topo">↑</a>
+
+<script>
+const secs = document.querySelectorAll('section[id]');
+const navs = document.querySelectorAll('.nav-a');
+window.addEventListener('scroll', () => {
+  let cur = '';
+  secs.forEach(s => { if (window.scrollY >= s.offsetTop - 90) cur = s.id; });
+  navs.forEach(n => { n.classList.toggle('active', n.getAttribute('href') === '#'+cur); });
+});
+</script>
+</body>
+</html>
