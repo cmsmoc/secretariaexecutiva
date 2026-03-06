@@ -30,7 +30,7 @@ body { font-family: var(--fb); background: var(--off); color: var(--ink); line-h
   background: var(--navy);
   min-height: 100vh;
   display: grid;
-  grid-template-rows: 1fr auto;
+  grid-template-rows: auto 1fr auto;
   padding: 0;
   position: relative;
   overflow: hidden;
@@ -45,10 +45,19 @@ body { font-family: var(--fb); background: var(--off); color: var(--ink); line-h
 .cover-inner {
   position: relative;
   max-width: 1000px; margin: 0 auto;
-  padding: 80px 72px;
+  padding: 40px 72px 80px 72px;
   display: flex; flex-direction: column; justify-content: center;
-  min-height: calc(100vh - 5px);
+  min-height: calc(100vh - 10px);
 }
+
+/* Logo Header */
+.cover-logo-top {
+  width: auto;
+  height: 60px;
+  margin-bottom: 30px;
+  align-self: flex-start;
+}
+
 .cover-eyebrow {
   font-family: var(--fd);
   font-size: 10px; font-weight: 700;
@@ -104,7 +113,12 @@ body { font-family: var(--fb); background: var(--off); color: var(--ink); line-h
 
 /* body */
 .page { max-width: 1000px; margin: 0 auto; padding: 80px 72px; }
-@media (max-width: 700px) { .page { padding: 40px 24px; } .cover-inner { padding: 60px 24px; } .cover-numero { display: none; } }
+@media (max-width: 700px) { 
+  .page { padding: 40px 24px; } 
+  .cover-inner { padding: 40px 24px; } 
+  .cover-numero { display: none; } 
+  .cover-logo-top { height: 45px; }
+}
 
 /* section */
 .sec { margin-bottom: 72px; }
@@ -236,40 +250,6 @@ body { font-family: var(--fb); background: var(--off); color: var(--ink); line-h
 .ct p { font-size: 16px; color: var(--ink); margin-bottom: 6px; font-weight: 500; }
 .ct small { font-size: 13px; color: var(--muted); }
 
-/* services */
-.services { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; margin-bottom: 32px; }
-@media (max-width: 700px) { .services { grid-template-columns: 1fr; } }
-.svc {
-  background: white;
-  border-radius: 12px;
-  padding: 18px;
-  border: 1px solid var(--border);
-}
-.svc-tag {
-  display: inline-block;
-  background: rgba(27,108,181,.1);
-  color: var(--blue);
-  font-size: 10px; font-weight: 700;
-  letter-spacing: 1.5px;
-  text-transform: uppercase;
-  padding: 4px 10px;
-  border-radius: 6px;
-  margin-bottom: 8px;
-}
-.svc-name {
-  display: block;
-  font-family: var(--fd);
-  font-size: 15px; font-weight: 700;
-  color: var(--navy);
-  margin-bottom: 4px;
-}
-.svc-desc {
-  display: block;
-  font-size: 13px;
-  color: var(--muted);
-  line-height: 1.5;
-}
-
 /* big statement */
 .big-statement {
   background: white;
@@ -355,15 +335,13 @@ body { font-family: var(--fb); background: var(--off); color: var(--ink); line-h
 }
 .enc-body strong { color: var(--navy); font-weight: 600; }
 
-/* logo footer */
+/* logo footer: Centralizada e 40% maior */
 .logo-footer-container {
   text-align: center;
-  padding: 40px 0 20px 0;
-  border-bottom: 5px solid;
-  border-image: linear-gradient(to right, var(--yellow) 33.3%, var(--green) 33.3% 66.6%, var(--blue) 66.6%) 1;
+  padding: 120px 0; 
 }
 .logo-footer-container img {
-  max-height: 80px;
+  max-height: 180px;
   width: auto;
 }
 
@@ -381,28 +359,23 @@ body { font-family: var(--fb); background: var(--off); color: var(--ink); line-h
 @media (max-width: 700px) { .page-footer { padding: 20px 24px; text-align: center; } }
 .page-footer strong { font-weight: 600; display: block; margin-bottom: 4px; }
 
-/* header logo */
-.header-logo {
-  display: block;
-  margin: 16px auto;
-  height: 40px;
-}
 </style>
 </head>
 <body>
-
-<img src="https://i.ibb.co/FbR0dQKy/secexe5.png" alt="Secretaria Executiva" class="header-logo">
 
 <div class="stripe"></div>
 
 <section class="cover">
   <div class="cover-bg"></div>
   <div class="cover-inner">
-    <p class="cover-eyebrow">RESUMO EXECUTIVO</p>
+    <!-- Imagem sexec6.png adicionada aqui -->
+    <img src="https://i.ibb.co/609vKbxR/sexec6.png" alt="CMS Logo" class="cover-logo-top">
+
+    <p class="cover-eyebrow">DOCUMENTO OFICIAL · CMS MONTES CLAROS · 2026</p>
     <h1 class="cover-title">461ª Reunião<br><em>Ordinária Periódica</em></h1>
     <p class="cover-subtitle">Informes, deliberações e encaminhamentos da Secretaria de Saúde · Discussões sobre vigilância epidemiológica, demanda reprimida e gestão de serviços</p>
     <div class="cover-chips">
-      <div class="chip"><strong>Data:</strong> 20 de janeiro de 2026</div>
+      <div class="chip"><strong>Data:</strong> 21 de janeiro de 2026</div>
       <div class="chip"><strong>Hora:</strong> 10h30 a 14h</div>
       <div class="chip"><strong>Local:</strong> Plenário da Câmara Municipal</div>
     </div>
@@ -512,11 +485,6 @@ body { font-family: var(--fb); background: var(--off); color: var(--ink); line-h
       <div class="bs-label">Questão de Ordem</div>
       <div class="bs-text">Conselheiro solicitou formalmente <strong style="color:var(--yellow)">moção de repúdio</strong> do Conselho Municipal de Saúde às multas aplicadas durante período de COVID-19 em Montes Claros. <span>Mais de 1000 famílias foram afetadas pelo não cumprimento de isolamento social. Agora processo de anistia está em discussão, o que evidencia a injustiça das penalidades originais. Participação da gestão anterior e necessidade de correção destacadas.</span></div>
     </div>
-
-    <div class="big-statement">
-      <div class="bs-label">Importância para o CMS</div>
-      <div class="bs-text">A moção representa posicionamento do Conselho sobre questões de direitos humanos e sociais na saúde pública. Demonstra compromisso com populações vulneráveis e capacidade de questionar decisões que prejudicaram cidadãos durante crise de saúde pública.</div>
-    </div>
   </section>
 
   <!-- DESTAQUE: VIGILÂNCIA EPIDEMIOLÓGICA -->
@@ -528,11 +496,6 @@ body { font-family: var(--fb); background: var(--off); color: var(--ink); line-h
       <div class="bs-label">Ferramentas de Monitoramento</div>
       <div class="bs-text"><strong style="color:var(--yellow)">Lira (Levantamento de Índice Rápido de Infestação por Aedes aegypti)</strong> é ferramenta auxiliar comparativamente nova para monitoramento epidemiológico. <strong style="color:var(--yellow)">Moscara</strong> complementa o sistema com visitas casa-a-casa. <span>Conselheiro solicitou explicação detalhada sobre como funcionam os trabalhos de monitoramento, demonstrando interesse em entender a condução da vigilância no município.</span></div>
     </div>
-
-    <div class="big-statement">
-      <div class="bs-label">Encaminhamento</div>
-      <div class="bs-text">Secretaria de Saúde a disponibilizar informações sobre funcionamento e resultados do sistema Lira/Moscara em próxima reunião ou informe complementar, para transparência total do trabalho de vigilância com o Conselho.</div>
-    </div>
   </section>
 
   <!-- DESTAQUE: FLUXO SAMU -->
@@ -543,11 +506,6 @@ body { font-family: var(--fb); background: var(--off); color: var(--ink); line-h
     <div class="big-statement">
       <div class="bs-label">Dificuldades Relatadas</div>
       <div class="bs-text">Profissionais de saúde das unidades básicas reportam dificuldades em contato com SAMU. Principais problemas: <strong style="color:var(--yellow)">SAMU reluta em atender enfermeiros</strong> como solicitantes (prefere apenas médicos), o que cria impasse quando UBS tem apenas enfermeiro disponível. Também há dificuldades com autorização e despacho de ambulâncias.</div>
-    </div>
-
-    <div class="big-statement">
-      <div class="bs-label">Proposição e Encaminhamento</div>
-      <div class="bs-text">Conselheiro solicitou <strong style="color:var(--yellow)">convite ao SAMU para apresentação formal</strong> do fluxo de processos de trabalho e atendimentos por telefone. Objetivo: manter diálogo, esclarecer incompreensões e estabelecer protocolos que respeitem competência dos enfermeiros como profissionais de saúde habilitados. <span>Reunião com representantes do SAMU a ser agendada em pauta futura.</span></div>
     </div>
   </section>
 
@@ -571,11 +529,6 @@ body { font-family: var(--fb); background: var(--off); color: var(--ink); line-h
         <h3>Demandas para Pautas Futuras</h3>
         <p>Registradas demandas por: explicação detalhada sobre Lira/Moscara; convite ao SAMU para apresentação; discussão de cirurgias eletivas represadas e outras questões levantadas durante expediente.</p>
       </div>
-      <div class="topic t-green">
-        <div class="topic-tag">Participação Conselheiros</div>
-        <h3>Apelo por Engajamento</h3>
-        <p>Houve ênfase na importância do acompanhamento próximo de informes de gestão. Secretaria de Saúde reconhece papel fundamental do Conselho na fiscalização e proposição de políticas de saúde pública.</p>
-      </div>
     </div>
   </section>
 
@@ -584,24 +537,25 @@ body { font-family: var(--fb); background: var(--off); color: var(--ink); line-h
     <p class="sec-label">Decisões formais</p>
     <h2 class="sec-title"><span>5 encaminhamentos</span><br>registrados</h2>
     <div class="enc-list">
-      <div class="enc"><span class="enc-n">1</span><span class="enc-body"><strong>Retirada de pauta 3.3 (Levantamento de Servidores)</strong> conforme solicitado pela gestão. Será apresentado em reunião ordinária do mês de fevereiro de 2026 com informações atualizadas sobre posse de efetivos, contratos temporários e vagas abertas.</span></div>
-      <div class="enc"><span class="enc-n">2</span><span class="enc-body"><strong>Moção de repúdio às multas COVID-19</strong> proposta para votação. Conselho a avaliar posicionamento institucional sobre anistia de multas do período de isolamento social obrigatório em Montes Claros.</span></div>
-      <div class="enc"><span class="enc-n">3</span><span class="enc-body"><strong>Secretaria de Saúde a apresentar informe detalhado</strong> sobre funcionamento do sistema Lira/Moscara (vigilância epidemiológica) em próxima reunião ou por informe complementar, respondendo solicitação de conselheiro.</span></div>
-      <div class="enc"><span class="enc-n">4</span><span class="enc-body"><strong>Convite ao SAMU para apresentação formal</strong> do fluxo de processos de trabalho e atendimentos telefônicos. Objetivo: esclarecer dificuldades relatadas por profissionais de saúde das UBS e discutir protocolos de comunicação e autorização de ambulâncias.</span></div>
-      <div class="enc"><span class="enc-n">5</span><span class="enc-body"><strong>Utilização de formulário QN-Coach</strong> para preenchimento de listas virtuais em apresentações. Conselheiros receberão declaração de participação por e-mail, mantendo registro de presença nos arquivos do Conselho.</span></div>
+      <div class="enc"><span class="enc-n">1</span><span class="enc-body"><strong>Retirada de pauta 3.3 (Levantamento de Servidores)</strong> conforme solicitado pela gestão. Apresentação em fevereiro de 2026.</span></div>
+      <div class="enc"><span class="enc-n">2</span><span class="enc-body"><strong>Moção de repúdio às multas COVID-19</strong> proposta para votação. Conselho a avaliar posicionamento sobre anistia.</span></div>
+      <div class="enc"><span class="enc-n">3</span><span class="enc-body"><strong>Informe Lira/Moscara:</strong> Secretaria de Saúde a disponibilizar funcionamento e resultados em informe complementar.</span></div>
+      <div class="enc"><span class="enc-n">4</span><span class="enc-body"><strong>Convite ao SAMU:</strong> Agendamento para apresentação formal do fluxo de processos e atendimentos telefônicos.</span></div>
+      <div class="enc"><span class="enc-n">5</span><span class="enc-body"><strong>Lista Virtual:</strong> Utilização oficial do QN-Coach para registro de presença e envio de declarações automáticas.</span></div>
     </div>
   </section>
 
 </div>
 
+<!-- Logo inferior: 40% maior e centralizada verticalmente -->
 <div class="logo-footer-container">
-  <img src="https://i.ibb.co/0PgmjXV/Logo-Secretaria-Executiva-CMS-com-lema.png" alt="Secretaria Executiva CMS - Compromisso com a Saúde">
+  <img src="https://i.ibb.co/0PgmjXV/Logo-Secretaria-Executiva-CMS-com-lema.png" alt="Secretaria Executiva CMS">
 </div>
 
 <div class="stripe"></div>
 <footer class="page-footer">
   <strong>Conselho Municipal de Saúde de Montes Claros – MG</strong><br>
-  461ª Reunião Ordinária Periódica · 20 de janeiro de 2026 · Secretaria Executiva: Alexandre Dourado
+  461ª Reunião Ordinária · 21 janeiro de 2026 · Secretaria Executiva
 </footer>
 
 </body>
