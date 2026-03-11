@@ -1,0 +1,1206 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Saúde é de Todos — Conselho Municipal de Saúde de Montes Claros</title>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700;800;900&family=Open+Sans:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --cms-blue:   #1B6CB5;
+  --cms-navy:   #0D2E5A;
+  --cms-green:  #1E8A4A;
+  --cms-yellow: #F5C400;
+  --cms-white:  #FFFFFF;
+  --cms-off:    #F7F8FA;
+  --cms-ink:    #111827;
+  --cms-muted:  #6B7280;
+  --cms-border: #E5E7EB;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'Open Sans', sans-serif;
+  background: var(--cms-off);
+  color: var(--cms-ink);
+  line-height: 1.6;
+}
+
+/* ── TOPBAR ── */
+.topbar {
+  background: var(--cms-navy);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 48px;
+  height: 56px;
+  position: sticky; top: 0; z-index: 200;
+  box-shadow: 0 2px 16px rgba(0,0,0,.25);
+}
+.topbar-brand {
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 700; font-size: 12px;
+  letter-spacing: 2px; text-transform: uppercase;
+  color: white;
+}
+.topbar-brand span { color: var(--cms-yellow); }
+.topbar-nav { display: flex; gap: 28px; }
+.topbar-nav a {
+  font-size: 11px; font-weight: 600; letter-spacing: 1px;
+  text-transform: uppercase; color: rgba(255,255,255,.6);
+  text-decoration: none; transition: color .2s;
+  padding: 4px 0;
+  border-bottom: 2px solid transparent;
+}
+.topbar-nav a:hover { color: var(--cms-yellow); border-color: var(--cms-yellow); }
+
+/* ── STRIPE ── */
+.stripe {
+  height: 4px;
+  background: linear-gradient(to right, #F5C400 33.3%, #1E8A4A 33.3% 66.6%, #1B6CB5 66.6%);
+}
+
+/* ── HERO ── */
+.hero {
+  background: var(--cms-navy);
+  color: white;
+  padding: 80px 48px 72px;
+  position: relative;
+  overflow: hidden;
+}
+.hero::before {
+  content: '';
+  position: absolute;
+  top: -80px; right: -80px;
+  width: 600px; height: 600px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(245,196,0,.10) 0%, transparent 65%);
+  pointer-events: none;
+}
+.hero::after {
+  content: '';
+  position: absolute;
+  bottom: -40px; left: 30%;
+  width: 300px; height: 300px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(27,108,181,.15) 0%, transparent 65%);
+  pointer-events: none;
+}
+.hero-inner { max-width: 1080px; margin: 0 auto; position: relative; z-index: 1; }
+.hero-eyebrow {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 10px; font-weight: 700;
+  letter-spacing: 3.5px; text-transform: uppercase;
+  color: var(--cms-yellow);
+  margin-bottom: 20px;
+  display: flex; align-items: center; gap: 10px;
+}
+.hero-eyebrow::before {
+  content: '';
+  display: inline-block;
+  width: 24px; height: 2px;
+  background: var(--cms-yellow);
+}
+.hero h1 {
+  font-family: 'Montserrat', sans-serif;
+  font-size: clamp(36px, 5vw, 72px);
+  font-weight: 900;
+  line-height: 0.95;
+  letter-spacing: -2px;
+  max-width: 700px;
+  margin-bottom: 24px;
+}
+.hero h1 em { color: var(--cms-yellow); font-style: normal; }
+.hero-sub {
+  font-size: 16px; color: rgba(255,255,255,.6);
+  max-width: 560px; font-weight: 300; line-height: 1.7;
+  margin-bottom: 40px;
+}
+.hero-stats {
+  display: flex; gap: 40px; flex-wrap: wrap;
+  padding-top: 32px;
+  border-top: 1px solid rgba(255,255,255,.1);
+}
+.hero-stat-n {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 36px; font-weight: 900; color: var(--cms-yellow);
+  line-height: 1;
+}
+.hero-stat-l { font-size: 11px; color: rgba(255,255,255,.5); text-transform: uppercase; letter-spacing: 1px; margin-top: 4px; }
+
+/* ── WRAP ── */
+.wrap { max-width: 1080px; margin: 0 auto; padding: 0 48px; }
+
+/* ── NAV TABS ── */
+.tabs-wrap {
+  background: white;
+  border-bottom: 1px solid var(--cms-border);
+  position: sticky; top: 56px; z-index: 100;
+  box-shadow: 0 2px 8px rgba(0,0,0,.04);
+}
+.tabs {
+  max-width: 1080px; margin: 0 auto;
+  display: flex; gap: 0;
+  padding: 0 48px;
+  overflow-x: auto;
+}
+.tab-btn {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 11px; font-weight: 700;
+  letter-spacing: 1px; text-transform: uppercase;
+  color: var(--cms-muted);
+  background: none; border: none; cursor: pointer;
+  padding: 18px 20px;
+  border-bottom: 3px solid transparent;
+  transition: all .2s;
+  white-space: nowrap;
+  display: flex; align-items: center; gap: 8px;
+}
+.tab-btn:hover { color: var(--cms-blue); }
+.tab-btn.active { color: var(--cms-navy); border-color: var(--cms-blue); }
+.tab-btn .tab-icon { font-size: 14px; }
+
+/* ── SECTION ── */
+.section { padding: 72px 0; scroll-margin-top: 110px; }
+.section + .section { border-top: 1px solid var(--cms-border); }
+
+.section-eyebrow {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 10px; font-weight: 700;
+  letter-spacing: 3px; text-transform: uppercase;
+  color: var(--cms-blue); margin-bottom: 10px;
+}
+.section-title {
+  font-family: 'Montserrat', sans-serif;
+  font-size: clamp(26px, 3.5vw, 40px);
+  font-weight: 900;
+  letter-spacing: -1px; line-height: 1.05;
+  color: var(--cms-navy);
+  margin-bottom: 12px;
+}
+.section-title em { color: var(--cms-blue); font-style: normal; }
+.section-desc { font-size: 15px; color: var(--cms-muted); max-width: 580px; margin-bottom: 48px; line-height: 1.7; }
+
+/* ── FAQ CARDS (expandable) ── */
+.faq-grid { display: grid; gap: 16px; }
+
+.faq-card {
+  background: white;
+  border-radius: 14px;
+  border: 1px solid var(--cms-border);
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0,0,0,.04);
+  transition: box-shadow .25s, border-color .25s;
+}
+.faq-card:hover { box-shadow: 0 6px 24px rgba(13,46,90,.10); border-color: rgba(27,108,181,.25); }
+
+.faq-question {
+  display: flex; align-items: center; gap: 16px;
+  padding: 22px 28px;
+  cursor: pointer;
+  user-select: none;
+  transition: background .2s;
+}
+.faq-question:hover { background: var(--cms-off); }
+
+.faq-q-icon {
+  width: 44px; height: 44px;
+  border-radius: 12px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 20px;
+  flex-shrink: 0;
+}
+.faq-q-icon.blue   { background: rgba(27,108,181,.08); }
+.faq-q-icon.green  { background: rgba(30,138,74,.08); }
+.faq-q-icon.yellow { background: rgba(245,196,0,.10); }
+.faq-q-icon.navy   { background: rgba(13,46,90,.06); }
+
+.faq-q-text { flex: 1; }
+.faq-q-num {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 10px; font-weight: 700;
+  letter-spacing: 2px; text-transform: uppercase;
+  color: var(--cms-blue); margin-bottom: 4px;
+}
+.faq-q-label {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 16px; font-weight: 800;
+  color: var(--cms-navy); line-height: 1.2;
+}
+
+.faq-toggle {
+  width: 32px; height: 32px;
+  border-radius: 50%;
+  background: var(--cms-off);
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+  font-size: 18px; color: var(--cms-blue);
+  transition: all .3s;
+  font-weight: 700;
+}
+.faq-card.open .faq-toggle { background: var(--cms-blue); color: white; transform: rotate(45deg); }
+
+/* Answer levels */
+.faq-answer {
+  border-top: 1px solid var(--cms-border);
+  overflow: hidden;
+  max-height: 0;
+  transition: max-height .4s cubic-bezier(.4,0,.2,1);
+}
+.faq-card.open .faq-answer { max-height: 1200px; }
+
+.faq-answer-inner { padding: 8px 28px 28px; }
+
+/* Level tabs inside answer */
+.level-tabs { display: flex; gap: 8px; margin-bottom: 20px; flex-wrap: wrap; }
+.level-btn {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 10px; font-weight: 700;
+  letter-spacing: 1.5px; text-transform: uppercase;
+  padding: 6px 14px; border-radius: 20px;
+  border: 1.5px solid var(--cms-border);
+  background: white; color: var(--cms-muted);
+  cursor: pointer; transition: all .2s;
+}
+.level-btn.active { background: var(--cms-navy); color: white; border-color: var(--cms-navy); }
+.level-btn:hover:not(.active) { border-color: var(--cms-blue); color: var(--cms-blue); }
+
+.level-panel { display: none; animation: fadeIn .25s ease; }
+.level-panel.active { display: block; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
+
+/* Answer tag */
+.answer-tag {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 9px; font-weight: 700;
+  letter-spacing: 2px; text-transform: uppercase;
+  padding: 4px 10px; border-radius: 4px;
+  margin-bottom: 14px;
+}
+.answer-tag.flash { background: var(--cms-yellow); color: var(--cms-navy); }
+.answer-tag.short { background: rgba(27,108,181,.1); color: var(--cms-blue); }
+.answer-tag.full  { background: rgba(30,138,74,.1);  color: var(--cms-green); }
+
+.answer-headline {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 18px; font-weight: 800;
+  color: var(--cms-navy); line-height: 1.25;
+  margin-bottom: 12px;
+}
+.answer-text { font-size: 14.5px; color: #374151; line-height: 1.75; }
+.answer-text + .answer-text { margin-top: 10px; }
+
+/* Lists inside answers */
+.a-list { list-style: none; padding: 0; margin: 12px 0; }
+.a-list li {
+  display: flex; gap: 10px; align-items: flex-start;
+  padding: 8px 0; border-bottom: 1px solid var(--cms-border);
+  font-size: 14px; color: #374151; line-height: 1.55;
+}
+.a-list li:last-child { border-bottom: none; }
+.a-list li .li-dot {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: var(--cms-yellow); margin-top: 7px; flex-shrink: 0;
+}
+
+/* Compare grid inside answers */
+.compare-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 16px 0; }
+.compare-card {
+  border-radius: 10px; padding: 16px 18px;
+  border: 1px solid var(--cms-border);
+}
+.compare-card.blue { background: rgba(27,108,181,.05); border-color: rgba(27,108,181,.2); }
+.compare-card.green { background: rgba(30,138,74,.05); border-color: rgba(30,138,74,.2); }
+.compare-card h4 {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px;
+  margin-bottom: 10px;
+}
+.compare-card.blue h4 { color: var(--cms-blue); }
+.compare-card.green h4 { color: var(--cms-green); }
+.compare-card .c-item { font-size: 13px; color: #374151; padding: 5px 0; border-bottom: 1px solid rgba(0,0,0,.05); }
+.compare-card .c-item:last-child { border-bottom: none; }
+
+/* ── MYTH CARDS ── */
+.myth-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+@media (max-width: 720px) { .myth-grid { grid-template-columns: 1fr; } }
+
+.myth-card {
+  border-radius: 14px; overflow: hidden;
+  border: 1px solid var(--cms-border);
+  cursor: pointer;
+  transition: all .3s;
+  box-shadow: 0 2px 8px rgba(0,0,0,.04);
+  position: relative;
+}
+.myth-card:hover { box-shadow: 0 8px 28px rgba(13,46,90,.13); transform: translateY(-2px); }
+
+.myth-front {
+  background: white;
+  padding: 28px;
+}
+.myth-badge {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 9px; font-weight: 700;
+  letter-spacing: 2.5px; text-transform: uppercase;
+  padding: 5px 10px; border-radius: 4px;
+  background: #FEE2E2; color: #991B1B;
+  display: inline-block; margin-bottom: 14px;
+}
+.myth-icon { font-size: 28px; margin-bottom: 12px; }
+.myth-title {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 17px; font-weight: 800;
+  color: var(--cms-navy); line-height: 1.25;
+  margin-bottom: 8px;
+}
+.myth-teaser { font-size: 13px; color: var(--cms-muted); }
+.myth-cta {
+  margin-top: 18px;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 10px; font-weight: 700; letter-spacing: 1.5px;
+  text-transform: uppercase; color: var(--cms-blue);
+  display: flex; align-items: center; gap: 6px;
+}
+.myth-cta-arrow { transition: transform .2s; }
+.myth-card:hover .myth-cta-arrow { transform: translateX(4px); }
+
+.myth-reveal {
+  background: var(--cms-navy);
+  padding: 28px;
+  display: none;
+}
+.myth-reveal.visible { display: block; animation: fadeIn .3s ease; }
+.myth-reveal-badge {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 9px; font-weight: 700;
+  letter-spacing: 2.5px; text-transform: uppercase;
+  padding: 5px 10px; border-radius: 4px;
+  background: rgba(30,138,74,.3); color: #6EE7B7;
+  display: inline-block; margin-bottom: 14px;
+}
+.myth-reveal-title {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 15px; font-weight: 700; color: white;
+  margin-bottom: 10px;
+}
+.myth-reveal-text { font-size: 13.5px; color: rgba(255,255,255,.75); line-height: 1.7; }
+.myth-close {
+  margin-top: 14px;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 10px; font-weight: 700; letter-spacing: 1px;
+  text-transform: uppercase; color: var(--cms-yellow);
+  cursor: pointer;
+}
+
+/* ── EXAMPLES / CASES ── */
+.cases-grid { display: grid; gap: 16px; }
+.case-card {
+  background: white;
+  border-radius: 14px;
+  border: 1px solid var(--cms-border);
+  overflow: hidden;
+  display: grid; grid-template-columns: 64px 1fr;
+  box-shadow: 0 2px 8px rgba(0,0,0,.04);
+  cursor: pointer;
+  transition: all .25s;
+}
+.case-card:hover { box-shadow: 0 6px 20px rgba(13,46,90,.10); }
+.case-num {
+  background: var(--cms-navy);
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 22px; font-weight: 900; color: var(--cms-yellow);
+  padding: 20px 0;
+}
+.case-body { padding: 18px 24px; }
+.case-tag {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 9px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase;
+  color: var(--cms-blue); margin-bottom: 6px;
+}
+.case-title {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 15px; font-weight: 800; color: var(--cms-navy);
+  margin-bottom: 6px;
+}
+.case-teaser { font-size: 13px; color: var(--cms-muted); }
+
+.case-detail {
+  background: var(--cms-off);
+  border-top: 1px solid var(--cms-border);
+  grid-column: 1 / -1;
+  overflow: hidden; max-height: 0;
+  transition: max-height .4s cubic-bezier(.4,0,.2,1);
+}
+.case-card.open .case-detail { max-height: 600px; }
+.case-detail-inner { padding: 20px 28px 24px; }
+.case-step {
+  display: flex; gap: 12px; align-items: flex-start;
+  margin-bottom: 12px;
+}
+.case-step-dot {
+  width: 8px; height: 8px; border-radius: 50%;
+  background: var(--cms-blue); margin-top: 6px; flex-shrink: 0;
+}
+.case-step-text { font-size: 14px; color: #374151; line-height: 1.6; }
+
+/* ── CONTEXT SECTION ── */
+.context-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; }
+.context-card {
+  background: white;
+  border-radius: 14px;
+  border: 1px solid var(--cms-border);
+  padding: 24px;
+  box-shadow: 0 2px 8px rgba(0,0,0,.04);
+  transition: all .25s;
+}
+.context-card:hover { box-shadow: 0 6px 20px rgba(13,46,90,.10); transform: translateY(-2px); }
+.context-icon { font-size: 28px; margin-bottom: 14px; }
+.context-audience {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 10px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase;
+  color: var(--cms-blue); margin-bottom: 8px;
+}
+.context-phrase {
+  font-size: 14px; color: #374151; line-height: 1.65;
+  font-style: italic;
+  border-left: 3px solid var(--cms-yellow);
+  padding-left: 12px;
+}
+
+/* ── BANNER CALLOUT ── */
+.callout {
+  background: var(--cms-navy);
+  border-radius: 16px;
+  padding: 40px 48px;
+  display: flex; align-items: center; gap: 32px;
+  position: relative; overflow: hidden;
+  margin: 48px 0 0;
+}
+.callout::before {
+  content: '';
+  position: absolute; right: -60px; top: -60px;
+  width: 280px; height: 280px; border-radius: 50%;
+  background: radial-gradient(circle, rgba(245,196,0,.12), transparent 65%);
+}
+.callout-icon { font-size: 48px; flex-shrink: 0; }
+.callout-text h3 {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 20px; font-weight: 800; color: white;
+  margin-bottom: 8px;
+}
+.callout-text p { font-size: 14px; color: rgba(255,255,255,.65); line-height: 1.65; }
+
+/* ── COMPOSITION VISUAL ── */
+.comp-visual {
+  background: white;
+  border-radius: 16px;
+  border: 1px solid var(--cms-border);
+  padding: 36px;
+  margin-bottom: 32px;
+  box-shadow: 0 2px 8px rgba(0,0,0,.04);
+}
+.comp-title {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 13px; font-weight: 700; text-transform: uppercase;
+  letter-spacing: 1.5px; color: var(--cms-muted);
+  margin-bottom: 24px; text-align: center;
+}
+.comp-bar {
+  display: flex; border-radius: 10px; overflow: hidden;
+  height: 52px; margin-bottom: 16px;
+}
+.comp-seg {
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 11px; font-weight: 700; color: white;
+  transition: flex .4s;
+  text-align: center; line-height: 1.2;
+}
+.comp-seg.usuarios { background: var(--cms-blue); flex: 50; }
+.comp-seg.trabalhadores { background: var(--cms-green); flex: 25; }
+.comp-seg.gestores { background: var(--cms-navy); flex: 25; }
+.comp-legend { display: flex; gap: 20px; flex-wrap: wrap; justify-content: center; }
+.comp-leg-item { display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--cms-muted); }
+.comp-leg-dot { width: 10px; height: 10px; border-radius: 3px; }
+
+/* ── FOOTER ── */
+.footer {
+  background: var(--cms-navy);
+  color: rgba(255,255,255,.5);
+  text-align: center;
+  padding: 40px 20px;
+  font-size: 13px;
+}
+.footer strong { color: rgba(255,255,255,.8); }
+.footer-stripe { height: 4px; background: linear-gradient(to right, #F5C400 33.3%, #1E8A4A 33.3% 66.6%, #1B6CB5 66.6%); }
+
+/* ── RESPONSIVE ── */
+@media (max-width: 768px) {
+  .topbar { padding: 0 20px; }
+  .topbar-nav { display: none; }
+  .hero { padding: 56px 20px 48px; }
+  .wrap { padding: 0 20px; }
+  .tabs { padding: 0 20px; }
+  .hero-stats { gap: 24px; }
+  .compare-grid { grid-template-columns: 1fr; }
+  .callout { flex-direction: column; padding: 32px 24px; gap: 20px; }
+  .case-card { grid-template-columns: 52px 1fr; }
+}
+
+/* ── SMOOTH HIGHLIGHT ANIMATION ── */
+@keyframes highlightIn {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.animate-in { animation: highlightIn .4s ease forwards; }
+
+/* ── PROGRESS INDICATOR ── */
+.progress-bar {
+  position: fixed; top: 56px; left: 0; right: 0; z-index: 150;
+  height: 3px; background: rgba(255,255,255,0);
+}
+.progress-fill {
+  height: 100%; width: 0%;
+  background: var(--cms-yellow);
+  transition: width .1s;
+}
+</style>
+</head>
+<body>
+
+<!-- Progress bar -->
+<div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+
+<!-- TOPBAR -->
+<nav class="topbar">
+  <a href="#" style="display:flex; align-items:center; text-decoration:none; flex-shrink:0;">
+    <img src="https://i.ibb.co/HLG4tvfn/LOGOTIPO-CONSELHO-BRANCO.png"
+         alt="Conselho Municipal de Saúde de Montes Claros"
+         style="height:34px; width:auto; display:block;">
+  </a>
+  <div class="topbar-nav">
+    <a href="#faq">FAQ</a>
+    <a href="#exemplos">Exemplos</a>
+    <a href="#mitos">Mitos</a>
+    <a href="#contextos">O Conselho na Prática</a>
+  </div>
+</nav>
+
+<!-- TOP STRIPE -->
+<div class="stripe"></div>
+
+<!-- HERO -->
+<header class="hero">
+  <div class="hero-inner">
+    <div class="hero-eyebrow">Conselho Municipal de Saúde · Montes Claros</div>
+    <h1>Saúde<br>é de <em>Todos</em></h1>
+    <p class="hero-sub">Entenda o Conselho Municipal de Saúde — o que ele é, o que faz e por que isso importa para você e para o município.</p>
+    <div class="hero-stats">
+      <div>
+        <div class="hero-stat-n">5</div>
+        <div class="hero-stat-l">Perguntas essenciais</div>
+      </div>
+      <div>
+        <div class="hero-stat-n">5</div>
+        <div class="hero-stat-l">Casos práticos</div>
+      </div>
+      <div>
+        <div class="hero-stat-n">5</div>
+        <div class="hero-stat-l">Mitos desmitificados</div>
+      </div>
+      <div>
+        <div class="hero-stat-n">5</div>
+        <div class="hero-stat-l">Formas de explicar</div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- TABS -->
+<div class="tabs-wrap">
+  <div class="tabs">
+    <button class="tab-btn active" onclick="scrollToSection('faq', this)"><span class="tab-icon">❓</span> FAQ</button>
+    <button class="tab-btn" onclick="scrollToSection('exemplos', this)"><span class="tab-icon">⚙️</span> Exemplos Práticos</button>
+    <button class="tab-btn" onclick="scrollToSection('mitos', this)"><span class="tab-icon">💬</span> Mitos</button>
+    <button class="tab-btn" onclick="scrollToSection('contextos', this)"><span class="tab-icon">🗣️</span> O Conselho na Prática</button>
+  </div>
+</div>
+
+<main>
+
+<!-- ═══════════════════════════════ FAQ ═══════════════════════════════ -->
+<section id="faq" class="section">
+  <div class="wrap">
+    <div class="section-eyebrow">Perguntas Frequentes</div>
+    <h2 class="section-title">FAQ <em>Prático</em></h2>
+    <p class="section-desc">Clique em cada pergunta para expandir. Escolha entre a resposta rápida, resumida ou completa — conforme sua necessidade.</p>
+
+    <div class="faq-grid">
+
+      <!-- Q1 -->
+      <div class="faq-card" id="faq1">
+        <div class="faq-question" onclick="toggleFaq('faq1')">
+          <div class="faq-q-icon blue">🏛️</div>
+          <div class="faq-q-text">
+            <div class="faq-q-num">Pergunta 01</div>
+            <div class="faq-q-label">O que é o Conselho Municipal de Saúde?</div>
+          </div>
+          <div class="faq-toggle">+</div>
+        </div>
+        <div class="faq-answer">
+          <div class="faq-answer-inner">
+            <div class="level-tabs">
+              <button class="level-btn active" onclick="switchLevel('faq1', 'flash', this)">⚡ Em 1 frase</button>
+              <button class="level-btn" onclick="switchLevel('faq1', 'short', this)">📋 Resumido</button>
+              <button class="level-btn" onclick="switchLevel('faq1', 'full', this)">📖 Completo</button>
+            </div>
+
+            <div class="level-panel active" data-level="flash" data-faq="faq1">
+              <span class="answer-tag flash">⚡ Flash</span>
+              <p class="answer-text" style="font-size:18px; font-weight:600; color: var(--cms-navy); line-height:1.5;">
+                É o espaço onde <strong>sociedade e governo decidem juntos</strong> os rumos da saúde pública do município.
+              </p>
+            </div>
+
+            <div class="level-panel" data-level="short" data-faq="faq1">
+              <span class="answer-tag short">📋 Resumido</span>
+              <p class="answer-text">O Conselho Municipal de Saúde é um <strong>órgão colegiado do SUS</strong> onde representantes da população, trabalhadores da saúde, gestores e prestadores se reúnem para <strong>avaliar, fiscalizar e decidir</strong> sobre a política de saúde do município.</p>
+            </div>
+
+            <div class="level-panel" data-level="full" data-faq="faq1">
+              <span class="answer-tag full">📖 Completo</span>
+              <p class="answer-text">O Conselho Municipal de Saúde é um <strong>órgão permanente do SUS</strong> responsável por formular, acompanhar e controlar a política municipal de saúde, inclusive o uso dos recursos financeiros.</p>
+              <p class="answer-text" style="margin-top:12px;">Ele reúne representantes da sociedade e do governo e funciona como espaço institucional de <strong>controle social</strong>, garantindo que a população participe das decisões sobre a saúde pública. Sua existência está prevista em lei e é condição fundamental para o funcionamento do SUS no município.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Q2 -->
+      <div class="faq-card" id="faq2">
+        <div class="faq-question" onclick="toggleFaq('faq2')">
+          <div class="faq-q-icon green">⚙️</div>
+          <div class="faq-q-text">
+            <div class="faq-q-num">Pergunta 02</div>
+            <div class="faq-q-label">O que o Conselho de Saúde faz?</div>
+          </div>
+          <div class="faq-toggle">+</div>
+        </div>
+        <div class="faq-answer">
+          <div class="faq-answer-inner">
+            <div class="level-tabs">
+              <button class="level-btn active" onclick="switchLevel('faq2', 'flash', this)">⚡ Em 1 frase</button>
+              <button class="level-btn" onclick="switchLevel('faq2', 'short', this)">📋 Resumido</button>
+              <button class="level-btn" onclick="switchLevel('faq2', 'full', this)">📖 Completo</button>
+            </div>
+            <div class="level-panel active" data-level="flash" data-faq="faq2">
+              <span class="answer-tag flash">⚡ Flash</span>
+              <p class="answer-text" style="font-size:18px; font-weight:600; color: var(--cms-navy); line-height:1.5;">
+                O Conselho <strong>analisa, aprova e fiscaliza</strong> as políticas e os recursos da saúde do município.
+              </p>
+            </div>
+            <div class="level-panel" data-level="short" data-faq="faq2">
+              <span class="answer-tag short">📋 Resumido</span>
+              <p class="answer-text">Ele acompanha o funcionamento do SUS no município, analisa documentos de gestão, fiscaliza recursos, propõe melhorias e delibera decisões que orientam a política de saúde.</p>
+            </div>
+            <div class="level-panel" data-level="full" data-faq="faq2">
+              <span class="answer-tag full">📖 Completo</span>
+              <p class="answer-text" style="margin-bottom:14px;">Entre suas principais atribuições:</p>
+              <ul class="a-list">
+                <li><span class="li-dot"></span> Analisar e aprovar o <strong>Plano Municipal de Saúde</strong></li>
+                <li><span class="li-dot"></span> Acompanhar metas e indicadores de saúde</li>
+                <li><span class="li-dot"></span> Fiscalizar o uso do dinheiro da saúde</li>
+                <li><span class="li-dot"></span> Analisar prestações de contas quadrimestrais</li>
+                <li><span class="li-dot"></span> Propor prioridades e políticas públicas</li>
+                <li><span class="li-dot"></span> Acompanhar a qualidade dos serviços de saúde</li>
+                <li><span class="li-dot"></span> Convocar e organizar <strong>Conferências de Saúde</strong></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Q3 -->
+      <div class="faq-card" id="faq3">
+        <div class="faq-question" onclick="toggleFaq('faq3')">
+          <div class="faq-q-icon yellow">⚖️</div>
+          <div class="faq-q-text">
+            <div class="faq-q-num">Pergunta 03</div>
+            <div class="faq-q-label">O Conselho manda na Secretaria de Saúde?</div>
+          </div>
+          <div class="faq-toggle">+</div>
+        </div>
+        <div class="faq-answer">
+          <div class="faq-answer-inner">
+            <div class="level-tabs">
+              <button class="level-btn active" onclick="switchLevel('faq3', 'flash', this)">⚡ Em 1 frase</button>
+              <button class="level-btn" onclick="switchLevel('faq3', 'short', this)">📋 Resumido</button>
+              <button class="level-btn" onclick="switchLevel('faq3', 'full', this)">📖 Completo</button>
+            </div>
+            <div class="level-panel active" data-level="flash" data-faq="faq3">
+              <span class="answer-tag flash">⚡ Flash</span>
+              <p class="answer-text" style="font-size:18px; font-weight:600; color: var(--cms-navy); line-height:1.5;">
+                <strong>Não.</strong> O Conselho não administra a saúde, mas decide diretrizes e fiscaliza a gestão.
+              </p>
+            </div>
+            <div class="level-panel" data-level="short" data-faq="faq3">
+              <span class="answer-tag short">📋 Resumido</span>
+              <p class="answer-text">A <strong>Secretaria de Saúde executa</strong> a política de saúde. O <strong>Conselho define diretrizes</strong>, aprova instrumentos de gestão e fiscaliza a execução. Funções distintas, complementares.</p>
+            </div>
+            <div class="level-panel" data-level="full" data-faq="faq3">
+              <span class="answer-tag full">📖 Completo</span>
+              <div class="compare-grid">
+                <div class="compare-card green">
+                  <h4>🏥 Secretaria de Saúde</h4>
+                  <div class="c-item">Administra os serviços</div>
+                  <div class="c-item">Executa programas</div>
+                  <div class="c-item">Gerencia recursos</div>
+                  <div class="c-item">Organiza o sistema</div>
+                </div>
+                <div class="compare-card blue">
+                  <h4>🏛️ Conselho de Saúde</h4>
+                  <div class="c-item">Define diretrizes</div>
+                  <div class="c-item">Aprova planos e relatórios</div>
+                  <div class="c-item">Fiscaliza a gestão</div>
+                  <div class="c-item">Representa a sociedade</div>
+                </div>
+              </div>
+              <p class="answer-text">O Conselho não substitui o gestor, mas <strong>controla e orienta a política pública</strong> — papel essencial para a legitimidade democrática do SUS.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Q4 -->
+      <div class="faq-card" id="faq4">
+        <div class="faq-question" onclick="toggleFaq('faq4')">
+          <div class="faq-q-icon navy">👥</div>
+          <div class="faq-q-text">
+            <div class="faq-q-num">Pergunta 04</div>
+            <div class="faq-q-label">Quem pode participar do Conselho?</div>
+          </div>
+          <div class="faq-toggle">+</div>
+        </div>
+        <div class="faq-answer">
+          <div class="faq-answer-inner">
+            <div class="level-tabs">
+              <button class="level-btn active" onclick="switchLevel('faq4', 'flash', this)">⚡ Em 1 frase</button>
+              <button class="level-btn" onclick="switchLevel('faq4', 'short', this)">📋 Resumido</button>
+              <button class="level-btn" onclick="switchLevel('faq4', 'full', this)">📖 Completo</button>
+            </div>
+            <div class="level-panel active" data-level="flash" data-faq="faq4">
+              <span class="answer-tag flash">⚡ Flash</span>
+              <p class="answer-text" style="font-size:18px; font-weight:600; color: var(--cms-navy); line-height:1.5;">
+                Qualquer cidadão pode participar das discussões, mas os <strong>conselheiros representam segmentos da sociedade</strong>.
+              </p>
+            </div>
+            <div class="level-panel" data-level="short" data-faq="faq4">
+              <span class="answer-tag short">📋 Resumido</span>
+              <p class="answer-text">O Conselho é composto por representantes de: <strong>usuários do SUS</strong>, trabalhadores da saúde, governo e prestadores de serviços. A maior parte das vagas é da sociedade usuária do SUS.</p>
+            </div>
+            <div class="level-panel" data-level="full" data-faq="faq4">
+              <span class="answer-tag full">📖 Completo</span>
+              <p class="answer-text" style="margin-bottom:16px;">A composição segue o princípio da <strong>paridade</strong>:</p>
+              <div class="comp-visual">
+                <div class="comp-title">Composição do Conselho</div>
+                <div class="comp-bar">
+                  <div class="comp-seg usuarios">50%<br>Usuários</div>
+                  <div class="comp-seg trabalhadores">25%<br>Trabalhadores</div>
+                  <div class="comp-seg gestores">25%<br>Gestores</div>
+                </div>
+                <div class="comp-legend">
+                  <div class="comp-leg-item"><div class="comp-leg-dot" style="background:var(--cms-blue)"></div> 50% Usuários do SUS</div>
+                  <div class="comp-leg-item"><div class="comp-leg-dot" style="background:var(--cms-green)"></div> 25% Trabalhadores da Saúde</div>
+                  <div class="comp-leg-item"><div class="comp-leg-dot" style="background:var(--cms-navy)"></div> 25% Gestores e Prestadores</div>
+                </div>
+              </div>
+              <p class="answer-text">As vagas são ocupadas por <strong>entidades e organizações da sociedade</strong>, que indicam seus representantes para exercer o mandato de conselheiro.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Q5 -->
+      <div class="faq-card" id="faq5">
+        <div class="faq-question" onclick="toggleFaq('faq5')">
+          <div class="faq-q-icon blue">📋</div>
+          <div class="faq-q-text">
+            <div class="faq-q-num">Pergunta 05</div>
+            <div class="faq-q-label">O Conselho resolve alguma coisa ou é só reunião?</div>
+          </div>
+          <div class="faq-toggle">+</div>
+        </div>
+        <div class="faq-answer">
+          <div class="faq-answer-inner">
+            <div class="level-tabs">
+              <button class="level-btn active" onclick="switchLevel('faq5', 'flash', this)">⚡ Em 1 frase</button>
+              <button class="level-btn" onclick="switchLevel('faq5', 'short', this)">📋 Resumido</button>
+              <button class="level-btn" onclick="switchLevel('faq5', 'full', this)">📖 Completo</button>
+            </div>
+            <div class="level-panel active" data-level="flash" data-faq="faq5">
+              <span class="answer-tag flash">⚡ Flash</span>
+              <p class="answer-text" style="font-size:18px; font-weight:600; color: var(--cms-navy); line-height:1.5;">
+                O Conselho toma <strong>decisões formais</strong> que influenciam a política de saúde do município.
+              </p>
+            </div>
+            <div class="level-panel" data-level="short" data-faq="faq5">
+              <span class="answer-tag short">📋 Resumido</span>
+              <p class="answer-text">As reuniões servem para analisar informações, discutir problemas e <strong>deliberar decisões</strong> que orientam a gestão da saúde. Não é só conversa — é controle social em ação.</p>
+            </div>
+            <div class="level-panel" data-level="full" data-faq="faq5">
+              <span class="answer-tag full">📖 Completo</span>
+              <p class="answer-text" style="margin-bottom:14px;">O Conselho toma decisões formais chamadas de:</p>
+              <ul class="a-list">
+                <li><span class="li-dot"></span> <strong>Deliberações</strong> — decisões com força normativa</li>
+                <li><span class="li-dot"></span> <strong>Resoluções</strong> — atos formais aprovados em plenária</li>
+                <li><span class="li-dot"></span> <strong>Recomendações</strong> — orientações à gestão</li>
+                <li><span class="li-dot"></span> <strong>Moções</strong> — manifestações de posição</li>
+              </ul>
+              <p class="answer-text" style="margin-top:14px;">Essas decisões podem aprovar ou reprovar documentos de gestão, exigir esclarecimentos, recomendar mudanças e até <strong>encaminhar questões ao Ministério Público</strong> quando necessário.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /faq-grid -->
+  </div>
+</section>
+
+<!-- ═══════════════════════════════ EXEMPLOS ═══════════════════════════════ -->
+<section id="exemplos" class="section">
+  <div class="wrap">
+    <div class="section-eyebrow">Casos Reais</div>
+    <h2 class="section-title">Como o Conselho <em>atua na prática</em></h2>
+    <p class="section-desc">Clique em cada caso para ver o passo a passo de como o Conselho pode intervir em situações concretas.</p>
+
+    <div class="cases-grid">
+
+      <div class="case-card" id="case1" onclick="toggleCase('case1')">
+        <div class="case-num">01</div>
+        <div class="case-body">
+          <div class="case-tag">📄 Gestão Documental</div>
+          <div class="case-title">Aprovação do Plano de Saúde</div>
+          <div class="case-teaser">A Secretaria apresenta — o Conselho analisa e delibera. Clique para ver o fluxo.</div>
+        </div>
+        <div class="case-detail">
+          <div class="case-detail-inner">
+            <div class="case-step"><div class="case-step-dot"></div><div class="case-step-text">A Secretaria apresenta o <strong>Plano Municipal de Saúde</strong> ao Conselho.</div></div>
+            <div class="case-step"><div class="case-step-dot"></div><div class="case-step-text">O Conselho analisa metas, indicadores, prioridades e orçamento previsto.</div></div>
+            <div class="case-step"><div class="case-step-dot"></div><div class="case-step-text">Pode <strong>aprovar</strong>, pedir ajustes, solicitar mais informações ou reprovar o plano.</div></div>
+            <div class="case-step"><div class="case-step-dot"></div><div class="case-step-text">Sem aprovação do Conselho, o plano <strong>não tem legitimidade no controle social</strong>.</div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="case-card" id="case2" onclick="toggleCase('case2')">
+        <div class="case-num">02</div>
+        <div class="case-body">
+          <div class="case-tag">💰 Controle Financeiro</div>
+          <div class="case-title">Fiscalização de recursos</div>
+          <div class="case-teaser">Cada centavo do Fundo de Saúde passa pelo olhar do Conselho. Veja como.</div>
+        </div>
+        <div class="case-detail">
+          <div class="case-detail-inner">
+            <div class="case-step"><div class="case-step-dot"></div><div class="case-step-text">A cada <strong>quadrimestre</strong> o gestor apresenta a prestação de contas do Fundo Municipal de Saúde.</div></div>
+            <div class="case-step"><div class="case-step-dot"></div><div class="case-step-text">O Conselho analisa gastos, contratos, investimentos e cumprimento de metas.</div></div>
+            <div class="case-step"><div class="case-step-dot"></div><div class="case-step-text">Se houver problema, pode <strong>pedir esclarecimentos</strong> ou recomendar correções à gestão.</div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="case-card" id="case3" onclick="toggleCase('case3')">
+        <div class="case-num">03</div>
+        <div class="case-body">
+          <div class="case-tag">🏥 Serviços de Saúde</div>
+          <div class="case-title">Problemas em unidades de saúde</div>
+          <div class="case-teaser">Falta de médicos, insumos... O Conselho pode agir. Como?</div>
+        </div>
+        <div class="case-detail">
+          <div class="case-detail-inner">
+            <div class="case-step"><div class="case-step-dot"></div><div class="case-step-text">Usuários relatam <strong>falta de médicos ou insumos</strong> em alguma unidade.</div></div>
+            <div class="case-step"><div class="case-step-dot"></div><div class="case-step-text">O Conselho pode solicitar informações à gestão sobre o problema.</div></div>
+            <div class="case-step"><div class="case-step-dot"></div><div class="case-step-text">Pode pedir providências, realizar <strong>visitas técnicas</strong> à unidade.</div></div>
+            <div class="case-step"><div class="case-step-dot"></div><div class="case-step-text">Encaminha recomendações formais com prazo de resposta da gestão.</div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="case-card" id="case4" onclick="toggleCase('case4')">
+        <div class="case-num">04</div>
+        <div class="case-body">
+          <div class="case-tag">📊 Políticas Públicas</div>
+          <div class="case-title">Criação de políticas públicas</div>
+          <div class="case-teaser">O Conselho não só fiscaliza — também propõe. Entenda.</div>
+        </div>
+        <div class="case-detail">
+          <div class="case-detail-inner">
+            <div class="case-step"><div class="case-step-dot"></div><div class="case-step-text">O Conselho identifica demandas da população, como necessidade de política de <strong>saúde da mulher</strong>.</div></div>
+            <div class="case-step"><div class="case-step-dot"></div><div class="case-step-text">Pode propor diretrizes específicas: ampliação da atenção básica, prioridades de orçamento.</div></div>
+            <div class="case-step"><div class="case-step-dot"></div><div class="case-step-text">Aprova essas propostas em plenária e as <strong>encaminha formalmente</strong> à Secretaria de Saúde.</div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="case-card" id="case5" onclick="toggleCase('case5')">
+        <div class="case-num">05</div>
+        <div class="case-body">
+          <div class="case-tag">🔍 Irregularidades</div>
+          <div class="case-title">Denúncias de irregularidades</div>
+          <div class="case-teaser">Quando algo errado é denunciado, o Conselho tem papel ativo. Veja.</div>
+        </div>
+        <div class="case-detail">
+          <div class="case-detail-inner">
+            <div class="case-step"><div class="case-step-dot"></div><div class="case-step-text">Denúncia de irregularidade chega ao Conselho por conselheiros ou pela sociedade.</div></div>
+            <div class="case-step"><div class="case-step-dot"></div><div class="case-step-text">O Conselho pode <strong>solicitar documentos</strong> e abrir discussão formal em plenária.</div></div>
+            <div class="case-step"><div class="case-step-dot"></div><div class="case-step-text">Elabora recomendações e exige resposta da gestão em prazo definido.</div></div>
+            <div class="case-step"><div class="case-step-dot"></div><div class="case-step-text">Se necessário, pode <strong>encaminhar ao Ministério Público</strong> para apuração.</div></div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /cases-grid -->
+  </div>
+</section>
+
+<!-- ═══════════════════════════════ MITOS ═══════════════════════════════ -->
+<section id="mitos" class="section">
+  <div class="wrap">
+    <div class="section-eyebrow">Desmistificando</div>
+    <h2 class="section-title">Mitos & <em>Equívocos</em></h2>
+    <p class="section-desc">Clique em cada mito para revelar a realidade. Porque informação correta é a base do controle social.</p>
+
+    <div class="myth-grid">
+
+      <div class="myth-card" id="myth1">
+        <div class="myth-front">
+          <div class="myth-badge">✗ Mito</div>
+          <div class="myth-icon">🏢</div>
+          <div class="myth-title">"O Conselho é da Secretaria de Saúde."</div>
+          <div class="myth-teaser">Muitas pessoas acreditam nisso. Mas a relação é bem diferente.</div>
+          <div class="myth-cta">Ver a realidade <span class="myth-cta-arrow">→</span></div>
+        </div>
+        <div class="myth-reveal" id="myth1-reveal">
+          <div class="myth-reveal-badge">✓ Realidade</div>
+          <div class="myth-reveal-title">O Conselho é independente.</div>
+          <div class="myth-reveal-text">O Conselho recebe apoio operacional da Secretaria, mas é um <strong>órgão colegiado independente</strong> de controle social. Ele fiscaliza a própria Secretaria — não faz parte dela.</div>
+          <div class="myth-close" onclick="closeMythReveal('myth1')">↑ Fechar</div>
+        </div>
+      </div>
+
+      <div class="myth-card" id="myth2">
+        <div class="myth-front">
+          <div class="myth-badge">✗ Mito</div>
+          <div class="myth-icon">👑</div>
+          <div class="myth-title">"Conselheiro manda na saúde."</div>
+          <div class="myth-teaser">O papel do conselheiro é poderoso — mas diferente do que se imagina.</div>
+          <div class="myth-cta">Ver a realidade <span class="myth-cta-arrow">→</span></div>
+        </div>
+        <div class="myth-reveal" id="myth2-reveal">
+          <div class="myth-reveal-badge">✓ Realidade</div>
+          <div class="myth-reveal-title">Conselheiro fiscaliza, não administra.</div>
+          <div class="myth-reveal-text">Conselheiro não administra serviços de saúde, não contrata, não demite. Mas <strong>participa ativamente</strong> da definição e fiscalização das políticas públicas — papel essencial e insubstituível.</div>
+          <div class="myth-close" onclick="closeMythReveal('myth2')">↑ Fechar</div>
+        </div>
+      </div>
+
+      <div class="myth-card" id="myth3">
+        <div class="myth-front">
+          <div class="myth-badge">✗ Mito</div>
+          <div class="myth-icon">😴</div>
+          <div class="myth-title">"O Conselho não serve para nada."</div>
+          <div class="myth-teaser">Uma crítica comum — mas que ignora o que o Conselho representa.</div>
+          <div class="myth-cta">Ver a realidade <span class="myth-cta-arrow">→</span></div>
+        </div>
+        <div class="myth-reveal" id="myth3-reveal">
+          <div class="myth-reveal-badge">✓ Realidade</div>
+          <div class="myth-reveal-title">Sem Conselho, o SUS perde legitimidade.</div>
+          <div class="myth-reveal-text">Sem Conselho: não existe controle social do SUS; planos e relatórios não têm legitimidade formal; e a sociedade <strong>perde sua voz</strong> nas decisões sobre saúde pública. O Conselho é condição legal de funcionamento do SUS.</div>
+          <div class="myth-close" onclick="closeMythReveal('myth3')">↑ Fechar</div>
+        </div>
+      </div>
+
+      <div class="myth-card" id="myth4">
+        <div class="myth-front">
+          <div class="myth-badge">✗ Mito</div>
+          <div class="myth-icon">🩺</div>
+          <div class="myth-title">"Só profissionais da saúde podem participar."</div>
+          <div class="myth-teaser">Quem pode ser conselheiro? A resposta surpreende.</div>
+          <div class="myth-cta">Ver a realidade <span class="myth-cta-arrow">→</span></div>
+        </div>
+        <div class="myth-reveal" id="myth4-reveal">
+          <div class="myth-reveal-badge">✓ Realidade</div>
+          <div class="myth-reveal-title">A maioria das vagas é para usuários do SUS.</div>
+          <div class="myth-reveal-text">50% das vagas pertencem a <strong>usuários do SUS</strong> — ou seja, qualquer cidadão representando entidades da sociedade civil. Profissionais de saúde têm apenas 25% das vagas.</div>
+          <div class="myth-close" onclick="closeMythReveal('myth4')">↑ Fechar</div>
+        </div>
+      </div>
+
+      <div class="myth-card" id="myth5" style="grid-column: 1 / -1; max-width: 600px;">
+        <div class="myth-front">
+          <div class="myth-badge">✗ Mito</div>
+          <div class="myth-icon">👤</div>
+          <div class="myth-title">"O Conselho resolve problemas individuais."</div>
+          <div class="myth-teaser">Alguém com problema pessoal no posto de saúde deve ir ao Conselho?</div>
+          <div class="myth-cta">Ver a realidade <span class="myth-cta-arrow">→</span></div>
+        </div>
+        <div class="myth-reveal" id="myth5-reveal">
+          <div class="myth-reveal-badge">✓ Realidade</div>
+          <div class="myth-reveal-title">O Conselho atua em políticas coletivas.</div>
+          <div class="myth-reveal-text">O Conselho não resolve casos administrativos individuais, como reclamações específicas de atendimento. Sua atuação é em <strong>políticas públicas e problemas coletivos</strong>. Para problemas individuais, o caminho é a ouvidoria ou a própria unidade de saúde.</div>
+          <div class="myth-close" onclick="closeMythReveal('myth5')">↑ Fechar</div>
+        </div>
+      </div>
+
+    </div><!-- /myth-grid -->
+  </div>
+</section>
+
+<!-- ═══════════════════════════════ CONTEXTOS ═══════════════════════════════ -->
+<section id="contextos" class="section">
+  <div class="wrap">
+    <div class="section-eyebrow">O Conselho no dia a dia</div>
+    <h2 class="section-title">Como o Conselho <em>aparece</em> na sua vida</h2>
+    <p class="section-desc">O Conselho não existe só nas reuniões. Ele está presente em cada decisão que molda a saúde pública do município — e provavelmente já afetou algo que você usa.</p>
+
+    <div class="context-grid">
+
+      <div class="context-card">
+        <div class="context-icon">🗣️</div>
+        <div class="context-audience">Na conversa de todo dia</div>
+        <div class="context-phrase">"O Conselho de Saúde é onde representantes da população, profissionais e governo se reúnem para discutir e fiscalizar como a saúde pública funciona no município."</div>
+      </div>
+
+      <div class="context-card">
+        <div class="context-icon">🏥</div>
+        <div class="context-audience">Se você usa o SUS</div>
+        <div class="context-phrase">"É um espaço onde a população participa das decisões sobre a saúde pública, ajudando a fiscalizar os serviços e melhorar o SUS."</div>
+      </div>
+
+      <div class="context-card">
+        <div class="context-icon">👨‍⚕️</div>
+        <div class="context-audience">Se você trabalha na saúde</div>
+        <div class="context-phrase">"É a instância de controle social do SUS — acompanha a política de saúde, analisa instrumentos de gestão e fiscaliza a execução das ações."</div>
+      </div>
+
+      <div class="context-card">
+        <div class="context-icon">📊</div>
+        <div class="context-audience">Se você está na gestão</div>
+        <div class="context-phrase">"É uma instância deliberativa que contribui para a legitimidade, transparência e aperfeiçoamento da gestão do SUS."</div>
+      </div>
+
+      <div class="context-card">
+        <div class="context-icon">🎤</div>
+        <div class="context-audience">Em uma apresentação</div>
+        <div class="context-phrase">"O principal instrumento de participação social no SUS — reúne sociedade e governo para formular, acompanhar e fiscalizar a política pública de saúde."</div>
+      </div>
+
+    </div><!-- /context-grid -->
+
+    <!-- Callout -->
+    <div class="callout">
+      <div class="callout-icon">💡</div>
+      <div class="callout-text">
+        <h3>Controle Social é Democracia em ação</h3>
+        <p>Participar do Conselho Municipal de Saúde não é apenas um direito — é o exercício direto da cidadania. A saúde pública é construída por todos quando todos têm voz.</p>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+</main>
+
+<!-- FOOTER -->
+<div class="footer-stripe"></div>
+<footer class="footer">
+  <img src="https://i.ibb.co/0j6L6ZzD/SECRETARIA-EXECUTIVA-LOGO-TEXTO-BRANCO-VERSAO-COMPLETA-COM-LEMA.png"
+       alt="Secretaria Executiva — Conselho Municipal de Saúde de Montes Claros"
+       style="height: 96px; width:auto; display:block; margin:0 auto 20px; opacity:.92;">
+  <div style="color:rgba(255,255,255,.35); font-size:12px; letter-spacing:.5px;">
+    Conselho Municipal de Saúde de Montes Claros — MG &nbsp;·&nbsp; 2026
+  </div>
+</footer>
+
+<script>
+// ── Progress bar
+window.addEventListener('scroll', () => {
+  const doc = document.documentElement;
+  const scrolled = (doc.scrollTop) / (doc.scrollHeight - doc.clientHeight) * 100;
+  document.getElementById('progressFill').style.width = scrolled + '%';
+});
+
+// ── Tab nav scroll
+function scrollToSection(id, btn) {
+  document.getElementById(id).scrollIntoView({ behavior: 'smooth' });
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+}
+
+// ── FAQ toggle
+function toggleFaq(id) {
+  const card = document.getElementById(id);
+  const isOpen = card.classList.contains('open');
+  // Close all
+  document.querySelectorAll('.faq-card').forEach(c => c.classList.remove('open'));
+  if (!isOpen) card.classList.add('open');
+}
+
+// ── Level switch
+function switchLevel(faqId, level, btn) {
+  // Update buttons
+  const card = document.getElementById(faqId);
+  card.querySelectorAll('.level-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  // Update panels
+  card.querySelectorAll('.level-panel').forEach(p => {
+    p.classList.toggle('active', p.dataset.level === level);
+  });
+}
+
+// ── Case toggle
+function toggleCase(id) {
+  const card = document.getElementById(id);
+  const isOpen = card.classList.contains('open');
+  document.querySelectorAll('.case-card').forEach(c => c.classList.remove('open'));
+  if (!isOpen) card.classList.add('open');
+}
+
+// ── Myth reveal
+document.querySelectorAll('.myth-card').forEach(card => {
+  const front = card.querySelector('.myth-front');
+  const reveal = card.querySelector('.myth-reveal');
+  if (front && reveal) {
+    front.addEventListener('click', () => {
+      reveal.classList.toggle('visible');
+    });
+  }
+});
+
+function closeMythReveal(id) {
+  event.stopPropagation();
+  const reveal = document.getElementById(id + '-reveal');
+  if (reveal) reveal.classList.remove('visible');
+}
+
+// ── Active tab on scroll
+const sections = ['faq','exemplos','mitos','contextos'];
+const tabBtns = document.querySelectorAll('.tab-btn');
+window.addEventListener('scroll', () => {
+  let cur = '';
+  sections.forEach(id => {
+    const el = document.getElementById(id);
+    if (el && window.scrollY >= el.offsetTop - 140) cur = id;
+  });
+  tabBtns.forEach((btn, i) => {
+    btn.classList.toggle('active', sections[i] === cur);
+  });
+});
+</script>
+</body>
+</html>
