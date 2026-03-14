@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Post Instagram - CMS Montes Claros</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;900&family=Open+Sans:wght@300;400&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --navy: #0D2E5A;
+            --azul: #1B6CB5;
+            --verde: #1E8A4A;
+            --amarelo: #F5C400;
+            --branco: #FFFFFF;
+            --off-white: #F7F8FA;
+            --ink: #111827;
+            --margin: 8%;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        body {
+            background-color: #222;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            font-family: 'Open Sans', sans-serif;
+        }
+
+        /* Canvas do Post (1:1 Ratio) */
+        .cms-post-canvas {
+            width: 1080px;
+            height: 1080px;
+            background-color: var(--navy);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            padding: var(--margin);
+            color: var(--branco);
+            /* Zoom para visualização no browser */
+            transform: scale(0.6);
+            transform-origin: center;
+        }
+
+        /* Marca d'água de fundo */
+        .cms-watermark {
+            position: absolute;
+            bottom: -10%;
+            right: -10%;
+            width: 70%;
+            opacity: 0.05;
+            pointer-events: none;
+        }
+
+        /* Header do Post */
+        .cms-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            z-index: 10;
+        }
+
+        .cms-logo-main {
+            height: 80px;
+        }
+
+        .cms-post-type {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .cms-label-pill {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 700;
+            font-size: 18px;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            border: 2px solid var(--amarelo);
+            padding: 8px 20px;
+            color: var(--amarelo);
+            outline: none;
+        }
+
+        .cms-live-indicator {
+            width: 14px;
+            height: 14px;
+            background-color: #FF0000;
+            border-radius: 50%;
+            box-shadow: 0 0 15px rgba(255, 0, 0, 0.6);
+        }
+
+        /* Corpo do Post */
+        .cms-body {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            z-index: 10;
+        }
+
+        .cms-eyebrow {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 700;
+            font-size: 22px;
+            letter-spacing: 5px;
+            text-transform: uppercase;
+            color: var(--amarelo);
+            margin-bottom: 10px;
+            outline: none;
+        }
+
+        .cms-title-display {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 900;
+            font-size: 110px;
+            line-height: 0.95;
+            letter-spacing: -4px;
+            text-transform: uppercase;
+            max-width: 900px;
+            outline: none;
+        }
+
+        .cms-divider {
+            width: 120px;
+            height: 8px;
+            background-color: var(--amarelo);
+            margin: 40px 0;
+        }
+
+        .cms-info-grid {
+            display: grid;
+            grid-template-columns: auto 1fr;
+            gap: 60px;
+            align-items: center;
+        }
+
+        .cms-date-highlight {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 900;
+            font-size: 64px;
+            color: var(--branco);
+            outline: none;
+        }
+
+        .cms-details {
+            border-left: 2px solid rgba(255,255,255,0.2);
+            padding-left: 40px;
+        }
+
+        .cms-detail-item {
+            font-family: 'Open Sans', sans-serif;
+            font-weight: 300;
+            font-size: 32px;
+            color: rgba(255,255,255,0.8);
+            margin-bottom: 5px;
+            outline: none;
+        }
+
+        .cms-detail-item b {
+            font-weight: 700;
+            color: var(--branco);
+        }
+
+        /* Footer do Post */
+        .cms-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            z-index: 10;
+        }
+
+        .cms-hashtags {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 700;
+            font-size: 16px;
+            letter-spacing: 1px;
+            color: var(--amarelo);
+            outline: none;
+        }
+
+        .cms-partnership-logo {
+            height: 60px;
+            opacity: 0.9;
+        }
+
+        /* Estilo para quando o texto estiver em foco para edição */
+        [contenteditable="true"]:focus {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+        }
+
+        /* Responsividade para o container do preview */
+        @media (max-width: 800px) {
+            .cms-post-canvas {
+                transform: scale(0.35);
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="cms-post-canvas">
+        <!-- Elemento Gráfico de Fundo -->
+        <img src="https://i.ibb.co/0ybbQ35z/logline.png" alt="Marca d'água CMS" class="cms-watermark">
+
+        <!-- Header -->
+        <div class="cms-header">
+            <img src="https://i.ibb.co/HLG4tvfn/LOGOTIPO-CONSELHO-BRANCO.png" alt="Logo CMS" class="cms-logo-main">
+            <div class="cms-post-type">
+                <div class="cms-label-pill" contenteditable="true">CONVITE</div>
+                <div class="cms-live-indicator"></div>
+            </div>
+        </div>
+
+        <!-- Conteúdo Principal -->
+        <div class="cms-body">
+            <div class="cms-eyebrow" contenteditable="true">Plenária Mensal</div>
+            <h1 class="cms-title-display" contenteditable="true">463ª REUNIÃO<br>ORDINÁRIA</h1>
+            
+            <div class="cms-divider"></div>
+
+            <div class="cms-info-grid">
+                <div class="cms-date-highlight" contenteditable="true">04/03</div>
+                <div class="cms-details">
+                    <p class="cms-detail-item" contenteditable="true">Quarta-feira às <b>13h30</b></p>
+                    <p class="cms-detail-item" contenteditable="true">Câmara Municipal de Montes Claros</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="cms-footer">
+            <div class="cms-hashtags" contenteditable="true">
+                #SaúdeMC #ConselhoMunicipal #ControleSocial
+            </div>
+            <img src="https://i.ibb.co/1YvvDPyM/11p.png" alt="Parceria Prefeitura e Conselho" class="cms-partnership-logo">
+        </div>
+    </div>
+
+</body>
+</html>
