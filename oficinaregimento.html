@@ -2322,6 +2322,28 @@ function renderAllQuizzes() {
   for (let m = 0; m < 9; m++) renderQuestion(m);
 }
 
+function quizScaffold(m) {
+  // Rebuilds the quiz inner HTML after showQuizComplete wiped it
+  const container = document.getElementById('quiz-' + m);
+  container.innerHTML =
+    '<div class="quiz-title">🎯 Quiz · Módulo ' + m + '</div>' +
+    '<div class="quiz-progress-bar"><div class="quiz-progress-fill" id="q' + m + '-prog" style="width:0%"></div></div>' +
+    '<div class="quiz-counter" id="q' + m + '-counter">Questão 1 de ' + QUIZZES[m].length + '</div>' +
+    '<div class="quiz-question" id="q' + m + '-question"></div>' +
+    '<div class="quiz-options" id="q' + m + '-options"></div>' +
+    '<div class="quiz-feedback" id="q' + m + '-feedback">' +
+      '<div class="feedback-label" id="q' + m + '-flabel"></div>' +
+      '<div id="q' + m + '-ftext"></div>' +
+    '</div>' +
+    '<div class="quiz-nav">' +
+      '<span class="quiz-score" id="q' + m + '-score">Pontos: 0</span>' +
+      '<div style="display:flex;gap:8px;align-items:center;">' +
+        '<button class="btn btn-outline btn-sm" style="opacity:.55;" onclick="resetQuiz(' + m + ')">↺ Resetar</button>' +
+        '<button class="btn btn-outline btn-sm" id="q' + m + '-next" onclick="nextQuestion(' + m + ')" style="display:none;">Próxima →</button>' +
+      '</div>' +
+    '</div>';
+}
+
 function renderQuestion(m) {
   const qs = state.quizState[m];
   const quiz = QUIZZES[m];
@@ -2333,6 +2355,11 @@ function renderQuestion(m) {
   if (qs.done) {
     showQuizComplete(m);
     return;
+  }
+
+  // Re-scaffold if elements were wiped by showQuizComplete
+  if (!document.getElementById('q' + m + '-counter')) {
+    quizScaffold(m);
   }
 
   const q = quiz[qi];
