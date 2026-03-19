@@ -3,107 +3,202 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sistema do Conselho - CMS-MOC</title>
+    <title>Painel de Recomposição - CMS Montes Claros</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,400;0,600;0,700;0,900;1,400&family=Open+Sans:wght@300;400;600&display=swap" rel="stylesheet">
     <style>
+        /* ── TOKENS DA MARCA ── */
         :root {
-            --bg-color: #f4f7f6;
-            --card-bg: #ffffff;
-            --success: #d4edda;
-            --warning: #fff3cd;
-            --danger: #f8d7da;
-            --text-dark: #333;
-            --primary: #0056b3;
-            --navbar-bg: #2c3e50;
+            --cms-navy:   #0D2E5A;
+            --cms-blue:   #1B6CB5;
+            --cms-green:  #1E8A4A;
+            --cms-yellow: #F5C400;
+            --cms-white:  #FFFFFF;
+            --cms-off:    #F7F8FA;
+            --cms-ink:    #111827;
+            --cms-muted:  #6B7280;
+            --cms-border: #E5E7EB;
+            --cms-danger: #E02020; /* Baseado no red-dot do mockup do guia */
+            
+            --font-display: 'Montserrat', sans-serif;
+            --font-body:    'Open Sans', sans-serif;
         }
 
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: var(--bg-color); color: var(--text-dark); margin: 0; padding: 0; }
+        /* ── RESET MÍNIMO E BASE ── */
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
         
-        /* Navbar Principal */
-        .navbar { background-color: var(--navbar-bg); padding: 15px 30px; display: flex; justify-content: space-between; align-items: center; color: white; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
-        .navbar h2 { margin: 0; font-size: 1.5em; }
-        .nav-links { display: flex; gap: 15px; }
-        .nav-btn { background: rgba(255,255,255,0.1); color: white; border: 1px solid rgba(255,255,255,0.2); padding: 10px 20px; border-radius: 6px; cursor: pointer; font-weight: bold; transition: all 0.3s; }
-        .nav-btn:hover { background: rgba(255,255,255,0.2); }
-        .nav-btn.active { background: white; color: var(--navbar-bg); }
+        body {
+            font-family: var(--font-body);
+            background: var(--cms-off);
+            color: var(--cms-ink);
+            line-height: 1.65;
+            font-size: 15px;
+        }
 
-        .container { padding: 30px; max-width: 1200px; margin: 0 auto; }
+        /* ── NAVBAR PRINCIPAL ── */
+        .topbar {
+            background: var(--cms-navy);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 48px;
+            height: 64px;
+            position: sticky; top: 0; z-index: 200;
+        }
+        .topbar-brand {
+            font-family: var(--font-display);
+            font-weight: 900;
+            font-size: 16px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            color: var(--cms-white);
+        }
+        .topbar-brand span { color: var(--cms-yellow); }
+        
+        .nav-links { display: flex; gap: 24px; }
+        .nav-btn {
+            font-family: var(--font-display);
+            font-size: 11px; font-weight: 700; letter-spacing: 1.5px;
+            text-transform: uppercase; color: rgba(255,255,255,0.65);
+            background: transparent; border: none;
+            cursor: pointer; transition: color .2s;
+            padding: 10px 0; border-bottom: 2px solid transparent;
+        }
+        .nav-btn:hover { color: var(--cms-white); }
+        .nav-btn.active { color: var(--cms-yellow); border-bottom-color: var(--cms-yellow); }
 
-        /* Módulos (Telas principais) */
+        /* Faixa decorativa Swiss Design */
+        .cms-stripe {
+            height: 4px;
+            background: linear-gradient(to right, #F5C400 33.3%, #1E8A4A 33.3% 66.6%, #1B6CB5 66.6%);
+        }
+
+        /* ── CONTAINER E TIPOGRAFIA MESTRE ── */
+        .container { max-width: 1200px; margin: 0 auto; padding: 48px 24px; }
+        
+        .section-eyebrow {
+            font-family: var(--font-display); font-size: 11px; font-weight: 700;
+            letter-spacing: 3px; text-transform: uppercase; color: var(--cms-blue);
+            margin-bottom: 12px;
+        }
+        .section-title {
+            font-family: var(--font-display); font-size: clamp(28px, 4vw, 44px);
+            font-weight: 900; letter-spacing: -1px; line-height: 1.05;
+            color: var(--cms-navy); margin-bottom: 40px;
+        }
+
+        /* ── MÓDULOS E TABS ── */
         .modulo { display: none; }
-        .modulo.active { display: block; }
-        
-        /* Sub-Abas do Módulo de Recomposição */
-        .tabs { display: flex; justify-content: center; margin-bottom: 20px; border-bottom: 2px solid #ccc; }
-        .tab-btn { background: none; border: none; padding: 10px 20px; font-size: 1.1em; cursor: pointer; color: #666; font-weight: bold; }
-        .tab-btn.active { color: var(--primary); border-bottom: 3px solid var(--primary); margin-bottom: -2px; }
+        .modulo.active { display: block; animation: fadeIn 0.3s ease; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        .tabs { display: flex; gap: 16px; margin-bottom: 32px; border-bottom: 2px solid var(--cms-border); }
+        .tab-btn {
+            background: none; border: none; padding: 12px 24px;
+            font-family: var(--font-display); font-size: 13px; font-weight: 700;
+            color: var(--cms-muted); cursor: pointer; text-transform: uppercase; letter-spacing: 1px;
+            margin-bottom: -2px; border-bottom: 3px solid transparent; transition: 0.2s;
+        }
+        .tab-btn:hover { color: var(--cms-navy); }
+        .tab-btn.active { color: var(--cms-blue); border-bottom-color: var(--cms-blue); }
         .tab-content { display: none; }
         .tab-content.active { display: block; }
 
-        .loader { text-align: center; font-size: 1.2em; color: #666; margin-top: 50px; }
+        .loader { text-align: center; font-size: 14px; font-weight: 600; color: var(--cms-muted); margin-top: 50px; }
 
-        /* Grids e Cards */
-        .grid-container { display: grid; grid-template-columns: repeat(auto-fill, minmax(350px, 1fr)); gap: 20px; }
-        .card { background-color: var(--card-bg); border-radius: 8px; padding: 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); border-left: 5px solid; display: flex; flex-direction: column; gap: 10px; }
-        .card.enviado { border-color: #28a745; background-color: var(--success); }
-        .card.incompleto { border-color: #ffc107; background-color: var(--warning); }
-        .card.pendente { border-color: #dc3545; background-color: var(--danger); opacity: 0.9; }
+        /* ── GRIDS E CARDS SWISS ── */
+        .grid-container { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 24px; }
         
-        /* Card de Pleiteante (Novo visual) */
-        .card-pleiteante { border-left: 5px solid var(--primary); background: #fff; }
-        .card-pleiteante .segmento { font-size: 0.8em; text-transform: uppercase; letter-spacing: 1px; color: var(--primary); font-weight: bold; }
+        .cms-card {
+            background: var(--cms-white);
+            border-radius: 10px;
+            padding: 28px;
+            border: 1px solid var(--cms-border);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.04);
+            display: flex; flex-direction: column; gap: 12px;
+            position: relative; overflow: hidden;
+        }
+        
+        .cms-card.enviado { border-left: 4px solid var(--cms-green); }
+        .cms-card.incompleto { border-left: 4px solid var(--cms-yellow); }
+        .cms-card.pendente { border-left: 4px solid var(--cms-danger); }
+        .cms-card.pleiteante { border-left: 4px solid var(--cms-blue); }
 
-        .card-header { font-size: 1.1em; font-weight: bold; }
-        .badge { display: inline-block; padding: 4px 8px; border-radius: 4px; font-size: 0.8em; font-weight: bold; width: max-content; }
+        .card-header { font-family: var(--font-display); font-size: 18px; font-weight: 800; color: var(--cms-navy); line-height: 1.2; letter-spacing: -0.5px; }
+        
+        /* ── BADGES INSTITUCIONAIS ── */
+        .cms-badge {
+            display: inline-block; padding: 4px 10px; border-radius: 4px;
+            font-family: var(--font-display); font-size: 10px; font-weight: 700;
+            letter-spacing: 1.5px; text-transform: uppercase; width: max-content;
+        }
+        .bg-green { background: var(--cms-green); color: var(--cms-white); }
+        .bg-yellow { background: var(--cms-yellow); color: var(--cms-navy); }
+        .bg-danger { background: rgba(224, 32, 32, 0.1); color: var(--cms-danger); border: 1px solid rgba(224, 32, 32, 0.2); }
+        .text-danger { color: var(--cms-danger); font-size: 13px; font-weight: 600; }
 
-        /* Tabelas */
-        table { width: 100%; border-collapse: collapse; background: #fff; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
-        th, td { padding: 12px 15px; text-align: left; border-bottom: 1px solid #ddd; }
-        th { background-color: var(--navbar-bg); color: #fff; }
-        tr:hover { background-color: #f1f1f1; }
-        .status-ok { color: #28a745; font-weight: bold; }
-        .status-pendente { color: #dc3545; font-weight: bold; }
-        .status-alerta { color: #d39e00; font-weight: bold; }
+        /* ── TABELAS OFICIAIS ── */
+        .cms-table { width: 100%; border-collapse: collapse; background: var(--cms-white); border-radius: 10px; overflow: hidden; border: 1px solid var(--cms-border); box-shadow: 0 4px 20px rgba(0,0,0,.04); }
+        .cms-table thead tr { background: var(--cms-navy); color: var(--cms-white); }
+        .cms-table th { padding: 16px 20px; text-align: left; font-family: var(--font-display); font-size: 11px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; }
+        .cms-table td { padding: 16px 20px; border-bottom: 1px solid var(--cms-border); font-size: 14px; }
+        .cms-table tbody tr:nth-child(even) td { background: var(--cms-off); }
+        .cms-table tbody tr:hover td { background: #f0f4f8; }
+
+        .status-ok { color: var(--cms-green); font-weight: 700; }
+        .status-pendente { color: var(--cms-danger); font-weight: 600; }
+        .status-alerta { color: #d39e00; font-weight: 700; }
+        
+        a { color: var(--cms-blue); text-decoration: none; font-weight: 600; }
+        a:hover { text-decoration: underline; }
     </style>
 </head>
 <body>
 
-    <nav class="navbar">
-        <h2>CMS-MOC</h2>
+    <nav class="topbar">
+        <div class="topbar-brand">CMS <span>Montes Claros</span></div>
         <div class="nav-links">
-            <button class="nav-btn active" onclick="mudarModulo('modulo-recomposicao', this)">Recomposição de Vagas</button>
-            <button class="nav-btn" onclick="mudarModulo('modulo-pleiteantes', this)">Novas Inscrições (Pleiteantes)</button>
+            <button class="nav-btn active" onclick="mudarModulo('modulo-recomposicao', this)">Recomposição Atual</button>
+            <button class="nav-btn" onclick="mudarModulo('modulo-pleiteantes', this)">Novas Inscrições</button>
         </div>
     </nav>
+    <div class="cms-stripe"></div>
 
     <div class="container">
-        <div id="loader" class="loader">Carregando dados do sistema...</div>
+        <div id="loader" class="loader">Sincronizando dados com a base oficial...</div>
 
         <div id="modulo-recomposicao" class="modulo active">
+            <p class="section-eyebrow">Gestão de Vagas Atuais</p>
+            <h2 class="section-title">Painel de <span>Recomposição</span></h2>
+
             <div class="tabs">
-                <button class="tab-btn active" onclick="mudarAba('resumo', this)">Resumo (Cards)</button>
+                <button class="tab-btn active" onclick="mudarAba('resumo', this)">Resumo em Cards</button>
                 <button class="tab-btn" onclick="mudarAba('entidades', this)">Lista de Entidades</button>
-                <button class="tab-btn" onclick="mudarAba('conselheiros', this)">Lista de Conselheiros</button>
+                <button class="tab-btn" onclick="mudarAba('conselheiros', this)">Gabarito de Conselheiros</button>
             </div>
             
             <div id="resumo" class="tab-content active">
                 <div class="grid-container" id="cards-container"></div>
             </div>
+            
             <div id="entidades" class="tab-content">
-                <table>
-                    <thead><tr><th>Entidade</th><th>Status do Envio</th><th>Ofício</th></tr></thead>
+                <table class="cms-table">
+                    <thead><tr><th>Entidade</th><th>Status do Envio</th><th>Documentação (Ofício)</th></tr></thead>
                     <tbody id="tabela-entidades"></tbody>
                 </table>
             </div>
+            
             <div id="conselheiros" class="tab-content">
-                <table>
-                    <thead><tr><th>Entidade</th><th>Cadeira</th><th>Conselheiro Esperado</th><th>Status no Formulário</th></tr></thead>
+                <table class="cms-table">
+                    <thead><tr><th>Entidade</th><th>Cadeira</th><th>Conselheiro Esperado</th><th>Validação do Formulário</th></tr></thead>
                     <tbody id="tabela-conselheiros"></tbody>
                 </table>
             </div>
         </div>
 
         <div id="modulo-pleiteantes" class="modulo">
-            <h2 style="color: #2c3e50; border-bottom: 2px solid #ddd; padding-bottom: 10px;">Entidades Pleiteantes a Vagas</h2>
+            <p class="section-eyebrow">Processo Seletivo</p>
+            <h2 class="section-title">Entidades <span>Pleiteantes</span></h2>
+            
             <div class="grid-container" id="cards-pleiteantes">
                 </div>
         </div>
@@ -111,7 +206,7 @@
     </div>
 
     <script>
-        // === COLOQUE SUA URL AQUI ===
+        // === COLOQUE A URL DO SEU GOOGLE APPS SCRIPT AQUI ===
         const urlAPI = 'https://script.google.com/macros/s/AKfycbzR3y--PcH9j8c9qiDnl5xTUeEbDN2FIWywonGyDoR3C4HbIp9HyzgptY7PH2zrOcHLbQ/exec';
 
         const normalizar = (str) => {
@@ -119,7 +214,6 @@
             return str.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().trim();
         };
 
-        // Navegação entre os Grandes Módulos
         function mudarModulo(idModulo, elemento) {
             document.querySelectorAll('.modulo').forEach(mod => mod.classList.remove('active'));
             document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
@@ -127,7 +221,6 @@
             elemento.classList.add('active');
         }
 
-        // Navegação das Sub-abas da Recomposição
         function mudarAba(idAba, elemento) {
             document.querySelectorAll('.tab-content').forEach(aba => aba.classList.remove('active'));
             document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
@@ -141,20 +234,16 @@
                 const dados = await response.json();
                 document.getElementById('loader').style.display = 'none';
                 
-                // Processa o Módulo 1 (Recomposição)
                 processarRecomposicao(dados.respostas, dados.conselheiros);
-                
-                // Processa o Módulo 2 (Pleiteantes)
                 processarPleiteantes(dados.pleiteantes);
-
             } catch (error) {
-                document.getElementById('loader').innerText = 'Erro ao carregar. Verifique a URL.';
+                document.getElementById('loader').innerText = 'Erro de sincronização. Verifique a URL do Web App.';
                 console.error(error);
             }
         }
 
         // ==========================================
-        // LÓGICA DO MÓDULO 1 (Mantida intacta)
+        // LÓGICA DO MÓDULO 1 (Recomposição)
         // ==========================================
         function processarRecomposicao(respostas, conselheirosEsperados) {
             const entidadesOficiais = [...new Set(conselheirosEsperados.map(c => c['ENTIDADE']).filter(e => e))];
@@ -170,63 +259,87 @@
                     const temOficio = submissao['Ofício'] && submissao['Ofício'].includes('http');
                     const temTitular = submissao['Conselheiro  Titular: Nome completo'] && submissao['Conselheiro  Titular: Nome completo'] !== 'N/A';
                     if (temOficio && temTitular) { status = "enviado"; } else { status = "incompleto"; }
+                    if (!temOficio) pendencias += "Ofício ausente. ";
+                    if (!temTitular) pendencias += "Titular não indicado.";
                 }
 
+                // Gerador de Classes para as Cores Oficiais
+                let bgClass = status === 'enviado' ? 'bg-green' : (status === 'incompleto' ? 'bg-yellow' : 'bg-danger');
+                let textoStatus = status === 'enviado' ? 'Documentação Completa' : (status === 'incompleto' ? 'Dados Incompletos' : 'Aguardando Envio');
+
                 containerCards.innerHTML += `
-                    <div class="card ${status}">
+                    <div class="cms-card ${status}">
                         <div class="card-header">${nomeOficial}</div>
-                        <div class="badge" style="background: ${status==='enviado'?'#28a745':status==='incompleto'?'#ffc107':'#dc3545'}; color: ${status==='incompleto'?'#000':'#fff'}">${status.toUpperCase()}</div>
+                        <div>
+                            <span class="cms-badge ${bgClass}">${textoStatus}</span>
+                        </div>
+                        ${pendencias ? `<div class="text-danger" style="margin-top:8px;">⚠️ ${pendencias}</div>` : ''}
                     </div>
                 `;
 
-                tbodyEntidades.innerHTML += `<tr><td>${nomeOficial}</td><td class="status-${status==='enviado'?'ok':'pendente'}">${status.toUpperCase()}</td><td>${submissao ? 'Enviado' : '-'}</td></tr>`;
+                tbodyEntidades.innerHTML += `
+                    <tr>
+                        <td><strong>${nomeOficial}</strong></td>
+                        <td class="${status==='enviado'?'status-ok':'status-pendente'}">${textoStatus.toUpperCase()}</td>
+                        <td>${(submissao && submissao['Ofício']) ? `<a href="${submissao['Ofício']}" target="_blank">Visualizar Documento ↗</a>` : '-'}</td>
+                    </tr>`;
             });
 
             conselheirosEsperados.forEach(esperado => {
                 if(!esperado['NOME']) return;
                 let submissao = respostas.find(resp => normalizar(resp['Nome completo da entidade']) === normalizar(esperado['ENTIDADE']));
-                let status = "<span class='status-pendente'>Pendente</span>";
+                let status = "<span class='status-pendente'>Aguardando submissão</span>";
+                
                 if(submissao) {
                     let nomeDigitado = esperado['CADEIRA (TITULAR/SUPLENTE)'].toUpperCase() === "TITULAR" ? submissao['Conselheiro  Titular: Nome completo'] : submissao['Conselheiro Suplente: Nome completo'];
                     if(normalizar(nomeDigitado) === normalizar(esperado['NOME'])) status = `<span class='status-ok'>✅ Confirmado</span>`;
+                    else if (nomeDigitado && nomeDigitado !== 'N/A') status = `<span class='status-alerta'>⚠️ Divergente (${nomeDigitado})</span>`;
+                    else status = "<span class='status-pendente'>Não preenchido no formulário</span>";
                 }
-                tbodyConselheiros.innerHTML += `<tr><td>${esperado['ENTIDADE']}</td><td>${esperado['CADEIRA (TITULAR/SUPLENTE)']}</td><td>${esperado['NOME']}</td><td>${status}</td></tr>`;
+                
+                tbodyConselheiros.innerHTML += `
+                    <tr>
+                        <td style="font-size: 12px; color: var(--cms-muted);">${esperado['ENTIDADE']}</td>
+                        <td><strong>${esperado['CADEIRA (TITULAR/SUPLENTE)']}</strong></td>
+                        <td>${esperado['NOME']}</td>
+                        <td>${status}</td>
+                    </tr>`;
             });
         }
 
         // ==========================================
-        // LÓGICA DO MÓDULO 2 (Novos Pleiteantes)
+        // LÓGICA DO MÓDULO 2 (Pleiteantes)
         // ==========================================
         function processarPleiteantes(pleiteantes) {
             const container = document.getElementById('cards-pleiteantes');
             
             if (!pleiteantes || pleiteantes.length === 0) {
-                container.innerHTML = "<p>Nenhuma inscrição recebida ainda.</p>";
+                container.innerHTML = "<p style='color: var(--cms-muted);'>Nenhuma inscrição de pleiteante recebida até o momento.</p>";
                 return;
             }
 
             pleiteantes.forEach(pleito => {
-                // COMO NÃO TENHO SEUS CABEÇALHOS AINDA, CRIE ESTA ESTRUTURA GENÉRICA:
-                // Vou assumir que existem colunas genéricas. Você precisará ajustar os nomes abaixo!
-                
-                const nomeEntidade = pleito['Nome da Entidade'] || 'Nome não encontrado';
+                // Adapte estas chaves conforme o cabeçalho exato da sua Aba 3
+                const nomeEntidade = pleito['Nome da Entidade'] || 'Entidade Indefinida';
                 const segmento = pleito['Segmento Pleiteado'] || 'Segmento não informado';
                 const dataEnvio = pleito['Carimbo de data/hora'] || '';
 
                 container.innerHTML += `
-                    <div class="card card-pleiteante">
-                        <div class="segmento">${segmento}</div>
+                    <div class="cms-card pleiteante">
+                        <div class="section-eyebrow" style="margin-bottom:4px;">${segmento}</div>
                         <div class="card-header">${nomeEntidade}</div>
-                        <div style="font-size: 0.85em; color: #666;">Inscrição recebida em: ${dataEnvio}</div>
-                        <hr style="border: 0; border-top: 1px solid #eee; width: 100%;">
+                        <div style="font-size: 12px; color: var(--cms-muted); border-bottom: 1px solid var(--cms-border); padding-bottom: 12px; margin-bottom: 12px;">
+                            Inscrição recebida em: ${dataEnvio}
+                        </div>
                         <div>
-                            <strong>Documentação:</strong> <a href="#">Ver anexos</a><br>
+                            <a href="#">Visualizar Processo Completo ↗</a>
                         </div>
                     </div>
                 `;
             });
         }
 
+        // Start
         carregarDados();
     </script>
 </body>
