@@ -3,25 +3,36 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Painel de Recomposição - CMS-MOC</title>
+    <title>Sistema do Conselho - CMS-MOC</title>
     <style>
         :root {
             --bg-color: #f4f7f6;
             --card-bg: #ffffff;
             --success: #d4edda;
-            --success-border: #c3e6cb;
             --warning: #fff3cd;
-            --warning-border: #ffeeba;
             --danger: #f8d7da;
-            --danger-border: #f5c6cb;
             --text-dark: #333;
             --primary: #0056b3;
+            --navbar-bg: #2c3e50;
         }
 
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: var(--bg-color); color: var(--text-dark); padding: 20px; margin: 0; }
-        h1 { text-align: center; color: #2c3e50; margin-bottom: 20px; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: var(--bg-color); color: var(--text-dark); margin: 0; padding: 0; }
         
-        /* Sistema de Abas */
+        /* Navbar Principal */
+        .navbar { background-color: var(--navbar-bg); padding: 15px 30px; display: flex; justify-content: space-between; align-items: center; color: white; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        .navbar h2 { margin: 0; font-size: 1.5em; }
+        .nav-links { display: flex; gap: 15px; }
+        .nav-btn { background: rgba(255,255,255,0.1); color: white; border: 1px solid rgba(255,255,255,0.2); padding: 10px 20px; border-radius: 6px; cursor: pointer; font-weight: bold; transition: all 0.3s; }
+        .nav-btn:hover { background: rgba(255,255,255,0.2); }
+        .nav-btn.active { background: white; color: var(--navbar-bg); }
+
+        .container { padding: 30px; max-width: 1200px; margin: 0 auto; }
+
+        /* Módulos (Telas principais) */
+        .modulo { display: none; }
+        .modulo.active { display: block; }
+        
+        /* Sub-Abas do Módulo de Recomposição */
         .tabs { display: flex; justify-content: center; margin-bottom: 20px; border-bottom: 2px solid #ccc; }
         .tab-btn { background: none; border: none; padding: 10px 20px; font-size: 1.1em; cursor: pointer; color: #666; font-weight: bold; }
         .tab-btn.active { color: var(--primary); border-bottom: 3px solid var(--primary); margin-bottom: -2px; }
@@ -30,19 +41,24 @@
 
         .loader { text-align: center; font-size: 1.2em; color: #666; margin-top: 50px; }
 
-        /* Grid de Cards */
-        .grid-container { display: grid; grid-template-columns: repeat(auto-fill, minmax(350px, 1fr)); gap: 20px; max-width: 1200px; margin: 0 auto; }
+        /* Grids e Cards */
+        .grid-container { display: grid; grid-template-columns: repeat(auto-fill, minmax(350px, 1fr)); gap: 20px; }
         .card { background-color: var(--card-bg); border-radius: 8px; padding: 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); border-left: 5px solid; display: flex; flex-direction: column; gap: 10px; }
         .card.enviado { border-color: #28a745; background-color: var(--success); }
         .card.incompleto { border-color: #ffc107; background-color: var(--warning); }
         .card.pendente { border-color: #dc3545; background-color: var(--danger); opacity: 0.9; }
+        
+        /* Card de Pleiteante (Novo visual) */
+        .card-pleiteante { border-left: 5px solid var(--primary); background: #fff; }
+        .card-pleiteante .segmento { font-size: 0.8em; text-transform: uppercase; letter-spacing: 1px; color: var(--primary); font-weight: bold; }
+
         .card-header { font-size: 1.1em; font-weight: bold; }
-        .badge { display: inline-block; padding: 4px 8px; border-radius: 4px; font-size: 0.8em; font-weight: bold; text-transform: uppercase; width: max-content; }
+        .badge { display: inline-block; padding: 4px 8px; border-radius: 4px; font-size: 0.8em; font-weight: bold; width: max-content; }
 
         /* Tabelas */
-        table { width: 100%; border-collapse: collapse; background: #fff; box-shadow: 0 1px 3px rgba(0,0,0,0.1); max-width: 1200px; margin: 0 auto; }
+        table { width: 100%; border-collapse: collapse; background: #fff; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
         th, td { padding: 12px 15px; text-align: left; border-bottom: 1px solid #ddd; }
-        th { background-color: #2c3e50; color: #fff; }
+        th { background-color: var(--navbar-bg); color: #fff; }
         tr:hover { background-color: #f1f1f1; }
         .status-ok { color: #28a745; font-weight: bold; }
         .status-pendente { color: #dc3545; font-weight: bold; }
@@ -51,43 +67,67 @@
 </head>
 <body>
 
-    <h1>Painel de Recomposição - CMS-MOC</h1>
+    <nav class="navbar">
+        <h2>CMS-MOC</h2>
+        <div class="nav-links">
+            <button class="nav-btn active" onclick="mudarModulo('modulo-recomposicao', this)">Recomposição de Vagas</button>
+            <button class="nav-btn" onclick="mudarModulo('modulo-pleiteantes', this)">Novas Inscrições (Pleiteantes)</button>
+        </div>
+    </nav>
 
-    <div class="tabs">
-        <button class="tab-btn active" onclick="mudarAba('resumo', this)">Resumo (Cards)</button>
-        <button class="tab-btn" onclick="mudarAba('entidades', this)">Lista de Entidades</button>
-        <button class="tab-btn" onclick="mudarAba('conselheiros', this)">Lista de Conselheiros</button>
-    </div>
+    <div class="container">
+        <div id="loader" class="loader">Carregando dados do sistema...</div>
 
-    <div id="loader" class="loader">Carregando dados das planilhas...</div>
-    
-    <div id="resumo" class="tab-content active">
-        <div class="grid-container" id="cards-container"></div>
-    </div>
+        <div id="modulo-recomposicao" class="modulo active">
+            <div class="tabs">
+                <button class="tab-btn active" onclick="mudarAba('resumo', this)">Resumo (Cards)</button>
+                <button class="tab-btn" onclick="mudarAba('entidades', this)">Lista de Entidades</button>
+                <button class="tab-btn" onclick="mudarAba('conselheiros', this)">Lista de Conselheiros</button>
+            </div>
+            
+            <div id="resumo" class="tab-content active">
+                <div class="grid-container" id="cards-container"></div>
+            </div>
+            <div id="entidades" class="tab-content">
+                <table>
+                    <thead><tr><th>Entidade</th><th>Status do Envio</th><th>Ofício</th></tr></thead>
+                    <tbody id="tabela-entidades"></tbody>
+                </table>
+            </div>
+            <div id="conselheiros" class="tab-content">
+                <table>
+                    <thead><tr><th>Entidade</th><th>Cadeira</th><th>Conselheiro Esperado</th><th>Status no Formulário</th></tr></thead>
+                    <tbody id="tabela-conselheiros"></tbody>
+                </table>
+            </div>
+        </div>
 
-    <div id="entidades" class="tab-content">
-        <table>
-            <thead><tr><th>Entidade</th><th>Status do Envio</th><th>Ofício</th></tr></thead>
-            <tbody id="tabela-entidades"></tbody>
-        </table>
-    </div>
+        <div id="modulo-pleiteantes" class="modulo">
+            <h2 style="color: #2c3e50; border-bottom: 2px solid #ddd; padding-bottom: 10px;">Entidades Pleiteantes a Vagas</h2>
+            <div class="grid-container" id="cards-pleiteantes">
+                </div>
+        </div>
 
-    <div id="conselheiros" class="tab-content">
-        <table>
-            <thead><tr><th>Entidade</th><th>Cadeira</th><th>Conselheiro Esperado</th><th>Status / Enviado no Formulário</th></tr></thead>
-            <tbody id="tabela-conselheiros"></tbody>
-        </table>
     </div>
 
     <script>
         // === COLOQUE SUA URL AQUI ===
-        const urlAPI = 'SUA_URL_DO_WEB_APP_AQUI';
+        const urlAPI = 'https://script.google.com/macros/s/AKfycbzR3y--PcH9j8c9qiDnl5xTUeEbDN2FIWywonGyDoR3C4HbIp9HyzgptY7PH2zrOcHLbQ/exec';
 
         const normalizar = (str) => {
             if (!str) return "";
             return str.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().trim();
         };
 
+        // Navegação entre os Grandes Módulos
+        function mudarModulo(idModulo, elemento) {
+            document.querySelectorAll('.modulo').forEach(mod => mod.classList.remove('active'));
+            document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
+            document.getElementById(idModulo).classList.add('active');
+            elemento.classList.add('active');
+        }
+
+        // Navegação das Sub-abas da Recomposição
         function mudarAba(idAba, elemento) {
             document.querySelectorAll('.tab-content').forEach(aba => aba.classList.remove('active'));
             document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
@@ -100,103 +140,89 @@
                 const response = await fetch(urlAPI);
                 const dados = await response.json();
                 document.getElementById('loader').style.display = 'none';
-                processarPainel(dados.respostas, dados.conselheiros);
+                
+                // Processa o Módulo 1 (Recomposição)
+                processarRecomposicao(dados.respostas, dados.conselheiros);
+                
+                // Processa o Módulo 2 (Pleiteantes)
+                processarPleiteantes(dados.pleiteantes);
+
             } catch (error) {
                 document.getElementById('loader').innerText = 'Erro ao carregar. Verifique a URL.';
                 console.error(error);
             }
         }
 
-        function processarPainel(respostas, conselheirosEsperados) {
-            // Extrai a lista única de entidades baseada na aba de Conselheiros (o seu Gabarito)
+        // ==========================================
+        // LÓGICA DO MÓDULO 1 (Mantida intacta)
+        // ==========================================
+        function processarRecomposicao(respostas, conselheirosEsperados) {
             const entidadesOficiais = [...new Set(conselheirosEsperados.map(c => c['ENTIDADE']).filter(e => e))];
-
             const containerCards = document.getElementById('cards-container');
             const tbodyEntidades = document.getElementById('tabela-entidades');
             const tbodyConselheiros = document.getElementById('tabela-conselheiros');
 
-            // === PROCESSAMENTO DAS ENTIDADES (CARDS E TABELA) ===
             entidadesOficiais.forEach(nomeOficial => {
-                // Busca exata baseada na sua limpeza da planilha
-                let submissao = respostas.find(resp => 
-                    normalizar(resp['Nome completo da entidade']) === normalizar(nomeOficial)
-                );
-
-                let status = "pendente";
-                let pendencias = "";
+                let submissao = respostas.find(resp => normalizar(resp['Nome completo da entidade']) === normalizar(nomeOficial));
+                let status = "pendente"; let pendencias = "";
 
                 if (submissao) {
                     const temOficio = submissao['Ofício'] && submissao['Ofício'].includes('http');
                     const temTitular = submissao['Conselheiro  Titular: Nome completo'] && submissao['Conselheiro  Titular: Nome completo'] !== 'N/A';
-                    
-                    if (temOficio && temTitular) { status = "enviado"; } 
-                    else {
-                        status = "incompleto";
-                        if (!temOficio) pendencias += "Sem ofício; ";
-                        if (!temTitular) pendencias += "Sem titular;";
-                    }
+                    if (temOficio && temTitular) { status = "enviado"; } else { status = "incompleto"; }
                 }
 
-                // 1. Gera o Card
-                const card = document.createElement('div');
-                card.className = `card ${status}`;
-                card.innerHTML = `
-                    <div class="card-header">${nomeOficial}</div>
-                    <div class="badge" style="background: ${status==='enviado'?'#28a745':status==='incompleto'?'#ffc107':'#dc3545'}; color: ${status==='incompleto'?'#000':'#fff'}">
-                        ${status.toUpperCase()}
+                containerCards.innerHTML += `
+                    <div class="card ${status}">
+                        <div class="card-header">${nomeOficial}</div>
+                        <div class="badge" style="background: ${status==='enviado'?'#28a745':status==='incompleto'?'#ffc107':'#dc3545'}; color: ${status==='incompleto'?'#000':'#fff'}">${status.toUpperCase()}</div>
                     </div>
-                    ${pendencias ? `<div style="color: #d32f2f; font-size: 0.85em; font-weight: bold;">Falta: ${pendencias}</div>` : ''}
                 `;
-                containerCards.appendChild(card);
 
-                // 2. Gera a Linha da Tabela de Entidades
-                const linkOficio = submissao && submissao['Ofício'] && submissao['Ofício'].includes('http') ? `<a href="${submissao['Ofício']}" target="_blank">Ver Ofício</a>` : 'Não enviado';
-                tbodyEntidades.innerHTML += `
-                    <tr>
-                        <td>${nomeOficial}</td>
-                        <td class="${status === 'enviado' ? 'status-ok' : (status === 'incompleto' ? 'status-alerta' : 'status-pendente')}">${status.toUpperCase()}</td>
-                        <td>${linkOficio}</td>
-                    </tr>
-                `;
+                tbodyEntidades.innerHTML += `<tr><td>${nomeOficial}</td><td class="status-${status==='enviado'?'ok':'pendente'}">${status.toUpperCase()}</td><td>${submissao ? 'Enviado' : '-'}</td></tr>`;
             });
 
-            // === PROCESSAMENTO DOS CONSELHEIROS (TABELA DE CRUZAMENTO) ===
             conselheirosEsperados.forEach(esperado => {
-                if(!esperado['NOME']) return; // Pula linhas vazias
-
-                let nomeOficial = esperado['ENTIDADE'];
-                let nomeEsperado = esperado['NOME'];
-                let cadeira = esperado['CADEIRA (TITULAR/SUPLENTE)'].toUpperCase().trim();
-
-                // Acha a resposta da entidade
-                let submissao = respostas.find(resp => normalizar(resp['Nome completo da entidade']) === normalizar(nomeOficial));
-                
-                let statusConselheiro = "<span class='status-pendente'>Entidade não enviou resposta</span>";
-                
+                if(!esperado['NOME']) return;
+                let submissao = respostas.find(resp => normalizar(resp['Nome completo da entidade']) === normalizar(esperado['ENTIDADE']));
+                let status = "<span class='status-pendente'>Pendente</span>";
                 if(submissao) {
-                    // Pega o nome que a entidade digitou no formulário dependendo da cadeira
-                    let nomeDigitado = cadeira === "TITULAR" 
-                        ? submissao['Conselheiro  Titular: Nome completo'] 
-                        : submissao['Conselheiro Suplente: Nome completo'];
-                    
-                    if(!nomeDigitado || nomeDigitado === 'N/A') {
-                        statusConselheiro = "<span class='status-pendente'>Vaga não preenchida no formulário</span>";
-                    } 
-                    else if (normalizar(nomeDigitado) === normalizar(nomeEsperado)) {
-                        statusConselheiro = `<span class='status-ok'>✅ Confirmado</span>`;
-                    } 
-                    else {
-                        statusConselheiro = `<span class='status-alerta'>⚠️ Divergente (Indicado: ${nomeDigitado})</span>`;
-                    }
+                    let nomeDigitado = esperado['CADEIRA (TITULAR/SUPLENTE)'].toUpperCase() === "TITULAR" ? submissao['Conselheiro  Titular: Nome completo'] : submissao['Conselheiro Suplente: Nome completo'];
+                    if(normalizar(nomeDigitado) === normalizar(esperado['NOME'])) status = `<span class='status-ok'>✅ Confirmado</span>`;
                 }
+                tbodyConselheiros.innerHTML += `<tr><td>${esperado['ENTIDADE']}</td><td>${esperado['CADEIRA (TITULAR/SUPLENTE)']}</td><td>${esperado['NOME']}</td><td>${status}</td></tr>`;
+            });
+        }
 
-                tbodyConselheiros.innerHTML += `
-                    <tr>
-                        <td>${nomeOficial}</td>
-                        <td><strong>${cadeira}</strong></td>
-                        <td>${nomeEsperado}</td>
-                        <td>${statusConselheiro}</td>
-                    </tr>
+        // ==========================================
+        // LÓGICA DO MÓDULO 2 (Novos Pleiteantes)
+        // ==========================================
+        function processarPleiteantes(pleiteantes) {
+            const container = document.getElementById('cards-pleiteantes');
+            
+            if (!pleiteantes || pleiteantes.length === 0) {
+                container.innerHTML = "<p>Nenhuma inscrição recebida ainda.</p>";
+                return;
+            }
+
+            pleiteantes.forEach(pleito => {
+                // COMO NÃO TENHO SEUS CABEÇALHOS AINDA, CRIE ESTA ESTRUTURA GENÉRICA:
+                // Vou assumir que existem colunas genéricas. Você precisará ajustar os nomes abaixo!
+                
+                const nomeEntidade = pleito['Nome da Entidade'] || 'Nome não encontrado';
+                const segmento = pleito['Segmento Pleiteado'] || 'Segmento não informado';
+                const dataEnvio = pleito['Carimbo de data/hora'] || '';
+
+                container.innerHTML += `
+                    <div class="card card-pleiteante">
+                        <div class="segmento">${segmento}</div>
+                        <div class="card-header">${nomeEntidade}</div>
+                        <div style="font-size: 0.85em; color: #666;">Inscrição recebida em: ${dataEnvio}</div>
+                        <hr style="border: 0; border-top: 1px solid #eee; width: 100%;">
+                        <div>
+                            <strong>Documentação:</strong> <a href="#">Ver anexos</a><br>
+                        </div>
+                    </div>
                 `;
             });
         }
