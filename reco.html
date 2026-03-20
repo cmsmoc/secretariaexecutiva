@@ -17,7 +17,7 @@
             --cms-ink:    #111827;
             --cms-muted:  #6B7280;
             --cms-border: #E5E7EB;
-            --cms-danger: #E02020; /* Baseado no red-dot do mockup do guia */
+            --cms-danger: #E02020; 
             
             --font-display: 'Montserrat', sans-serif;
             --font-body:    'Open Sans', sans-serif;
@@ -66,7 +66,6 @@
         .nav-btn:hover { color: var(--cms-white); }
         .nav-btn.active { color: var(--cms-yellow); border-bottom-color: var(--cms-yellow); }
 
-        /* Faixa decorativa Swiss Design */
         .cms-stripe {
             height: 4px;
             background: linear-gradient(to right, #F5C400 33.3%, #1E8A4A 33.3% 66.6%, #1B6CB5 66.6%);
@@ -135,6 +134,14 @@
         .bg-yellow { background: var(--cms-yellow); color: var(--cms-navy); }
         .bg-danger { background: rgba(224, 32, 32, 0.1); color: var(--cms-danger); border: 1px solid rgba(224, 32, 32, 0.2); }
         .text-danger { color: var(--cms-danger); font-size: 13px; font-weight: 600; }
+
+        /* Document Links */
+        .doc-link {
+            display: inline-block; font-size: 11px; margin-right: 6px; margin-bottom: 6px; 
+            padding: 6px 10px; background: var(--cms-off); border: 1px solid var(--cms-border); 
+            border-radius: 4px; color: var(--cms-navy); text-decoration: none; font-weight: 600;
+        }
+        .doc-link:hover { background: #eef2f6; border-color: var(--cms-blue); color: var(--cms-blue); }
 
         /* ── TABELAS OFICIAIS ── */
         .cms-table { width: 100%; border-collapse: collapse; background: var(--cms-white); border-radius: 10px; overflow: hidden; border: 1px solid var(--cms-border); box-shadow: 0 4px 20px rgba(0,0,0,.04); }
@@ -206,12 +213,48 @@
     </div>
 
     <script>
-        // === COLOQUE A URL DO SEU GOOGLE APPS SCRIPT AQUI ===
-        const urlAPI = 'https://script.google.com/macros/s/AKfycbzZTjXBcSn7flByQayOGtIaeCzlqmXaU5rQXL6WeNPqV7Z6vTaxiwbpfzMlU5E2rbEdHA/exec';
+        // =========================================================================
+        // CONFIGURAÇÕES PRINCIPAIS - PREENCHA AQUI!
+        // =========================================================================
+        const urlAPI = 'SUA_URL_DO_WEB_APP_AQUI';
+
+        // O MAPEAMENTO OFICIAL DA ABA "inscritos" FOI INCLUÍDO AQUI
+        const COLUNAS_INSCRITOS = {
+            dataEnvio: 'Carimbo de data/hora',
+            nomeEntidade: 'Nome da Instituição',
+            segmento: 'SEGMENTO PRINCIPAL DE ATUAÇÃO',
+            cnpj: 'CNPJ',
+            presidente: 'Nome Completo do Presidente/Diretor da Instituição',
+            estatuto: 'Estatuto da Instituição',
+            ataFundacao: 'Cópia da Ata de Fundação',
+            ataEleicao: 'Cópia da Ata de Eleição da Última Diretoria',
+            copiaCnpj: 'Cópia do CNPJ',
+            utilidadePublica: 'Cópia do Registro de Utilidade Pública',
+            docsPresidente: 'Cópia do Comprovante de Endereço, Carteira de Identidade e CPF do Presidente da Instituição'
+        };
+        // =========================================================================
 
         const normalizar = (str) => {
             if (!str) return "";
             return str.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().trim();
+        };
+
+        // Formata tanto "17/03/2026 16:02:38" quanto "2026-03-17T19:02:37.848Z"
+        const formatarData = (dataString) => {
+            if (!dataString) return "Data não registrada";
+            
+            if (typeof dataString === 'string' && dataString.includes('/')) {
+                const partes = dataString.split(' ');
+                if (partes[0].includes('/')) return dataString; // Se já vier amigável da planilha
+            }
+
+            try {
+                const data = new Date(dataString);
+                if (isNaN(data.getTime())) return dataString; 
+                return data.toLocaleDateString('pt-BR') + ' às ' + data.toLocaleTimeString('pt-BR', {hour: '2-digit', minute:'2-digit'});
+            } catch (e) {
+                return dataString;
+            }
         };
 
         function mudarModulo(idModulo, elemento) {
@@ -242,9 +285,7 @@
             }
         }
 
-        // ==========================================
-        // LÓGICA DO MÓDULO 1 (Recomposição)
-        // ==========================================
+        // --- LÓGICA DO MÓDULO 1: RECOMPOSIÇÃO ---
         function processarRecomposicao(respostas, conselheirosEsperados) {
             const entidadesOficiais = [...new Set(conselheirosEsperados.map(c => c['ENTIDADE']).filter(e => e))];
             const containerCards = document.getElementById('cards-container');
@@ -263,16 +304,13 @@
                     if (!temTitular) pendencias += "Titular não indicado.";
                 }
 
-                // Gerador de Classes para as Cores Oficiais
                 let bgClass = status === 'enviado' ? 'bg-green' : (status === 'incompleto' ? 'bg-yellow' : 'bg-danger');
                 let textoStatus = status === 'enviado' ? 'Documentação Completa' : (status === 'incompleto' ? 'Dados Incompletos' : 'Aguardando Envio');
 
                 containerCards.innerHTML += `
                     <div class="cms-card ${status}">
                         <div class="card-header">${nomeOficial}</div>
-                        <div>
-                            <span class="cms-badge ${bgClass}">${textoStatus}</span>
-                        </div>
+                        <div><span class="cms-badge ${bgClass}">${textoStatus}</span></div>
                         ${pendencias ? `<div class="text-danger" style="margin-top:8px;">⚠️ ${pendencias}</div>` : ''}
                     </div>
                 `;
@@ -307,9 +345,7 @@
             });
         }
 
-        // ==========================================
-        // LÓGICA DO MÓDULO 2 (Pleiteantes)
-        // ==========================================
+        // --- LÓGICA DO MÓDULO 2: PLEITEANTES (NOVA) ---
         function processarPleiteantes(pleiteantes) {
             const container = document.getElementById('cards-pleiteantes');
             
@@ -318,21 +354,47 @@
                 return;
             }
 
+            const criarLinkDoc = (url, rotulo) => {
+                if (!url) return '';
+                // Como o Google envia links separados por vírgula em upload múltiplo, extrai apenas o primeiro ou trata isso
+                const urlLimpa = url.split(',')[0].trim();
+                return `<a href="${urlLimpa}" target="_blank" class="doc-link">📄 ${rotulo}</a>`;
+            };
+
             pleiteantes.forEach(pleito => {
-                // Adapte estas chaves conforme o cabeçalho exato da sua Aba 3
-                const nomeEntidade = pleito['Nome da Entidade'] || 'Entidade Indefinida';
-                const segmento = pleito['Segmento Pleiteado'] || 'Segmento não informado';
-                const dataEnvio = pleito['Carimbo de data/hora'] || '';
+                const nomeEntidade = pleito[COLUNAS_INSCRITOS.nomeEntidade] || 'Entidade Indefinida';
+                const segmento = pleito[COLUNAS_INSCRITOS.segmento] || 'Segmento não informado';
+                const dataEnvio = formatarData(pleito[COLUNAS_INSCRITOS.dataEnvio]);
+                const cnpj = pleito[COLUNAS_INSCRITOS.cnpj] || 'Não informado';
+                const presidente = pleito[COLUNAS_INSCRITOS.presidente] || 'Não informado';
+
+                // Gera os botões de anexo
+                const anexosHtml = `
+                    ${criarLinkDoc(pleito[COLUNAS_INSCRITOS.estatuto], 'Estatuto')}
+                    ${criarLinkDoc(pleito[COLUNAS_INSCRITOS.ataFundacao], 'Ata de Fundação')}
+                    ${criarLinkDoc(pleito[COLUNAS_INSCRITOS.ataEleicao], 'Ata da Diretoria')}
+                    ${criarLinkDoc(pleito[COLUNAS_INSCRITOS.copiaCnpj], 'CNPJ')}
+                    ${criarLinkDoc(pleito[COLUNAS_INSCRITOS.utilidadePublica], 'Utilidade Pública')}
+                    ${criarLinkDoc(pleito[COLUNAS_INSCRITOS.docsPresidente], 'Docs Presidente')}
+                `;
 
                 container.innerHTML += `
                     <div class="cms-card pleiteante">
                         <div class="section-eyebrow" style="margin-bottom:4px;">${segmento}</div>
                         <div class="card-header">${nomeEntidade}</div>
+                        
                         <div style="font-size: 12px; color: var(--cms-muted); border-bottom: 1px solid var(--cms-border); padding-bottom: 12px; margin-bottom: 12px;">
                             Inscrição recebida em: ${dataEnvio}
                         </div>
+                        
+                        <div style="font-size: 13px; color: var(--cms-ink); line-height: 1.6; margin-bottom: 16px;">
+                            <strong>CNPJ:</strong> ${cnpj}<br>
+                            <strong>Presidência:</strong> ${presidente}
+                        </div>
+                        
                         <div>
-                            <a href="#">Visualizar Processo Completo ↗</a>
+                            <div style="font-family: var(--font-display); font-size: 10px; font-weight: 700; color: var(--cms-blue); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px;">Documentação Anexada:</div>
+                            ${anexosHtml ? anexosHtml : '<span style="font-size: 12px; color: var(--cms-muted);">Nenhum arquivo enviado.</span>'}
                         </div>
                     </div>
                 `;
