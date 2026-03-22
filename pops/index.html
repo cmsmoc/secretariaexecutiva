@@ -1457,6 +1457,412 @@ document.addEventListener('keydown', e => {
    BOOT
 ═══════════════════════════════════════════════════════════ */
 init();
+
+  <!-- ═══════════════════════════════════════════════════════
+     IMPORTADOR DE POPs — cole este bloco dentro do <body>
+     do index.html, logo antes do </body>
+     Após importar e salvar, pode remover este bloco.
+════════════════════════════════════════════════════════ -->
+<script>
+// ─── DADOS DOS POPs (gerado automaticamente) ────────────
+const POPS_SEED = [
+  {
+    "id": "pop01",
+    "num": "POP 01",
+    "title": "Preparação e convocação de reunião plenária",
+    "desc": "Define os passos para organizar e comunicar a realização de reunião ordinária mensal",
+    "category": "Reuniões Plenárias",
+    "responsible": "Secretaria Executiva",
+    "blocks": [
+      {
+        "type": "flowchart",
+        "title": "Fluxo de convocação",
+        "nodes": [
+          { "title": "Definição da pauta", "desc": "O Presidente do Conselho, com apoio da Secretaria Executiva, define os pontos de pauta a partir das demandas das comissões temáticas, pendências da reunião anterior e temas de urgência.", "responsible": "Presidente", "deadline": "7 dias antes", "type": "step" },
+          { "title": "Elaboração do convite/convocação", "desc": "A Secretaria Executiva elabora a convocação formal contendo: data, horário, local, pauta e documentos de apoio.", "responsible": "Secretaria Executiva", "deadline": "6 dias antes", "type": "step" },
+          { "title": "Envio da convocação", "desc": "Enviar por e-mail e grupo de WhatsApp a todos os conselheiros titulares e suplentes. Registrar data e hora do envio em planilha de controle.", "responsible": "Secretaria Executiva", "deadline": "5 dias úteis antes", "type": "step" },
+          { "title": "Preparação da sala e materiais", "desc": "Providenciar lista de presença, cópias de documentos de pauta, equipamento audiovisual e água. Reservar espaço físico.", "responsible": "Secretaria Executiva", "deadline": "Dia anterior", "type": "step" },
+          { "title": "Reunião realizada", "desc": "Abertura pelo Presidente. Verificação de quórum. Início dos trabalhos conforme pauta.", "responsible": "Presidente", "deadline": "", "type": "end" }
+        ]
+      },
+      { "type": "alert", "title": "", "alertType": "info", "content": "A pauta deve ser enviada com antecedência mínima de 5 dias úteis para que os conselheiros possam se preparar adequadamente para os debates." }
+    ]
+  },
+  {
+    "id": "pop02",
+    "num": "POP 02",
+    "title": "Condução e registro da reunião plenária",
+    "desc": "Orientações para o registro durante a reunião e lavratura da ata",
+    "category": "Reuniões Plenárias",
+    "responsible": "Secretaria Executiva",
+    "blocks": [
+      {
+        "type": "steps",
+        "title": "Etapas durante a reunião",
+        "items": [
+          { "title": "Abertura e registro de presença", "desc": "A Secretaria Executiva circula a lista de presença. Verificar quórum mínimo conforme regimento interno. Registrar horário de abertura.", "responsible": "Secretaria Executiva", "deadline": "Início da reunião", "tool": "Lista de presença impressa" },
+          { "title": "Leitura e aprovação da ata anterior", "desc": "A ata da reunião anterior é lida ou disponibilizada previamente para aprovação pelo plenário. Registrar se aprovada com ou sem ressalvas.", "responsible": "Presidente", "deadline": "", "tool": "" },
+          { "title": "Registro dos debates e deliberações", "desc": "A Secretaria Executiva registra em tempo real os principais pontos debatidos, moções apresentadas, votações realizadas (sim/não/abstenções) e decisões aprovadas.", "responsible": "Secretaria Executiva", "deadline": "", "tool": "Editor de texto / notebook" },
+          { "title": "Encerramento e assinatura de presença", "desc": "Registrar horário de encerramento. Confirmar que todos os presentes assinaram a lista de presença.", "responsible": "Secretaria Executiva", "deadline": "Encerramento", "tool": "" }
+        ]
+      },
+      { "type": "alert", "title": "", "alertType": "warn", "content": "Se não houver quórum, a sessão deve ser registrada como prejudicada e nova convocação emitida em até 5 dias úteis." }
+    ]
+  },
+  {
+    "id": "pop03",
+    "num": "POP 03",
+    "title": "Elaboração, aprovação e arquivamento de ata",
+    "desc": "Procedimento para formalização do registro das reuniões plenárias",
+    "category": "Reuniões Plenárias",
+    "responsible": "Secretaria Executiva",
+    "blocks": [
+      {
+        "type": "flowchart",
+        "title": "Fluxo da ata — do rascunho ao arquivo",
+        "nodes": [
+          { "title": "Elaboração da ata", "desc": "A Secretaria Executiva redige a ata com base nas anotações e, quando disponível, gravação de áudio da reunião.", "responsible": "Secretaria Executiva", "deadline": "Até 5 dias úteis após", "type": "step" },
+          { "title": "Revisão pelo Presidente", "desc": "O Presidente revisa o conteúdo e sugere correções, se necessário.", "responsible": "Presidente", "deadline": "2 dias úteis", "type": "step" },
+          { "title": "Envio prévio aos conselheiros", "desc": "A ata é enviada por e-mail e WhatsApp com antecedência mínima de 3 dias antes da próxima plenária.", "responsible": "Secretaria Executiva", "deadline": "3 dias antes da próxima reunião", "type": "step" },
+          { "title": "Ata aprovada sem ressalvas?", "desc": "O plenário vota pela aprovação da ata na reunião seguinte. Se houver ressalvas, a Secretaria corrige e reapresenta.", "responsible": "Plenário", "deadline": "Próxima plenária", "type": "decision" },
+          { "title": "Assinatura e arquivamento", "desc": "Presidente e Secretário Executivo assinam o original. A ata digitalizada é salva no Google Drive: pasta Atas / [Ano]. Nomenclatura: ATA_[Nº]_[Mês]_[Ano].pdf", "responsible": "Secretaria Executiva", "deadline": "Até 2 dias após aprovação", "type": "end" }
+        ]
+      },
+      { "type": "alert", "title": "", "alertType": "success", "content": "Numerar as atas sequencialmente por ano (ex.: Ata nº 01/2025) e manter cópia física impressa em arquivo físico no conselho." },
+      {
+        "type": "folder",
+        "title": "Nomenclatura padrão de arquivos",
+        "items": [
+          { "name": "CMS-Montes Claros/", "depth": 0, "isFile": false },
+          { "name": "[Ano]/", "depth": 1, "isFile": false },
+          { "name": "Atas/", "depth": 2, "isFile": false },
+          { "name": "ATA_01_JAN_2025.pdf", "depth": 3, "isFile": true },
+          { "name": "ATA_02_FEV_2025.pdf", "depth": 3, "isFile": true }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "pop05",
+    "num": "POP 05",
+    "title": "Elaboração e tramitação de ofícios e moções",
+    "desc": "Documentos produzidos com maior frequência pela Secretaria Executiva",
+    "category": "Gestão Documental",
+    "responsible": "Secretaria Executiva",
+    "blocks": [
+      {
+        "type": "table",
+        "title": "Tipos de documentos e responsabilidades",
+        "headers": ["Documento", "Quem elabora", "Quem assina", "Arquivo no Drive"],
+        "rows": [
+          ["Ofício", "Secretaria Executiva", "Presidente", "Drive / Ofícios"],
+          ["Moção", "Secretaria Executiva", "Presidente + Mesa Diretora", "Drive / Moções"],
+          ["Requerimento", "Secretaria Executiva", "Presidente", "Drive / Requerimentos"]
+        ]
+      },
+      {
+        "type": "flowchart",
+        "title": "Fluxo de elaboração e tramitação",
+        "nodes": [
+          { "title": "Identificação da necessidade", "desc": "A demanda surge de deliberação plenária, solicitação de comissão ou necessidade administrativa.", "responsible": "", "deadline": "", "type": "step" },
+          { "title": "Elaboração do documento", "desc": "Secretaria usa modelo padronizado. Numeração: OF. nº [Nº]/[Ano].", "responsible": "Secretaria Executiva", "deadline": "", "type": "step" },
+          { "title": "Revisão aprovada?", "desc": "O Presidente revisa. Se necessário, devolve para correção. Após aprovação, assina.", "responsible": "Presidente", "deadline": "", "type": "decision" },
+          { "title": "Registro, envio e arquivamento", "desc": "Registrar na planilha de controle. Enviar ao destinatário. Arquivar no Drive.", "responsible": "Secretaria Executiva", "deadline": "", "type": "end" }
+        ]
+      },
+      { "type": "alert", "title": "", "alertType": "info", "content": "Manter numeração sequencial por ano e por tipo. Ex.: OF. 01/2025, OF. 02/2025 — reiniciar a contagem em janeiro de cada ano." }
+    ]
+  },
+  {
+    "id": "pop06",
+    "num": "POP 06",
+    "title": "Organização e nomenclatura no Google Drive",
+    "desc": "Estrutura padrão de pastas para arquivamento digital de todos os documentos do Conselho",
+    "category": "Gestão Documental",
+    "responsible": "Secretaria Executiva",
+    "blocks": [
+      {
+        "type": "folder",
+        "title": "Estrutura completa de pastas — Google Drive",
+        "items": [
+          { "name": "CMS-Montes Claros/", "depth": 0, "isFile": false },
+          { "name": "[Ano]/  (ex: 2025/)", "depth": 1, "isFile": false },
+          { "name": "Atas/", "depth": 2, "isFile": false },
+          { "name": "Ofícios/", "depth": 2, "isFile": false },
+          { "name": "Moções e Requerimentos/", "depth": 2, "isFile": false },
+          { "name": "Pautas e Convocações/", "depth": 2, "isFile": false },
+          { "name": "Listas de Presença/", "depth": 2, "isFile": false },
+          { "name": "Resoluções/", "depth": 2, "isFile": false },
+          { "name": "Correspondências Recebidas/", "depth": 2, "isFile": false },
+          { "name": "Controle de Frequência/", "depth": 2, "isFile": false },
+          { "name": "Conselheiros (Mandato [Ano-Ano])/", "depth": 1, "isFile": false },
+          { "name": "Fichas Cadastrais/", "depth": 2, "isFile": false },
+          { "name": "Termos de Posse/", "depth": 2, "isFile": false },
+          { "name": "Comissões Temáticas/", "depth": 1, "isFile": false },
+          { "name": "[Nome da Comissão]/", "depth": 2, "isFile": false },
+          { "name": "Atas de Comissão/", "depth": 3, "isFile": false },
+          { "name": "Pareceres/", "depth": 3, "isFile": false }
+        ]
+      },
+      {
+        "type": "table",
+        "title": "Padrão de nomenclatura de arquivos",
+        "headers": ["Tipo", "Formato do nome", "Exemplo"],
+        "rows": [
+          ["Ata", "ATA_[Nº]_[Mês]_[Ano].pdf", "ATA_03_MAR_2025.pdf"],
+          ["Ofício", "OF_[Nº]_[Mês]_[Ano].pdf", "OF_12_JUN_2025.pdf"],
+          ["Moção", "MOC_[Nº]_[Mês]_[Ano].pdf", "MOC_02_ABR_2025.pdf"],
+          ["Convocação", "CONV_[Mês]_[Ano].pdf", "CONV_MAI_2025.pdf"],
+          ["Lista de Presença", "PRES_[Mês]_[Ano].pdf", "PRES_MAI_2025.pdf"],
+          ["Resolução", "RES_[Nº]_[Ano].pdf", "RES_07_2025.pdf"]
+        ]
+      },
+      { "type": "alert", "title": "", "alertType": "info", "content": "Usar sempre letras maiúsculas e underscores. Nunca usar espaços, acentos ou caracteres especiais nos nomes de arquivos." }
+    ]
+  },
+  {
+    "id": "pop08",
+    "num": "POP 08",
+    "title": "Controle de correspondências enviadas e recebidas",
+    "desc": "Registro sistemático para rastreabilidade e comprovação de comunicações",
+    "category": "Correspondências",
+    "responsible": "Secretaria Executiva",
+    "blocks": [
+      {
+        "type": "steps",
+        "title": "Correspondências enviadas",
+        "items": [
+          { "title": "Elaborar e assinar o documento", "desc": "Conforme POP 05 — elaboração, revisão e assinatura pelo Presidente.", "responsible": "Secretaria Executiva + Presidente", "deadline": "", "tool": "" },
+          { "title": "Registrar na planilha de controle", "desc": "Preencher: número, data, destinatário, assunto e meio de envio.", "responsible": "Secretaria Executiva", "deadline": "Mesmo dia do envio", "tool": "Planilha Google Drive" },
+          { "title": "Enviar e arquivar comprovante", "desc": "Guardar print de confirmação ou AR no Drive.", "responsible": "Secretaria Executiva", "deadline": "", "tool": "E-mail / Correios" }
+        ]
+      },
+      {
+        "type": "steps",
+        "title": "Correspondências recebidas",
+        "items": [
+          { "title": "Receber e registrar", "desc": "Anotar na planilha: data de recebimento, remetente e assunto.", "responsible": "Secretaria Executiva", "deadline": "Mesmo dia", "tool": "Planilha de controle" },
+          { "title": "Digitalizar e arquivar", "desc": "Escanear o documento físico e salvar no Drive: Correspondências Recebidas / [Ano].", "responsible": "Secretaria Executiva", "deadline": "", "tool": "Google Drive" },
+          { "title": "Encaminhar ao Presidente", "desc": "Comunicar o Presidente para ciência e decisão de encaminhamento.", "responsible": "Secretaria Executiva", "deadline": "Mesmo dia", "tool": "WhatsApp" }
+        ]
+      },
+      {
+        "type": "table",
+        "title": "Campos obrigatórios da planilha de controle",
+        "headers": ["Campo", "Exemplo", "Obrigatório?"],
+        "rows": [
+          ["Nº do documento", "OF. 15/2025", "Sim"],
+          ["Data", "10/06/2025", "Sim"],
+          ["Remetente / Destinatário", "Secretaria Municipal de Saúde", "Sim"],
+          ["Assunto", "Solicitação de relatório financeiro", "Sim"],
+          ["Meio de envio/recebimento", "E-mail / Físico / WhatsApp", "Sim"],
+          ["Status", "Enviado / Aguardando resposta / Respondido", "Sim"],
+          ["Link no Drive", "https://drive.google.com/...", "Recomendado"]
+        ]
+      }
+    ]
+  },
+  {
+    "id": "pop10",
+    "num": "POP 10",
+    "title": "Processo de renovação de mandato e convocação de entidades",
+    "desc": "Mandato de 3 anos — início do processo com 90 dias de antecedência",
+    "category": "Posse e Renovação",
+    "responsible": "Secretaria Executiva",
+    "blocks": [
+      {
+        "type": "flowchart",
+        "title": "Fluxo de renovação e posse",
+        "nodes": [
+          { "title": "Alerta de vencimento de mandato", "desc": "Secretaria monitora o calendário e emite alerta interno 90 dias antes.", "responsible": "Secretaria Executiva", "deadline": "90 dias antes", "type": "step" },
+          { "title": "Envio de ofício às entidades", "desc": "Solicitar indicação formal de titular e suplente. Publicar no D.O. e WhatsApp.", "responsible": "Secretaria Executiva", "deadline": "60 dias antes", "type": "step" },
+          { "title": "Recebimento das indicações", "desc": "Registrar indicações. Notificar entidades omissas com lembrete.", "responsible": "Secretaria Executiva", "deadline": "Prazo: 30 dias para resposta", "type": "step" },
+          { "title": "Todas as indicações recebidas?", "desc": "Se houver omissas após o prazo, comunicar ao Presidente para providências.", "responsible": "Presidente", "deadline": "", "type": "decision" },
+          { "title": "Coleta da ficha cadastral", "desc": "Solicitar Ficha de Informações Pessoais a cada novo conselheiro.", "responsible": "Secretaria Executiva", "deadline": "30 dias antes da posse", "type": "step" },
+          { "title": "Publicação no Diário Oficial", "desc": "Publicar a nova composição do Conselho no D.O. do Município.", "responsible": "Secretaria Executiva", "deadline": "15 dias antes da posse", "type": "step" },
+          { "title": "Cerimônia de posse", "desc": "Cerimônia com assinatura do Termo de Posse. Arquivar termos no Drive.", "responsible": "Secretaria Executiva + Presidente", "deadline": "Data programada", "type": "end" }
+        ]
+      },
+      {
+        "type": "table",
+        "title": "Documentos exigidos na posse",
+        "headers": ["Documento", "Quem fornece", "Obrigatório?"],
+        "rows": [
+          ["Ficha de informações pessoais", "Novo conselheiro", "Sim"],
+          ["Indicação formal da entidade", "Entidade representada", "Sim"],
+          ["Termo de Posse assinado", "Conselheiro na cerimônia", "Sim"],
+          ["Publicação no Diário Oficial", "Secretaria Executiva", "Sim"]
+        ]
+      },
+      { "type": "alert", "title": "", "alertType": "warn", "content": "Iniciar o processo com mínimo de 90 dias de antecedência. Processos tardios podem resultar em interrupção do mandato sem sucessor empossado." }
+    ]
+  },
+  {
+    "id": "pop13",
+    "num": "POP 13",
+    "title": "Controle de frequência dos conselheiros",
+    "desc": "Monitoramento de presença nas reuniões plenárias e comissões temáticas",
+    "category": "Controle e Monitoramento",
+    "responsible": "Secretaria Executiva",
+    "blocks": [
+      {
+        "type": "steps",
+        "title": "Procedimento de controle de frequência",
+        "items": [
+          { "title": "Registro de presença em cada reunião", "desc": "Coletar lista assinada. Registrar: nome, segmento, titular/suplente e justificativa de ausência.", "responsible": "Secretaria Executiva", "deadline": "Durante a reunião", "tool": "Lista de presença + Planilha" },
+          { "title": "Atualização mensal da planilha", "desc": "Atualizar o percentual de presença acumulada de cada conselheiro no ano.", "responsible": "Secretaria Executiva", "deadline": "Até 3 dias após a reunião", "tool": "Planilha Google Drive" },
+          { "title": "Verificação de ausências excessivas", "desc": "Verificar mensalmente se algum conselheiro atingiu o limite de ausências injustificadas do Regimento.", "responsible": "Secretaria Executiva", "deadline": "Mensal", "tool": "" },
+          { "title": "Comunicação ao Presidente e à entidade", "desc": "Se atingir o limite, comunicar o Presidente e a entidade representante para providências.", "responsible": "Secretaria Executiva", "deadline": "Imediato", "tool": "Ofício à entidade" }
+        ]
+      },
+      {
+        "type": "table",
+        "title": "Campos da planilha de frequência",
+        "headers": ["Campo", "Tipo", "Observação"],
+        "rows": [
+          ["Nome do conselheiro", "Texto", ""],
+          ["Segmento", "Governo / Soc. Civil", ""],
+          ["Entidade representada", "Texto", ""],
+          ["Condição", "Titular / Suplente", ""],
+          ["Presença por reunião", "S / N / J", "Uma coluna por reunião"],
+          ["Total de presenças no ano", "Número", "Calculado automaticamente"],
+          ["% de presença", "Percentual", "Calculado automaticamente"]
+        ]
+      },
+      { "type": "alert", "title": "", "alertType": "warn", "content": "Verifique no Regimento Interno do CMS/MC o número máximo de faltas injustificadas permitidas antes de acionar o processo de substituição." }
+    ]
+  },
+  {
+    "id": "pop14",
+    "num": "POP 14",
+    "title": "Monitoramento de resoluções aprovadas",
+    "desc": "Acompanhamento do cumprimento das deliberações do Conselho pelos órgãos responsáveis",
+    "category": "Controle e Monitoramento",
+    "responsible": "Secretaria Executiva",
+    "blocks": [
+      {
+        "type": "flowchart",
+        "title": "Fluxo de monitoramento de resoluções",
+        "nodes": [
+          { "title": "Aprovação da resolução em plenária", "desc": "Resolução aprovada. Secretaria numera, redige e formaliza o documento.", "responsible": "Secretaria Executiva", "deadline": "Até 3 dias úteis", "type": "step" },
+          { "title": "Registro no monitoramento", "desc": "Inserir na planilha: número, data, ementa, órgão responsável, prazo e status: Pendente.", "responsible": "Secretaria Executiva", "deadline": "", "type": "step" },
+          { "title": "Encaminhamento ao órgão competente", "desc": "Enviar cópia com ofício de encaminhamento. Registrar data.", "responsible": "Secretaria Executiva", "deadline": "Até 5 dias úteis", "type": "step" },
+          { "title": "Acompanhamento periódico", "desc": "Incluir relatório de monitoramento como ponto fixo de pauta. Atualizar status mensalmente.", "responsible": "Secretaria Executiva", "deadline": "Mensal", "type": "step" },
+          { "title": "Resolução cumprida?", "desc": "Verificar se a ação foi concluída e comprovada.", "responsible": "Plenário", "deadline": "", "type": "decision" },
+          { "title": "Marcar como cumprida e arquivar", "desc": "Atualizar status na planilha. Arquivar comprovantes no Drive.", "responsible": "Secretaria Executiva", "deadline": "", "type": "end" }
+        ]
+      },
+      {
+        "type": "table",
+        "title": "Status de monitoramento",
+        "headers": ["Status", "Significado", "Ação"],
+        "rows": [
+          ["🟡 Pendente", "Resolução aprovada, aguardando execução", "Aguardar e monitorar"],
+          ["🔵 Em execução", "Órgão iniciou as ações", "Registrar e acompanhar"],
+          ["🟢 Cumprida", "Ação concluída e verificada", "Arquivar e encerrar"],
+          ["🔴 Descumprida", "Prazo vencido sem execução", "Levar ao Plenário"]
+        ]
+      },
+      { "type": "alert", "title": "", "alertType": "danger", "content": "Resoluções com status Descumprida devem ser levadas imediatamente ao Plenário. O Conselho pode encaminhar ao Ministério Público ou Câmara Municipal." }
+    ]
+  },
+  {
+    "id": "pop15",
+    "num": "POP 15",
+    "title": "Gestão de denúncias e demandas da sociedade",
+    "desc": "Fluxo de recebimento, triagem e encaminhamento de demandas externas ao Conselho",
+    "category": "Controle e Monitoramento",
+    "responsible": "Secretaria Executiva",
+    "blocks": [
+      {
+        "type": "flowchart",
+        "title": "Fluxo de gestão de demandas",
+        "nodes": [
+          { "title": "Recebimento da demanda", "desc": "Demandas chegam por e-mail, ofício, presencialmente ou WhatsApp. Secretaria centraliza o recebimento.", "responsible": "Secretaria Executiva", "deadline": "", "type": "step" },
+          { "title": "Triagem e classificação", "desc": "Classificar: denúncia, solicitação de informação, reclamação ou sugestão de pauta. Verificar competência.", "responsible": "Secretaria Executiva", "deadline": "Até 2 dias úteis", "type": "step" },
+          { "title": "É de competência do Conselho?", "desc": "Se não, orientar o cidadão e encaminhar ao órgão correto.", "responsible": "Presidente", "deadline": "", "type": "decision" },
+          { "title": "Encaminhamento interno", "desc": "Incluir na pauta, encaminhar à comissão ou ao órgão responsável com ofício.", "responsible": "Presidente", "deadline": "", "type": "step" },
+          { "title": "Resposta ao demandante", "desc": "Comunicar o cidadão sobre o encaminhamento dado. Registrar na planilha.", "responsible": "Secretaria Executiva", "deadline": "15 dias úteis", "type": "end" }
+        ]
+      },
+      {
+        "type": "table",
+        "title": "Classificação de demandas",
+        "headers": ["Tipo", "Descrição", "Encaminhamento padrão"],
+        "rows": [
+          ["Denúncia", "Irregularidade em serviço de saúde", "Plenário + comissão competente"],
+          ["Reclamação", "Insatisfação com serviço público de saúde", "Comissão temática"],
+          ["Solicitação de informação", "Pedido de dados ou documentos", "Secretaria Executiva responde"],
+          ["Sugestão de pauta", "Tema para discussão em plenária", "Incluir na próxima pauta"],
+          ["Fora de competência", "Não é atribuição do Conselho", "Orientar e encaminhar ao órgão correto"]
+        ]
+      },
+      { "type": "alert", "title": "", "alertType": "info", "content": "Toda demanda recebida deve ser registrada, independentemente da natureza. O cidadão sempre deve receber resposta de encaminhamento em até 15 dias úteis." }
+    ]
+  }
+];
+
+// ─── FUNÇÃO DE IMPORTAÇÃO ────────────────────────────────
+async function importarPOPs() {
+  const btn = document.getElementById('importBtn');
+  const ja  = pops.length;
+
+  if (ja > 0) {
+    const ok = confirm(
+      `Atenção: já existem ${ja} POP(s) carregados.\n\n` +
+      `Escolha:\n` +
+      `• OK → SUBSTITUIR tudo pelos 10 POPs do manual\n` +
+      `• Cancelar → MESCLAR (adiciona apenas os que não existem)`
+    );
+    if (ok) {
+      // substitui tudo
+      pops = JSON.parse(JSON.stringify(POPS_SEED));
+    } else {
+      // mescla: só adiciona IDs que ainda não existem
+      const ids = new Set(pops.map(p => p.id));
+      const novos = POPS_SEED.filter(p => !ids.has(p.id));
+      if (novos.length === 0) {
+        alert('Nenhum POP novo para adicionar — todos já estão carregados.');
+        return;
+      }
+      pops = [...pops, ...novos];
+    }
+  } else {
+    pops = JSON.parse(JSON.stringify(POPS_SEED));
+  }
+
+  renderSidebar();
+  markDirty();
+
+  btn.textContent = `✓ ${pops.length} POPs importados`;
+  btn.style.background = '#1E8A4A';
+  btn.disabled = true;
+
+  toast(`${pops.length} POPs importados! Clique em 💾 Salvar para gravar na planilha.`, 'success');
+
+  // auto-seleciona o primeiro
+  if (pops.length > 0) selectPOP(pops[0].id);
+
+  // salva automaticamente após 1s
+  setTimeout(() => saveAll(), 1200);
+}
+
+// ─── INJETA BOTÃO DE IMPORTAÇÃO NA TOPBAR ────────────────
+document.addEventListener('DOMContentLoaded', () => {
+  // aguarda a topbar existir
+  const inject = () => {
+    const actions = document.querySelector('.topbar-actions');
+    if (!actions) { setTimeout(inject, 200); return; }
+    const btn = document.createElement('button');
+    btn.id = 'importBtn';
+    btn.className = 'btn btn-ghost btn-sm';
+    btn.textContent = '📥 Importar POPs do Manual';
+    btn.onclick = importarPOPs;
+    // insere antes do primeiro botão
+    actions.insertBefore(btn, actions.firstChild);
+  };
+  inject();
+});
 </script>
 </body>
 </html>
