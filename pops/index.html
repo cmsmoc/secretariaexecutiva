@@ -1,0 +1,1462 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>POPs — Secretaria Executiva · CMS Montes Claros</title>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;900&family=Open+Sans:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+/* ─── TOKENS ──────────────────────────────────────────────── */
+:root {
+  --blue:   #1B6CB5;
+  --navy:   #0D2E5A;
+  --green:  #1E8A4A;
+  --yellow: #F5C400;
+  --white:  #FFFFFF;
+  --off:    #F7F8FA;
+  --ink:    #111827;
+  --muted:  #6B7280;
+  --border: #E5E7EB;
+  --danger: #DC2626;
+  --r-sm:   6px;
+  --r-md:   10px;
+  --r-lg:   14px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Open Sans',sans-serif;background:var(--off);color:var(--ink);min-height:100vh}
+
+/* ─── TOPBAR ─────────────────────────────────────────────── */
+.topbar{
+  background:var(--navy);height:56px;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 32px;position:sticky;top:0;z-index:300;
+  border-bottom:3px solid var(--yellow);
+}
+.brand{font-family:'Montserrat',sans-serif;font-weight:900;font-size:13px;
+  letter-spacing:2px;text-transform:uppercase;color:#fff}
+.brand span{color:var(--yellow)}
+.topbar-actions{display:flex;align-items:center;gap:12px}
+.btn{
+  font-family:'Montserrat',sans-serif;font-size:11px;font-weight:700;
+  letter-spacing:1.5px;text-transform:uppercase;padding:8px 18px;
+  border-radius:var(--r-sm);border:none;cursor:pointer;transition:opacity .15s,transform .1s;
+  display:inline-flex;align-items:center;gap:6px
+}
+.btn:hover{opacity:.85}.btn:active{transform:scale(.97)}
+.btn-yellow{background:var(--yellow);color:var(--navy)}
+.btn-blue{background:var(--blue);color:#fff}
+.btn-navy{background:var(--navy);color:#fff;border:1px solid rgba(255,255,255,.2)}
+.btn-outline{background:transparent;border:1.5px solid var(--blue);color:var(--blue)}
+.btn-ghost{background:transparent;border:1px solid rgba(255,255,255,.25);color:rgba(255,255,255,.8)}
+.btn-danger{background:var(--danger);color:#fff}
+.btn-sm{padding:5px 12px;font-size:10px}
+.btn-icon{padding:7px;border-radius:var(--r-sm);background:transparent;border:1px solid var(--border);color:var(--muted);cursor:pointer;transition:all .15s;font-size:14px}
+.btn-icon:hover{background:var(--border);color:var(--ink)}
+
+/* ─── LAYOUT ─────────────────────────────────────────────── */
+.layout{display:flex;height:calc(100vh - 56px)}
+
+/* ─── SIDEBAR ────────────────────────────────────────────── */
+.sidebar{
+  width:280px;min-width:280px;background:#fff;
+  border-right:1px solid var(--border);
+  display:flex;flex-direction:column;overflow:hidden
+}
+.sidebar-head{
+  padding:20px 20px 16px;border-bottom:1px solid var(--border)
+}
+.sidebar-head h2{font-family:'Montserrat',sans-serif;font-size:11px;font-weight:700;
+  letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:12px}
+.pop-list{flex:1;overflow-y:auto;padding:8px}
+.pop-item{
+  display:flex;align-items:center;gap:10px;padding:10px 12px;
+  border-radius:var(--r-md);cursor:pointer;transition:background .12s;
+  border:1px solid transparent;margin-bottom:4px
+}
+.pop-item:hover{background:var(--off)}
+.pop-item.active{background:#EFF6FF;border-color:#BFDBFE}
+.pop-num{
+  min-width:36px;height:36px;border-radius:var(--r-sm);
+  background:var(--navy);color:#fff;
+  font-family:'Montserrat',sans-serif;font-size:10px;font-weight:700;
+  display:flex;align-items:center;justify-content:center;flex-shrink:0
+}
+.pop-item.active .pop-num{background:var(--blue)}
+.pop-info{flex:1;min-width:0}
+.pop-info-title{font-size:13px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pop-info-cat{font-size:11px;color:var(--muted);margin-top:2px}
+.pop-drag{color:var(--border);cursor:grab;font-size:16px;user-select:none}
+.pop-drag:hover{color:var(--muted)}
+
+.sidebar-footer{padding:12px 16px;border-top:1px solid var(--border)}
+
+/* ─── MAIN ───────────────────────────────────────────────── */
+.main{flex:1;overflow-y:auto;display:flex;flex-direction:column}
+
+/* ─── EMPTY STATE ────────────────────────────────────────── */
+.empty{
+  flex:1;display:flex;flex-direction:column;align-items:center;
+  justify-content:center;gap:16px;padding:48px;text-align:center
+}
+.empty-icon{font-size:48px;opacity:.25}
+.empty h3{font-family:'Montserrat',sans-serif;font-size:20px;font-weight:700;color:var(--navy)}
+.empty p{color:var(--muted);max-width:380px;font-size:14px;line-height:1.7}
+
+/* ─── EDITOR HEADER ──────────────────────────────────────── */
+.editor-header{
+  background:#fff;border-bottom:1px solid var(--border);
+  padding:20px 32px;display:flex;align-items:flex-start;gap:16px
+}
+.editor-header-left{flex:1}
+.pop-badge{
+  display:inline-flex;align-items:center;gap:6px;
+  font-family:'Montserrat',sans-serif;font-size:10px;font-weight:700;
+  letter-spacing:1.5px;text-transform:uppercase;
+  background:var(--navy);color:#fff;
+  padding:3px 10px;border-radius:4px;margin-bottom:10px
+}
+.editor-title-input{
+  font-family:'Montserrat',sans-serif;font-size:22px;font-weight:900;
+  color:var(--navy);border:none;background:transparent;width:100%;
+  outline:none;letter-spacing:-.5px
+}
+.editor-title-input:focus{border-bottom:2px solid var(--blue)}
+.editor-desc-input{
+  font-size:13px;color:var(--muted);border:none;background:transparent;
+  width:100%;outline:none;margin-top:6px
+}
+.editor-desc-input:focus{border-bottom:1px solid var(--border)}
+.editor-meta{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap}
+.meta-tag{
+  font-size:11px;font-weight:600;padding:3px 10px;border-radius:4px;
+  background:var(--off);color:var(--muted);border:1px solid var(--border);
+  cursor:pointer;transition:all .12s
+}
+.meta-tag:hover{border-color:var(--blue);color:var(--blue)}
+
+/* ─── EDITOR BODY ────────────────────────────────────────── */
+.editor-body{flex:1;padding:28px 32px}
+.blocks-list{display:flex;flex-direction:column;gap:16px}
+
+/* ─── BLOCK ──────────────────────────────────────────────── */
+.block{
+  background:#fff;border:1px solid var(--border);
+  border-radius:var(--r-lg);overflow:hidden;
+  transition:box-shadow .15s,border-color .15s
+}
+.block:hover{box-shadow:0 2px 12px rgba(0,0,0,.06)}
+.block.dragging{opacity:.5;border-style:dashed}
+.block.drag-over{border-color:var(--blue);box-shadow:0 0 0 2px #BFDBFE}
+
+.block-header{
+  display:flex;align-items:center;gap:10px;
+  padding:12px 16px;background:var(--off);border-bottom:1px solid var(--border)
+}
+.block-drag-handle{color:var(--border);cursor:grab;font-size:16px;user-select:none}
+.block-drag-handle:hover{color:var(--muted)}
+.block-type-badge{
+  font-family:'Montserrat',sans-serif;font-size:9px;font-weight:700;
+  letter-spacing:1.5px;text-transform:uppercase;padding:3px 8px;border-radius:4px
+}
+.type-flowchart{background:#DBEAFE;color:#1E40AF}
+.type-steps{background:#D1FAE5;color:#065F46}
+.type-table{background:#FEF3C7;color:#92400E}
+.type-folder{background:#EDE9FE;color:#4C1D95}
+.type-text{background:#F1F5F9;color:#475569}
+.type-alert{background:#FEE2E2;color:#991B1B}
+
+.block-title-input{
+  flex:1;font-weight:600;font-size:14px;border:none;background:transparent;outline:none;
+}
+.block-title-input:focus{border-bottom:1px solid var(--border)}
+.block-actions{display:flex;gap:4px;margin-left:auto}
+.block-body{padding:16px}
+
+/* ─── FLOWCHART EDITOR ───────────────────────────────────── */
+.flowchart-nodes{display:flex;flex-direction:column;gap:0}
+.flow-node{
+  display:flex;align-items:stretch;gap:0
+}
+.flow-node-connector{
+  display:flex;flex-direction:column;align-items:center;
+  width:40px;flex-shrink:0
+}
+.flow-node-dot{
+  width:12px;height:12px;border-radius:50%;background:var(--blue);
+  flex-shrink:0;margin-top:16px
+}
+.flow-node-line{flex:1;width:2px;background:var(--border);min-height:16px}
+.flow-node-card{
+  flex:1;border:1px solid var(--border);border-radius:var(--r-md);
+  padding:12px 14px;margin:4px 0;background:#fff;
+  transition:border-color .12s
+}
+.flow-node-card:hover{border-color:var(--blue)}
+.flow-node-fields{display:grid;gap:8px}
+.flow-field{display:flex;flex-direction:column;gap:3px}
+.flow-field label{font-size:10px;font-weight:700;text-transform:uppercase;
+  letter-spacing:1px;color:var(--muted)}
+.flow-field input,.flow-field textarea,.flow-field select{
+  font-family:'Open Sans',sans-serif;font-size:13px;
+  border:1px solid var(--border);border-radius:var(--r-sm);
+  padding:6px 10px;outline:none;background:#fff;color:var(--ink);
+  transition:border-color .12s;width:100%;resize:vertical
+}
+.flow-field input:focus,.flow-field textarea:focus,.flow-field select:focus{
+  border-color:var(--blue);box-shadow:0 0 0 2px #DBEAFE
+}
+.flow-node-meta{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:8px}
+.flow-node-actions{
+  display:flex;align-items:flex-start;gap:4px;
+  padding:4px 0 0 8px;flex-shrink:0
+}
+.flow-decision{
+  border-left:3px solid var(--yellow) !important;background:#FFFBEB !important
+}
+.flow-end{
+  border-left:3px solid var(--green) !important;background:#ECFDF5 !important
+}
+
+/* ─── STEPS EDITOR ───────────────────────────────────────── */
+.steps-list{display:flex;flex-direction:column;gap:8px}
+.step-item{
+  display:flex;align-items:flex-start;gap:12px;
+  padding:12px;border:1px solid var(--border);border-radius:var(--r-md);
+  background:#fff
+}
+.step-num{
+  min-width:28px;height:28px;border-radius:var(--r-sm);
+  background:var(--navy);color:#fff;
+  font-family:'Montserrat',sans-serif;font-size:11px;font-weight:700;
+  display:flex;align-items:center;justify-content:center;flex-shrink:0
+}
+.step-fields{flex:1;display:grid;gap:6px}
+.step-inline{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+
+/* ─── TABLE EDITOR ───────────────────────────────────────── */
+.table-editor-wrap{overflow-x:auto}
+.table-editor{width:100%;border-collapse:collapse;font-size:13px}
+.table-editor th,.table-editor td{
+  border:1px solid var(--border);padding:0
+}
+.table-editor th{background:var(--navy);color:#fff}
+.table-editor th input{
+  background:transparent;color:#fff;border:none;padding:8px 10px;
+  font-weight:600;font-size:13px;outline:none;width:100%
+}
+.table-editor td input{
+  border:none;padding:8px 10px;outline:none;width:100%;
+  font-size:13px;background:transparent
+}
+.table-editor td input:focus,.table-editor th input:focus{background:rgba(27,108,181,.08)}
+.table-editor tr:nth-child(even) td{background:var(--off)}
+.table-col-actions{display:flex;gap:4px;padding:6px 10px;align-items:center;justify-content:flex-end}
+
+/* ─── FOLDER TREE EDITOR ─────────────────────────────────── */
+.folder-tree{font-family:'Courier New',monospace;font-size:13px;line-height:1.8}
+.folder-node{display:flex;align-items:center;gap:6px;padding:2px 0}
+.folder-node input{
+  flex:1;border:none;background:transparent;font-family:'Courier New',monospace;
+  font-size:13px;outline:none;color:var(--ink)
+}
+.folder-node input:focus{border-bottom:1px solid var(--blue)}
+.folder-indent{padding-left:20px}
+.folder-icon{flex-shrink:0;font-size:14px}
+
+/* ─── TEXT EDITOR ────────────────────────────────────────── */
+.text-editor{
+  font-family:'Open Sans',sans-serif;font-size:14px;line-height:1.7;
+  border:1px solid var(--border);border-radius:var(--r-sm);
+  padding:12px;min-height:80px;outline:none;width:100%;resize:vertical;
+  color:var(--ink)
+}
+.text-editor:focus{border-color:var(--blue)}
+
+/* ─── ALERT EDITOR ───────────────────────────────────────── */
+.alert-editor-wrap{display:grid;gap:8px}
+.alert-type-select{
+  display:flex;gap:8px;flex-wrap:wrap
+}
+.alert-type-btn{
+  font-family:'Montserrat',sans-serif;font-size:10px;font-weight:700;
+  letter-spacing:1px;text-transform:uppercase;padding:5px 12px;
+  border-radius:4px;border:1.5px solid var(--border);background:#fff;
+  cursor:pointer;transition:all .12s
+}
+.alert-type-btn.active-info{background:#DBEAFE;border-color:#1B6CB5;color:#1B6CB5}
+.alert-type-btn.active-success{background:#D1FAE5;border-color:#1E8A4A;color:#1E8A4A}
+.alert-type-btn.active-warn{background:#FEF3C7;border-color:#D97706;color:#D97706}
+.alert-type-btn.active-danger{background:#FEE2E2;border-color:#DC2626;color:#DC2626}
+
+/* ─── ADD BLOCK BUTTON ───────────────────────────────────── */
+.add-block-area{
+  display:flex;align-items:center;gap:12px;
+  padding:16px;border:2px dashed var(--border);border-radius:var(--r-lg);
+  cursor:pointer;transition:all .15s;background:#fff
+}
+.add-block-area:hover{border-color:var(--blue);background:#EFF6FF}
+.add-block-area span{font-size:13px;color:var(--muted);font-weight:600}
+
+/* ─── TYPE PICKER ────────────────────────────────────────── */
+.type-picker{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:8px;padding:16px
+}
+.type-pick-btn{
+  display:flex;flex-direction:column;align-items:center;gap:6px;
+  padding:14px 8px;border:1.5px solid var(--border);border-radius:var(--r-md);
+  cursor:pointer;transition:all .12s;background:#fff
+}
+.type-pick-btn:hover{border-color:var(--blue);background:#EFF6FF}
+.type-pick-icon{font-size:22px}
+.type-pick-label{font-family:'Montserrat',sans-serif;font-size:10px;font-weight:700;
+  letter-spacing:1px;text-transform:uppercase;color:var(--muted)}
+
+/* ─── MODAL ──────────────────────────────────────────────── */
+.modal-bg{
+  position:fixed;inset:0;background:rgba(0,0,0,.5);
+  z-index:400;display:flex;align-items:center;justify-content:center;
+  animation:fadeIn .15s ease
+}
+.modal{
+  background:#fff;border-radius:var(--r-lg);min-width:320px;max-width:500px;
+  width:90%;box-shadow:0 20px 60px rgba(0,0,0,.2);overflow:hidden;
+  animation:slideUp .2s ease
+}
+.modal-head{
+  padding:20px 24px;background:var(--navy);color:#fff;
+  display:flex;align-items:center;justify-content:space-between
+}
+.modal-head h3{font-family:'Montserrat',sans-serif;font-size:14px;font-weight:700}
+.modal-close{background:transparent;border:none;color:rgba(255,255,255,.6);
+  font-size:18px;cursor:pointer}
+.modal-body{padding:20px 24px}
+.modal-footer{padding:16px 24px;border-top:1px solid var(--border);
+  display:flex;justify-content:flex-end;gap:8px}
+
+/* ─── FORM ELEMENTS ──────────────────────────────────────── */
+.form-group{display:flex;flex-direction:column;gap:6px;margin-bottom:16px}
+.form-group label{font-size:11px;font-weight:700;text-transform:uppercase;
+  letter-spacing:1px;color:var(--muted)}
+.form-group input,.form-group select,.form-group textarea{
+  font-family:'Open Sans',sans-serif;font-size:14px;
+  border:1px solid var(--border);border-radius:var(--r-sm);
+  padding:9px 12px;outline:none;color:var(--ink);transition:border-color .12s
+}
+.form-group input:focus,.form-group select:focus,.form-group textarea:focus{
+  border-color:var(--blue);box-shadow:0 0 0 2px #DBEAFE
+}
+
+/* ─── TOAST ──────────────────────────────────────────────── */
+.toast-wrap{
+  position:fixed;bottom:24px;right:24px;z-index:500;
+  display:flex;flex-direction:column;gap:8px;pointer-events:none
+}
+.toast{
+  background:var(--navy);color:#fff;padding:12px 18px;
+  border-radius:var(--r-md);font-size:13px;font-weight:600;
+  display:flex;align-items:center;gap:8px;
+  animation:slideRight .25s ease;pointer-events:all;
+  border-left:4px solid var(--yellow)
+}
+.toast.success{border-left-color:var(--green)}
+.toast.error{border-left-color:var(--danger)}
+.toast.removing{animation:fadeOut .25s ease forwards}
+
+/* ─── STATUS BAR ─────────────────────────────────────────── */
+.status-bar{
+  background:var(--navy);color:rgba(255,255,255,.6);
+  font-size:11px;padding:6px 32px;display:flex;align-items:center;gap:12px;
+  border-top:1px solid rgba(255,255,255,.08);flex-shrink:0
+}
+.status-dot{width:6px;height:6px;border-radius:50%;background:var(--green);flex-shrink:0}
+.status-dot.saving{background:var(--yellow);animation:pulse 1s infinite}
+.status-dot.error{background:var(--danger)}
+
+/* ─── LOADING ────────────────────────────────────────────── */
+.loading-screen{
+  position:fixed;inset:0;background:var(--navy);z-index:600;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px
+}
+.loading-logo{
+  font-family:'Montserrat',sans-serif;font-size:24px;font-weight:900;
+  letter-spacing:2px;color:#fff
+}
+.loading-logo span{color:var(--yellow)}
+.loading-bar{
+  width:200px;height:3px;background:rgba(255,255,255,.15);border-radius:2px;overflow:hidden
+}
+.loading-bar-fill{
+  height:100%;background:var(--yellow);border-radius:2px;
+  animation:loadFill 1.5s ease-in-out infinite
+}
+.loading-msg{color:rgba(255,255,255,.5);font-size:12px}
+
+/* ─── STRIPE ─────────────────────────────────────────────── */
+.cms-stripe{
+  height:4px;
+  background:linear-gradient(to right,#F5C400 33.3%,#1E8A4A 33.3% 66.6%,#1B6CB5 66.6%)
+}
+
+/* ─── PREVIEW MODE ───────────────────────────────────────── */
+.preview-mode .block-header{display:none}
+.preview-mode .flow-node-actions{display:none}
+.preview-mode .block-actions{display:none}
+.preview-mode .add-block-area{display:none}
+.preview-mode .flow-node-card{pointer-events:none}
+
+/* ─── RENDERED FLOWCHART (PREVIEW) ──────────────────────── */
+.rendered-flowchart{display:flex;flex-direction:column;align-items:flex-start;gap:0;padding:8px 0}
+.rf-node{display:flex;align-items:stretch;width:100%;max-width:600px}
+.rf-connector{display:flex;flex-direction:column;align-items:center;width:44px;flex-shrink:0}
+.rf-dot{width:14px;height:14px;border-radius:50%;background:var(--blue);flex-shrink:0;margin-top:20px;border:2px solid #fff;box-shadow:0 0 0 2px var(--blue)}
+.rf-line{flex:1;width:2px;background:var(--border);min-height:8px}
+.rf-card{
+  flex:1;margin:4px 0;border:1px solid var(--border);border-radius:var(--r-md);
+  padding:14px 16px;background:#fff
+}
+.rf-card.decision{border-left:3px solid var(--yellow);background:#FFFBEB}
+.rf-card.end{border-left:3px solid var(--green);background:#ECFDF5}
+.rf-card-title{font-weight:700;font-size:14px;margin-bottom:4px;color:var(--navy)}
+.rf-card-desc{font-size:13px;color:var(--muted);line-height:1.5}
+.rf-card-meta{display:flex;gap:6px;margin-top:8px;flex-wrap:wrap}
+.rf-tag{
+  font-family:'Montserrat',sans-serif;font-size:9px;font-weight:700;
+  letter-spacing:1px;text-transform:uppercase;padding:2px 8px;border-radius:4px
+}
+.rf-tag-resp{background:#DBEAFE;color:#1E40AF}
+.rf-tag-deadline{background:#D1FAE5;color:#065F46}
+.rf-tag-tool{background:#F3E8FF;color:#6B21A8}
+
+.rendered-steps{display:flex;flex-direction:column;gap:8px}
+.rs-item{display:flex;gap:12px;padding:12px 14px;border:1px solid var(--border);border-radius:var(--r-md);background:#fff}
+.rs-num{min-width:28px;height:28px;border-radius:var(--r-sm);background:var(--navy);color:#fff;
+  font-family:'Montserrat',sans-serif;font-size:11px;font-weight:700;
+  display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.rs-content strong{font-size:14px;font-weight:600;color:var(--navy);display:block}
+.rs-content p{font-size:13px;color:var(--muted);margin-top:3px;line-height:1.5}
+.rs-content .rs-tags{display:flex;gap:6px;margin-top:6px;flex-wrap:wrap}
+
+.rendered-table{width:100%;border-collapse:collapse;font-size:13px;border-radius:var(--r-md);overflow:hidden;border:1px solid var(--border)}
+.rendered-table thead tr{background:var(--navy);color:#fff}
+.rendered-table th,.rendered-table td{padding:10px 14px;text-align:left}
+.rendered-table td{border-top:1px solid var(--border)}
+.rendered-table tbody tr:nth-child(even) td{background:var(--off)}
+
+.rendered-folder{font-family:'Courier New',monospace;font-size:13px;line-height:2;background:var(--off);border-radius:var(--r-md);padding:16px}
+
+.rendered-alert{display:flex;gap:10px;padding:12px 16px;border-radius:var(--r-md);font-size:13px;line-height:1.5}
+.rendered-alert.info{background:#EFF6FF;border-left:3px solid var(--blue);color:#1E40AF}
+.rendered-alert.success{background:#ECFDF5;border-left:3px solid var(--green);color:#065F46}
+.rendered-alert.warn{background:#FFFBEB;border-left:3px solid #D97706;color:#92400E}
+.rendered-alert.danger{background:#FEF2F2;border-left:3px solid var(--danger);color:#991B1B}
+.rendered-text{font-size:14px;line-height:1.7;color:var(--ink)}
+
+/* ─── ANIMATIONS ─────────────────────────────────────────── */
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+@keyframes slideUp{from{transform:translateY(20px);opacity:0}to{transform:translateY(0);opacity:1}}
+@keyframes slideRight{from{transform:translateX(100%);opacity:0}to{transform:translateX(0);opacity:1}}
+@keyframes fadeOut{to{opacity:0;transform:translateX(100%)}}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+@keyframes loadFill{0%{transform:translateX(-100%)}50%{transform:translateX(0)}100%{transform:translateX(100%)}}
+
+/* ─── SCROLLBAR ──────────────────────────────────────────── */
+::-webkit-scrollbar{width:5px;height:5px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
+
+/* ─── RESPONSIVE ─────────────────────────────────────────── */
+@media(max-width:768px){
+  .sidebar{width:240px;min-width:240px}
+  .editor-header,.editor-body{padding:16px}
+  .topbar{padding:0 16px}
+}
+</style>
+</head>
+<body>
+
+<!-- LOADING SCREEN -->
+<div class="loading-screen" id="loadingScreen">
+  <div class="loading-logo">CMS<span>·</span>MoC</div>
+  <div class="loading-bar"><div class="loading-bar-fill"></div></div>
+  <div class="loading-msg">Carregando POPs…</div>
+</div>
+
+<!-- TOAST CONTAINER -->
+<div class="toast-wrap" id="toastWrap"></div>
+
+<!-- TOPBAR -->
+<div class="topbar">
+  <div class="brand">CMS <span>Montes Claros</span> · Secretaria Executiva</div>
+  <div class="topbar-actions">
+    <span id="syncLabel" style="font-size:11px;color:rgba(255,255,255,.5)">—</span>
+    <button class="btn btn-ghost btn-sm" onclick="togglePreview()">👁 Visualizar</button>
+    <button class="btn btn-yellow btn-sm" onclick="saveAll()" id="saveBtn">💾 Salvar</button>
+    <button class="btn btn-blue btn-sm" onclick="openNewPOP()">+ Novo POP</button>
+  </div>
+</div>
+<div class="cms-stripe"></div>
+
+<!-- LAYOUT -->
+<div class="layout" id="appLayout">
+
+  <!-- SIDEBAR -->
+  <div class="sidebar">
+    <div class="sidebar-head">
+      <h2>POPs &amp; Fluxos</h2>
+      <input type="text" id="searchInput" placeholder="Buscar POP…"
+        style="width:100%;padding:7px 10px;border:1px solid var(--border);border-radius:var(--r-sm);font-size:13px;outline:none"
+        oninput="filterPOPs(this.value)">
+    </div>
+    <div class="pop-list" id="popList"></div>
+    <div class="sidebar-footer">
+      <button class="btn btn-outline" style="width:100%" onclick="openNewPOP()">+ Adicionar POP</button>
+    </div>
+  </div>
+
+  <!-- MAIN -->
+  <div class="main" id="mainArea">
+    <div class="empty" id="emptyState">
+      <div class="empty-icon">📋</div>
+      <h3>Selecione um POP</h3>
+      <p>Escolha um POP na lista ao lado para editar seus fluxos, etapas e componentes.</p>
+      <button class="btn btn-blue" onclick="openNewPOP()">+ Criar primeiro POP</button>
+    </div>
+  </div>
+
+</div>
+
+<!-- STATUS BAR -->
+<div class="status-bar">
+  <div class="status-dot" id="statusDot"></div>
+  <span id="statusMsg">Conectado ao Google Sheets</span>
+  <span style="margin-left:auto">CMS Montes Claros · Secretaria Executiva · v1.0</span>
+</div>
+
+<!-- MODAL CONTAINER -->
+<div id="modalContainer"></div>
+
+<script>
+/* ═══════════════════════════════════════════════════════════
+   CONFIG
+═══════════════════════════════════════════════════════════ */
+const GAS_URL = 'https://script.google.com/macros/s/AKfycbwFh4QOtgmwIl3cQG2MD2XQUxYE_yFqZfTszlaIMJ1feIEgl3aQlPHkktPDHdaPTcSvpg/exec';
+
+/* ═══════════════════════════════════════════════════════════
+   STATE
+═══════════════════════════════════════════════════════════ */
+let pops = [];          // [{id, num, title, desc, category, color, blocks:[]}]
+let activePOP = null;
+let isDirty = false;
+let isPreview = false;
+let dragSrcBlock = null;
+let dragSrcPOP = null;
+
+/* ═══════════════════════════════════════════════════════════
+   INIT
+═══════════════════════════════════════════════════════════ */
+async function init() {
+  try {
+    setStatus('loading', 'Conectando…');
+    const data = await gasGet('getPOPs');
+    pops = data || [];
+    renderSidebar();
+    setStatus('ok', `${pops.length} POPs carregados`);
+  } catch(e) {
+    setStatus('error', 'Erro ao conectar — usando modo offline');
+    pops = getSamplePOPs();
+    renderSidebar();
+    toast('Usando dados de exemplo. Verifique a URL do GAS.', 'error');
+  } finally {
+    document.getElementById('loadingScreen').style.display = 'none';
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════
+   GAS API
+═══════════════════════════════════════════════════════════ */
+async function gasGet(action, params={}) {
+  const url = new URL(GAS_URL);
+  url.searchParams.set('action', action);
+  Object.entries(params).forEach(([k,v]) => url.searchParams.set(k, v));
+  const r = await fetch(url.toString());
+  const j = await r.json();
+  if(j.error) throw new Error(j.error);
+  return j.data;
+}
+
+async function gasPost(action, payload={}) {
+  const r = await fetch(GAS_URL, {
+    method: 'POST',
+    body: JSON.stringify({action, ...payload}),
+  });
+  const j = await r.json();
+  if(j.error) throw new Error(j.error);
+  return j.data;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   SIDEBAR
+═══════════════════════════════════════════════════════════ */
+function renderSidebar(filter='') {
+  const list = document.getElementById('popList');
+  const filtered = pops.filter(p =>
+    p.title.toLowerCase().includes(filter.toLowerCase()) ||
+    p.num.toLowerCase().includes(filter.toLowerCase()) ||
+    (p.category||'').toLowerCase().includes(filter.toLowerCase())
+  );
+  list.innerHTML = filtered.map(p => `
+    <div class="pop-item ${activePOP?.id === p.id ? 'active' : ''}"
+      onclick="selectPOP('${p.id}')"
+      draggable="true"
+      ondragstart="onPOPDragStart(event,'${p.id}')"
+      ondragover="event.preventDefault()"
+      ondrop="onPOPDrop(event,'${p.id}')">
+      <div class="pop-num">${p.num}</div>
+      <div class="pop-info">
+        <div class="pop-info-title">${p.title}</div>
+        <div class="pop-info-cat">${p.category||'Geral'}</div>
+      </div>
+      <span class="pop-drag">⠿</span>
+    </div>
+  `).join('');
+}
+
+function filterPOPs(v){ renderSidebar(v); }
+
+/* ═══════════════════════════════════════════════════════════
+   SELECT POP
+═══════════════════════════════════════════════════════════ */
+function selectPOP(id) {
+  activePOP = pops.find(p => p.id === id);
+  if(!activePOP) return;
+  renderSidebar(document.getElementById('searchInput').value);
+  renderEditor();
+}
+
+/* ═══════════════════════════════════════════════════════════
+   EDITOR
+═══════════════════════════════════════════════════════════ */
+function renderEditor() {
+  const main = document.getElementById('mainArea');
+  document.getElementById('emptyState')?.remove();
+
+  main.innerHTML = `
+    <div class="editor-header">
+      <div class="editor-header-left">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
+          <div class="pop-badge">${activePOP.num}</div>
+          <span style="font-size:11px;color:var(--muted)">Responsável:
+            <input id="respInput" value="${activePOP.responsible||''}"
+              placeholder="ex: Secretaria Executiva"
+              style="border:none;outline:none;background:transparent;font-size:11px;color:var(--muted);width:160px"
+              oninput="markDirty();activePOP.responsible=this.value">
+          </span>
+        </div>
+        <input class="editor-title-input" id="popTitleInput"
+          value="${esc(activePOP.title)}"
+          placeholder="Título do POP"
+          oninput="markDirty();activePOP.title=this.value;renderSidebar()">
+        <input class="editor-desc-input" id="popDescInput"
+          value="${esc(activePOP.desc||'')}"
+          placeholder="Descrição breve do procedimento…"
+          oninput="markDirty();activePOP.desc=this.value">
+        <div class="editor-meta">
+          <input class="meta-tag" id="categoryInput"
+            value="${esc(activePOP.category||'')}"
+            placeholder="Categoria"
+            style="border:1px solid var(--border);padding:3px 10px;border-radius:4px;font-size:11px;font-weight:600;outline:none;width:120px"
+            oninput="markDirty();activePOP.category=this.value;renderSidebar()">
+          <span class="meta-tag" onclick="editNumModal()">Nº: ${activePOP.num}</span>
+          <span class="meta-tag" style="cursor:pointer" onclick="deletePOPConfirm()">🗑 Excluir POP</span>
+        </div>
+      </div>
+    </div>
+    <div class="editor-body" id="editorBody">
+      <div class="blocks-list" id="blocksList"></div>
+      <div class="add-block-area" onclick="showTypePicker()" style="margin-top:8px">
+        <span style="font-size:20px">＋</span>
+        <span>Adicionar componente (fluxograma, etapas, tabela, pasta, texto…)</span>
+      </div>
+    </div>
+  `;
+
+  renderBlocks();
+}
+
+function renderBlocks() {
+  const list = document.getElementById('blocksList');
+  if(!list) return;
+  list.innerHTML = (activePOP.blocks||[]).map((b,i) => renderBlock(b,i)).join('');
+}
+
+function renderBlock(b, i) {
+  const typeLabels = {
+    flowchart:'Fluxograma', steps:'Etapas', table:'Tabela',
+    folder:'Árvore de Pastas', text:'Texto', alert:'Alerta'
+  };
+  const typeClasses = {
+    flowchart:'type-flowchart', steps:'type-steps', table:'type-table',
+    folder:'type-folder', text:'type-text', alert:'type-alert'
+  };
+
+  let bodyHTML = '';
+  if(b.type === 'flowchart') bodyHTML = renderFlowchartEditor(b, i);
+  else if(b.type === 'steps') bodyHTML = renderStepsEditor(b, i);
+  else if(b.type === 'table') bodyHTML = renderTableEditor(b, i);
+  else if(b.type === 'folder') bodyHTML = renderFolderEditor(b, i);
+  else if(b.type === 'text') bodyHTML = renderTextEditor(b, i);
+  else if(b.type === 'alert') bodyHTML = renderAlertEditor(b, i);
+
+  return `
+    <div class="block" id="block-${i}"
+      draggable="true"
+      ondragstart="onBlockDragStart(event,${i})"
+      ondragover="onBlockDragOver(event,${i})"
+      ondrop="onBlockDrop(event,${i})">
+      <div class="block-header">
+        <span class="block-drag-handle">⠿</span>
+        <span class="block-type-badge ${typeClasses[b.type]||'type-text'}">${typeLabels[b.type]||b.type}</span>
+        <input class="block-title-input" value="${esc(b.title||'')}"
+          placeholder="Título do bloco"
+          oninput="markDirty();activePOP.blocks[${i}].title=this.value">
+        <div class="block-actions">
+          <button class="btn-icon" onclick="moveBlock(${i},-1)" title="Mover para cima">↑</button>
+          <button class="btn-icon" onclick="moveBlock(${i},1)" title="Mover para baixo">↓</button>
+          <button class="btn-icon" onclick="changeBlockType(${i})" title="Mudar tipo">⚙</button>
+          <button class="btn-icon" style="color:var(--danger)" onclick="deleteBlock(${i})" title="Remover">✕</button>
+        </div>
+      </div>
+      <div class="block-body">${bodyHTML}</div>
+    </div>
+  `;
+}
+
+/* ─── FLOWCHART EDITOR ─────────────────────────────────── */
+function renderFlowchartEditor(b, bi) {
+  const nodes = b.nodes || [];
+  return `
+    <div class="flowchart-nodes" id="fn-${bi}">
+      ${nodes.map((n,ni) => renderFlowNode(n, bi, ni, nodes.length)).join('')}
+    </div>
+    <button class="btn btn-outline btn-sm" style="margin-top:10px"
+      onclick="addFlowNode(${bi})">+ Adicionar nó</button>
+    <button class="btn btn-ghost btn-sm" style="margin-top:10px;margin-left:8px"
+      onclick="addDecisionNode(${bi})">◆ Decisão</button>
+  `;
+}
+
+function renderFlowNode(n, bi, ni, total) {
+  const isDecision = n.type === 'decision';
+  const isEnd = n.type === 'end';
+  return `
+    <div class="flow-node">
+      <div class="flow-node-connector">
+        <div class="flow-node-dot" style="${isDecision?'background:var(--yellow)':isEnd?'background:var(--green)':''}"></div>
+        ${ni < total-1 ? '<div class="flow-node-line"></div>' : ''}
+      </div>
+      <div class="flow-node-card ${isDecision?'flow-decision':''}${isEnd?'flow-end':''}" style="flex:1">
+        <div class="flow-node-fields">
+          <div class="flow-field">
+            <label>Título da etapa</label>
+            <input value="${esc(n.title||'')}" placeholder="Ex: Preparação da pauta"
+              oninput="markDirty();activePOP.blocks[${bi}].nodes[${ni}].title=this.value">
+          </div>
+          <div class="flow-field">
+            <label>Descrição</label>
+            <textarea rows="2" placeholder="Detalhamento da etapa…"
+              oninput="markDirty();activePOP.blocks[${bi}].nodes[${ni}].desc=this.value">${esc(n.desc||'')}</textarea>
+          </div>
+          <div class="flow-node-meta">
+            <div class="flow-field">
+              <label>Responsável</label>
+              <input value="${esc(n.responsible||'')}" placeholder="Quem executa"
+                oninput="markDirty();activePOP.blocks[${bi}].nodes[${ni}].responsible=this.value">
+            </div>
+            <div class="flow-field">
+              <label>Prazo</label>
+              <input value="${esc(n.deadline||'')}" placeholder="ex: 5 dias úteis"
+                oninput="markDirty();activePOP.blocks[${bi}].nodes[${ni}].deadline=this.value">
+            </div>
+            <div class="flow-field">
+              <label>Tipo</label>
+              <select onchange="markDirty();activePOP.blocks[${bi}].nodes[${ni}].type=this.value;renderBlocks()">
+                <option value="step" ${n.type==='step'?'selected':''}>Etapa</option>
+                <option value="decision" ${n.type==='decision'?'selected':''}>Decisão</option>
+                <option value="end" ${n.type==='end'?'selected':''}>Fim</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="flow-node-actions">
+        <button class="btn-icon" onclick="moveFlowNode(${bi},${ni},-1)" title="↑">↑</button>
+        <button class="btn-icon" onclick="moveFlowNode(${bi},${ni},1)" title="↓">↓</button>
+        <button class="btn-icon" style="color:var(--danger)" onclick="deleteFlowNode(${bi},${ni})">✕</button>
+      </div>
+    </div>
+  `;
+}
+
+/* ─── STEPS EDITOR ─────────────────────────────────────── */
+function renderStepsEditor(b, bi) {
+  const items = b.items || [];
+  return `
+    <div class="steps-list">
+      ${items.map((s,si) => `
+        <div class="step-item">
+          <div class="step-num">${si+1}</div>
+          <div class="step-fields">
+            <div class="step-inline">
+              <div class="flow-field">
+                <label>Título da etapa</label>
+                <input value="${esc(s.title||'')}" placeholder="O que acontece nesta etapa"
+                  oninput="markDirty();activePOP.blocks[${bi}].items[${si}].title=this.value">
+              </div>
+              <div class="flow-field">
+                <label>Responsável</label>
+                <input value="${esc(s.responsible||'')}" placeholder="Quem executa"
+                  oninput="markDirty();activePOP.blocks[${bi}].items[${si}].responsible=this.value">
+              </div>
+            </div>
+            <div class="flow-field">
+              <label>Descrição</label>
+              <textarea rows="2" placeholder="Detalhes…"
+                oninput="markDirty();activePOP.blocks[${bi}].items[${si}].desc=this.value">${esc(s.desc||'')}</textarea>
+            </div>
+            <div class="step-inline">
+              <div class="flow-field">
+                <label>Prazo</label>
+                <input value="${esc(s.deadline||'')}" placeholder="Prazo"
+                  oninput="markDirty();activePOP.blocks[${bi}].items[${si}].deadline=this.value">
+              </div>
+              <div class="flow-field">
+                <label>Ferramenta / Canal</label>
+                <input value="${esc(s.tool||'')}" placeholder="ex: Google Drive"
+                  oninput="markDirty();activePOP.blocks[${bi}].items[${si}].tool=this.value">
+              </div>
+            </div>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:4px">
+            <button class="btn-icon" onclick="moveItem('items',${bi},${si},-1)">↑</button>
+            <button class="btn-icon" onclick="moveItem('items',${bi},${si},1)">↓</button>
+            <button class="btn-icon" style="color:var(--danger)" onclick="deleteItem('items',${bi},${si})">✕</button>
+          </div>
+        </div>
+      `).join('')}
+    </div>
+    <button class="btn btn-outline btn-sm" style="margin-top:10px"
+      onclick="addStep(${bi})">+ Adicionar etapa</button>
+  `;
+}
+
+/* ─── TABLE EDITOR ─────────────────────────────────────── */
+function renderTableEditor(b, bi) {
+  const headers = b.headers || ['Coluna 1','Coluna 2'];
+  const rows = b.rows || [['','']];
+  return `
+    <div class="table-editor-wrap">
+      <table class="table-editor">
+        <thead>
+          <tr>
+            ${headers.map((h,hi) => `
+              <th>
+                <input value="${esc(h)}"
+                  oninput="markDirty();activePOP.blocks[${bi}].headers[${hi}]=this.value">
+              </th>
+            `).join('')}
+            <th style="width:80px;background:var(--navy)">
+              <div class="table-col-actions">
+                <button class="btn-icon" style="color:#fff;border-color:rgba(255,255,255,.2)" onclick="addTableCol(${bi})" title="+ Coluna">+</button>
+                <button class="btn-icon" style="color:#fff;border-color:rgba(255,255,255,.2)" onclick="removeTableCol(${bi})" title="- Coluna">−</button>
+              </div>
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          ${rows.map((row,ri) => `
+            <tr>
+              ${headers.map((_,ci) => `
+                <td><input value="${esc(row[ci]||'')}"
+                  oninput="markDirty();activePOP.blocks[${bi}].rows[${ri}][${ci}]=this.value"></td>
+              `).join('')}
+              <td style="width:80px">
+                <div class="table-col-actions">
+                  <button class="btn-icon" style="color:var(--danger)" onclick="deleteTableRow(${bi},${ri})">✕</button>
+                </div>
+              </td>
+            </tr>
+          `).join('')}
+        </tbody>
+      </table>
+    </div>
+    <button class="btn btn-outline btn-sm" style="margin-top:10px" onclick="addTableRow(${bi})">+ Linha</button>
+  `;
+}
+
+/* ─── FOLDER EDITOR ─────────────────────────────────────── */
+function renderFolderEditor(b, bi) {
+  const items = b.items || [];
+  return `
+    <div class="folder-tree" id="folder-${bi}">
+      ${items.map((item,ii) => `
+        <div class="folder-node" style="padding-left:${(item.depth||0)*20}px">
+          <span class="folder-icon">${item.depth===0?'📁':'${item.isFile?"📄":"📁"}'}</span>
+          <input value="${esc(item.name||'')}" placeholder="Nome da pasta/arquivo"
+            oninput="markDirty();activePOP.blocks[${bi}].items[${ii}].name=this.value">
+          <button class="btn-icon btn-sm" onclick="increaseFolderDepth(${bi},${ii})">→</button>
+          <button class="btn-icon btn-sm" onclick="decreaseFolderDepth(${bi},${ii})">←</button>
+          <button class="btn-icon btn-sm" style="color:var(--danger)" onclick="deleteItem('items',${bi},${ii})">✕</button>
+        </div>
+      `).join('')}
+    </div>
+    <div style="display:flex;gap:8px;margin-top:10px">
+      <button class="btn btn-outline btn-sm" onclick="addFolderItem(${bi},false)">📁 Pasta</button>
+      <button class="btn btn-outline btn-sm" onclick="addFolderItem(${bi},true)">📄 Arquivo</button>
+    </div>
+  `;
+}
+
+/* ─── TEXT EDITOR ────────────────────────────────────────── */
+function renderTextEditor(b, bi) {
+  return `
+    <textarea class="text-editor" rows="4"
+      placeholder="Digite o texto do bloco…"
+      oninput="markDirty();activePOP.blocks[${bi}].content=this.value">${esc(b.content||'')}</textarea>
+  `;
+}
+
+/* ─── ALERT EDITOR ───────────────────────────────────────── */
+function renderAlertEditor(b, bi) {
+  const t = b.alertType || 'info';
+  return `
+    <div class="alert-editor-wrap">
+      <div class="alert-type-select">
+        ${['info','success','warn','danger'].map(tp => `
+          <button class="alert-type-btn ${t===tp?'active-'+tp:''}"
+            onclick="setAlertType(${bi},'${tp}')">${tp}</button>
+        `).join('')}
+      </div>
+      <textarea class="text-editor" rows="2"
+        placeholder="Conteúdo do alerta…"
+        oninput="markDirty();activePOP.blocks[${bi}].content=this.value">${esc(b.content||'')}</textarea>
+    </div>
+  `;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   BLOCK MUTATIONS
+═══════════════════════════════════════════════════════════ */
+function addFlowNode(bi) {
+  activePOP.blocks[bi].nodes = activePOP.blocks[bi].nodes||[];
+  activePOP.blocks[bi].nodes.push({title:'',desc:'',responsible:'',deadline:'',type:'step'});
+  markDirty(); renderBlocks();
+}
+function addDecisionNode(bi) {
+  activePOP.blocks[bi].nodes = activePOP.blocks[bi].nodes||[];
+  activePOP.blocks[bi].nodes.push({title:'',desc:'',responsible:'',deadline:'',type:'decision'});
+  markDirty(); renderBlocks();
+}
+function deleteFlowNode(bi,ni) {
+  activePOP.blocks[bi].nodes.splice(ni,1);
+  markDirty(); renderBlocks();
+}
+function moveFlowNode(bi,ni,dir) {
+  const nodes = activePOP.blocks[bi].nodes;
+  const to = ni+dir;
+  if(to<0||to>=nodes.length) return;
+  [nodes[ni],nodes[to]]=[nodes[to],nodes[ni]];
+  markDirty(); renderBlocks();
+}
+
+function addStep(bi) {
+  activePOP.blocks[bi].items = activePOP.blocks[bi].items||[];
+  activePOP.blocks[bi].items.push({title:'',desc:'',responsible:'',deadline:'',tool:''});
+  markDirty(); renderBlocks();
+}
+function deleteItem(key,bi,ii) {
+  activePOP.blocks[bi][key].splice(ii,1);
+  markDirty(); renderBlocks();
+}
+function moveItem(key,bi,ii,dir) {
+  const arr = activePOP.blocks[bi][key];
+  const to = ii+dir;
+  if(to<0||to>=arr.length) return;
+  [arr[ii],arr[to]]=[arr[to],arr[ii]];
+  markDirty(); renderBlocks();
+}
+
+function addTableRow(bi) {
+  const cols = activePOP.blocks[bi].headers?.length||2;
+  activePOP.blocks[bi].rows = activePOP.blocks[bi].rows||[];
+  activePOP.blocks[bi].rows.push(Array(cols).fill(''));
+  markDirty(); renderBlocks();
+}
+function deleteTableRow(bi,ri) {
+  activePOP.blocks[bi].rows.splice(ri,1);
+  markDirty(); renderBlocks();
+}
+function addTableCol(bi) {
+  activePOP.blocks[bi].headers.push('Nova Coluna');
+  activePOP.blocks[bi].rows = (activePOP.blocks[bi].rows||[]).map(r=>[...r,'']);
+  markDirty(); renderBlocks();
+}
+function removeTableCol(bi) {
+  if((activePOP.blocks[bi].headers||[]).length<=1) return;
+  activePOP.blocks[bi].headers.pop();
+  activePOP.blocks[bi].rows = (activePOP.blocks[bi].rows||[]).map(r=>r.slice(0,-1));
+  markDirty(); renderBlocks();
+}
+
+function addFolderItem(bi,isFile) {
+  activePOP.blocks[bi].items = activePOP.blocks[bi].items||[];
+  activePOP.blocks[bi].items.push({name:'',depth:0,isFile});
+  markDirty(); renderBlocks();
+}
+function increaseFolderDepth(bi,ii) {
+  activePOP.blocks[bi].items[ii].depth = Math.min(5,(activePOP.blocks[bi].items[ii].depth||0)+1);
+  markDirty(); renderBlocks();
+}
+function decreaseFolderDepth(bi,ii) {
+  activePOP.blocks[bi].items[ii].depth = Math.max(0,(activePOP.blocks[bi].items[ii].depth||0)-1);
+  markDirty(); renderBlocks();
+}
+
+function moveBlock(i,dir) {
+  const to = i+dir;
+  if(to<0||to>=activePOP.blocks.length) return;
+  [activePOP.blocks[i],activePOP.blocks[to]]=[activePOP.blocks[to],activePOP.blocks[i]];
+  markDirty(); renderBlocks();
+}
+
+function deleteBlock(i) {
+  if(!confirm('Remover este componente?')) return;
+  activePOP.blocks.splice(i,1);
+  markDirty(); renderBlocks();
+}
+
+function setAlertType(bi, tp) {
+  activePOP.blocks[bi].alertType = tp;
+  markDirty(); renderBlocks();
+}
+
+function changeBlockType(i) {
+  showTypePicker(i);
+}
+
+/* ═══════════════════════════════════════════════════════════
+   TYPE PICKER
+═══════════════════════════════════════════════════════════ */
+function showTypePicker(replaceIndex=null) {
+  const types = [
+    {type:'flowchart',icon:'🔀',label:'Fluxograma'},
+    {type:'steps',    icon:'📋',label:'Etapas'},
+    {type:'table',    icon:'🗂',label:'Tabela'},
+    {type:'folder',   icon:'📁',label:'Árvore de Pastas'},
+    {type:'text',     icon:'📝',label:'Texto'},
+    {type:'alert',    icon:'⚠️',label:'Alerta'},
+  ];
+  showModal(`
+    <div class="modal-head">
+      <h3>${replaceIndex!==null?'Mudar tipo do componente':'Adicionar componente'}</h3>
+      <button class="modal-close" onclick="closeModal()">✕</button>
+    </div>
+    <div class="type-picker">
+      ${types.map(t=>`
+        <div class="type-pick-btn" onclick="addBlock('${t.type}',${replaceIndex});closeModal()">
+          <span class="type-pick-icon">${t.icon}</span>
+          <span class="type-pick-label">${t.label}</span>
+        </div>
+      `).join('')}
+    </div>
+  `);
+}
+
+function addBlock(type, replaceIndex=null) {
+  const defaults = {
+    flowchart: {type:'flowchart', title:'Fluxograma', nodes:[{title:'',desc:'',responsible:'',deadline:'',type:'step'}]},
+    steps:     {type:'steps',     title:'Etapas',     items:[{title:'',desc:'',responsible:'',deadline:'',tool:''}]},
+    table:     {type:'table',     title:'Tabela',     headers:['Documento','Responsável','Prazo'], rows:[['','','']]},
+    folder:    {type:'folder',    title:'Estrutura de Pastas', items:[{name:'',depth:0,isFile:false}]},
+    text:      {type:'text',      title:'Texto',      content:''},
+    alert:     {type:'alert',     title:'Alerta',     alertType:'info', content:''},
+  };
+  const block = {...defaults[type]};
+  activePOP.blocks = activePOP.blocks||[];
+  if(replaceIndex !== null) {
+    block.title = activePOP.blocks[replaceIndex]?.title || block.title;
+    activePOP.blocks[replaceIndex] = block;
+  } else {
+    activePOP.blocks.push(block);
+  }
+  markDirty(); renderBlocks();
+}
+
+/* ═══════════════════════════════════════════════════════════
+   NEW / DELETE POP
+═══════════════════════════════════════════════════════════ */
+function openNewPOP() {
+  showModal(`
+    <div class="modal-head">
+      <h3>Novo POP</h3>
+      <button class="modal-close" onclick="closeModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label>Número</label>
+        <input id="newNum" placeholder="ex: POP 01" value="POP ${String(pops.length+1).padStart(2,'0')}">
+      </div>
+      <div class="form-group">
+        <label>Título</label>
+        <input id="newTitle" placeholder="Nome do procedimento">
+      </div>
+      <div class="form-group">
+        <label>Descrição</label>
+        <input id="newDesc" placeholder="Breve descrição">
+      </div>
+      <div class="form-group">
+        <label>Categoria</label>
+        <select id="newCat">
+          <option>Reuniões Plenárias</option>
+          <option>Gestão Documental</option>
+          <option>Correspondências</option>
+          <option>Posse e Renovação</option>
+          <option>Controle e Monitoramento</option>
+          <option>Outro</option>
+        </select>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline btn-sm" onclick="closeModal()">Cancelar</button>
+      <button class="btn btn-yellow btn-sm" onclick="createPOP()">Criar POP</button>
+    </div>
+  `);
+}
+
+function createPOP() {
+  const num   = document.getElementById('newNum').value.trim();
+  const title = document.getElementById('newTitle').value.trim();
+  const desc  = document.getElementById('newDesc').value.trim();
+  const cat   = document.getElementById('newCat').value;
+  if(!title){toast('Informe o título do POP','error');return;}
+  const pop = {id:uid(), num, title, desc, category:cat, responsible:'Secretaria Executiva', blocks:[]};
+  pops.push(pop);
+  closeModal();
+  activePOP = pop;
+  renderSidebar();
+  renderEditor();
+  markDirty();
+  toast('POP criado! Adicione os componentes.');
+}
+
+function editNumModal() {
+  showModal(`
+    <div class="modal-head">
+      <h3>Editar numeração</h3>
+      <button class="modal-close" onclick="closeModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label>Número do POP</label>
+        <input id="editNum" value="${esc(activePOP.num)}">
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline btn-sm" onclick="closeModal()">Cancelar</button>
+      <button class="btn btn-yellow btn-sm" onclick="applyNum()">Salvar</button>
+    </div>
+  `);
+}
+function applyNum() {
+  activePOP.num = document.getElementById('editNum').value.trim();
+  markDirty(); closeModal(); renderEditor(); renderSidebar();
+}
+
+function deletePOPConfirm() {
+  if(!confirm(`Excluir o POP "${activePOP.title}"? Esta ação não pode ser desfeita.`)) return;
+  pops = pops.filter(p=>p.id!==activePOP.id);
+  activePOP = null;
+  document.getElementById('mainArea').innerHTML = `
+    <div class="empty" id="emptyState">
+      <div class="empty-icon">📋</div>
+      <h3>POP excluído</h3>
+      <p>Selecione ou crie outro POP.</p>
+      <button class="btn btn-blue" onclick="openNewPOP()">+ Criar POP</button>
+    </div>`;
+  renderSidebar();
+  markDirty();
+  toast('POP excluído.','success');
+}
+
+/* ═══════════════════════════════════════════════════════════
+   DRAG & DROP (BLOCKS)
+═══════════════════════════════════════════════════════════ */
+function onBlockDragStart(e,i){ dragSrcBlock=i; e.dataTransfer.effectAllowed='move'; }
+function onBlockDragOver(e,i){ e.preventDefault(); e.dataTransfer.dropEffect='move'; }
+function onBlockDrop(e,i){
+  e.preventDefault();
+  if(dragSrcBlock===null||dragSrcBlock===i) return;
+  const blocks=activePOP.blocks;
+  const moved=blocks.splice(dragSrcBlock,1)[0];
+  blocks.splice(i,0,moved);
+  dragSrcBlock=null;
+  markDirty(); renderBlocks();
+}
+/* DRAG & DROP (POPs) */
+let dragSrcPOPId=null;
+function onPOPDragStart(e,id){ dragSrcPOPId=id; }
+function onPOPDrop(e,id){
+  e.preventDefault();
+  if(!dragSrcPOPId||dragSrcPOPId===id) return;
+  const fi=pops.findIndex(p=>p.id===dragSrcPOPId);
+  const ti=pops.findIndex(p=>p.id===id);
+  const moved=pops.splice(fi,1)[0];
+  pops.splice(ti,0,moved);
+  dragSrcPOPId=null;
+  renderSidebar();
+  markDirty();
+}
+
+/* ═══════════════════════════════════════════════════════════
+   PREVIEW MODE
+═══════════════════════════════════════════════════════════ */
+function togglePreview() {
+  isPreview = !isPreview;
+  const layout = document.getElementById('appLayout');
+  const btn = document.querySelector('button[onclick="togglePreview()"]');
+  if(isPreview) {
+    layout.classList.add('preview-mode');
+    btn.textContent = '✏️ Editar';
+    renderPreview();
+  } else {
+    layout.classList.remove('preview-mode');
+    btn.textContent = '👁 Visualizar';
+    if(activePOP) renderEditor();
+  }
+}
+
+function renderPreview() {
+  if(!activePOP) return;
+  const main = document.getElementById('mainArea');
+  main.innerHTML = `
+    <div style="padding:32px;max-width:780px">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:20px">
+        <div style="background:var(--navy);color:#fff;font-family:Montserrat,sans-serif;font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;padding:4px 12px;border-radius:4px">${activePOP.num}</div>
+        <span style="font-size:12px;color:var(--muted)">${activePOP.category||''} · Responsável: ${activePOP.responsible||''}</span>
+      </div>
+      <h1 style="font-family:Montserrat,sans-serif;font-size:26px;font-weight:900;color:var(--navy);letter-spacing:-.5px;margin-bottom:8px">${activePOP.title}</h1>
+      <p style="font-size:14px;color:var(--muted);margin-bottom:28px">${activePOP.desc||''}</p>
+      ${(activePOP.blocks||[]).map(b => renderBlockPreview(b)).join('')}
+    </div>
+  `;
+}
+
+function renderBlockPreview(b) {
+  let content = '';
+  if(b.type==='flowchart') {
+    const nodes=b.nodes||[];
+    content=`<div class="rendered-flowchart">${nodes.map((n,i)=>`
+      <div class="rf-node">
+        <div class="rf-connector">
+          <div class="rf-dot" style="${n.type==='decision'?'background:var(--yellow)':n.type==='end'?'background:var(--green)':''}"></div>
+          ${i<nodes.length-1?'<div class="rf-line"></div>':''}
+        </div>
+        <div class="rf-card ${n.type==='decision'?'decision':n.type==='end'?'end':''}">
+          <div class="rf-card-title">${n.title||'—'}</div>
+          ${n.desc?`<div class="rf-card-desc">${n.desc}</div>`:''}
+          <div class="rf-card-meta">
+            ${n.responsible?`<span class="rf-tag rf-tag-resp">${n.responsible}</span>`:''}
+            ${n.deadline?`<span class="rf-tag rf-tag-deadline">${n.deadline}</span>`:''}
+          </div>
+        </div>
+      </div>
+    `).join('')}</div>`;
+  } else if(b.type==='steps') {
+    const items=b.items||[];
+    content=`<div class="rendered-steps">${items.map((s,i)=>`
+      <div class="rs-item">
+        <div class="rs-num">${i+1}</div>
+        <div class="rs-content">
+          <strong>${s.title||'—'}</strong>
+          ${s.desc?`<p>${s.desc}</p>`:''}
+          <div class="rs-tags">
+            ${s.responsible?`<span class="rf-tag rf-tag-resp">${s.responsible}</span>`:''}
+            ${s.deadline?`<span class="rf-tag rf-tag-deadline">${s.deadline}</span>`:''}
+            ${s.tool?`<span class="rf-tag rf-tag-tool">${s.tool}</span>`:''}
+          </div>
+        </div>
+      </div>
+    `).join('')}</div>`;
+  } else if(b.type==='table') {
+    const headers=b.headers||[];const rows=b.rows||[];
+    content=`<table class="rendered-table"><thead><tr>${headers.map(h=>`<th>${h}</th>`).join('')}</tr></thead><tbody>${rows.map(r=>`<tr>${r.map(c=>`<td>${c}</td>`).join('')}</tr>`).join('')}</tbody></table>`;
+  } else if(b.type==='folder') {
+    const items=b.items||[];
+    content=`<div class="rendered-folder">${items.map(item=>`
+      <div style="padding-left:${(item.depth||0)*20}px">${item.isFile?'📄':'📁'} ${item.name||'—'}</div>
+    `).join('')}</div>`;
+  } else if(b.type==='text') {
+    content=`<div class="rendered-text">${(b.content||'').replace(/\n/g,'<br>')}</div>`;
+  } else if(b.type==='alert') {
+    const icons={info:'ℹ️',success:'✅',warn:'⚠️',danger:'🚨'};
+    content=`<div class="rendered-alert ${b.alertType||'info'}">${icons[b.alertType||'info']} ${b.content||''}</div>`;
+  }
+  return `
+    <div style="margin-bottom:24px">
+      ${b.title?`<h3 style="font-family:Montserrat,sans-serif;font-size:14px;font-weight:700;color:var(--navy);margin-bottom:10px;padding-bottom:6px;border-bottom:1px solid var(--border)">${b.title}</h3>`:''}
+      ${content}
+    </div>
+  `;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   SAVE
+═══════════════════════════════════════════════════════════ */
+async function saveAll() {
+  setStatus('saving','Salvando…');
+  document.getElementById('saveBtn').textContent='⏳ Salvando…';
+  try {
+    await gasPost('savePOPs', {pops: JSON.stringify(pops)});
+    isDirty = false;
+    setStatus('ok','Salvo com sucesso');
+    toast('POPs salvos no Google Sheets!','success');
+  } catch(e) {
+    setStatus('error','Erro ao salvar: '+e.message);
+    toast('Erro ao salvar: '+e.message,'error');
+  } finally {
+    document.getElementById('saveBtn').textContent='💾 Salvar';
+  }
+}
+
+function markDirty() {
+  isDirty = true;
+  document.getElementById('syncLabel').textContent = '● Alterações não salvas';
+  document.getElementById('syncLabel').style.color = 'var(--yellow)';
+}
+
+/* ═══════════════════════════════════════════════════════════
+   MODAL
+═══════════════════════════════════════════════════════════ */
+function showModal(html) {
+  const bg=document.createElement('div');
+  bg.className='modal-bg';bg.id='activeModal';
+  bg.innerHTML=`<div class="modal">${html}</div>`;
+  bg.addEventListener('click',e=>{ if(e.target===bg) closeModal(); });
+  document.getElementById('modalContainer').appendChild(bg);
+}
+function closeModal() {
+  document.getElementById('activeModal')?.remove();
+}
+
+/* ═══════════════════════════════════════════════════════════
+   TOAST
+═══════════════════════════════════════════════════════════ */
+function toast(msg, type='') {
+  const el=document.createElement('div');
+  el.className=`toast ${type}`;
+  el.innerHTML=`<span>${type==='success'?'✓':type==='error'?'✕':'ℹ'}</span>${msg}`;
+  document.getElementById('toastWrap').appendChild(el);
+  setTimeout(()=>{ el.classList.add('removing'); setTimeout(()=>el.remove(),300); },3500);
+}
+
+/* ═══════════════════════════════════════════════════════════
+   STATUS
+═══════════════════════════════════════════════════════════ */
+function setStatus(state, msg) {
+  const dot=document.getElementById('statusDot');
+  const txt=document.getElementById('statusMsg');
+  dot.className='status-dot'+(state==='saving'?' saving':state==='error'?' error':'');
+  txt.textContent=msg;
+  if(!isDirty) {
+    document.getElementById('syncLabel').textContent='Sincronizado';
+    document.getElementById('syncLabel').style.color='rgba(255,255,255,.4)';
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════
+   UTILS
+═══════════════════════════════════════════════════════════ */
+function uid(){ return Math.random().toString(36).slice(2,10); }
+function esc(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+/* ═══════════════════════════════════════════════════════════
+   SAMPLE DATA (fallback offline)
+═══════════════════════════════════════════════════════════ */
+function getSamplePOPs() {
+  return [
+    {
+      id:'pop01',num:'POP 01',title:'Preparação e convocação de reunião plenária',
+      desc:'Define os passos para organizar e comunicar a realização de reunião ordinária mensal',
+      category:'Reuniões Plenárias',responsible:'Secretaria Executiva',
+      blocks:[
+        {type:'flowchart',title:'Fluxo de convocação',nodes:[
+          {title:'Definição da pauta',desc:'O Presidente define pontos de pauta com apoio da Secretaria Executiva.',responsible:'Presidente',deadline:'7 dias antes',type:'step'},
+          {title:'Elaboração da convocação',desc:'Secretaria elabora convocação formal com data, horário, local e pauta.',responsible:'Secretaria Executiva',deadline:'5 dias antes',type:'step'},
+          {title:'Envio da convocação',desc:'Enviar por e-mail e WhatsApp a todos os conselheiros.',responsible:'Secretaria Executiva',deadline:'5 dias úteis antes',type:'step'},
+          {title:'Preparação da sala',desc:'Providenciar lista de presença, cópias de documentos e equipamentos.',responsible:'Secretaria Executiva',deadline:'Dia anterior',type:'step'},
+        ]},
+        {type:'alert',title:'',alertType:'info',content:'A pauta deve ser enviada com antecedência de pelo menos 5 dias úteis para que os conselheiros possam se preparar.'},
+      ]
+    },
+    {
+      id:'pop03',num:'POP 03',title:'Elaboração, aprovação e arquivamento de ata',
+      desc:'Procedimento para formalização do registro das reuniões',
+      category:'Reuniões Plenárias',responsible:'Secretaria Executiva',
+      blocks:[
+        {type:'steps',title:'Etapas do processo de ata',items:[
+          {title:'Elaboração da ata',desc:'A Secretaria Executiva redige a ata em até 5 dias úteis após a reunião.',responsible:'Secretaria Executiva',deadline:'5 dias úteis',tool:'Editor de texto'},
+          {title:'Revisão pelo Presidente',desc:'O Presidente revisa e sugere correções, se necessário.',responsible:'Presidente',deadline:'2 dias úteis',tool:''},
+          {title:'Envio prévio aos conselheiros',desc:'A ata é enviada por e-mail/WhatsApp com 3 dias de antecedência.',responsible:'Secretaria Executiva',deadline:'3 dias antes',tool:'E-mail/WhatsApp'},
+          {title:'Aprovação em plenária',desc:'Submetida a votação. Se aprovada, Presidente e Secretário assinam.',responsible:'Plenário',deadline:'Próxima reunião',tool:''},
+          {title:'Arquivamento',desc:'Salvar a ata assinada digitalizada no Google Drive.',responsible:'Secretaria Executiva',deadline:'Até 2 dias após',tool:'Google Drive'},
+        ]},
+        {type:'folder',title:'Estrutura de arquivamento',items:[
+          {name:'CMS-Montes Claros/',depth:0,isFile:false},
+          {name:'[Ano]/',depth:1,isFile:false},
+          {name:'Atas/',depth:2,isFile:false},
+          {name:'ATA_01_JAN_2025.pdf',depth:3,isFile:true},
+          {name:'ATA_02_FEV_2025.pdf',depth:3,isFile:true},
+          {name:'Ofícios/',depth:2,isFile:false},
+          {name:'Moções e Requerimentos/',depth:2,isFile:false},
+          {name:'Pautas e Convocações/',depth:2,isFile:false},
+        ]},
+      ]
+    },
+    {
+      id:'pop05',num:'POP 05',title:'Elaboração e tramitação de ofícios e moções',
+      desc:'Fluxo de produção de documentos formais',
+      category:'Gestão Documental',responsible:'Secretaria Executiva',
+      blocks:[
+        {type:'table',title:'Tipos de documentos',
+          headers:['Documento','Quem elabora','Quem assina','Arquivo'],
+          rows:[
+            ['Ofício','Secretaria Executiva','Presidente','Google Drive / Ofícios'],
+            ['Moção','Secretaria Executiva','Presidente + Mesa','Google Drive / Moções'],
+            ['Requerimento','Secretaria Executiva','Presidente','Google Drive / Requerimentos'],
+          ]
+        },
+        {type:'flowchart',title:'Fluxo de elaboração',nodes:[
+          {title:'Identificação da necessidade',desc:'Demanda surge de deliberação plenária ou comissão.',responsible:'',deadline:'',type:'step'},
+          {title:'Elaboração do documento',desc:'Secretaria usa modelo padronizado com numeração sequencial.',responsible:'Secretaria Executiva',deadline:'',type:'step'},
+          {title:'Revisão e aprovação',desc:'Presidente revisa. Aprovado, assina o documento.',responsible:'Presidente',deadline:'',type:'decision'},
+          {title:'Registro e envio',desc:'Registrar na planilha de controle. Enviar ao destinatário. Arquivar no Drive.',responsible:'Secretaria Executiva',deadline:'',type:'end'},
+        ]},
+      ]
+    },
+  ];
+}
+
+/* ═══════════════════════════════════════════════════════════
+   KEYBOARD SHORTCUTS
+═══════════════════════════════════════════════════════════ */
+document.addEventListener('keydown', e => {
+  if((e.ctrlKey||e.metaKey) && e.key==='s'){ e.preventDefault(); saveAll(); }
+  if(e.key==='Escape') closeModal();
+});
+
+/* ═══════════════════════════════════════════════════════════
+   BOOT
+═══════════════════════════════════════════════════════════ */
+init();
+</script>
+</body>
+</html>
