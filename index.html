@@ -1,30 +1,111 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="refresh" content="5;url=https://conselhomunicipaldesaudemoc.my.canva.site/">
-    <title>Carregando...</title>
-    <style>
-        body, html {
-            margin: 0;
-            padding: 0;
-            height: 100%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            background-color: #ffffff; /* Cor de fundo branca */
-        }
-        img {
-            max-width: 90%;
-            max-height: 90%;
-            object-fit: contain;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <title>Notebook Simplificado</title>
+  <style>
+    /* Estilos super básicos e limpos para o Dark Mode */
+    body { margin: 0; display: flex; height: 100vh; font-family: sans-serif; background: #121212; color: #eee; }
+    #sidebar { width: 300px; background: #1e1e1e; border-right: 1px solid #333; display: flex; flex-direction: column; }
+    #header { padding: 20px; border-bottom: 1px solid #333; }
+    button { width: 100%; padding: 10px; cursor: pointer; background: #c9a96e; border: none; font-weight: bold; border-radius: 4px; color: #121212; }
+    button:hover { background: #b0925c; }
+    #search { width: 100%; box-sizing: border-box; padding: 8px; margin-top: 15px; border-radius: 4px; border: 1px solid #444; background: #2a2a2a; color: white; }
+    #file-list { list-style: none; padding: 0; margin: 0; overflow-y: auto; flex: 1; }
+    .file-item { padding: 12px 20px; cursor: pointer; border-bottom: 1px solid #2a2a2a; }
+    .file-item:hover { background: #2a2a2a; }
+    .file-item.active { background: #333; border-left: 4px solid #c9a96e; }
+    #main { flex: 1; display: flex; flex-direction: column; }
+    iframe { flex: 1; border: none; width: 100%; height: 100%; background: #fff; }
+    .welcome { padding: 40px; text-align: center; color: #888; }
+  </style>
 </head>
 <body>
 
-    <img src="https://i.ibb.co/1t76QWLx/image.png" alt="Logo">
+  <aside id="sidebar">
+    <div id="header">
+      <button id="btn-open-folder">📁 Escolher Pasta de Arquivos</button>
+      <input type="text" id="search" placeholder="Filtrar arquivos..." disabled>
+    </div>
+    <ul id="file-list"></ul>
+  </aside>
 
+  <main id="main">
+    <div id="welcome" class="welcome">
+      <h2>Seu Notebook Local</h2>
+      <p>Clique no botão ao lado e selecione sua pasta "docs" para listar os HTMLs.</p>
+    </div>
+    <iframe id="viewer" style="display:none;"></iframe>
+  </main>
+
+  <script>
+    let filesData = []; // Guarda as referências dos arquivos
+    const btnOpen = document.getElementById('btn-open-folder');
+    const fileList = document.getElementById('file-list');
+    const search = document.getElementById('search');
+    const iframe = document.getElementById('viewer');
+    const welcome = document.getElementById('welcome');
+
+    // Função que pede pro usuário escolher a pasta
+    btnOpen.addEventListener('click', async () => {
+      try {
+        // Abre a janela do sistema para escolher a pasta
+        const dirHandle = await window.showDirectoryPicker();
+        filesData = [];
+        
+        // Varre a pasta procurando apenas arquivos .html
+        for await (const entry of dirHandle.values()) {
+          if (entry.kind === 'file' && entry.name.endsWith('.html')) {
+            filesData.push({ name: entry.name, handle: entry });
+          }
+        }
+        
+        // Ordena em ordem alfabética por padrão
+        filesData.sort((a, b) => a.name.localeCompare(b.name));
+        
+        search.disabled = false;
+        renderList(filesData);
+        btnOpen.textContent = "🔄 Recarregar Pasta";
+
+      } catch (err) {
+        console.log("Seleção cancelada ou erro:", err);
+      }
+    });
+
+    // Função que desenha a lista na tela
+    function renderList(files) {
+      fileList.innerHTML = '';
+      files.forEach(file => {
+        const li = document.createElement('li');
+        li.className = 'file-item';
+        // Remove o .html do nome para ficar mais limpo
+        li.textContent = file.name.replace('.html', ''); 
+        
+        // O que acontece ao clicar no arquivo:
+        li.onclick = async () => {
+          // Destaca o item clicado
+          document.querySelectorAll('.file-item').forEach(el => el.classList.remove('active'));
+          li.classList.add('active');
+
+          // Lê o arquivo direto do seu PC e cria um link temporário pro iframe
+          const fileData = await file.handle.getFile();
+          const objectURL = URL.createObjectURL(fileData);
+          
+          welcome.style.display = 'none';
+          iframe.style.display = 'block';
+          iframe.src = objectURL;
+        };
+        
+        fileList.appendChild(li);
+      });
+    }
+
+    // Filtro de busca na lista
+    search.addEventListener('input', (e) => {
+      const termo = e.target.value.toLowerCase();
+      const filtrados = filesData.filter(f => f.name.toLowerCase().includes(termo));
+      renderList(filtrados);
+    });
+  </script>
 </body>
 </html>
