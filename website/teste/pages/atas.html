@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="gas-endpoint" content="COLE_SUA_URL_GAS_AQUI">
+  <title>Atas de Reunião · CMS Montes Claros</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/theme.css">
+  <link rel="stylesheet" href="../css/base.css">
+</head>
+<body>
+  <div id="cms-loading"><div class="loader-spinner"></div><p class="loader-text">Carregando...</p></div>
+  <nav id="cms-nav"></nav>
+
+  <main style="min-height:80vh">
+    <div class="container" style="padding-top:48px;padding-bottom:64px">
+      <div style="margin-bottom:32px">
+        <a href="../index.html" style="font-size:13px;color:var(--color-muted)">← Início</a>
+        <h1 style="font-size:32px;font-weight:900;color:var(--color-primary);margin-top:12px">Atas de Reunião</h1>
+        <p style="color:var(--color-muted);margin-top:8px;font-size:14px">Registros oficiais das reuniões do Conselho Municipal de Saúde</p>
+      </div>
+
+      <div id="atas-list" style="display:flex;flex-direction:column;gap:10px"></div>
+    </div>
+  </main>
+
+  <footer id="cms-footer"></footer>
+
+  <script type="module">
+    import { fetchCMS } from '../js/api.js';
+    import { aplicarTema, aplicarConfig } from '../js/theme.js';
+
+    function esc(s) {
+      return String(s ?? '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+    }
+
+    function renderAta(a) {
+      const dt = a.data ? new Date(a.data + 'T12:00:00').toLocaleDateString('pt-BR', {day:'2-digit',month:'long',year:'numeric'}) : '';
+      const tipo = { ordinaria:'Ordinária', extraordinaria:'Extraordinária', especial:'Especial' }[a.tipo] || a.tipo || '';
+      return `
+        <div style="display:flex;align-items:center;gap:16px;background:var(--color-white);border:1px solid var(--color-border);border-radius:var(--border-radius);padding:18px 20px">
+          <div style="min-width:52px;text-align:center;background:var(--color-primary);color:#fff;border-radius:8px;padding:8px 6px;flex-shrink:0">
+            <div style="font-size:11px;font-weight:700;opacity:.7;text-transform:uppercase">${esc(tipo.slice(0,3))}</div>
+            <div style="font-size:18px;font-weight:900">Nº${esc(a.numero||'?')}</div>
+          </div>
+          <div style="flex:1;min-width:0">
+            <div style="font-weight:700;font-size:14px;color:var(--color-ink)">${esc(tipo)} ${a.numero ? `· Reunião Nº ${esc(a.numero)}` : ''}</div>
+            <div style="font-size:13px;color:var(--color-muted);margin-top:4px">${dt}</div>
+            ${a.pauta_resumo ? `<div style="font-size:12px;color:var(--color-muted);margin-top:6px;line-height:1.5">Pauta: ${esc(a.pauta_resumo)}</div>` : ''}
+          </div>
+          <div style="display:flex;gap:8px;flex-shrink:0">
+            ${a.pdf_url ? `<a href="${esc(a.pdf_url)}" target="_blank" rel="noopener" style="padding:8px 16px;background:var(--color-secondary);color:#fff;border-radius:6px;font-size:12px;font-weight:600;text-decoration:none">📄 Ver Ata</a>` : '<span style="font-size:12px;color:var(--color-muted)">Em elaboração</span>'}
+          </div>
+        </div>
+      `;
+    }
+
+    async function init() {
+      const loading = document.getElementById('cms-loading');
+      try {
+        const cms = await fetchCMS();
+        aplicarTema(cms.theme);
+        aplicarConfig(cms.config);
+
+        const nav   = document.getElementById('cms-nav');
+        const sigla = cms.config?.site_sigla || 'CMS';
+        const nome  = cms.config?.site_nome  || 'CMS';
+        const itens = (cms.menu || []).filter(m => m.ativo).sort((a,b)=>(a.ordem||99)-(b.ordem||99));
+        const links = itens.map(m => `<li><a href="${esc(m.url||'#')}">${esc(m.label||'')}</a></li>`).join('');
+        nav.innerHTML = `<div class="container nav-inner"><a href="../index.html" class="nav-brand"><span class="nav-brand-sigla">${esc(sigla)}</span><span>${esc(nome)}</span></a><ul class="nav-links">${links}</ul></div>`;
+
+        const list = document.getElementById('atas-list');
+        const atas = cms.atas || [];
+
+        if (atas.length === 0) {
+          list.innerHTML = '<p class="text-muted">Nenhuma ata publicada ainda.</p>';
+        } else {
+          list.innerHTML = atas.map(renderAta).join('');
+        }
+
+        const footer = document.getElementById('cms-footer');
+        if (footer && cms.config) footer.innerHTML = `<strong>${esc(cms.config.site_nome||'')}</strong> · © ${new Date().getFullYear()}`;
+
+        loading?.classList.add('hidden');
+      } catch(err) {
+        loading.innerHTML = `<p style="color:red;padding:24px">Erro: ${err.message}</p>`;
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', init);
+  </script>
+</body>
+</html>

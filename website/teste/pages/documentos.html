@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="gas-endpoint" content="COLE_SUA_URL_GAS_AQUI">
+  <title>Documentos · CMS Montes Claros</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/theme.css">
+  <link rel="stylesheet" href="../css/base.css">
+</head>
+<body>
+  <div id="cms-loading"><div class="loader-spinner"></div><p class="loader-text">Carregando...</p></div>
+  <nav id="cms-nav"></nav>
+
+  <main style="min-height:80vh">
+    <div class="container" style="padding-top:48px;padding-bottom:64px">
+      <div style="margin-bottom:32px">
+        <a href="../index.html" style="font-size:13px;color:var(--color-muted)">← Início</a>
+        <h1 style="font-size:32px;font-weight:900;color:var(--color-primary);margin-top:12px">Documentos</h1>
+      </div>
+      <div id="filtros-wrap" style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:24px"></div>
+      <div id="docs-list" style="display:flex;flex-direction:column;gap:8px"></div>
+    </div>
+  </main>
+
+  <footer id="cms-footer"></footer>
+
+  <script type="module">
+    import { fetchCMS } from '../js/api.js';
+    import { aplicarTema, aplicarConfig } from '../js/theme.js';
+
+    const tipoIcon = { resolucao:'📋',ata:'📝',relatorio:'📊',legislacao:'⚖️',formulario:'📄',material:'📚' };
+    const tipoLabel= { resolucao:'Resolução',ata:'Ata',relatorio:'Relatório',legislacao:'Legislação',formulario:'Formulário',material:'Material' };
+
+    function esc(s) {
+      return String(s ?? '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+    }
+
+    function renderDoc(d) {
+      const icon = tipoIcon[d.tipo] || '📁';
+      const dt   = d.data ? new Date(d.data + 'T12:00:00').toLocaleDateString('pt-BR') : '';
+      const kb   = d.tamanho_kb ? `${d.tamanho_kb} KB` : '';
+      return `
+        <div style="display:flex;align-items:center;gap:12px;background:var(--color-white);border:1px solid var(--color-border);border-radius:var(--border-radius);padding:14px 16px;transition:box-shadow .18s" onmouseover="this.style.boxShadow='var(--shadow-sm)'" onmouseout="this.style.boxShadow=''">
+          <span style="font-size:20px;flex-shrink:0">${icon}</span>
+          <div style="flex:1;min-width:0">
+            <div style="font-weight:600;font-size:14px;color:var(--color-ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(d.titulo)}</div>
+            <div style="display:flex;gap:8px;margin-top:4px;align-items:center;flex-wrap:wrap">
+              ${dt ? `<span style="font-size:12px;color:var(--color-muted)">${dt}</span>` : ''}
+              ${kb ? `<span style="font-size:12px;color:var(--color-muted)">· ${kb}</span>` : ''}
+              ${d.tipo ? `<span class="tag tag-navy" style="padding:1px 7px;font-size:9px">${esc(tipoLabel[d.tipo]||d.tipo)}</span>` : ''}
+            </div>
+          </div>
+          ${d.url ? `<a href="${esc(d.url)}" target="_blank" rel="noopener" style="padding:8px 14px;background:var(--color-bg);border:1px solid var(--color-border);color:var(--color-secondary);border-radius:6px;font-size:12px;font-weight:600;text-decoration:none;white-space:nowrap">↗ Abrir</a>` : ''}
+        </div>
+      `;
+    }
+
+    async function init() {
+      const loading = document.getElementById('cms-loading');
+      try {
+        const cms  = await fetchCMS();
+        aplicarTema(cms.theme);
+        aplicarConfig(cms.config);
+
+        const nav   = document.getElementById('cms-nav');
+        const sigla = cms.config?.site_sigla || 'CMS';
+        const nome  = cms.config?.site_nome  || 'CMS';
+        const itens = (cms.menu||[]).filter(m=>m.ativo).sort((a,b)=>(a.ordem||99)-(b.ordem||99));
+        const links = itens.map(m=>`<li><a href="${esc(m.url||'#')}">${esc(m.label||'')}</a></li>`).join('');
+        nav.innerHTML = `<div class="container nav-inner"><a href="../index.html" class="nav-brand"><span class="nav-brand-sigla">${esc(sigla)}</span><span>${esc(nome)}</span></a><ul class="nav-links">${links}</ul></div>`;
+
+        const docs = cms.documentos || [];
+        const list = document.getElementById('docs-list');
+        const filtrosWrap = document.getElementById('filtros-wrap');
+
+        const tipos = [...new Set(docs.map(d=>d.tipo).filter(Boolean))];
+        filtrosWrap.innerHTML = ['todos',...tipos].map(t => `
+          <button data-tipo="${t}" style="padding:6px 14px;border-radius:20px;border:1px solid var(--color-border);background:${t==='todos'?'var(--color-primary)':'var(--color-white)'};color:${t==='todos'?'#fff':'var(--color-ink)'};cursor:pointer;font-size:12px;font-weight:600">
+            ${t==='todos'?'Todos':(tipoLabel[t]||t)}
+          </button>
+        `).join('');
+
+        let tipoAtivo = 'todos';
+        function render() {
+          const filtrados = tipoAtivo==='todos' ? docs : docs.filter(d=>d.tipo===tipoAtivo);
+          list.innerHTML = filtrados.length ? filtrados.map(renderDoc).join('') : '<p class="text-muted">Nenhum documento nesta categoria.</p>';
+        }
+        filtrosWrap.addEventListener('click', e=>{
+          const btn = e.target.closest('[data-tipo]');
+          if(!btn) return;
+          tipoAtivo = btn.dataset.tipo;
+          filtrosWrap.querySelectorAll('[data-tipo]').forEach(b=>{
+            b.style.background = b.dataset.tipo===tipoAtivo?'var(--color-primary)':'var(--color-white)';
+            b.style.color      = b.dataset.tipo===tipoAtivo?'#fff':'var(--color-ink)';
+          });
+          render();
+        });
+        render();
+
+        const footer = document.getElementById('cms-footer');
+        if(footer && cms.config) footer.innerHTML = `<strong>${esc(cms.config.site_nome||'')}</strong> · © ${new Date().getFullYear()}`;
+
+        loading?.classList.add('hidden');
+      } catch(err) {
+        loading.innerHTML = `<p style="color:red;padding:24px">Erro: ${err.message}</p>`;
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', init);
+  </script>
+</body>
+</html>

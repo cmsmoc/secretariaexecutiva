@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="gas-endpoint" content="COLE_SUA_URL_GAS_AQUI">
+  <title>Academia do Conselheiro · CMS Montes Claros</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/theme.css">
+  <link rel="stylesheet" href="../css/base.css">
+</head>
+<body>
+  <div id="cms-loading"><div class="loader-spinner"></div><p class="loader-text">Carregando...</p></div>
+  <nav id="cms-nav"></nav>
+
+  <main style="min-height:80vh">
+    <div class="container" style="padding-top:48px;padding-bottom:64px">
+      <div style="margin-bottom:32px">
+        <a href="../index.html" style="font-size:13px;color:var(--color-muted)">← Início</a>
+        <h1 style="font-size:32px;font-weight:900;color:var(--color-primary);margin-top:12px">🎓 Academia do Conselheiro</h1>
+        <p style="color:var(--color-muted);margin-top:8px;font-size:14px">Conteúdos educativos para conselheiros municipais de saúde</p>
+      </div>
+      <div id="academia-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px"></div>
+    </div>
+  </main>
+
+  <footer id="cms-footer"></footer>
+
+  <script type="module">
+    import { fetchCMS } from '../js/api.js';
+    import { aplicarTema, aplicarConfig } from '../js/theme.js';
+
+    const nivelCls  = { basico:'tag-green',intermediario:'tag-blue',avancado:'tag-red' };
+    const tipoIcon  = { pdf:'📄',video:'▶️',texto:'📖',oficina:'🎓',link:'🔗' };
+    const catLabel  = { legislacao:'Legislação',gestao_sus:'Gestão SUS',participacao:'Participação',direitos:'Direitos',conferencia:'Conferência' };
+
+    function esc(s) {
+      return String(s ?? '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+    }
+
+    function renderCard(a) {
+      const icon   = tipoIcon[a.tipo_conteudo] || '📁';
+      const nivCls = nivelCls[a.nivel] || 'tag-navy';
+      const dur    = a.duracao_min ? `⏱ ${a.duracao_min} min` : '';
+      return `
+        <div style="background:var(--color-white);border:1px solid var(--color-border);border-radius:var(--border-radius);padding:20px;display:flex;flex-direction:column;gap:10px;${a.destaque?'border-color:var(--color-accent);border-width:2px':''}">
+          <div style="display:flex;align-items:center;gap:8px">
+            <span style="font-size:22px">${icon}</span>
+            <span class="tag ${nivCls}">${esc(a.nivel||'')}</span>
+            ${a.categoria ? `<span class="tag tag-navy" style="font-size:9px">${esc(catLabel[a.categoria]||a.categoria)}</span>` : ''}
+          </div>
+          <h3 style="font-size:15px;font-weight:700;color:var(--color-ink);line-height:1.35">${esc(a.titulo)}</h3>
+          ${a.descricao ? `<p style="font-size:13px;color:var(--color-muted);line-height:1.6;flex:1">${esc(a.descricao)}</p>` : ''}
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-top:auto">
+            <span style="font-size:11px;color:var(--color-muted)">${dur}</span>
+            ${a.url ? `<a href="${esc(a.url)}" target="_blank" rel="noopener" style="padding:7px 16px;background:var(--color-secondary);color:#fff;border-radius:6px;font-size:12px;font-weight:600;text-decoration:none">Acessar →</a>` : ''}
+          </div>
+        </div>
+      `;
+    }
+
+    async function init() {
+      const loading = document.getElementById('cms-loading');
+      try {
+        const cms = await fetchCMS();
+        aplicarTema(cms.theme);
+        aplicarConfig(cms.config);
+
+        const nav   = document.getElementById('cms-nav');
+        const sigla = cms.config?.site_sigla || 'CMS';
+        const nome  = cms.config?.site_nome  || 'CMS';
+        const itens = (cms.menu||[]).filter(m=>m.ativo).sort((a,b)=>(a.ordem||99)-(b.ordem||99));
+        const links = itens.map(m=>`<li><a href="${esc(m.url||'#')}">${esc(m.label||'')}</a></li>`).join('');
+        nav.innerHTML = `<div class="container nav-inner"><a href="../index.html" class="nav-brand"><span class="nav-brand-sigla">${esc(sigla)}</span><span>${esc(nome)}</span></a><ul class="nav-links">${links}</ul></div>`;
+
+        const grid    = document.getElementById('academia-grid');
+        const conteud = cms.academia || [];
+        grid.innerHTML = conteud.length ? conteud.map(renderCard).join('') : '<p class="text-muted">Nenhum conteúdo publicado.</p>';
+
+        const footer = document.getElementById('cms-footer');
+        if(footer && cms.config) footer.innerHTML = `<strong>${esc(cms.config.site_nome||'')}</strong> · © ${new Date().getFullYear()}`;
+
+        loading?.classList.add('hidden');
+      } catch(err) {
+        loading.innerHTML = `<p style="color:red;padding:24px">Erro: ${err.message}</p>`;
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', init);
+  </script>
+</body>
+</html>

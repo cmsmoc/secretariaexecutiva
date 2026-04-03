@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="gas-endpoint" content="COLE_SUA_URL_GAS_AQUI">
+  <title>Notícias · CMS Montes Claros</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/theme.css">
+  <link rel="stylesheet" href="../css/base.css">
+</head>
+<body>
+  <div id="cms-loading"><div class="loader-spinner"></div><p class="loader-text">Carregando...</p></div>
+  <nav id="cms-nav"></nav>
+
+  <main style="min-height:80vh">
+    <div class="container" style="padding-top:48px;padding-bottom:64px">
+      <div style="margin-bottom:32px">
+        <a href="../index.html" style="font-size:13px;color:var(--color-muted)">← Início</a>
+        <h1 style="font-size:32px;font-weight:900;color:var(--color-primary);margin-top:12px">Notícias</h1>
+      </div>
+
+      <!-- Filtros -->
+      <div class="filtros-wrap" id="filtros-wrap" style="margin-bottom:28px;display:flex;gap:8px;flex-wrap:wrap"></div>
+
+      <!-- Grid de notícias -->
+      <div id="noticias-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px"></div>
+    </div>
+  </main>
+
+  <footer id="cms-footer"></footer>
+
+  <script type="module">
+    import { fetchCMS }        from '../js/api.js';
+    import { aplicarTema, aplicarConfig } from '../js/theme.js';
+
+    const catMap = {
+      resolucao:   { label: 'Resolução',   cls: 'tag-green'  },
+      reuniao:     { label: 'Reunião',     cls: 'tag-blue'   },
+      conferencia: { label: 'Conferência', cls: 'tag-yellow'  },
+      informe:     { label: 'Informe',     cls: 'tag-navy'   },
+      deliberacao: { label: 'Deliberação', cls: 'tag-green'  },
+    };
+
+    function esc(s) {
+      return String(s ?? '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+    }
+
+    function renderCard(n) {
+      const cat = catMap[n.categoria] || { label: n.categoria || 'Notícia', cls: 'tag-navy' };
+      const dt  = n.data_publicacao
+        ? new Date(n.data_publicacao + 'T12:00:00').toLocaleDateString('pt-BR')
+        : '';
+      return `
+        <article class="feed-card${n.destaque ? ' feed-card--destaque' : ''}">
+          <div class="feed-card-top">
+            <span class="tag ${cat.cls}">${esc(cat.label)}</span>
+            <time class="feed-date">${dt}</time>
+          </div>
+          <h3 class="feed-title">
+            <a href="noticia.html#${esc(n.slug || n.id)}">${esc(n.titulo)}</a>
+          </h3>
+          ${n.resumo ? `<p class="feed-resumo">${esc(n.resumo)}</p>` : ''}
+        </article>
+        <style>
+          .feed-card{background:var(--color-white);border:1px solid var(--color-border);border-radius:var(--border-radius);padding:20px;display:flex;flex-direction:column;gap:10px;transition:box-shadow .2s,transform .2s}
+          .feed-card:hover{box-shadow:var(--shadow-md);transform:translateY(-2px)}
+          .feed-card--destaque{border-color:var(--color-accent);border-width:2px}
+          .feed-card-top{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+          .feed-date{font-size:11px;color:var(--color-muted);margin-left:auto}
+          .feed-title{font-size:15px;font-weight:700;color:var(--color-ink);line-height:1.4}
+          .feed-title a{color:inherit}
+          .feed-title a:hover{color:var(--color-secondary);text-decoration:none}
+          .feed-resumo{font-size:13px;color:var(--color-muted);line-height:1.6}
+        </style>
+      `;
+    }
+
+    function renderizarNav(menu, config) {
+      const nav   = document.getElementById('cms-nav');
+      const sigla = config?.site_sigla || 'CMS';
+      const nome  = config?.site_nome  || 'Conselho Municipal de Saúde';
+      const itens = (menu || []).filter(m => m.ativo).sort((a,b)=>(a.ordem||99)-(b.ordem||99));
+      const links = itens.map(m => `<li><a href="${esc(m.url||'#')}">${esc(m.label||'')}</a></li>`).join('');
+      nav.innerHTML = `<div class="container nav-inner"><a href="../index.html" class="nav-brand"><span class="nav-brand-sigla">${esc(sigla)}</span><span>${esc(nome)}</span></a><ul class="nav-links">${links}</ul></div>`;
+    }
+
+    async function init() {
+      const loading = document.getElementById('cms-loading');
+      try {
+        const cms = await fetchCMS();
+        aplicarTema(cms.theme);
+        aplicarConfig(cms.config);
+        renderizarNav(cms.menu, cms.config);
+
+        const noticias = cms.noticias || [];
+        const grid = document.getElementById('noticias-grid');
+        const filtrosWrap = document.getElementById('filtros-wrap');
+
+        // Filtros de categoria
+        const cats = [...new Set(noticias.map(n => n.categoria).filter(Boolean))];
+        filtrosWrap.innerHTML = ['todos', ...cats].map(c => `
+          <button class="filtro-btn${c==='todos'?' active':''}" data-cat="${c}" style="padding:6px 16px;border-radius:20px;border:1px solid var(--color-border);background:${c==='todos'?'var(--color-primary)':'var(--color-white)'};color:${c==='todos'?'#fff':'var(--color-ink)'};cursor:pointer;font-size:12px;font-weight:600">
+            ${c === 'todos' ? 'Todos' : (catMap[c]?.label || c)}
+          </button>
+        `).join('');
+
+        let catAtiva = 'todos';
+        function renderFiltrado() {
+          const filtradas = catAtiva === 'todos' ? noticias : noticias.filter(n => n.categoria === catAtiva);
+          if (filtradas.length === 0) {
+            grid.innerHTML = '<p class="text-muted">Nenhuma notícia nesta categoria.</p>';
+            return;
+          }
+          grid.innerHTML = filtradas.map(renderCard).join('');
+        }
+
+        filtrosWrap.addEventListener('click', e => {
+          const btn = e.target.closest('[data-cat]');
+          if (!btn) return;
+          catAtiva = btn.dataset.cat;
+          filtrosWrap.querySelectorAll('.filtro-btn').forEach(b => {
+            const isActive = b.dataset.cat === catAtiva;
+            b.style.background = isActive ? 'var(--color-primary)' : 'var(--color-white)';
+            b.style.color       = isActive ? '#fff' : 'var(--color-ink)';
+          });
+          renderFiltrado();
+        });
+
+        renderFiltrado();
+
+        const footer = document.getElementById('cms-footer');
+        if (footer && cms.config) footer.innerHTML = `<strong>${esc(cms.config.site_nome||'')}</strong> · © ${new Date().getFullYear()}`;
+
+        loading?.classList.add('hidden');
+      } catch(err) {
+        loading.innerHTML = `<p style="color:red;padding:24px">Erro: ${err.message}</p>`;
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', init);
+  </script>
+</body>
+</html>

@@ -1,0 +1,20 @@
+/* ═══════════════════════════════════════════════════════════
+   CMS-MOC · theme.css
+   Variáveis CSS padrão — substituídas dinamicamente pelo
+   theme.js ao carregar o JSON do GAS.
+   NÃO editar manualmente: use a aba THEME no Sheets.
+   ═══════════════════════════════════════════════════════════ */
+
+:root {
+  --color-primary:   #0D2E5A;
+  --color-secondary: #1B6CB5;
+  --color-accent:    #F5C400;
+  --color-success:   #1E8A4A;
+  --color-bg:        #F7F8FA;
+  --color-white:     #ffffff;
+  --color-ink:       #111827;
+  --color-muted:     #6B7280;
+  --color-border:    #E5E7EB;
+  --font-primary:    'Inter', system-ui, sans-serif;
+  --border-radius:   10px;
+}
