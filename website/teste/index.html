@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- ⚠️  CONFIGURAR: Cole aqui a URL do seu GAS Web App -->
+  <meta name="gas-endpoint" content="https://script.google.com/macros/s/AKfycbx_vnI5UewvGNA2sq_w7JA9GdXNNgAyDOnR1MSqgrrOiPyvTuR7xOpLvsQFg6gdSWR0vw/exec">
+
+  <title>Conselho Municipal de Saúde de Montes Claros</title>
+  <meta name="description" content="Site oficial do Conselho Municipal de Saúde de Montes Claros - MG">
+  <meta property="og:title" content="CMS Montes Claros">
+  <meta property="og:type" content="website">
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="css/theme.css">
+  <link rel="stylesheet" href="css/base.css">
+
+  <!-- Favicon básico -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏛️</text></svg>">
+</head>
+<body>
+
+  <!-- ── LOADING ──────────────────────────────────────────── -->
+  <div id="cms-loading" role="status" aria-live="polite">
+    <div class="loader-spinner"></div>
+    <p class="loader-text">Carregando...</p>
+  </div>
+
+  <!-- ── ERRO ─────────────────────────────────────────────── -->
+  <div id="cms-error" role="alert">
+    <h2>Não foi possível carregar o site</h2>
+    <p id="error-detail">Verifique se o endpoint do GAS está configurado corretamente no index.html.</p>
+    <button onclick="window.location.reload()">Tentar novamente</button>
+  </div>
+
+  <!-- ── NAVBAR (preenchida via JS) ───────────────────────── -->
+  <nav id="cms-nav" aria-label="Navegação principal"></nav>
+
+  <!-- ── CONTEÚDO DINÂMICO (módulos injetados via JS) ─────── -->
+  <main id="cms-main" aria-label="Conteúdo principal"></main>
+
+  <!-- ── FOOTER (preenchido via JS) ───────────────────────── -->
+  <footer id="cms-footer"></footer>
+
+  <!-- ── POPUP OVERLAY ────────────────────────────────────── -->
+  <div id="cms-popup-overlay" class="hidden" aria-hidden="true"></div>
+
+  <!-- ── JS (módulos ES6) ─────────────────────────────────── -->
+  <script type="module" src="js/main.js"></script>
+
+</body>
+</html>
