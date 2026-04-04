@@ -3,111 +3,219 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Relatório de Monitoramento - Horário Estendido</title>
+    <title>Relatório de Monitoramento - Horário Estendido | CMS Montes Claros</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700;900&family=Open+Sans:wght@300;400;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Configuração do Tailwind com o Design System CMS -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        cms: {
+                            navy:   '#0D2E5A',
+                            blue:   '#1B6CB5',
+                            green:  '#1E8A4A',
+                            yellow: '#F5C400',
+                            white:  '#FFFFFF',
+                            off:    '#F7F8FA',
+                            ink:    '#111827',
+                            muted:  '#6B7280',
+                            border: '#E5E7EB'
+                        }
+                    },
+                    fontFamily: {
+                        display: ['Montserrat', 'sans-serif'],
+                        body: ['Open Sans', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+
     <style>
-        body { font-family: 'Inter', sans-serif; background-color: #f8fafc; }
-        .card-shadow { box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06); }
-        .status-badge { @apply px-2 py-1 rounded-full text-xs font-semibold; }
+        body { background-color: theme('colors.cms.off'); color: theme('colors.cms.ink'); line-height: 1.75; }
         .loading-spinner {
-            border: 4px solid #f3f3f3;
-            border-top: 4px solid #3b82f6;
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
+            border: 4px solid theme('colors.cms.border');
+            border-top: 4px solid theme('colors.cms.blue');
+            border-radius: 50%; width: 40px; height: 40px;
             animation: spin 1s linear infinite;
         }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-        
-        /* Modal transitions */
-        .modal-backdrop { background-color: rgba(0, 0, 0, 0.5); backdrop-filter: blur(4px); }
-        .tab-active { @apply border-b-4 border-white font-bold; }
+        .modal-backdrop { background-color: rgba(13, 46, 90, 0.8); backdrop-filter: blur(4px); }
+        .tab-active { color: theme('colors.cms.yellow') !important; border-bottom: 3px solid theme('colors.cms.yellow'); }
+        .cms-eyebrow { font-family: 'Montserrat', sans-serif; font-size: 10px; font-weight: 700; letter-spacing: 3px; text-transform: uppercase; }
+        .cms-tag { font-family: 'Montserrat', sans-serif; font-size: 10px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; padding: 4px 10px; border-radius: 4px; }
     </style>
 </head>
-<body class="text-slate-800">
+<body class="font-body antialiased selection:bg-cms-yellow selection:text-cms-navy">
 
     <div id="app" class="min-h-screen flex flex-col">
         
-        <!-- Imagem de Topo Principal -->
-        <div class="w-full overflow-hidden bg-white">
-            <img src="https://i.ibb.co/FLc433Br/Form-Header-28.png" alt="Relatórios de Visitas da Câmara de Atenção Primária do Conselho Municipal de Saúde nas UBS" class="w-full h-auto object-contain">
+        <!-- Header Banner HTML -->
+        <div class="w-full bg-white border-b border-cms-border flex justify-center">
+            <!-- Container Principal do Banner -->
+            <div class="relative w-full max-w-[1200px] h-[280px] md:h-[320px] bg-white overflow-hidden flex flex-col md:flex-row">
+
+                <!-- Fundo Direito (Ícone SVG de Prancheta com Lupa e Olho) -->
+                <div class="absolute right-[-25%] md:right-[-2%] top-1/2 transform -translate-y-1/2 w-[100%] md:w-[45%] h-[120%] pointer-events-none flex justify-end items-center opacity-80 rotate-[6deg] z-0">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 250 250" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" class="w-full h-full text-[#def0f8]">
+                        <!-- Prancheta -->
+                        <rect x="40" y="40" width="130" height="180" rx="12" stroke-width="6" />
+                        <!-- Presilha -->
+                        <path d="M 85 40 V 25 C 85 20 90 15 95 15 H 115 C 120 15 125 20 125 25 V 40" stroke-width="6" />
+                        <rect x="75" y="30" width="60" height="20" rx="4" stroke-width="6" />
+                        <!-- Linhas e Checkboxes -->
+                        <rect x="60" y="80" width="16" height="16" rx="2" stroke-width="6" />
+                        <line x1="90" y1="88" x2="140" y2="88" stroke-width="6" />
+                        
+                        <rect x="60" y="115" width="16" height="16" rx="2" stroke-width="6" />
+                        <line x1="90" y1="123" x2="140" y2="123" stroke-width="6" />
+                        
+                        <rect x="60" y="150" width="16" height="16" rx="2" stroke-width="6" />
+                        
+                        <!-- Lupa (com fundo branco para sobrepor as linhas da prancheta) -->
+                        <circle cx="160" cy="130" r="50" fill="#ffffff" stroke-width="8" />
+                        <!-- Cabo da lupa -->
+                        <line x1="195" y1="165" x2="230" y2="200" stroke-width="14" stroke-linecap="round" />
+                        
+                        <!-- Olho dentro da lupa -->
+                        <path d="M 125 130 C 125 130 140 105 160 105 C 180 105 195 130 195 130 C 195 130 180 155 160 155 C 140 155 125 130 125 130 Z" stroke-width="6" />
+                        <circle cx="160" cy="130" r="12" stroke-width="6" />
+                    </svg>
+                </div>
+                
+                <!-- Ícone no canto inferior esquerdo (Cortado pela base) -->
+                <div class="absolute left-[-10%] md:left-[-3%] bottom-0 transform translate-y-[35%] md:translate-y-[41%] w-[45%] md:w-[29%] pointer-events-none z-0">
+                    <img src="https://raw.githubusercontent.com/cmsmoc/secretariaexecutiva/main/logo/iconcms1.png" 
+                         alt="Ícone do Conselho" 
+                         class="object-contain w-full h-full drop-shadow-2xl" />
+                </div>
+
+                <!-- Cabeçalho de Logos (Canto Superior Esquerdo) -->
+                <div class="absolute top-0 left-0 z-20 w-full flex items-center gap-3 md:gap-4 px-6 md:px-12 pt-6 md:pt-10">
+                    
+                    <!-- Logo Conselho Municipal -->
+                    <div class="flex flex-col text-cms-ink mt-1">
+                        <span class="font-display font-extrabold text-[12px] md:text-[16px] leading-tight tracking-tight">CONSELHO</span>
+                        <span class="font-display font-extrabold text-[12px] md:text-[16px] leading-tight tracking-tight">MUNICIPAL</span>
+                        <span class="font-display font-extrabold text-[12px] md:text-[16px] leading-tight tracking-tight">DE SAÚDE</span>
+                        <span class="font-display font-medium text-[8px] md:text-[11px] leading-tight tracking-tighter mt-[2px]">de MONTES CLAROS</span>
+                    </div>
+
+                    <!-- Divisor -->
+                    <div class="w-[2px] h-12 md:h-16 bg-gray-300"></div>
+
+                    <!-- Logo Câmara Técnica -->
+                    <div class="flex flex-col text-cms-blue bg-white/60 md:bg-transparent backdrop-blur-sm md:backdrop-blur-none p-1 md:p-0 rounded">
+                        <span class="font-display font-light text-[12px] md:text-[16px] leading-tight">Câmara Técnica de</span>
+                        <span class="font-display font-bold text-[14px] md:text-[18px] leading-tight">Atenção Primária</span>
+                        <span class="font-display font-bold text-[14px] md:text-[18px] leading-tight">à Saúde</span>
+                    </div>
+                </div>
+
+                <!-- Conteúdo do Banner (Títulos centralizados verticalmente) -->
+                <div class="relative z-10 w-full h-full flex flex-col justify-center px-6 md:px-12 md:pl-[38%] pt-[100px] md:pt-0 pb-8 md:pb-0">
+                    <h2 class="font-display text-xl md:text-[32px] font-light text-cms-ink mb-1">
+                        Visitas às Unidades
+                    </h2>
+                    <h1 class="font-display text-3xl md:text-[60px] font-black text-cms-ink mb-2 md:mb-4 tracking-tight leading-none">
+                        Relatórios de Observação
+                    </h1>
+                    <h3 class="font-display text-xl md:text-[32px] font-light text-cms-ink">
+                        Horário Estendido
+                    </h3>
+                </div>
+
+            </div>
         </div>
 
-        <!-- Header & Nav -->
-        <header class="bg-blue-700 text-white shadow-lg sticky top-0 z-40">
-            <div class="container mx-auto px-6 py-3 flex flex-col md:flex-row justify-between items-center gap-4">
+        <!-- Header & Nav Institucional -->
+        <header class="bg-cms-navy text-white sticky top-0 z-40 border-b-4 border-cms-blue">
+            <div class="max-w-[1080px] mx-auto px-6 lg:px-12 py-0 flex flex-col md:flex-row justify-between items-center gap-4 h-auto md:h-16">
                 
-                <nav class="flex gap-8 h-full">
-                    <button onclick="switchView('home')" id="btnHome" class="py-2 px-1 tab-active transition-all text-lg">🏠 Início</button>
-                    <button onclick="switchView('report')" id="btnReport" class="py-2 px-1 border-b-4 border-transparent hover:border-blue-300 transition-all text-lg">📋 Relatório Completo</button>
+                <nav class="flex gap-8 h-full pt-4 md:pt-0">
+                    <button onclick="switchView('home')" id="btnHome" class="h-full flex items-center py-4 md:py-0 font-display font-bold text-xs tracking-[1.5px] uppercase tab-active transition-colors text-white hover:text-cms-yellow">Início</button>
+                    <button onclick="switchView('report')" id="btnReport" class="h-full flex items-center py-4 md:py-0 font-display font-bold text-xs tracking-[1.5px] uppercase border-b-3 border-transparent text-white/70 hover:text-cms-yellow transition-colors">Relatório Completo</button>
                 </nav>
 
-                <div class="flex items-center gap-3 w-full md:w-auto">
+                <div class="flex items-center gap-3 w-full md:w-auto pb-4 md:pb-0">
                     <input type="text" id="searchInput" placeholder="Buscar unidade ou equipe..." 
-                           class="px-4 py-2 rounded-lg text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-400 flex-grow md:w-64 text-sm">
-                    <button onclick="loadData()" class="bg-blue-800 hover:bg-blue-900 px-4 py-2 rounded-lg transition-colors text-sm flex items-center gap-2 whitespace-nowrap">
-                        🔄 Atualizar
+                           class="px-4 py-2 rounded font-body text-sm text-cms-ink border border-white/20 bg-white/10 placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-cms-yellow focus:bg-white focus:text-cms-navy transition-all flex-grow md:w-64">
+                    <button onclick="loadData()" class="bg-cms-yellow text-cms-navy font-display font-bold text-[11px] tracking-[1px] uppercase px-4 py-2.5 rounded hover:bg-white transition-colors flex items-center gap-2 whitespace-nowrap">
+                        Atualizar
                     </button>
                 </div>
             </div>
         </header>
 
         <!-- Main Content -->
-        <main class="container mx-auto p-4 md:p-6 flex-grow">
+        <main class="max-w-[1080px] mx-auto px-6 lg:px-12 py-12 flex-grow w-full">
             
-            <!-- Summary Stats -->
-            <div id="statsGrid" class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
-                <!-- Dynamically filled -->
+            <!-- Título da Página -->
+            <div class="mb-10">
+                <p class="cms-eyebrow text-cms-blue mb-3">Monitoramento Contínuo</p>
+                <h1 class="font-display text-4xl md:text-5xl font-black text-cms-navy tracking-[-1px] leading-tight">
+                    HORÁRIO ESTENDIDO<br><span class="text-cms-blue">NAS UNIDADES DE SAÚDE</span>
+                </h1>
             </div>
 
             <!-- Error Message -->
-            <div id="errorMessage" class="hidden bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-6" role="alert">
-                <strong class="font-bold">Erro!</strong>
-                <span class="block sm:inline" id="errorText">Não foi possível carregar os dados.</span>
+            <div id="errorMessage" class="hidden bg-red-50 border-l-4 border-red-500 text-red-700 p-6 rounded-r mb-8" role="alert">
+                <strong class="font-display font-bold uppercase tracking-widest text-xs">Erro na Conexão</strong>
+                <p class="mt-2 font-body text-sm" id="errorText">Não foi possível carregar os dados.</p>
+            </div>
+
+            <!-- Summary Stats -->
+            <div id="statsGrid" class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+                <!-- Dynamically filled -->
             </div>
 
             <!-- Loading State -->
             <div id="loadingState" class="flex flex-col items-center justify-center py-20">
-                <div class="loading-spinner mb-4"></div>
-                <p class="text-slate-500 animate-pulse">Buscando informações atualizadas...</p>
+                <div class="loading-spinner mb-6"></div>
+                <p class="font-display font-bold text-xs tracking-widest uppercase text-cms-muted animate-pulse">Sincronizando Dados...</p>
             </div>
 
             <!-- View: Home (Gallery) -->
             <section id="viewHome" class="view-section">
-                <h2 class="text-xl font-bold text-slate-600 mb-6 flex items-center gap-2">
-                    <span class="w-2 h-8 bg-blue-500 rounded-full"></span> 
-                    Galeria de Visitas
-                </h2>
-                <div id="galleryContainer" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                    <!-- Simple Cards -->
+                <div class="flex items-center gap-4 mb-8">
+                    <h2 class="font-display text-2xl font-bold text-cms-navy tracking-tight">Galeria de Visitas</h2>
+                    <div class="h-[1px] bg-cms-border flex-grow"></div>
+                </div>
+                <div id="galleryContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <!-- Cards de Galeria -->
                 </div>
             </section>
 
             <!-- View: Report (Full List) -->
             <section id="viewReport" class="view-section hidden">
-                <h2 class="text-xl font-bold text-slate-600 mb-6 flex items-center gap-2">
-                    <span class="w-2 h-8 bg-green-500 rounded-full"></span> 
-                    Dados Consolidados de Visitas
-                </h2>
-                <div id="reportContainer" class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                    <!-- Detailed Cards -->
+                <div class="flex items-center gap-4 mb-8">
+                    <h2 class="font-display text-2xl font-bold text-cms-navy tracking-tight">Relatórios Detalhados</h2>
+                    <div class="h-[1px] bg-cms-border flex-grow"></div>
+                </div>
+                <div id="reportContainer" class="grid grid-cols-1 gap-12">
+                    <!-- Cards Detalhados -->
                 </div>
             </section>
         </main>
 
-        <!-- Footer -->
-        <footer class="bg-white border-t border-slate-200 p-8 mt-10 text-center text-slate-500 text-sm">
-            <p class="font-bold mb-2">Conselho de Saúde</p>
-            <p>Monitoramento de Unidades com Horário Estendido</p>
-            <p class="mt-4 text-[10px] uppercase tracking-widest">Sincronizado via Google Sheets API</p>
+        <!-- Footer Oficial -->
+        <footer class="bg-cms-navy text-white/60 text-center py-12 px-6 font-body text-sm mt-12 border-t-8 border-cms-yellow">
+            <p class="font-display font-bold text-white tracking-widest uppercase mb-2">Conselho Municipal de Saúde de Montes Claros – MG</p>
+            <p class="mb-6 font-light">Câmara de Atenção Primária · Monitoramento de Unidades</p>
+            <p class="font-display font-bold text-[10px] tracking-[2px] uppercase text-cms-yellow/70">Sincronizado via Google Sheets API</p>
         </footer>
     </div>
 
     <!-- Modal Backdrop -->
-    <div id="modalContainer" class="fixed inset-0 z-50 hidden modal-backdrop flex items-center justify-center p-4">
-        <div class="bg-white w-full max-w-4xl max-h-[90vh] rounded-2xl shadow-2xl overflow-y-auto relative">
-            <button onclick="closeModal()" class="absolute top-4 right-4 bg-slate-100 hover:bg-slate-200 p-2 rounded-full text-slate-600 transition-colors z-10">
+    <div id="modalContainer" class="fixed inset-0 z-50 hidden modal-backdrop flex items-center justify-center p-4 md:p-8">
+        <div class="bg-white w-full max-w-4xl max-h-[90vh] rounded-xl shadow-2xl overflow-y-auto relative border border-cms-border">
+            <button onclick="closeModal()" class="absolute top-6 right-6 bg-cms-off hover:bg-cms-border border border-cms-border w-10 h-10 rounded text-cms-navy font-bold transition-colors z-10 flex items-center justify-center">
                 ✕
             </button>
             <div id="modalContent">
@@ -128,6 +236,8 @@
 
             loading.classList.remove('hidden');
             error.classList.add('hidden');
+            document.getElementById('galleryContainer').innerHTML = '';
+            document.getElementById('reportContainer').innerHTML = '';
 
             try {
                 const response = await fetch(CSV_URL);
@@ -164,18 +274,30 @@
             document.getElementById('btnHome').classList.toggle('tab-active', view === 'home');
             document.getElementById('btnReport').classList.toggle('tab-active', view === 'report');
             
+            // Remove the subtle inactive styles when active
+            if(view === 'home') {
+                document.getElementById('btnHome').classList.remove('text-white/70');
+                document.getElementById('btnReport').classList.add('text-white/70');
+            } else {
+                document.getElementById('btnReport').classList.remove('text-white/70');
+                document.getElementById('btnHome').classList.add('text-white/70');
+            }
+
             renderCurrentView();
         }
 
         function renderCurrentView() {
             const term = document.getElementById('searchInput').value.toLowerCase();
             const filtered = allData.filter(v => 
-                v['🔠 Nome da Unidade:'].toLowerCase().includes(term) ||
-                v['👥 Equipe Responsável:'].toLowerCase().includes(term)
+                (v['🔠 Nome da Unidade:'] || '').toLowerCase().includes(term) ||
+                (v['👥 Equipe Responsável:'] || '').toLowerCase().includes(term)
             );
 
             if (currentView === 'home') renderGallery(filtered);
             else renderFullReport(filtered);
+
+            // Inicia os ícones após a renderização do DOM
+            setTimeout(() => { if(window.lucide) window.lucide.createIcons(); }, 10);
         }
 
         function renderGallery(data) {
@@ -184,27 +306,39 @@
 
             data.forEach((visit) => {
                 const card = document.createElement('div');
-                card.className = 'bg-white p-6 rounded-2xl border border-slate-200 card-shadow cursor-pointer hover:border-blue-400 hover:bg-blue-50 transition-all group flex flex-col min-h-[200px]';
+                card.className = 'bg-white p-8 border border-cms-border rounded-xl hover:shadow-lg hover:border-cms-blue transition-all cursor-pointer group flex flex-col min-h-[240px] relative overflow-hidden';
                 card.onclick = () => openModal(visit._originalIndex);
                 
                 card.innerHTML = `
+                    <div class="absolute top-0 left-0 right-0 h-1.5 bg-cms-blue group-hover:bg-cms-yellow transition-colors"></div>
                     <div class="flex flex-col h-full">
-                        <div class="mb-4">
-                            <h3 class="text-2xl font-black text-slate-800 group-hover:text-blue-700 leading-tight mb-2 transition-colors">${visit['🔠 Nome da Unidade:']}</h3>
-                            <div class="flex items-center gap-2">
-                                <span class="bg-blue-600 text-white text-xs font-bold px-2 py-1 rounded">DATA DA VISITA</span>
-                                <span class="text-lg font-bold text-slate-600">${visit['📅 Data da Visita:']}</span>
+                        <div class="mb-8">
+                            <span class="cms-eyebrow text-cms-blue mb-4 flex items-center gap-2">
+                                <i data-lucide="building" class="w-4 h-4"></i> Unidade de Saúde
+                            </span>
+                            <h3 class="font-display text-2xl font-black text-cms-navy group-hover:text-cms-blue leading-tight tracking-tight transition-colors">${visit['🔠 Nome da Unidade:']}</h3>
+                        </div>
+                        <div class="space-y-5 mb-8 flex-grow">
+                            <div class="flex gap-4 items-center">
+                                <div class="bg-cms-blue/10 text-cms-blue p-2.5 rounded-lg shrink-0"><i data-lucide="clipboard-signature" class="w-5 h-5"></i></div>
+                                <div>
+                                    <p class="cms-eyebrow text-cms-muted mb-0.5">Membros Relatores</p>
+                                    <p class="font-body text-sm font-semibold text-cms-ink">${visit['👥 Equipe Responsável:']}</p>
+                                </div>
+                            </div>
+                            <div class="flex gap-4 items-center">
+                                <div class="bg-cms-green/10 text-cms-green p-2.5 rounded-lg shrink-0"><i data-lucide="calendar-check" class="w-5 h-5"></i></div>
+                                <div>
+                                    <p class="cms-eyebrow text-cms-muted mb-0.5">Data da Visita</p>
+                                    <p class="font-body text-sm font-bold text-cms-navy">${visit['📅 Data da Visita:']}</p>
+                                </div>
                             </div>
                         </div>
-                        <div class="text-sm text-slate-600 mb-6 flex-grow">
-                            <p class="font-bold text-blue-800 uppercase text-[11px] tracking-wider mb-1">Equipe Responsável:</p>
-                            <p class="leading-relaxed font-medium">${visit['👥 Equipe Responsável:']}</p>
-                        </div>
-                        <div class="flex justify-between items-center mt-auto pt-4 border-t border-slate-100">
-                            <span class="text-sm font-bold text-blue-600 flex items-center gap-1">
-                                Ver Detalhes ➔
+                        <div class="flex justify-between items-center mt-auto pt-5 border-t border-cms-border">
+                            <span class="font-display font-bold text-[10px] tracking-[1.5px] uppercase text-cms-blue flex items-center gap-2 group-hover:text-cms-yellow transition-colors bg-cms-blue/5 py-2 px-3 rounded">
+                                Ver Detalhes <i data-lucide="arrow-right" class="w-4 h-4"></i>
                             </span>
-                            <span class="text-xs font-bold text-slate-300">#${visit._originalIndex + 1}</span>
+                            <span class="font-body text-xs font-bold text-cms-muted bg-cms-off px-3 py-2 rounded">#${String(visit._originalIndex + 1).padStart(3, '0')}</span>
                         </div>
                     </div>
                 `;
@@ -222,107 +356,179 @@
 
         function createFullDetailCard(visit, isModal = false) {
             const card = document.createElement('div');
-            card.className = isModal ? '' : 'bg-white rounded-2xl overflow-hidden card-shadow border border-slate-100 flex flex-col';
+            card.className = isModal ? '' : 'bg-white border border-cms-border flex flex-col rounded-xl overflow-hidden shadow-sm';
             
-            const getStatusColor = (val) => {
-                if (!val) return 'bg-slate-100 text-slate-500';
+            // Lógica para transformar texto em Badges Visuais e Score
+            const parseStatus = (val) => {
+                if (!val || val === '-') return { color: 'bg-cms-off text-cms-muted border border-cms-border', icon: 'help-circle', text: 'Não Avaliado', score: 0 };
                 const lower = val.toLowerCase();
-                if (lower.includes('sim') || lower.includes('adequado') || lower.includes('bom')) return 'bg-green-100 text-green-700';
-                if (lower.includes('não') || lower.includes('inadequado') || lower.includes('barreiras')) return 'bg-red-100 text-red-700';
-                return 'bg-blue-100 text-blue-700';
+                if (lower.includes('sim') || lower.includes('adequado') || lower.includes('bom')) 
+                    return { color: 'bg-cms-green/10 text-cms-green border border-cms-green/20', icon: 'check-circle-2', text: val, score: 1 };
+                if (lower.includes('não') || lower.includes('inadequado') || lower.includes('barreiras') || lower.includes('falta')) 
+                    return { color: 'bg-red-50 text-red-700 border border-red-200', icon: 'x-circle', text: val, score: 0 };
+                return { color: 'bg-cms-yellow/20 text-cms-navy border border-cms-yellow/50', icon: 'alert-triangle', text: val, score: 0.5 };
             };
 
+            const stAcesso = parseStatus(visit['🏥 Estrutura e Ambiência [♿ Acesso fácil? Há barreiras arquitetônicas? ]']);
+            const stLuz = parseStatus(visit['🏥 Estrutura e Ambiência [💡 Iluminação adequada?]']);
+            const stSeg = parseStatus(visit['🏥 Estrutura e Ambiência [🔐 Condições de segurança? (vigia, câmeras, controle de acesso)]']);
+            const stPlaca = parseStatus(visit['🏥 Estrutura e Ambiência [🪧 Placa de identificação da unidade visível?]']);
+            
+            // Cálculo do gráfico de adequação
+            const infraScore = ((stAcesso.score + stLuz.score + stSeg.score + stPlaca.score) / 4) * 100;
+            const infraColor = infraScore >= 75 ? 'bg-cms-green' : infraScore >= 50 ? 'bg-cms-yellow' : 'bg-red-500';
+
+            const renderBadge = (status) => `
+                <div class="flex items-center gap-3 p-3.5 rounded-lg ${status.color} mt-2 w-full transition-colors">
+                    <i data-lucide="${status.icon}" class="w-6 h-6 shrink-0"></i>
+                    <span class="font-body text-sm font-semibold truncate" title="${status.text}">${status.text}</span>
+                </div>
+            `;
+
             card.innerHTML = `
-                <div class="${isModal ? 'bg-blue-50' : 'bg-slate-50'} p-6 border-b border-slate-100">
-                    <div class="flex justify-between items-start mb-2">
-                        <h3 class="text-2xl font-bold text-blue-900">${visit['🔠 Nome da Unidade:']}</h3>
-                        <span class="text-xs bg-blue-200 text-blue-700 font-bold px-3 py-1 rounded-full">Visita: ${visit['📅 Data da Visita:']}</span>
+                <!-- Cabeçalho com Gráfico e Relatores -->
+                <div class="${isModal ? 'bg-cms-navy' : 'bg-cms-navy'} p-8 md:p-10 relative overflow-hidden">
+                    ${isModal ? '' : '<div class="absolute top-0 left-0 right-0 h-2 bg-cms-blue"></div>'}
+                    <div class="absolute -right-10 -bottom-10 opacity-[0.03]">
+                        <i data-lucide="building-2" class="w-64 h-64 text-white"></i>
                     </div>
-                    <p class="text-sm text-slate-600 flex items-center gap-1 font-medium">📍 ${visit['📍 Endereço:']}</p>
-                    <p class="text-sm text-blue-700 mt-2 font-bold">Equipe: ${visit['👥 Equipe Responsável:']}</p>
+                    <div class="relative z-10 flex flex-col lg:flex-row lg:justify-between lg:items-end gap-8">
+                        <div class="flex-grow">
+                            <p class="cms-eyebrow text-cms-yellow mb-3 flex items-center gap-2"><i data-lucide="calendar" class="w-4 h-4"></i> Data da Visita: ${visit['📅 Data da Visita:']}</p>
+                            <h3 class="font-display text-3xl md:text-5xl font-black text-white tracking-tight leading-none mb-4">${visit['🔠 Nome da Unidade:']}</h3>
+                            <p class="font-body text-sm text-white/80 flex items-center gap-2 bg-white/10 w-fit px-3 py-1.5 rounded-full backdrop-blur-sm">
+                                <i data-lucide="map-pin" class="w-4 h-4 text-cms-yellow"></i> ${visit['📍 Endereço:']}
+                            </p>
+                        </div>
+                        
+                        <div class="flex flex-col sm:flex-row lg:flex-col gap-4 shrink-0">
+                            <!-- Membros Relatores (Mudou de Unidade para Autor do Relatório) -->
+                            <div class="bg-cms-blue/20 backdrop-blur-sm border border-cms-blue/30 p-4 rounded-xl flex items-center gap-4">
+                                <div class="bg-cms-blue text-white p-3 rounded-lg shrink-0">
+                                    <i data-lucide="clipboard-signature" class="w-6 h-6"></i>
+                                </div>
+                                <div>
+                                    <p class="cms-eyebrow text-white/70 mb-1">Membros Relatores</p>
+                                    <p class="font-body text-sm font-bold text-white leading-snug">${visit['👥 Equipe Responsável:']}</p>
+                                </div>
+                            </div>
+
+                            <!-- Mini Gráfico: Score de Infraestrutura -->
+                            <div class="bg-white/10 backdrop-blur-sm border border-white/20 p-5 rounded-xl min-w-[280px]">
+                                <div class="flex justify-between items-end mb-3">
+                                    <p class="cms-eyebrow text-white/80 m-0">Adequação Estrutural</p>
+                                    <span class="font-display font-black text-white text-2xl leading-none">${infraScore}%</span>
+                                </div>
+                                <div class="w-full bg-white/20 h-2.5 rounded-full overflow-hidden">
+                                    <div class="h-full ${infraColor} transition-all duration-1000" style="width: ${infraScore}%"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Observações Gerais em Destaque Absoluto (Topo) -->
+                <div class="bg-cms-yellow/10 border-b border-cms-border p-6 md:p-10">
+                    <div class="flex flex-col md:flex-row gap-6 items-start">
+                        <div class="bg-cms-yellow text-cms-navy p-4 rounded-2xl shrink-0 shadow-sm">
+                            <i data-lucide="message-square-quote" class="w-8 h-8"></i>
+                        </div>
+                        <div>
+                            <h4 class="font-display font-bold text-xs text-cms-navy uppercase tracking-[2px] mb-3">Observações e Destaques da Visita</h4>
+                            <p class="text-base md:text-lg text-cms-ink font-body leading-relaxed font-medium">
+                                ${visit['📝 Observações Gerais:'] || '<span class="text-cms-muted italic font-normal">Nenhuma observação geral registrada pelo relator nesta visita.</span>'}
+                            </p>
+                        </div>
+                    </div>
                 </div>
                 
-                <div class="p-6 grid grid-cols-1 md:grid-cols-2 gap-8">
-                    <!-- Seção Ambiência -->
-                    <div class="space-y-4">
-                        <h4 class="text-xs font-black text-slate-400 uppercase tracking-widest border-b pb-1">🏥 Estrutura e Ambiência</h4>
-                        <ul class="space-y-3 text-sm">
-                            <li class="flex justify-between items-center gap-4">
-                                <span class="text-slate-500 font-medium">Acesso fácil / Barreiras:</span>
-                                <span class="status-badge shrink-0 ${getStatusColor(visit['🏥 Estrutura e Ambiência [♿ Acesso fácil? Há barreiras arquitetônicas? ]'])}">${visit['🏥 Estrutura e Ambiência [♿ Acesso fácil? Há barreiras arquitetônicas? ]']}</span>
-                            </li>
-                            <li class="flex justify-between items-center gap-4">
-                                <span class="text-slate-500 font-medium">Iluminação adequada:</span>
-                                <span class="status-badge shrink-0 ${getStatusColor(visit['🏥 Estrutura e Ambiência [💡 Iluminação adequada?]'])}">${visit['🏥 Estrutura e Ambiência [💡 Iluminação adequada?]']}</span>
-                            </li>
-                            <li class="flex justify-between items-center gap-4">
-                                <span class="text-slate-500 font-medium">Segurança:</span>
-                                <span class="status-badge shrink-0 ${getStatusColor(visit['🏥 Estrutura e Ambiência [🔐 Condições de segurança? (vigia, câmeras, controle de acesso)]'])}">${visit['🏥 Estrutura e Ambiência [🔐 Condições de segurança? (vigia, câmeras, controle de acesso)]']}</span>
-                            </li>
-                            <li class="flex justify-between items-center gap-4">
-                                <span class="text-slate-500 font-medium">Placa visível:</span>
-                                <span class="status-badge shrink-0 ${getStatusColor(visit['🏥 Estrutura e Ambiência [🪧 Placa de identificação da unidade visível?]'])}">${visit['🏥 Estrutura e Ambiência [🪧 Placa de identificação da unidade visível?]']}</span>
-                            </li>
-                        </ul>
-                    </div>
-
-                    <!-- Divulgação -->
-                    <div class="space-y-4">
-                        <h4 class="text-xs font-black text-slate-400 uppercase tracking-widest border-b pb-1">📢 Divulgação e Informação</h4>
-                        <div class="space-y-3">
+                <!-- Corpo de Dados em Grid -->
+                <div class="p-8 md:p-10 grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-10 bg-white">
+                    
+                    <!-- Bloco: Ambiência (Badges) -->
+                    <div>
+                        <h4 class="font-display font-bold text-xs text-cms-blue uppercase tracking-[2px] border-b-2 border-cms-border pb-3 mb-6 flex items-center gap-2"><i data-lucide="layout-grid" class="w-5 h-5"></i> Estrutura e Ambiência</h4>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
                             <div>
-                                <p class="text-[11px] text-slate-400 uppercase font-bold mb-1">Informativo Saúde na Hora:</p>
-                                <div class="p-2 rounded text-sm ${getStatusColor(visit['📢 Divulgação e Informação sobre Horário Estendido/Saúde na Hora [👀Existe cartaz/informativo sobre o “Saúde na Hora” ou horário estendido? ]'])}">
-                                    ${visit['📢 Divulgação e Informação sobre Horário Estendido/Saúde na Hora [👀Existe cartaz/informativo sobre o “Saúde na Hora” ou horário estendido? ]']}
-                                </div>
+                                <p class="text-[10px] font-bold text-cms-muted uppercase tracking-wider">Acessibilidade</p>
+                                ${renderBadge(stAcesso)}
                             </div>
                             <div>
-                                <p class="text-[11px] text-slate-400 uppercase font-bold mb-1">Conhecimento da Comunidade:</p>
-                                <div class="p-2 rounded text-sm ${getStatusColor(visit['📢 Divulgação e Informação sobre Horário Estendido/Saúde na Hora [🧾 A comunidade tem conhecimento do funcionamento diferenciado?]'])}">
-                                    ${visit['📢 Divulgação e Informação sobre Horário Estendido/Saúde na Hora [🧾 A comunidade tem conhecimento do funcionamento diferenciado?]']}
+                                <p class="text-[10px] font-bold text-cms-muted uppercase tracking-wider">Iluminação</p>
+                                ${renderBadge(stLuz)}
+                            </div>
+                            <div>
+                                <p class="text-[10px] font-bold text-cms-muted uppercase tracking-wider">Segurança</p>
+                                ${renderBadge(stSeg)}
+                            </div>
+                            <div>
+                                <p class="text-[10px] font-bold text-cms-muted uppercase tracking-wider">Identificação (Placa)</p>
+                                ${renderBadge(stPlaca)}
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Bloco: Divulgação -->
+                    <div>
+                        <h4 class="font-display font-bold text-xs text-cms-blue uppercase tracking-[2px] border-b-2 border-cms-border pb-3 mb-6 flex items-center gap-2"><i data-lucide="megaphone" class="w-5 h-5"></i> Divulgação</h4>
+                        <div class="space-y-5">
+                            <div class="bg-cms-off p-5 border border-cms-border rounded-xl flex items-start gap-4">
+                                <div class="bg-white p-3 rounded-lg shadow-sm border border-cms-border shrink-0"><i data-lucide="file-text" class="w-6 h-6 text-cms-blue"></i></div>
+                                <div>
+                                    <p class="cms-eyebrow text-cms-muted mb-1">Informativo Visível</p>
+                                    <p class="font-body text-sm font-semibold text-cms-navy">${visit['📢 Divulgação e Informação sobre Horário Estendido/Saúde na Hora [👀Existe cartaz/informativo sobre o “Saúde na Hora” ou horário estendido? ]'] || '-'}</p>
+                                </div>
+                            </div>
+                            <div class="bg-cms-off p-5 border border-cms-border rounded-xl flex items-start gap-4">
+                                <div class="bg-white p-3 rounded-lg shadow-sm border border-cms-border shrink-0"><i data-lucide="users" class="w-6 h-6 text-cms-green"></i></div>
+                                <div>
+                                    <p class="cms-eyebrow text-cms-muted mb-1">Conhecimento da População</p>
+                                    <p class="font-body text-sm font-semibold text-cms-navy">${visit['📢 Divulgação e Informação sobre Horário Estendido/Saúde na Hora [🧾 A comunidade tem conhecimento do funcionamento diferenciado?]'] || '-'}</p>
                                 </div>
                             </div>
                         </div>
                     </div>
 
-                    <!-- RH e Funcionamento -->
-                    <div class="md:col-span-2 bg-slate-50 p-6 rounded-xl border border-slate-100">
-                        <h4 class="text-xs font-black text-slate-400 uppercase tracking-widest mb-4 italic">⚙️ Atendimento e Recursos Humanos</h4>
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-6">
-                            <div class="space-y-4">
+                    <!-- Bloco: Atendimento e RH -->
+                    <div class="md:col-span-2 pt-4">
+                        <h4 class="font-display font-bold text-xs text-cms-blue uppercase tracking-[2px] border-b-2 border-cms-border pb-3 mb-6 flex items-center gap-2"><i data-lucide="activity-square" class="w-5 h-5"></i> Dinâmica de Atendimento</h4>
+                        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                            <div class="bg-white p-6 rounded-xl border border-cms-border shadow-sm flex flex-col gap-4 relative overflow-hidden">
+                                <div class="absolute top-0 left-0 w-1.5 h-full bg-cms-green"></div>
+                                <div class="bg-cms-green/10 text-cms-green p-3.5 rounded-xl w-fit"><i data-lucide="stethoscope" class="w-7 h-7"></i></div>
                                 <div>
-                                    <p class="text-[11px] text-slate-400 font-bold uppercase">Categorias Profissionais:</p>
-                                    <p class="text-sm font-semibold text-slate-700 mt-1">${visit['Recursos Humanos - Categorias profissionais presentes no horário estendido 👩🏼‍🔬👩🏾‍⚕️👨🏻‍⚕️:']}</p>
-                                </div>
-                                <div>
-                                    <p class="text-[11px] text-slate-400 font-bold uppercase">Forma de Atendimento:</p>
-                                    <p class="text-sm font-semibold text-slate-700 mt-1">${visit['⏰ Forma de Atendimento no Horário Estendido:']}</p>
+                                    <p class="cms-eyebrow text-cms-muted mb-2">Profissionais Presentes</p>
+                                    <p class="font-body text-sm font-bold text-cms-ink">${visit['Recursos Humanos - Categorias profissionais presentes no horário estendido 👩🏼‍🔬👩🏾‍⚕️👨🏻‍⚕️:'] || '-'}</p>
                                 </div>
                             </div>
-                            <div class="space-y-4">
+                            
+                            <div class="bg-white p-6 rounded-xl border border-cms-border shadow-sm flex flex-col gap-4 relative overflow-hidden">
+                                <div class="absolute top-0 left-0 w-1.5 h-full bg-cms-blue"></div>
+                                <div class="bg-cms-blue/10 text-cms-blue p-3.5 rounded-xl w-fit"><i data-lucide="bar-chart-3" class="w-7 h-7"></i></div>
                                 <div>
-                                    <p class="text-[11px] text-slate-400 font-bold uppercase">Demanda Percebida:</p>
-                                    <p class="text-sm font-semibold text-slate-700 mt-1">${visit['📊 Percepção de Demanda [👥 Há procura da comunidade nesse horário?]']}</p>
-                                </div>
-                                <div>
-                                    <p class="text-[11px] text-slate-400 font-bold uppercase">Fila ou Ociosidade:</p>
-                                    <p class="text-sm font-semibold text-slate-700 mt-1">${visit['📊 Percepção de Demanda [⏳ Existe fila de espera ou ociosidade? ]']}</p>
+                                    <p class="cms-eyebrow text-cms-muted mb-2">Demanda Percebida</p>
+                                    <p class="font-body text-sm font-bold text-cms-ink">${visit['📊 Percepção de Demanda [👥 Há procura da comunidade nesse horário?]'] || '-'}</p>
                                 </div>
                             </div>
-                        </div>
-                    </div>
 
-                    <!-- Observações -->
-                    <div class="md:col-span-2">
-                        <h4 class="text-xs font-black text-slate-400 uppercase tracking-widest mb-2">📝 Observações Gerais</h4>
-                        <div class="bg-yellow-50 p-5 rounded-lg border-l-8 border-yellow-300 text-sm text-slate-700 leading-relaxed font-medium">
-                            ${visit['📝 Observações Gerais:'] || 'Nenhuma observação extra registrada.'}
+                            <div class="bg-white p-6 rounded-xl border border-cms-border shadow-sm flex flex-col gap-4 relative overflow-hidden">
+                                <div class="absolute top-0 left-0 w-1.5 h-full bg-cms-yellow"></div>
+                                <div class="bg-cms-yellow/20 text-yellow-600 p-3.5 rounded-xl w-fit"><i data-lucide="timer" class="w-7 h-7"></i></div>
+                                <div>
+                                    <p class="cms-eyebrow text-cms-muted mb-2">Fila ou Ociosidade</p>
+                                    <p class="font-body text-sm font-bold text-cms-ink">${visit['📊 Percepção de Demanda [⏳ Existe fila de espera ou ociosidade? ]'] || '-'}</p>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
 
-                <div class="bg-slate-800 p-3 text-[10px] text-white text-center uppercase tracking-widest mt-auto font-bold">
-                    ID Registro: ${visit._originalIndex + 1} | Registrado em: ${visit['Carimbo de data/hora']}
+                <!-- Rodapé do Card -->
+                <div class="bg-cms-off border-t border-cms-border p-5 text-center flex justify-center items-center gap-3">
+                    <i data-lucide="fingerprint" class="w-4 h-4 text-cms-muted"></i>
+                    <span class="font-display font-bold text-[10px] tracking-[2px] uppercase text-cms-muted">
+                        REGISTRO SISTEMA #${String(visit._originalIndex + 1).padStart(4, '0')} · INSERIDO EM: ${visit['Carimbo de data/hora']}
+                    </span>
                 </div>
             `;
             return card;
@@ -340,6 +546,9 @@
             
             modal.classList.remove('hidden');
             document.body.style.overflow = 'hidden'; 
+            
+            // Inicia os ícones no modal
+            setTimeout(() => { if(window.lucide) window.lucide.createIcons(); }, 10);
         }
 
         function closeModal() {
@@ -354,17 +563,26 @@
             const recent = data.reduce((max, d) => d['📅 Data da Visita:'] > max ? d['📅 Data da Visita:'] : max, '');
 
             stats.innerHTML = `
-                <div class="bg-white p-6 rounded-xl card-shadow border-l-4 border-blue-600">
-                    <p class="text-[11px] font-black uppercase text-slate-400 tracking-wider">Total de Visitas</p>
-                    <p class="text-4xl font-black text-slate-800">${total}</p>
+                <div class="bg-white p-6 border-t-4 border-cms-blue border-x border-b border-cms-border rounded shadow-sm flex items-center gap-6">
+                    <div class="p-4 bg-blue-50 text-cms-blue rounded-full"><i data-lucide="clipboard-check" class="w-8 h-8"></i></div>
+                    <div>
+                        <p class="cms-eyebrow text-cms-blue mb-1">Total de Visitas</p>
+                        <p class="font-display font-black text-4xl tracking-tighter text-cms-navy leading-none">${total}</p>
+                    </div>
                 </div>
-                <div class="bg-white p-6 rounded-xl card-shadow border-l-4 border-green-600">
-                    <p class="text-[11px] font-black uppercase text-slate-400 tracking-wider">Unidades Diferentes</p>
-                    <p class="text-4xl font-black text-slate-800">${unique}</p>
+                <div class="bg-white p-6 border-t-4 border-cms-green border-x border-b border-cms-border rounded shadow-sm flex items-center gap-6">
+                    <div class="p-4 bg-green-50 text-cms-green rounded-full"><i data-lucide="map" class="w-8 h-8"></i></div>
+                    <div>
+                        <p class="cms-eyebrow text-cms-green mb-1">Unidades Diferentes</p>
+                        <p class="font-display font-black text-4xl tracking-tighter text-cms-navy leading-none">${unique}</p>
+                    </div>
                 </div>
-                <div class="bg-white p-6 rounded-xl card-shadow border-l-4 border-orange-500">
-                    <p class="text-[11px] font-black uppercase text-slate-400 tracking-wider">Última Visita em</p>
-                    <p class="text-2xl font-black text-slate-800">${recent || '--/--/--'}</p>
+                <div class="bg-white p-6 border-t-4 border-cms-yellow border-x border-b border-cms-border rounded shadow-sm flex items-center gap-6">
+                    <div class="p-4 bg-yellow-50 text-yellow-600 rounded-full"><i data-lucide="clock" class="w-8 h-8"></i></div>
+                    <div>
+                        <p class="cms-eyebrow text-cms-yellow mb-1">Última Visita</p>
+                        <p class="font-display font-black text-2xl tracking-tighter text-cms-navy leading-none mt-2">${recent || '--/--/--'}</p>
+                    </div>
                 </div>
             `;
         }
