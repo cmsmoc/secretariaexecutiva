@@ -8,7 +8,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@48,700,1,0" rel="stylesheet" />
 <style>
 /* ════════════════════════════════════════════════════
-   CMS MONTES CLAROS · INVENTÁRIO (GALERIA)
+   CMS MONTES CLAROS · INVENTÁRIO (GALERIA COM CATEGORIAS)
 ════════════════════════════════════════════════════ */
 
 :root {
@@ -63,14 +63,47 @@ header p {
   margin: 0 auto;
 }
 
-/* ── GALERIA (GRID) ── */
+/* ── MAIN & FILTROS ── */
 main {
   flex: 1;
-  padding: 64px 24px;
+  padding: 48px 24px 64px;
   max-width: 1400px;
   width: 100%;
   margin: 0 auto;
 }
+
+.filters-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 40px;
+  justify-content: center;
+}
+.filter-btn {
+  background: var(--cms-white);
+  border: 1px solid var(--cms-border);
+  color: var(--cms-muted);
+  font-family: 'Montserrat', sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  padding: 10px 20px;
+  border-radius: 30px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+.filter-btn:hover {
+  border-color: var(--cms-blue);
+  color: var(--cms-blue);
+}
+.filter-btn.active {
+  background: var(--cms-navy);
+  border-color: var(--cms-navy);
+  color: var(--cms-white);
+}
+
+/* ── GALERIA (GRID) ── */
 .gallery-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
@@ -88,6 +121,7 @@ main {
   display: flex;
   flex-direction: column;
   cursor: pointer;
+  position: relative;
 }
 .card:hover {
   transform: translateY(-4px);
@@ -95,22 +129,38 @@ main {
   border-color: var(--cms-blue);
 }
 
-/* O truque do Thumbnail com iframe escalonado */
+/* Badge / Etiqueta de Categoria */
+.card-badge {
+  position: absolute;
+  top: 16px;
+  left: 16px;
+  z-index: 20;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  padding: 4px 10px;
+  border-radius: 4px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+}
+
+/* Thumbnail com iframe escalonado */
 .thumb-container {
   width: 100%;
   aspect-ratio: 16 / 9;
   position: relative;
   overflow: hidden;
   background: var(--cms-navy);
-  border-bottom: 3px solid var(--cms-yellow);
+  border-bottom: 3px solid var(--cms-border); /* Cor alterada via JS */
 }
 .thumb-iframe {
-  width: 400%;  /* Renderiza o iframe 4x maior */
+  width: 400%;  
   height: 400%;
-  transform: scale(0.25); /* E o reduz para 25%, criando um thumbnail em HD */
+  transform: scale(0.25); 
   transform-origin: top left;
   border: none;
-  pointer-events: none; /* Evita interação no thumbnail */
+  pointer-events: none; 
   position: absolute;
   top: 0; left: 0;
 }
@@ -170,6 +220,16 @@ main {
   font-weight: 700;
   font-size: 14px;
   letter-spacing: 1px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.modal-badge {
+  font-size: 10px;
+  padding: 2px 8px;
+  border-radius: 4px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
 }
 .btn-close {
   background: transparent;
@@ -225,15 +285,23 @@ main {
 </header>
 
 <main>
+  <!-- Contêiner de Filtros -->
+  <div class="filters-container" id="filters-container">
+    <!-- Botões gerados via JS -->
+  </div>
+
   <div class="gallery-grid" id="gallery">
-    <div id="status-message">Carregando apresentações...</div>
+    <div id="status-message">Procurando apresentações e pastas...</div>
   </div>
 </main>
 
 <!-- Modal Fullscreen -->
 <div id="presentation-modal">
   <div class="modal-header">
-    <div class="modal-title" id="modal-title-text">Apresentação CMS</div>
+    <div class="modal-title">
+      <span id="modal-badge-container"></span>
+      <span id="modal-title-text">Apresentação CMS</span>
+    </div>
     <button class="btn-close" onclick="closeModal()">
       <span class="material-symbols-rounded">close</span> FECHAR
     </button>
@@ -251,75 +319,155 @@ main {
   const GITHUB_REPO = "secretariaexecutiva"; 
   const FOLDER_PATH = "pres";                
   
-  // =========================================================================
-  // MODO MANUAL (FALLBACK)
-  // Caso a API do GitHub falhe (ou você teste offline no seu PC), 
-  // ele usará esta lista. Coloque os nomes exatos dos seus arquivos HTML aqui.
-  // =========================================================================
-  const MANUAL_FILES = [
-    "apresentacao_poder_informacao_completa.html"
-    // Adicione mais se precisar testar localmente
+  // Paleta de cores oficial da marca para aplicar às pastas/categorias
+  const BRAND_COLORS = [
+    { bg: 'var(--cms-blue)', text: 'var(--cms-white)' },
+    { bg: 'var(--cms-green)', text: 'var(--cms-white)' },
+    { bg: 'var(--cms-yellow)', text: 'var(--cms-navy)' },
+    { bg: 'var(--cms-navy)', text: 'var(--cms-white)' }
   ];
 
+  // Variáveis Globais
+  let allPresentations = []; 
+  let categoriesData = {}; // Guarda a cor associada a cada pasta
+
   const galleryEl = document.getElementById('gallery');
+  const filtersEl = document.getElementById('filters-container');
   const modal = document.getElementById('presentation-modal');
   const modalIframe = document.getElementById('fullscreen-iframe');
   const modalTitle = document.getElementById('modal-title-text');
+  const modalBadgeContainer = document.getElementById('modal-badge-container');
 
-  // Inicializa o app
+  // Inicializa o app e busca os dados
   async function init() {
-    let files = [];
-    
+    let colorIndex = 0;
+
     try {
-      // Tenta buscar os arquivos automaticamente via API do GitHub
-      const apiUrl = `https://api.github.com/repos/${GITHUB_USERNAME}/${GITHUB_REPO}/contents/${FOLDER_PATH}`;
-      const response = await fetch(apiUrl);
+      // 1. Busca os itens da pasta raiz (ex: /pres)
+      const rootUrl = `https://api.github.com/repos/${GITHUB_USERNAME}/${GITHUB_REPO}/contents/${FOLDER_PATH}`;
+      const rootResponse = await fetch(rootUrl);
       
-      if (response.ok) {
-        const data = await response.json();
-        // Filtra apenas arquivos com extensão .html (e ignora o próprio index.html)
-        files = data
-          .filter(item => item.name.endsWith('.html') && item.name !== 'index.html')
-          .map(item => item.name);
-      } else {
-        throw new Error("Erro na API");
+      if (!rootResponse.ok) throw new Error("Erro na API ao acessar a pasta raiz.");
+      const rootItems = await rootResponse.json();
+
+      for (const item of rootItems) {
+        if (item.type === 'file' && item.name.endsWith('.html') && item.name !== 'index.html') {
+          // Arquivos soltos na raiz vão para a categoria "Geral"
+          allPresentations.push(createFileData(item, 'Geral', { bg: 'var(--cms-muted)', text: 'var(--cms-white)' }));
+        } 
+        else if (item.type === 'dir') {
+          // É uma pasta! Vamos definir uma cor para ela
+          const catName = formatName(item.name);
+          if (!categoriesData[catName]) {
+            categoriesData[catName] = BRAND_COLORS[colorIndex % BRAND_COLORS.length];
+            colorIndex++;
+          }
+
+          // Busca os arquivos dentro dessa subpasta
+          const subResponse = await fetch(item.url);
+          if (subResponse.ok) {
+            const subItems = await subResponse.json();
+            for (const subItem of subItems) {
+              if (subItem.type === 'file' && subItem.name.endsWith('.html') && subItem.name !== 'index.html') {
+                allPresentations.push(createFileData(subItem, catName, categoriesData[catName]));
+              }
+            }
+          }
+        }
       }
     } catch (error) {
-      console.log("Modo Automático falhou ou rodando localmente. Usando lista manual.");
-      // Se falhar (ex: testando no PC ou repo não configurado), usa a lista manual
-      files = MANUAL_FILES;
-    }
-
-    renderGallery(files);
-  }
-
-  // Renderiza os cartões na tela
-  function renderGallery(files) {
-    galleryEl.innerHTML = ''; // Limpa mensagem de loading
-
-    if (files.length === 0) {
-      galleryEl.innerHTML = '<div id="status-message">Nenhuma apresentação HTML encontrada na pasta.</div>';
+      console.error(error);
+      galleryEl.innerHTML = `<div id="status-message">Erro ao carregar do GitHub. Verifique os limites da API ou o caminho configurado.</div>`;
       return;
     }
 
-    files.forEach(filename => {
-      // Formata o nome do arquivo para um título mais amigável (remove .html, troca _ por espaço)
-      let niceTitle = filename.replace('.html', '').replace(/_/g, ' ');
-      // Capitaliza a primeira letra
-      niceTitle = niceTitle.charAt(0).toUpperCase() + niceTitle.slice(1);
+    renderFilters();
+    renderGallery(allPresentations);
+  }
 
+  // Cria o objeto formatado de cada arquivo
+  function createFileData(apiItem, categoryName, colorTheme) {
+    // Para funcionar no iFrame, o path precisa ser relativo à pasta onde o index.html está rodando.
+    // A API do Github retorna "pres/tema1/arq.html". Se já estamos em /pres/, removemos o "pres/"
+    let relativePath = apiItem.path;
+    if (FOLDER_PATH && relativePath.startsWith(FOLDER_PATH + '/')) {
+      relativePath = relativePath.substring(FOLDER_PATH.length + 1);
+    }
+
+    return {
+      path: relativePath,
+      name: apiItem.name,
+      title: formatName(apiItem.name.replace('.html', '')),
+      category: categoryName,
+      color: colorTheme
+    };
+  }
+
+  // Formata nomes (de "nome_da_pasta" para "Nome Da Pasta")
+  function formatName(str) {
+    return str
+      .replace(/[-_]/g, ' ')
+      .replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
+  }
+
+  // Renderiza os botões de Filtro
+  function renderFilters() {
+    if (allPresentations.length === 0) return;
+
+    // Pega as categorias únicas
+    const categories = [...new Set(allPresentations.map(p => p.category))].sort();
+
+    // Cria o botão "Todas"
+    let buttonsHTML = `<button class="filter-btn active" onclick="filterGallery('Todas', this)">Todas</button>`;
+    
+    // Cria um botão para cada categoria/pasta
+    categories.forEach(cat => {
+      buttonsHTML += `<button class="filter-btn" onclick="filterGallery('${cat}', this)">${cat}</button>`;
+    });
+
+    filtersEl.innerHTML = buttonsHTML;
+  }
+
+  // Filtra a galeria ao clicar
+  function filterGallery(category, btnElement) {
+    // Atualiza estilo do botão ativo
+    document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+    btnElement.classList.add('active');
+
+    // Filtra array
+    const filtered = category === 'Todas' 
+      ? allPresentations 
+      : allPresentations.filter(p => p.category === category);
+
+    renderGallery(filtered);
+  }
+
+  // Renderiza os cartões na tela
+  function renderGallery(filesToRender) {
+    galleryEl.innerHTML = ''; 
+
+    if (filesToRender.length === 0) {
+      galleryEl.innerHTML = '<div id="status-message">Nenhuma apresentação encontrada.</div>';
+      return;
+    }
+
+    filesToRender.forEach(file => {
       const card = document.createElement('div');
       card.className = 'card';
-      card.onclick = () => openModal(filename, niceTitle);
+      // Passamos os dados completos em formato de string escapada para abrir o modal
+      card.onclick = () => openModal(file.path, file.title, file.category, file.color.bg, file.color.text);
 
       card.innerHTML = `
-        <div class="thumb-container">
-          <iframe class="thumb-iframe" src="${filename}" scrolling="no" tabindex="-1"></iframe>
+        <div class="card-badge" style="background-color: ${file.color.bg}; color: ${file.color.text};">
+          ${file.category}
+        </div>
+        <div class="thumb-container" style="border-bottom-color: ${file.color.bg}">
+          <iframe class="thumb-iframe" src="${file.path}" scrolling="no" tabindex="-1"></iframe>
         </div>
         <div class="card-content">
-          <h3 class="card-title">${niceTitle}</h3>
+          <h3 class="card-title">${file.title}</h3>
           <div class="card-meta">
-            <span class="material-symbols-rounded" style="font-size: 16px;">html</span> Arquivo Web Institucional
+            <span class="material-symbols-rounded" style="font-size: 16px;">html</span> ${file.category}
           </div>
         </div>
       `;
@@ -329,17 +477,21 @@ main {
   }
 
   // Controle do Modal (Popup)
-  function openModal(filename, title) {
+  function openModal(filePath, title, category, bg, text) {
     modalTitle.innerText = title;
-    modalIframe.src = filename;
+    
+    // Configura o badge dentro do modal para manter consistência
+    modalBadgeContainer.innerHTML = `<span class="modal-badge" style="background-color: ${bg}; color: ${text};">${category}</span>`;
+    
+    modalIframe.src = filePath;
     modal.classList.add('active');
-    document.body.style.overflow = 'hidden'; // Impede rolagem do fundo
+    document.body.style.overflow = 'hidden'; 
   }
 
   function closeModal() {
     modal.classList.remove('active');
-    modalIframe.src = ""; // Para o vídeo/apresentação que estiver rodando
-    document.body.style.overflow = 'auto'; // Restaura rolagem
+    modalIframe.src = ""; 
+    document.body.style.overflow = 'auto'; 
   }
 
   // Fechar modal com a tecla ESC
