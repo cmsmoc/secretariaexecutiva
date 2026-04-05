@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<!-- saved from url=(0064)file:///C:/Users/55389/Documents/CMS%202026/SecExeDB/modelo.html -->
+<html lang="pt-BR"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Modelo de Certificado — Farley Sindeaux</title>
+<link href="./modelo2_files/css2" rel="stylesheet">
+<style>
+/* 1. REGRAS GLOBAIS E DE IMPRESSÃO (O QUE RESOLVE O PROBLEMA) */
+* { margin:0; padding:0; box-sizing:border-box; }
+
+:root {
+  --dourado:#E8A020; 
+  --dourado-claro:#F2BC4A;
+}
+
+/* Força o navegador a imprimir as cores de fundo e degradês */
+@media print {
+  @page {
+    size: A4 landscape;
+    margin: 0;
+  }
+  body { background: none !important; }
+  .stage { padding: 0 !important; min-height: auto !important; }
+  .cert-wrap { 
+    box-shadow: none !important; 
+    width: 297mm !important; 
+    height: 210mm !important; 
+    border: none !important;
+  }
+  * {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+    color-adjust: exact !important;
+  }
+}
+
+/* 2. ESTILIZAÇÃO DO DOCUMENTO (DESIGN ORIGINAL) */
+body { 
+  font-family:'Lato',sans-serif; 
+  background:#1a1a2e; 
+  color:#333; 
+  min-height:100vh; 
+}
+
+.stage {
+  display:flex; 
+  align-items:center; 
+  justify-content:center;
+  padding: 40px 24px;
+  min-height: 100vh;
+}
+
+.cert-wrap {
+  width: 297mm;
+  height: 210mm;
+  position: relative;
+  box-shadow: 0 30px 80px rgba(0,0,0,0.5);
+  background: linear-gradient(150deg, #001830 0%, #003060 40%, #001830 100%);
+  display:flex; flex-direction:column; overflow:hidden;
+}
+
+/* Elementos Decorativos */
+.cert-wrap::before {
+  content:''; position:absolute; inset:0;
+  background-image:repeating-linear-gradient(45deg,transparent,transparent 25px,rgba(255,255,255,.018) 25px,rgba(255,255,255,.018) 26px);
+}
+.cert-wrap::after {
+  content:''; position:absolute; top:0; left:0; bottom:0; width:3px;
+  background: linear-gradient(180deg, transparent, #E8A020 30%, #F2BC4A 50%, #E8A020 70%, transparent);
+}
+
+.m4-border { position:absolute; inset:7mm; border:1px solid rgba(232,160,32,0.25); z-index:1; pointer-events:none; }
+.m4-border-i { position:absolute; inset:9.5mm; border:1px solid rgba(232,160,32,0.12); z-index:1; pointer-events:none; }
+
+/* Conteúdo */
+.m4-header {
+  padding:12mm 18mm 6mm;
+  display:flex; align-items:flex-start; justify-content:space-between;
+  position:relative; z-index:2;
+}
+.m4-logo img { height:22mm; filter:brightness(0) invert(1); }
+.m4-badge {
+  font-family:'Montserrat',sans-serif; font-size:8pt; font-weight:800;
+  color:var(--dourado); text-transform:uppercase; letter-spacing:0.3em;
+  display:block; margin-bottom:3mm; text-align:right;
+}
+.m4-evento { font-family:'Playfair Display',serif; font-size:13pt; color:rgba(255,255,255,0.9); line-height:1.3; text-align:right; }
+
+.m4-sep { height:1px; background:linear-gradient(90deg,transparent,rgba(232,160,32,0.6),transparent); margin:0 18mm; position:relative; z-index:2; }
+
+.m4-body {
+  flex:1; display:flex; flex-direction:column;
+  align-items:center; justify-content:center;
+  padding:4mm 18mm; text-align:center; position:relative; z-index:2;
+}
+.m4-certifica { font-family:'Montserrat',sans-serif; font-size:7pt; font-weight:500; color:rgba(255,255,255,0.45); letter-spacing:0.25em; text-transform:uppercase; margin-bottom:3mm; }
+.m4-nome { font-family:'Playfair Display',serif; font-size:32pt; font-weight:900; color:white; margin-bottom:2mm; }
+.m4-gold-sep { width:70mm; height:2px; background:linear-gradient(90deg,transparent,#E8A020,#F2BC4A,#E8A020,transparent); margin:3mm auto; }
+.m4-txt { font-family:'Lato',sans-serif; font-size:10pt; color:rgba(255,255,255,0.7); line-height:1.7; }
+.m4-curso { font-family:'Playfair Display',serif; font-style:italic; font-size:13pt; font-weight:700; color:var(--dourado-claro); }
+
+.m4-detalhes { display:flex; gap:16mm; justify-content:center; margin-top:6mm; }
+.m4-d-l { font-family:'Montserrat',sans-serif; font-size:6.5pt; color:rgba(232,160,32,0.7); font-weight:800; text-transform:uppercase; display:block; margin-bottom:1mm; }
+.m4-d-v { font-family:'Montserrat',sans-serif; font-size:9pt; color:rgba(255,255,255,0.9); font-weight:600; }
+
+.m4-rodape {
+  padding:5mm 18mm 12mm; display:flex; align-items:flex-end;
+  justify-content:space-between; position:relative; z-index:2;
+}
+.m4-ass { text-align:center; }
+.m4-ass-line { width:65mm; height:1px; background:rgba(232,160,32,0.4); margin:0 auto 3mm; }
+.m4-ass-nome { font-family:'Montserrat',sans-serif; font-size:10pt; font-weight:700; color:white; }
+.m4-ass-cargo { font-family:'Lato',sans-serif; font-size:8pt; color:rgba(255,255,255,0.5); }
+.m4-data { font-family:'Montserrat',sans-serif; font-size:9pt; color:rgba(255,255,255,0.55); text-align:right; }
+</style>
+</head>
+<body><div class="stage">
+  <!-- ══════════════ MODELO 4 ══════════════ -->
+  <div class="cert-wrap" id="modelo4">
+    <div class="m4-border"></div>
+    <div class="m4-border-i"></div>
+
+    <div class="m4-header">
+      <div class="m4-logo"><img src="./modelo2_files/farleylogo-white.png" alt="Logo"></div>
+      <div class="m4-header-right">
+        <span class="m4-badge">Certificado de Participação</span>
+        <div class="m4-evento">Enfermagem com Propósito:<br>Ética, Prática e Responsabilidade</div>
+      </div>
+    </div>
+
+    <div class="m4-sep"></div>
+
+    <div class="m4-body">
+      <p class="m4-certifica">Certificamos que</p>
+      <p class="m4-nome">{{NOME}}</p>
+      <div class="m4-gold-sep"></div>
+      <p class="m4-txt">
+        participou com aproveitamento do curso de atualização<br>
+        <span class="m4-curso">Enfermagem com Propósito:<br>Ética, Prática e Responsabilidade</span><br>
+        realizado com excelência.
+      </p>
+      <div class="m4-detalhes">
+        <div class="m4-d"><span class="m4-d-l">Data</span><span class="m4-d-v">{{DATACIMA}}</span></div>
+        <div class="m4-d"><span class="m4-d-l">Local</span><span class="m4-d-v">{{LOCAL}}</span></div>
+        <div class="m4-d"><span class="m4-d-l">Carga Horária</span><span class="m4-d-v">{{HORAS}}</span></div>
+        <div class="m4-d"><span class="m4-d-l">Ministrado por</span><span class="m4-d-v">Farley Sindeaux Ribeiro</span></div>
+      </div>
+    </div>
+
+    <div class="m4-rodape">
+      <div class="m4-ass">
+        <div class="m4-ass-line"></div>
+        <p class="m4-ass-nome">Farley Sindeaux Ribeiro</p>
+        <p class="m4-ass-cargo">Enfermeiro · Advogado · Especialista em Saúde Pública</p>
+      </div>
+      <div class="m4-data">{{CIDADE}}<br>{{DATABAIXO}}</div>
+    </div>
+  </div>
+</div></body></html>

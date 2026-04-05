@@ -1,0 +1,1355 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Saúde é Democracia — 11ª CMS Montes Claros 2026</title>
+<link href="https://fonts.googleapis.com/css2?family=Georama:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html,body{width:100%;height:100%;overflow:hidden;background:#000;font-family:'Georama',sans-serif;}
+#deck{width:100vw;height:100vh;position:relative;}
+
+/* ── SLIDE BASE ── */
+.slide{
+  position:absolute;inset:0;overflow:hidden;
+  display:flex;flex-direction:column;justify-content:center;align-items:center;
+  text-align:center;padding:5vw 7vw;
+  opacity:0;pointer-events:none;
+  transition:opacity .5s ease;
+}
+.slide.active{opacity:1;pointer-events:all;}
+.slide > *:not(.deco){position:relative;z-index:2;}
+.deco{position:absolute;inset:0;pointer-events:none;z-index:1;overflow:hidden;}
+
+/* ═══ BACKGROUNDS ═══ */
+.bg-black{background:#060709;}
+.bg-dark{background:#0D3D6B;}
+.bg-sus{background:#1A5EA8;}
+.bg-wave{background:linear-gradient(135deg,#1A5EA8 0%,#2E8BC0 40%,#5BBF6A 75%,#F5C800 100%);}
+.bg-wave-dark{background:linear-gradient(135deg,#0D3D6B 0%,#1A5EA8 55%,#2E8BC0 100%);}
+.bg-red{background:#7f1d1d;}
+.bg-red-mid{background:#991b1b;}
+.bg-green{background:#14532d;}
+.bg-navy{background:#0a2540;}
+.bg-terra{background:#78350f;}
+.bg-e1{background:linear-gradient(150deg,#0f3460 0%,#1A5EA8 100%);}
+.bg-e2{background:linear-gradient(150deg,#0a2540 0%,#0D3D6B 100%);}
+.bg-e3{background:linear-gradient(150deg,#052e16 0%,#14532d 100%);}
+.bg-e4{background:linear-gradient(150deg,#0c4a6e 0%,#2E8BC0 100%);}
+.bg-encerra{background:linear-gradient(160deg,#0D3D6B 0%,#1A5EA8 60%,#2E8BC0 100%);}
+
+/* ═══ TIPOGRAFIA — hierarquia agressiva ═══ */
+/* TITAN: slides de impacto máximo — único elemento na tela */
+.t-titan{
+  font-size:clamp(72px,16vw,200px);
+  font-weight:900;line-height:.92;letter-spacing:-.04em;
+}
+/* MONSTER: números, datas, palavras-chave isoladas */
+.t-monster{
+  font-size:clamp(60px,12vw,150px);
+  font-weight:900;line-height:.95;letter-spacing:-.03em;
+}
+/* HUGE: título de seção + perguntas retóricas */
+.t-huge{
+  font-size:clamp(40px,7.5vw,96px);
+  font-weight:900;line-height:1.05;letter-spacing:-.025em;
+}
+/* BIG: conteúdo principal */
+.t-big{
+  font-size:clamp(28px,4.5vw,62px);
+  font-weight:800;line-height:1.15;letter-spacing:-.015em;
+}
+/* MID: secundário */
+.t-mid{
+  font-size:clamp(20px,3vw,40px);
+  font-weight:700;line-height:1.3;
+}
+/* BODY: explicações */
+.t-body{
+  font-size:clamp(15px,2vw,26px);
+  font-weight:400;line-height:1.65;
+}
+/* SMALL: metadados, labels */
+.t-small{font-size:clamp(13px,1.4vw,19px);font-weight:600;line-height:1.5;}
+/* LABEL: caps */
+.t-label{font-size:clamp(11px,1.1vw,15px);font-weight:800;letter-spacing:.2em;text-transform:uppercase;}
+
+/* ═══ CORES ═══ */
+.c-white{color:#fff;}.c-gold{color:#F5C800;}.c-blue{color:#7EC8E3;}
+.c-green{color:#4ECBA0;}.c-dim{color:rgba(255,255,255,.6);}.c-dark{color:#0D3D6B;}
+.c-red{color:#fca5a5;}.c-sus{color:#1A5EA8;}
+
+/* ═══ UTILITÁRIOS ═══ */
+.mt1{margin-top:.4em;}.mt2{margin-top:.85em;}.mt3{margin-top:1.4em;}
+.mb1{margin-bottom:.4em;}.mb2{margin-bottom:.85em;}
+.hl{background:#F5C800;color:#0a2540;padding:2px 14px;border-radius:5px;display:inline-block;font-weight:900;}
+.hl-g{background:#3AAA35;color:#fff;padding:2px 14px;border-radius:5px;display:inline-block;font-weight:900;}
+.hl-r{background:#dc2626;color:#fff;padding:3px 14px;border-radius:5px;display:inline-block;font-weight:900;}
+.strike{text-decoration:line-through;text-decoration-color:rgba(255,255,255,.5);}
+.badge{display:inline-block;background:rgba(255,255,255,.12);border:1.5px solid rgba(255,255,255,.28);border-radius:999px;padding:5px 20px;}
+.ul-gold{text-decoration:underline;text-decoration-color:#F5C800;text-decoration-thickness:4px;text-underline-offset:5px;}
+
+/* ═══ ANIMAÇÕES ═══ */
+@keyframes waveFlow{0%{transform:translateX(0);}100%{transform:translateX(-50%);}}
+@keyframes waveFlow2{0%{transform:translateX(-50%);}100%{transform:translateX(0);}}
+@keyframes floatUp{0%,100%{transform:translateY(0);}50%{transform:translateY(-14px);}}
+@keyframes floatSide{0%,100%{transform:translateX(0);}50%{transform:translateX(10px);}}
+@keyframes rotateSlow{from{transform:rotate(0deg);}to{transform:rotate(360deg);}}
+@keyframes rotateSlowRev{from{transform:rotate(360deg);}to{transform:rotate(0deg);}}
+@keyframes breathe{0%,100%{transform:scale(1);}50%{transform:scale(1.06);}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(24px);}to{opacity:1;transform:none;}}
+@keyframes fadeIn{from{opacity:0;}to{opacity:1;}}
+@keyframes scaleIn{from{opacity:0;transform:scale(.82);}to{opacity:1;transform:scale(1);}}
+@keyframes slideL{from{opacity:0;transform:translateX(-32px);}to{opacity:1;transform:none;}}
+@keyframes slideR{from{opacity:0;transform:translateX(32px);}to{opacity:1;transform:none;}}
+@keyframes barGrow{from{width:0;}to{width:40%;}}
+
+.slide.active .a1{animation:fadeUp .5s .08s ease both;}
+.slide.active .a2{animation:fadeUp .5s .26s ease both;}
+.slide.active .a3{animation:fadeUp .5s .44s ease both;}
+.slide.active .a4{animation:fadeUp .5s .62s ease both;}
+.slide.active .a5{animation:fadeUp .5s .80s ease both;}
+.slide.active .asc{animation:scaleIn .55s .12s ease both;}
+.slide.active .afi{animation:fadeIn .7s .1s ease both;}
+.slide.active .aL{animation:slideL .5s .15s ease both;}
+.slide.active .aR{animation:slideR .5s .3s ease both;}
+.slide.active .bar-fill{animation:barGrow 1.3s .5s ease both;}
+
+/* grain overlay */
+.slide::before{content:'';position:absolute;inset:0;z-index:3;pointer-events:none;opacity:.018;
+background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");background-size:160px;}
+
+/* ═══ LAYOUTS ESPECIAIS ═══ */
+.split{display:grid;grid-template-columns:1fr 1fr;width:100%;height:100%;position:relative;z-index:2;}
+.split-l{background:#6b1f1f;display:flex;flex-direction:column;justify-content:center;align-items:center;padding:6vw;overflow:hidden;position:relative;}
+.split-r{background:#1A5EA8;display:flex;flex-direction:column;justify-content:center;align-items:center;padding:6vw;overflow:hidden;position:relative;}
+
+.formula-row{display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:1.2vw;}
+.fb{padding:.55em 1.4em;border-radius:10px;font-size:clamp(15px,2.8vw,36px);font-weight:900;letter-spacing:-.01em;}
+.fb-v{background:#1A5EA8;color:#fff;}
+.fb-o{background:#F5C800;color:#0a2540;}
+.fb-r{background:#3AAA35;color:#fff;}
+.fb-p{background:#fff;color:#0a2540;}
+.fp{color:rgba(255,255,255,.4);font-size:2.2em;font-weight:900;line-height:1;}
+
+.eixos-grid{display:grid;grid-template-columns:1fr 1fr;gap:2.5vw;width:100%;max-width:920px;}
+.eb{border-radius:14px;padding:2.8vw 2.4vw;display:flex;flex-direction:column;align-items:flex-start;gap:7px;border:2px solid rgba(255,255,255,.15);}
+.eb1{background:rgba(26,94,168,.55);}
+.eb2{background:rgba(10,37,64,.7);}
+.eb3{background:rgba(20,83,45,.65);}
+.eb4{background:rgba(14,74,110,.55);}
+
+.bar-wrap{width:82%;max-width:620px;}
+.bar-track{height:44px;background:rgba(255,255,255,.12);border-radius:999px;overflow:hidden;position:relative;}
+.bar-fill{height:100%;background:linear-gradient(90deg,#1A5EA8,#2E8BC0);border-radius:999px;display:flex;align-items:center;padding-right:16px;justify-content:flex-end;}
+.bar-ref{position:absolute;top:-10px;left:60%;height:64px;width:2.5px;background:#F5C800;}
+.bar-ref::after{content:'Meta 60%';position:absolute;top:-22px;left:7px;font-size:11px;color:#F5C800;font-weight:800;white-space:nowrap;letter-spacing:.06em;}
+
+/* ═══ HUD ═══ */
+#hud{position:fixed;bottom:22px;right:26px;z-index:999;display:flex;align-items:center;gap:14px;
+background:rgba(0,0,0,.6);backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,.1);
+border-radius:999px;padding:7px 18px;font-size:12px;color:rgba(255,255,255,.55);
+font-family:'Georama',sans-serif;font-weight:700;transition:opacity .35s;letter-spacing:.04em;}
+#hud.dim{opacity:.18;}
+#hud:hover{opacity:1;}
+#slide-num{color:#fff;font-weight:800;}
+#prog-bar{position:fixed;top:0;left:0;height:3px;z-index:998;
+background:linear-gradient(90deg,#1A5EA8,#2E8BC0,#5BBF6A,#F5C800);
+transition:width .42s ease;box-shadow:0 0 10px rgba(245,200,0,.6);}
+
+/* cursor */
+body{cursor:none;}
+.cur{position:fixed;width:10px;height:10px;background:#F5C800;border-radius:50%;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);mix-blend-mode:difference;}
+.cur-ring{position:fixed;width:34px;height:34px;border:1.5px solid rgba(245,200,0,.45);border-radius:50%;pointer-events:none;z-index:9998;transform:translate(-50%,-50%);transition:left .13s ease,top .13s ease;}
+</style>
+</head>
+<body>
+
+<div class="cur" id="cur"></div>
+<div class="cur-ring" id="cring"></div>
+<div id="prog-bar"></div>
+<div id="hud" class="dim">
+  <span>11ª CMS · Montes Claros · 2026</span>
+  <span id="slide-num">1 / 49</span>
+  <span style="opacity:.45;">← →  F</span>
+</div>
+
+<div id="deck">
+
+
+<!-- ══════════════════════════════════════════════
+  S1 — CAPA
+  Ícone: cruz médica SVG sólida em azul claro, canto inferior direito
+  Tipografia: TITAN em dois níveis de peso visual
+══════════════════════════════════════════════ -->
+<div class="slide bg-black active" data-id="1">
+  <div class="deco">
+    <!-- Cruz médica SVG sólida — posicionada no canto inferior direito como elemento editorial -->
+    <svg style="position:absolute;bottom:-6%;right:-4%;width:min(52vw,460px);animation:floatUp 9s ease-in-out infinite;" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+      <rect x="38" y="8" width="24" height="84" rx="7" fill="#1A5EA8"/>
+      <rect x="8" y="38" width="84" height="24" rx="7" fill="#1A5EA8"/>
+    </svg>
+    <!-- onda inferior sólida -->
+    <svg style="position:absolute;bottom:0;left:0;width:200%;animation:waveFlow 22s linear infinite;" viewBox="0 0 1440 90" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M0,55 C240,88 480,20 720,55 C960,88 1200,20 1440,55 L1440,90 L0,90 Z" fill="#0D3D6B"/>
+    </svg>
+    <svg style="position:absolute;bottom:0;left:0;width:200%;animation:waveFlow2 30s linear infinite;" viewBox="0 0 1440 70" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M0,38 C360,68 1080,8 1440,38 L1440,70 L0,70 Z" fill="#F5C800" fill-opacity=".18"/>
+    </svg>
+  </div>
+
+  <div class="asc" style="position:relative;z-index:2;text-align:left;align-self:flex-start;padding-left:1vw;">
+    <div class="t-label c-dim mb2">11ª Conferência Municipal de Saúde · Montes Claros · 2026</div>
+    <div class="t-titan c-white" style="line-height:.9;">Saúde é</div>
+    <div class="t-titan c-gold" style="line-height:.95;">Demo-<br>cracia</div>
+    <div class="t-big c-dim mt2" style="font-weight:400;">e Democracia é Participação</div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════════
+  S2 — PERGUNTA 1
+  Ícone: ponto de interrogação SVG sólido, à esquerda como elemento tipográfico
+══════════════════════════════════════════════ -->
+<div class="slide bg-dark" data-id="2">
+  <div class="deco">
+    <!-- ponto de interrogação como elemento gráfico sólido à esquerda -->
+    <svg style="position:absolute;left:-3%;top:50%;transform:translateY(-50%);height:90%;animation:breathe 8s ease-in-out infinite;" viewBox="0 0 80 200" xmlns="http://www.w3.org/2000/svg">
+      <text x="40" y="155" text-anchor="middle" font-size="180" font-weight="900" fill="#2E8BC0" font-family="Georama,sans-serif">?</text>
+    </svg>
+    <!-- linha vertical dourada -->
+    <div style="position:absolute;left:18%;top:12%;bottom:12%;width:3px;background:linear-gradient(to bottom,transparent,#F5C800,transparent);"></div>
+  </div>
+  <div class="t-huge c-white a1" style="max-width:800px;text-align:left;align-self:flex-end;padding-right:2vw;">
+    Quando foi a última vez<br>que o SUS te atendeu <span class="c-gold">bem?</span>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════════
+  S3 — PERGUNTA 2 / VIRADA
+  Tipografia: palavra "mal?" em escala TITAN, ocupando quase a tela toda
+══════════════════════════════════════════════ -->
+<div class="slide bg-dark" data-id="3">
+  <div class="deco">
+    <!-- barra horizontal dourada cortando o slide -->
+    <div style="position:absolute;top:40%;left:0;right:0;height:2px;background:linear-gradient(to right,transparent,#F5C800 20%,#F5C800 80%,transparent);"></div>
+  </div>
+  <div class="t-big c-dim a1" style="align-self:flex-start;padding-left:2vw;">E quando foi que ele te atendeu</div>
+  <div class="t-titan c-gold a2" style="font-size:clamp(80px,18vw,220px);align-self:flex-end;line-height:.85;padding-right:1vw;">mal?</div>
+  <div class="t-body c-dim a3" style="align-self:flex-start;padding-left:2vw;">Aposta que essa resposta veio mais rápido.</div>
+</div>
+
+
+<!-- ══════════════════════════════════════════════
+  S4 — LISTA / COTIDIANO DO SUS
+  Ícone: barras verticais SVG sólidas (estilo gráfico de dados), lado direito
+  Tipografia: cada item com tamanho levemente diferente (hierarquia interna)
+══════════════════════════════════════════════ -->
+<div class="slide bg-dark" data-id="4">
+  <div class="deco">
+    <!-- barras verticais gráfico SVG sólido em azul -->
+    <svg style="position:absolute;right:5%;top:50%;transform:translateY(-50%);height:70%;width:auto;animation:breathe 10s ease-in-out infinite;" viewBox="0 0 100 200" xmlns="http://www.w3.org/2000/svg">
+      <rect x="0"  y="60"  width="16" height="140" rx="8" fill="#2E8BC0"/>
+      <rect x="22" y="30"  width="16" height="170" rx="8" fill="#1A5EA8"/>
+      <rect x="44" y="80"  width="16" height="120" rx="8" fill="#2E8BC0"/>
+      <rect x="66" y="20"  width="16" height="180" rx="8" fill="#0D3D6B"/>
+      <rect x="88" y="50"  width="12" height="150" rx="6" fill="#7EC8E3"/>
+    </svg>
+    <!-- linha esquerda -->
+    <div style="position:absolute;left:7%;top:0;bottom:0;width:3px;background:#F5C800;border-radius:2px;"></div>
+  </div>
+  <div style="text-align:left;align-self:flex-start;padding-left:4vw;">
+    <div class="t-huge c-white a1">Fila longa.</div>
+    <div class="t-big c-dim a2 mt1">Médico que não tem.</div>
+    <div class="t-big c-dim a3 mt1">Remédio em falta.</div>
+    <div class="t-huge c-gold a4 mt1">UBS fechada.</div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════════
+  S5 — R$1 TRILHÃO
+  Tipografia TITAN máxima, número ocupa toda a largura
+  Ícone: seta para baixo SVG sólida em vermelho escuro
+══════════════════════════════════════════════ -->
+<div class="slide bg-black" data-id="5">
+  <div class="deco">
+    <!-- cifrão SVG sólido, canto esquerdo, cor escura -->
+    <svg style="position:absolute;left:-2%;top:50%;transform:translateY(-50%);height:100%;width:auto;" viewBox="0 0 80 200" xmlns="http://www.w3.org/2000/svg">
+      <text x="40" y="165" text-anchor="middle" font-size="210" font-weight="900" fill="#0D3D6B" font-family="Georama,sans-serif">$</text>
+    </svg>
+    <!-- onda sólida inferior dourada -->
+    <svg style="position:absolute;bottom:0;left:0;width:200%;animation:waveFlow 20s linear infinite;" viewBox="0 0 1440 55" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M0,28 C360,52 1080,5 1440,28 L1440,55 L0,55 Z" fill="#F5C800" fill-opacity=".22"/>
+    </svg>
+  </div>
+  <div class="t-label c-dim a1 mb2">Em 2025, o Brasil pagou</div>
+  <div class="t-monster c-gold asc" style="font-size:clamp(32px,6.5vw,78px);letter-spacing:-.025em;line-height:1;">R$1.000.000.000.000</div>
+  <div class="t-huge c-white a2 mt2">em juros da dívida</div>
+  <div class="t-body c-dim a3 mt1">Doze zeros. Mil bilhões.</div>
+</div>
+
+
+<!-- ══════════════════════════════════════════════
+  S6 — SPLIT CONTRASTE
+  Ícones SVG sólidos em cada painel (seta pra cima / pra baixo)
+══════════════════════════════════════════════ -->
+<div class="slide" data-id="6" style="padding:0;">
+  <div class="split">
+    <div class="split-l">
+      <!-- seta pra cima (juros subiram) SVG sólida -->
+      <svg style="position:absolute;bottom:10%;right:8%;width:min(18vw,120px);animation:floatUp 7s ease-in-out infinite;" viewBox="0 0 60 80" xmlns="http://www.w3.org/2000/svg">
+        <polygon points="30,0 60,50 45,50 45,80 15,80 15,50 0,50" fill="#ef4444"/>
+      </svg>
+      <div class="t-label c-dim mb2 a1">Juros da dívida · 2025</div>
+      <div class="t-titan c-white a2" style="font-size:clamp(48px,10vw,130px);">R$1<br>tri</div>
+    </div>
+    <div class="split-r">
+      <!-- seta pra baixo (SUS subfinanciado) SVG sólida -->
+      <svg style="position:absolute;bottom:10%;right:8%;width:min(18vw,120px);animation:floatUp 9s ease-in-out infinite;animation-delay:-4s;" viewBox="0 0 60 80" xmlns="http://www.w3.org/2000/svg">
+        <polygon points="30,80 60,30 45,30 45,0 15,0 15,30 0,30" fill="#7EC8E3"/>
+      </svg>
+      <div class="t-label c-dim mb2 a1">Orçamento SUS · 2025</div>
+      <div class="t-titan c-white a2" style="font-size:clamp(48px,10vw,130px);">R$253<br>bi</div>
+      <div class="t-mid c-dim a3 mt2">Quatro vezes menos.</div>
+    </div>
+  </div>
+  <!-- divisor central -->
+  <div style="position:absolute;top:0;bottom:0;left:50%;width:3px;background:#F5C800;z-index:3;transform:translateX(-50%);"></div>
+</div>
+
+
+<!-- ══════════════════════════════════════════════
+  S7 — ESCOLHA
+  Tipografia: "ESCOLHA" em titan com cor sólida de contraste máximo
+  Ícone: raio / lightning SVG sólido em amarelo
+══════════════════════════════════════════════ -->
+<div class="slide bg-black" data-id="7">
+  <div class="deco">
+    <!-- raio SVG sólido, colorido, posicionado atrás do texto como composição -->
+    <svg style="position:absolute;right:6%;top:50%;transform:translateY(-50%);height:75%;width:auto;animation:breathe 7s ease-in-out infinite;" viewBox="0 0 60 130" xmlns="http://www.w3.org/2000/svg">
+      <polygon points="38,0 10,65 32,65 22,130 55,55 30,55" fill="#F5C800"/>
+    </svg>
+    <!-- linha de separação -->
+    <div style="position:absolute;left:5%;right:5%;top:52%;height:2px;background:#1A5EA8;"></div>
+  </div>
+  <div style="text-align:left;align-self:flex-start;">
+    <div class="t-big c-dim a1">Isso não é falta de dinheiro.</div>
+    <div class="t-titan c-gold a2" style="font-size:clamp(60px,13vw,160px);line-height:.88;margin-top:.2em;">É uma<br>ESCOLHA.</div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════════
+  S8 — VIRADA
+  Ondas SVG sólidas em dois tons, texto centralizado
+══════════════════════════════════════════════ -->
+<div class="slide bg-wave-dark" data-id="8">
+  <div class="deco">
+    <svg style="position:absolute;bottom:0;left:0;width:200%;animation:waveFlow 16s linear infinite;" viewBox="0 0 1440 100" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M0,50 C240,90 480,10 720,50 C960,90 1200,10 1440,50 L1440,100 L0,100 Z" fill="#F5C800" fill-opacity=".25"/>
+    </svg>
+    <svg style="position:absolute;bottom:0;left:0;width:200%;animation:waveFlow2 24s linear infinite;" viewBox="0 0 1440 80" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M0,40 C480,78 960,4 1440,40 L1440,80 L0,80 Z" fill="rgba(255,255,255,.12)"/>
+    </svg>
+    <!-- punho SVG sólido — símbolo de contestação -->
+    <svg style="position:absolute;left:5%;bottom:5%;width:min(14vw,100px);animation:floatUp 8s ease-in-out infinite;" viewBox="0 0 60 80" xmlns="http://www.w3.org/2000/svg">
+      <rect x="10" y="30" width="40" height="50" rx="8" fill="#3AAA35"/>
+      <rect x="14" y="14" width="12" height="20" rx="4" fill="#3AAA35"/>
+      <rect x="27" y="10" width="12" height="24" rx="4" fill="#3AAA35"/>
+      <rect x="40" y="14" width="10" height="20" rx="4" fill="#3AAA35"/>
+    </svg>
+  </div>
+  <div class="t-mid c-white a1">Escolhas políticas podem ser</div>
+  <div class="t-titan c-gold a2" style="font-size:clamp(56px,11vw,136px);line-height:.9;">contes-<br>tadas.</div>
+  <div class="t-body c-dim a3 mt3">É para isso que existe a conferência de saúde.</div>
+</div>
+
+
+<!-- ══════════════════════════════════════════════
+  S9 — TÍTULO PARTE 2
+  Ondas wave identidade + ícone de assembleia SVG
+══════════════════════════════════════════════ -->
+<div class="slide bg-wave" data-id="9">
+  <div class="deco">
+    <svg style="position:absolute;bottom:0;left:0;width:200%;animation:waveFlow 14s linear infinite;" viewBox="0 0 1440 110" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M0,55 C240,100 480,10 720,55 C960,100 1200,10 1440,55 L1440,110 L0,110 Z" fill="rgba(255,255,255,.2)"/>
+    </svg>
+    <svg style="position:absolute;bottom:0;left:0;width:200%;animation:waveFlow2 21s linear infinite;" viewBox="0 0 1440 85" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M0,42 C360,80 1080,5 1440,42 L1440,85 L0,85 Z" fill="rgba(13,61,107,.3)"/>
+    </svg>
+    <!-- colunas/pilares SVG sólidos (assembleia) canto direito -->
+    <svg style="position:absolute;right:4%;top:5%;height:90%;width:auto;animation:breathe 11s ease-in-out infinite;" viewBox="0 0 80 200" xmlns="http://www.w3.org/2000/svg">
+      <rect x="0"  y="20" width="16" height="180" rx="4" fill="rgba(255,255,255,.22)"/>
+      <rect x="22" y="10" width="16" height="190" rx="4" fill="rgba(255,255,255,.18)"/>
+      <rect x="44" y="20" width="16" height="180" rx="4" fill="rgba(255,255,255,.22)"/>
+      <rect x="66" y="15" width="14" height="185" rx="4" fill="rgba(255,255,255,.18)"/>
+      <rect x="0"  y="0"  width="80" height="14"  rx="4" fill="rgba(255,255,255,.3)"/>
+    </svg>
+  </div>
+  <div class="t-label c-white a1 mb2 badge">Parte 2</div>
+  <div class="t-titan c-white a2" style="font-size:clamp(52px,10vw,126px);line-height:.92;">A CONFE-<br>RÊNCIA</div>
+  <div class="t-big c-white a3 mt2" style="opacity:.82;">De onde veio e por que importa.</div>
+</div>
+
+
+<!-- ══════════════════════════════════════════════
+  S10 — 1986
+  Data em titan, ícone de livro/constituição SVG sólido
+══════════════════════════════════════════════ -->
+<div class="slide bg-dark" data-id="10">
+  <div class="deco">
+    <!-- data fantasma gigante como textura tipográfica -->
+    <div style="position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);font-size:clamp(130px,26vw,320px);font-weight:900;color:#0a2d52;letter-spacing:-.05em;user-select:none;white-space:nowrap;line-height:1;">1986</div>
+    <!-- livro/constituição SVG sólido, canto inferior direito -->
+    <svg style="position:absolute;right:6%;bottom:6%;width:min(14vw,110px);animation:floatUp 9s ease-in-out infinite;" viewBox="0 0 80 100" xmlns="http://www.w3.org/2000/svg">
+      <rect x="8"  y="0"  width="72" height="100" rx="6" fill="#3AAA35"/>
+      <rect x="0"  y="5"  width="14" height="90"  rx="4" fill="#2d8229"/>
+      <rect x="18" y="18" width="46" height="4"   rx="2" fill="rgba(255,255,255,.6)"/>
+      <rect x="18" y="28" width="36" height="4"   rx="2" fill="rgba(255,255,255,.4)"/>
+      <rect x="18" y="38" width="42" height="4"   rx="2" fill="rgba(255,255,255,.4)"/>
+      <rect x="18" y="48" width="30" height="4"   rx="2" fill="rgba(255,255,255,.3)"/>
+    </svg>
+    <!-- linha dourada superior -->
+    <div style="position:absolute;top:14%;left:10%;right:40%;height:3px;background:#F5C800;border-radius:2px;"></div>
+  </div>
+  <div style="text-align:left;align-self:flex-start;position:relative;z-index:2;">
+    <div class="t-monster c-gold a1" style="font-size:clamp(64px,13vw,160px);line-height:.9;">1986.</div>
+    <div class="t-big c-white a2 mt2">Brasil saindo de vinte anos<br>de ditadura.</div>
+    <div class="t-body c-dim a3 mt2">A democracia era recente, frágil,<br>cheirando a tinta nova.</div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════════
+  S11 — 4000 PESSOAS
+  Número titan, ícone de pessoas SVG sólido colorido
+══════════════════════════════════════════════ -->
+<div class="slide bg-dark" data-id="11">
+  <div class="deco">
+    <!-- silhuetas de pessoas SVG sólidas, fila no rodapé -->
+    <svg style="position:absolute;bottom:0;left:0;width:100%;" viewBox="0 0 1440 90" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMax meet">
+      <g fill="#1A5EA8">
+        <!-- pessoas repetidas -->
+        <circle cx="72"  cy="34" r="14"/><rect x="58"  y="50" width="28" height="40" rx="6"/>
+        <circle cx="144" cy="34" r="14"/><rect x="130" y="50" width="28" height="40" rx="6"/>
+        <circle cx="216" cy="34" r="14"/><rect x="202" y="50" width="28" height="40" rx="6"/>
+        <circle cx="288" cy="34" r="14"/><rect x="274" y="50" width="28" height="40" rx="6"/>
+        <circle cx="360" cy="34" r="14"/><rect x="346" y="50" width="28" height="40" rx="6"/>
+        <circle cx="432" cy="34" r="14"/><rect x="418" y="50" width="28" height="40" rx="6"/>
+        <circle cx="504" cy="34" r="14"/><rect x="490" y="50" width="28" height="40" rx="6"/>
+        <circle cx="576" cy="34" r="14"/><rect x="562" y="50" width="28" height="40" rx="6"/>
+        <circle cx="648" cy="34" r="14"/><rect x="634" y="50" width="28" height="40" rx="6"/>
+        <circle cx="720" cy="34" r="14"/><rect x="706" y="50" width="28" height="40" rx="6"/>
+        <circle cx="792" cy="34" r="14"/><rect x="778" y="50" width="28" height="40" rx="6"/>
+        <circle cx="864" cy="34" r="14"/><rect x="850" y="50" width="28" height="40" rx="6"/>
+        <circle cx="936" cy="34" r="14"/><rect x="922" y="50" width="28" height="40" rx="6"/>
+        <circle cx="1008" cy="34" r="14"/><rect x="994" y="50" width="28" height="40" rx="6"/>
+        <circle cx="1080" cy="34" r="14"/><rect x="1066" y="50" width="28" height="40" rx="6"/>
+        <circle cx="1152" cy="34" r="14"/><rect x="1138" y="50" width="28" height="40" rx="6"/>
+        <circle cx="1224" cy="34" r="14"/><rect x="1210" y="50" width="28" height="40" rx="6"/>
+        <circle cx="1296" cy="34" r="14"/><rect x="1282" y="50" width="28" height="40" rx="6"/>
+        <circle cx="1368" cy="34" r="14"/><rect x="1354" y="50" width="28" height="40" rx="6"/>
+      </g>
+    </svg>
+  </div>
+  <div class="t-titan c-white asc" style="font-size:clamp(80px,18vw,220px);line-height:.85;">4.000</div>
+  <div class="t-huge c-gold a1 mt1">pessoas</div>
+  <div class="t-body c-dim a2 mt2">8ª Conferência Nacional de Saúde · Brasília · 1986</div>
+</div>
+
+
+<!-- ══════════════════════════════════════════════
+  S12 — ART. 196 / CONSTITUIÇÃO
+  Aspas SVG sólidas em amarelo como elemento editorial
+══════════════════════════════════════════════ -->
+<div class="slide bg-sus" data-id="12">
+  <div class="deco">
+    <!-- aspas SVG sólidas em amarelo -->
+    <svg style="position:absolute;top:8%;left:6%;width:min(12vw,90px);" viewBox="0 0 60 50" xmlns="http://www.w3.org/2000/svg">
+      <path d="M0,50 C0,30 8,10 28,0 L30,8 C16,14 12,26 14,38 L28,38 L28,50 Z" fill="#F5C800"/>
+      <path d="M32,50 C32,30 40,10 60,0 L62,8 C48,14 44,26 46,38 L60,38 L60,50 Z" fill="#F5C800"/>
+    </svg>
+    <!-- onda inferior escura -->
+    <svg style="position:absolute;bottom:0;left:0;width:200%;animation:waveFlow 18s linear infinite;" viewBox="0 0 1440 65" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M0,32 C360,62 1080,5 1440,32 L1440,65 L0,65 Z" fill="#0D3D6B" fill-opacity=".4"/>
+    </svg>
+  </div>
+  <div class="t-small c-dim a1 mb2">Constituição Federal, Art. 196 · 1988</div>
+  <div class="t-huge c-white a2" style="max-width:820px;font-style:italic;line-height:1.15;">
+    "Saúde é direito de todos<br>e dever do Estado."
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════════
+  S13 — CONQUISTA
+  Palavras em tamanhos opostos para contraste máximo
+  Ícone: estrela/troféu SVG sólido em verde
+══════════════════════════════════════════════ -->
+<div class="slide bg-black" data-id="13">
+  <div class="deco">
+    <!-- estrela SVG sólida em verde, canto superior direito -->
+    <svg style="position:absolute;right:5%;top:8%;width:min(16vw,130px);animation:breathe 8s ease-in-out infinite;" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+      <polygon points="50,5 61,35 95,35 68,57 79,91 50,70 21,91 32,57 5,35 39,35" fill="#3AAA35"/>
+    </svg>
+    <!-- linha dourada esquerda -->
+    <div style="position:absolute;left:6%;top:10%;bottom:10%;width:4px;background:#3AAA35;border-radius:2px;"></div>
+  </div>
+  <div style="text-align:left;align-self:flex-start;padding-left:4vw;">
+    <div class="t-mid c-dim a1">Não foi um presente do governo.</div>
+    <div class="t-titan c-green a2" style="font-size:clamp(64px,13vw,160px);line-height:.9;color:#3AAA35;">Foi uma<br>conquista.</div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════════
+  S14 — FLUXO MUNICIPAL→ESTADUAL→NACIONAL
+  Setas SVG sólidas como elemento de layout
+══════════════════════════════════════════════ -->
+<div class="slide bg-dark" data-id="14">
+  <div class="deco">
+    <!-- onda inferior suave -->
+    <svg style="position:absolute;bottom:0;left:0;width:100%;" viewBox="0 0 1440 40" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M0,20 C360,40 1080,0 1440,20 L1440,40 L0,40 Z" fill="#0a2d52"/>
+    </svg>
+  </div>
+  <div class="t-label c-dim mb3 a1">O caminho das decisões</div>
+  <div style="display:flex;align-items:center;gap:2vw;flex-wrap:wrap;justify-content:center;width:100%;">
+    <!-- bloco mc -->
+    <div style="background:#1A5EA8;border-radius:14px;padding:3vw 4vw;border:2px solid #2E8BC0;" class="aL">
+      <div class="t-label" style="color:#7EC8E3;">Municipal</div>
+      <div class="t-huge c-white mt1" style="font-size:clamp(28px,5vw,64px);">MC</div>
+    </div>
+    <!-- seta SVG sólida amarela -->
+    <svg class="a2" style="width:min(8vw,60px);flex-shrink:0;" viewBox="0 0 60 30" xmlns="http://www.w3.org/2000/svg">
+      <polygon points="0,8 40,8 40,0 60,15 40,30 40,22 0,22" fill="#F5C800"/>
+    </svg>
+    <div style="background:#0D3D6B;border-radius:14px;padding:3vw 4vw;border:2px solid #1A5EA8;" class="a2">
+      <div class="t-label" style="color:#7EC8E3;">Estadual</div>
+      <div class="t-huge c-white mt1" style="font-size:clamp(28px,5vw,64px);">MG</div>
+    </div>
+    <svg class="a3" style="width:min(8vw,60px);flex-shrink:0;" viewBox="0 0 60 30" xmlns="http://www.w3.org/2000/svg">
+      <polygon points="0,8 40,8 40,0 60,15 40,30 40,22 0,22" fill="#F5C800"/>
+    </svg>
+    <div style="background:#0a2540;border-radius:14px;padding:3vw 4vw;border:2px solid #1A5EA8;" class="aR">
+      <div class="t-label" style="color:#7EC8E3;">Nacional</div>
+      <div class="t-huge c-white mt1" style="font-size:clamp(28px,5vw,64px);">BR</div>
+    </div>
+  </div>
+  <div class="t-big c-gold mt3 a4">O que vocês decidem aqui chega lá.</div>
+</div>
+
+
+<!-- S15 — IMPACTO LOCAL -->
+<div class="slide bg-navy" data-id="15">
+  <div class="deco">
+    <!-- pin de localização SVG sólido, amarelo -->
+    <svg style="position:absolute;right:7%;top:8%;width:min(10vw,85px);animation:floatUp 8s ease-in-out infinite;" viewBox="0 0 60 80" xmlns="http://www.w3.org/2000/svg">
+      <ellipse cx="30" cy="30" rx="28" ry="28" fill="#F5C800"/>
+      <circle cx="30" cy="30" r="11" fill="#0a2540"/>
+      <polygon points="30,80 10,50 50,50" fill="#F5C800"/>
+    </svg>
+    <svg style="position:absolute;bottom:0;left:0;width:200%;animation:waveFlow 19s linear infinite;" viewBox="0 0 1440 50" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M0,25 C480,48 960,2 1440,25 L1440,50 L0,50 Z" fill="#1A5EA8" fill-opacity=".4"/>
+    </svg>
+  </div>
+  <div class="t-mid c-dim a1">O que você decide aqui em Montes Claros...</div>
+  <div class="t-huge a2 mt2"><span class="hl">...pode virar diretriz nacional do SUS.</span></div>
+</div>
+
+
+<!-- S16 — PARIDADE 50% -->
+<div class="slide bg-dark" data-id="16">
+  <div class="deco">
+    <!-- pizza SVG sólida grande, posicionada à direita como elemento visual -->
+    <svg style="position:absolute;right:-5%;top:50%;transform:translateY(-50%);width:min(45vw,380px);animation:breathe 10s ease-in-out infinite;" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="100" cy="100" r="95" fill="#0a2d52"/>
+      <!-- 50% amarelo: semicírculo superior -->
+      <path d="M100,100 L100,5 A95,95 0 0,1 100,195 Z" fill="#F5C800"/>
+      <!-- divisor -->
+      <line x1="100" y1="5" x2="100" y2="195" stroke="#060709" stroke-width="4"/>
+      <circle cx="100" cy="100" r="38" fill="#0D3D6B"/>
+      <text x="100" y="96" text-anchor="middle" fill="#F5C800" font-size="18" font-weight="900" font-family="Georama,sans-serif">50%</text>
+      <text x="100" y="112" text-anchor="middle" fill="rgba(255,255,255,.65)" font-size="10" font-family="Georama,sans-serif">usuários</text>
+    </svg>
+    <!-- linha esquerda -->
+    <div style="position:absolute;left:5%;top:10%;bottom:10%;width:4px;background:#F5C800;border-radius:2px;"></div>
+  </div>
+  <div style="text-align:left;align-self:flex-start;padding-left:4vw;max-width:55%;">
+    <div class="t-label c-dim a1 mb2">Regra constitucional</div>
+    <div class="t-titan c-gold asc" style="font-size:clamp(72px,14vw,180px);line-height:.85;">50%</div>
+    <div class="t-big c-white a2 mt1">dos delegados<br>são <span class="hl">VOCÊ.</span></div>
+    <div class="t-body c-dim a3 mt2">Usuário do SUS.<br>Não gestor. Não político.</div>
+  </div>
+</div>
+
+
+<!-- S17 — PODER NAS SUAS MÃOS -->
+<div class="slide bg-sus" data-id="17">
+  <div class="deco">
+    <!-- mão/punho SVG sólido em verde, posicionado como parte da composição -->
+    <svg style="position:absolute;right:5%;bottom:5%;width:min(22vw,180px);animation:floatUp 9s ease-in-out infinite;" viewBox="0 0 80 100" xmlns="http://www.w3.org/2000/svg">
+      <!-- punho fechado simplificado -->
+      <rect x="15" y="40" width="50" height="60" rx="10" fill="#3AAA35"/>
+      <rect x="20" y="20" width="14" height="26" rx="6" fill="#3AAA35"/>
+      <rect x="35" y="14" width="14" height="32" rx="6" fill="#3AAA35"/>
+      <rect x="50" y="20" width="14" height="26" rx="6" fill="#3AAA35"/>
+    </svg>
+    <svg style="position:absolute;bottom:0;left:0;width:200%;animation:waveFlow 17s linear infinite;" viewBox="0 0 1440 60" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M0,30 C360,58 1080,4 1440,30 L1440,60 L0,60 Z" fill="#0D3D6B" fill-opacity=".5"/>
+    </svg>
+  </div>
+  <div class="t-big c-white a1" style="max-width:820px;">A Constituição colocou mais poder nas <span class="ul-gold">suas mãos</span> do que nas do gestor.</div>
+</div>
+
+
+<!-- S18 — EC95 -->
+<div class="slide bg-red" data-id="18">
+  <div class="deco">
+    <!-- seta pra baixo SVG sólida, grande, vermelha escura -->
+    <svg style="position:absolute;right:5%;top:50%;transform:translateY(-50%);height:65%;width:auto;animation:floatUp 7s ease-in-out infinite;" viewBox="0 0 60 100" xmlns="http://www.w3.org/2000/svg">
+      <polygon points="30,100 60,55 42,55 42,0 18,0 18,55 0,55" fill="#6b1f1f"/>
+    </svg>
+    <svg style="position:absolute;bottom:0;left:0;width:200%;animation:waveFlow 20s linear infinite;" viewBox="0 0 1440 55" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M0,28 C360,52 1080,5 1440,28 L1440,55 L0,55 Z" fill="rgba(0,0,0,.25)"/>
+    </svg>
+  </div>
+  <div style="text-align:left;align-self:flex-start;max-width:72%;">
+    <div class="t-label c-dim a1 mb2">EC 95 · 2016–2022</div>
+    <div class="t-titan c-white asc" style="font-size:clamp(56px,11vw,138px);line-height:.9;">R$70 bi<br>tirados do SUS</div>
+    <div class="t-mid a3 mt3"><span class="hl-g">✓ Revogada em 2023</span></div>
+    <div class="t-small c-dim a4 mt2">Por pressão da participação social organizada.</div>
+  </div>
+</div>
+
+
+<!-- S19 — SÍNTESE PARTE 2 -->
+<div class="slide bg-black" data-id="19">
+  <div class="deco">
+    <!-- dois blocos coloridos à direita como composição -->
+    <svg style="position:absolute;right:5%;top:50%;transform:translateY(-50%);width:min(18vw,150px);" viewBox="0 0 60 120" xmlns="http://www.w3.org/2000/svg">
+      <rect x="0" y="0"  width="60" height="55" rx="8" fill="#1A5EA8"/>
+      <rect x="0" y="65" width="60" height="55" rx="8" fill="#F5C800"/>
+    </svg>
+    <div style="position:absolute;left:0;right:0;top:48%;height:2px;background:linear-gradient(to right,transparent,rgba(255,255,255,.1),transparent);"></div>
+  </div>
+  <div style="text-align:left;align-self:flex-start;max-width:80%;">
+    <div class="t-mid c-dim a1">A participação não resolve tudo.</div>
+    <div class="t-huge c-white a2 mt2" style="font-size:clamp(32px,6vw,76px);">Mas a ausência garante que <span class="c-gold">nada mude.</span></div>
+  </div>
+</div>
+
+
+<!-- S20 — TÍTULO PARTE 3 -->
+<div class="slide" data-id="20" style="background:linear-gradient(150deg,#1A5EA8 0%,#3AAA35 100%);">
+  <div class="deco">
+    <svg style="position:absolute;bottom:0;left:0;width:200%;animation:waveFlow 15s linear infinite;" viewBox="0 0 1440 100" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M0,50 C240,90 480,10 720,50 C960,90 1200,10 1440,50 L1440,100 L0,100 Z" fill="rgba(255,255,255,.18)"/>
+    </svg>
+    <!-- mapa / localização SVG sólido branco, canto direito -->
+    <svg style="position:absolute;right:4%;bottom:10%;width:min(18vw,150px);animation:floatUp 10s ease-in-out infinite;" viewBox="0 0 80 100" xmlns="http://www.w3.org/2000/svg">
+      <ellipse cx="40" cy="38" rx="36" ry="36" fill="rgba(255,255,255,.22)"/>
+      <circle cx="40" cy="38" r="14" fill="rgba(255,255,255,.5)"/>
+      <polygon points="40,100 16,64 64,64" fill="rgba(255,255,255,.22)"/>
+    </svg>
+  </div>
+  <div class="t-label c-white a1 mb2 badge">Parte 3</div>
+  <div class="t-titan c-white asc" style="font-size:clamp(60px,13vw,160px);line-height:.88;text-align:left;align-self:flex-start;">MONTES<br>CLAROS</div>
+  <div class="t-big c-white a2 mt2" style="opacity:.88;">No centro do mapa.</div>
+</div>
+
+
+<!-- S21 — POLO REGIONAL -->
+<div class="slide bg-dark" data-id="21">
+  <div class="deco">
+    <!-- diagrama radial SVG com cores sólidas -->
+    <svg style="position:absolute;right:-3%;top:50%;transform:translateY(-50%);width:min(46vw,400px);animation:breathe 12s ease-in-out infinite;" viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg">
+      <g stroke="#2E8BC0" stroke-width="1.8">
+        <line x1="150" y1="150" x2="150" y2="28"/><line x1="150" y1="150" x2="254" y2="80"/>
+        <line x1="150" y1="150" x2="272" y2="192"/><line x1="150" y1="150" x2="212" y2="272"/>
+        <line x1="150" y1="150" x2="88"  y2="272"/><line x1="150" y1="150" x2="28"  y2="192"/>
+        <line x1="150" y1="150" x2="44"  y2="80"/><line x1="150" y1="150" x2="96"  y2="28"/>
+      </g>
+      <g fill="#2E8BC0">
+        <circle cx="150" cy="28"  r="17"/><circle cx="254" cy="80"  r="17"/>
+        <circle cx="272" cy="192" r="17"/><circle cx="212" cy="272" r="17"/>
+        <circle cx="88"  cy="272" r="17"/><circle cx="28"  cy="192" r="17"/>
+        <circle cx="44"  cy="80"  r="17"/><circle cx="96"  cy="28"  r="17"/>
+      </g>
+      <!-- núcleo MC -->
+      <circle cx="150" cy="150" r="46" fill="#F5C800"/>
+      <text x="150" y="146" text-anchor="middle" fill="#0a2540" font-size="16" font-weight="900" font-family="Georama,sans-serif">MC</text>
+      <text x="150" y="163" text-anchor="middle" fill="#0a2540" font-size="10" font-weight="700" font-family="Georama,sans-serif">polo</text>
+    </svg>
+  </div>
+  <div style="text-align:left;align-self:flex-start;max-width:55%;">
+    <div class="t-mid c-white a1 mb2">Polo de saúde do Norte de Minas</div>
+    <div class="t-titan c-gold asc" style="font-size:clamp(64px,13vw,160px);line-height:.88;">18–20</div>
+    <div class="t-big c-white a2">municípios</div>
+    <div class="t-body c-dim a3 mt2">dependem de Montes Claros<br>para serviços de saúde</div>
+  </div>
+</div>
+
+
+<!-- S22 — NORTE DE MINAS / CLIMA -->
+<div class="slide bg-terra" data-id="22">
+  <div class="deco">
+    <!-- sol SVG sólido, canto superior direito -->
+    <svg style="position:absolute;right:-4%;top:-4%;width:min(35vw,280px);animation:rotateSlow 60s linear infinite;" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="100" cy="100" r="50" fill="#F5C800"/>
+      <!-- raios -->
+      <g stroke="#F5C800" stroke-width="12" stroke-linecap="round">
+        <line x1="100" y1="10"  x2="100" y2="30"/><line x1="100" y1="170" x2="100" y2="190"/>
+        <line x1="10"  y1="100" x2="30"  y2="100"/><line x1="170" y1="100" x2="190" y2="100"/>
+        <line x1="29"  y1="29"  x2="43"  y2="43"/><line x1="157" y1="157" x2="171" y2="171"/>
+        <line x1="171" y1="29"  x2="157" y2="43"/><line x1="43"  y1="157" x2="29"  y2="171"/>
+      </g>
+    </svg>
+    <svg style="position:absolute;bottom:0;left:0;width:200%;animation:waveFlow 19s linear infinite;" viewBox="0 0 1440 50" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M0,25 C360,48 1080,4 1440,25 L1440,50 L0,50 Z" fill="rgba(0,0,0,.2)"/>
+    </svg>
+  </div>
+  <div class="t-mid c-white a1 mb3">A realidade do Norte de Minas</div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:2.5vw;max-width:640px;" class="a2">
+    <div style="background:rgba(0,0,0,.35);border:2px solid rgba(245,200,0,.4);border-radius:14px;padding:3vw;">
+      <!-- ícone cactus SVG sólido -->
+      <svg viewBox="0 0 50 60" width="40" xmlns="http://www.w3.org/2000/svg"><rect x="21" y="10" width="8" height="50" rx="4" fill="#3AAA35"/><rect x="8"  y="20" width="16" height="8" rx="4" fill="#3AAA35"/><rect x="8"  y="18" width="8"  height="20" rx="4" fill="#3AAA35"/><rect x="26" y="28" width="16" height="8" rx="4" fill="#3AAA35"/><rect x="34" y="26" width="8"  height="18" rx="4" fill="#3AAA35"/></svg>
+      <div class="t-label c-white mt2">Seca</div>
+    </div>
+    <div style="background:rgba(0,0,0,.35);border:2px solid rgba(245,200,0,.4);border-radius:14px;padding:3vw;">
+      <!-- termômetro SVG sólido -->
+      <svg viewBox="0 0 40 60" width="32" xmlns="http://www.w3.org/2000/svg"><rect x="14" y="0" width="12" height="42" rx="6" fill="#ef4444"/><circle cx="20" cy="50" r="10" fill="#ef4444"/></svg>
+      <div class="t-label c-white mt2">Calor extremo</div>
+    </div>
+    <div style="background:rgba(0,0,0,.35);border:2px solid rgba(245,200,0,.4);border-radius:14px;padding:3vw;">
+      <!-- mosquito SVG sólido simplificado -->
+      <svg viewBox="0 0 50 50" width="38" xmlns="http://www.w3.org/2000/svg"><ellipse cx="25" cy="28" rx="10" ry="16" fill="#1A5EA8"/><ellipse cx="25" cy="12" rx="7"  ry="7"  fill="#1A5EA8"/><line x1="25" y1="19" x2="25" y2="25" stroke="#1A5EA8" stroke-width="2"/><ellipse cx="10" cy="22" rx="12" ry="5" fill="#7EC8E3" opacity=".8"/><ellipse cx="40" cy="22" rx="12" ry="5" fill="#7EC8E3" opacity=".8"/></svg>
+      <div class="t-label c-white mt2">Dengue</div>
+    </div>
+    <div style="background:rgba(0,0,0,.35);border:2px solid rgba(245,200,0,.4);border-radius:14px;padding:3vw;">
+      <!-- nuvem de fumaça SVG sólida -->
+      <svg viewBox="0 0 60 50" width="44" xmlns="http://www.w3.org/2000/svg"><ellipse cx="30" cy="35" rx="28" ry="15" fill="#6b7280"/><ellipse cx="18" cy="28" rx="14" ry="12" fill="#9ca3af"/><ellipse cx="38" cy="24" rx="16" ry="13" fill="#9ca3af"/><ellipse cx="28" cy="18" rx="12" ry="10" fill="#d1d5db"/></svg>
+      <div class="t-label c-white mt2">Queimadas</div>
+    </div>
+  </div>
+  <div class="t-big c-gold a3 mt3">Tudo isso é pauta de saúde.</div>
+</div>
+
+
+<!-- S23 — 11ª EDIÇÃO -->
+<div class="slide bg-navy" data-id="23">
+  <div class="deco">
+    <!-- anéis concêntricos SVG sólidos (como ondas de impacto) -->
+    <svg style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:min(90vmin,650px);animation:breathe 12s ease-in-out infinite;" viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="150" cy="150" r="140" fill="none" stroke="#1A5EA8" stroke-width="1.5"/>
+      <circle cx="150" cy="150" r="108" fill="none" stroke="#1A5EA8" stroke-width="2"/>
+      <circle cx="150" cy="150" r="76"  fill="none" stroke="#2E8BC0" stroke-width="2.5"/>
+      <circle cx="150" cy="150" r="44"  fill="#1A5EA8"/>
+    </svg>
+  </div>
+  <div class="t-titan c-gold asc" style="font-size:clamp(100px,22vw,270px);line-height:.82;text-shadow:0 0 80px rgba(245,200,0,.35);">11ª</div>
+  <div class="t-big c-white a1 mt2">Conferência Municipal de Saúde<br>de Montes Claros</div>
+  <div class="t-small c-dim a2 mt2">Onze gerações de participação.</div>
+</div>
+
+
+<!-- S24 — CONTEXTO 2026 -->
+<div class="slide bg-dark" data-id="24">
+  <div class="deco">
+    <!-- calendário SVG sólido, canto direito -->
+    <svg style="position:absolute;right:5%;top:50%;transform:translateY(-50%);width:min(16vw,130px);animation:floatUp 9s ease-in-out infinite;" viewBox="0 0 80 90" xmlns="http://www.w3.org/2000/svg">
+      <rect x="0" y="10" width="80" height="80" rx="8" fill="#1A5EA8"/>
+      <rect x="0" y="10" width="80" height="22" rx="8" fill="#0D3D6B"/>
+      <rect x="20" y="0" width="8" height="20" rx="4" fill="#F5C800"/>
+      <rect x="52" y="0" width="8" height="20" rx="4" fill="#F5C800"/>
+      <!-- "2026" -->
+      <text x="40" y="70" text-anchor="middle" fill="white" font-size="22" font-weight="900" font-family="Georama,sans-serif">2026</text>
+    </svg>
+    <!-- linha vertical esquerda -->
+    <div style="position:absolute;left:6%;top:10%;bottom:10%;width:4px;background:linear-gradient(to bottom,#F5C800,#1A5EA8,#F5C800);border-radius:2px;"></div>
+  </div>
+  <div style="text-align:left;align-self:flex-start;padding-left:4vw;">
+    <div class="t-huge c-white a1" style="font-size:clamp(36px,7vw,88px);">2026.</div>
+    <div class="t-big c-white a2 mt1">Vésperas eleitorais.</div>
+    <div class="t-big c-gold a3 mt1">Crise democrática global.</div>
+  </div>
+</div>
+
+
+<!-- S25 — PERGUNTA ESPELHO -->
+<div class="slide bg-black" data-id="25">
+  <div class="deco">
+    <!-- mapa do brasil SVG sólido simplificado, canto direito -->
+    <svg style="position:absolute;right:3%;top:50%;transform:translateY(-50%);width:min(22vw,200px);animation:breathe 11s ease-in-out infinite;" viewBox="0 0 140 160" xmlns="http://www.w3.org/2000/svg">
+      <!-- forma aproximada do brasil simplificada -->
+      <path d="M70,5 C90,5 115,20 120,45 C130,55 135,75 125,95 C130,115 120,140 100,150 C80,158 55,152 40,135 C20,120 10,95 18,70 C5,50 15,20 40,12 C50,7 60,5 70,5 Z" fill="#1A5EA8"/>
+      <!-- MC como ponto dourado -->
+      <circle cx="62" cy="72" r="8" fill="#F5C800"/>
+      <circle cx="62" cy="72" r="14" fill="none" stroke="#F5C800" stroke-width="2"/>
+    </svg>
+    <!-- linha horizontal divisória -->
+    <div style="position:absolute;left:0;right:0;top:52%;height:2px;background:linear-gradient(to right,transparent,#1A5EA8 30%,#1A5EA8 70%,transparent);"></div>
+  </div>
+  <div class="t-huge c-white a1" style="max-width:760px;text-align:left;align-self:flex-start;">
+    O que <span class="c-gold">Montes Claros</span><br>vai dizer para o Brasil?
+  </div>
+</div>
+
+
+<!-- S26 — TÍTULO PARTE 4 -->
+<div class="slide bg-wave" data-id="26">
+  <div class="deco">
+    <svg style="position:absolute;bottom:0;left:0;width:200%;animation:waveFlow 13s linear infinite;" viewBox="0 0 1440 110" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M0,55 C240,100 480,10 720,55 C960,100 1200,10 1440,55 L1440,110 L0,110 Z" fill="rgba(255,255,255,.2)"/>
+    </svg>
+    <svg style="position:absolute;top:0;left:0;width:200%;animation:waveFlow2 20s linear infinite;" viewBox="0 0 1440 60" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M0,30 C480,0 960,60 1440,30 L1440,0 L0,0 Z" fill="rgba(13,61,107,.3)"/>
+    </svg>
+    <!-- 4 quadrados coloridos representando os eixos -->
+    <svg style="position:absolute;right:5%;top:50%;transform:translateY(-50%);width:min(14vw,120px);" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg">
+      <rect x="0"  y="0"  width="27" height="27" rx="5" fill="rgba(255,255,255,.3)"/>
+      <rect x="33" y="0"  width="27" height="27" rx="5" fill="rgba(255,255,255,.2)"/>
+      <rect x="0"  y="33" width="27" height="27" rx="5" fill="rgba(255,255,255,.2)"/>
+      <rect x="33" y="33" width="27" height="27" rx="5" fill="rgba(255,255,255,.3)"/>
+    </svg>
+  </div>
+  <div class="t-label c-white a1 mb2 badge">Parte 4</div>
+  <div class="t-titan c-white a2" style="font-size:clamp(44px,9vw,112px);line-height:.9;">OS 4 EIXOS<br><span style="font-size:.65em;opacity:.82;">DA 18ª CONFERÊNCIA</span></div>
+</div>
+
+
+<!-- S27 — VISÃO GERAL EIXOS -->
+<div class="slide bg-dark" data-id="27">
+  <div class="eixos-grid a1">
+    <div class="eb eb1">
+      <div class="t-label c-gold">Eixo 1</div>
+      <div class="t-body c-white mt1">Democracia, Saúde como Direito e Soberania Nacional</div>
+    </div>
+    <div class="eb eb2">
+      <div class="t-label c-gold">Eixo 2</div>
+      <div class="t-body c-white mt1">Financiamento Adequado e Suficiente para o SUS</div>
+    </div>
+    <div class="eb eb3">
+      <div class="t-label c-gold">Eixo 3</div>
+      <div class="t-body c-white mt1">Emergências Climáticas e Justiça Socioambiental</div>
+    </div>
+    <div class="eb eb4">
+      <div class="t-label c-gold">Eixo 4</div>
+      <div class="t-body c-white mt1">Modelos de Atenção e Gestão, Cuidado Integral</div>
+    </div>
+  </div>
+</div>
+
+
+<!-- S28 — EIXO 1 PERGUNTA -->
+<div class="slide bg-e1" data-id="28">
+  <div class="deco">
+    <!-- ícone de assembleia/colunas SVG sólido -->
+    <svg style="position:absolute;right:4%;bottom:4%;width:min(18vw,150px);animation:floatUp 10s ease-in-out infinite;" viewBox="0 0 80 100" xmlns="http://www.w3.org/2000/svg">
+      <rect x="0"  y="20" width="14" height="80" rx="4" fill="rgba(255,255,255,.25)"/>
+      <rect x="18" y="10" width="14" height="90" rx="4" fill="rgba(255,255,255,.2)"/>
+      <rect x="36" y="20" width="14" height="80" rx="4" fill="rgba(255,255,255,.25)"/>
+      <rect x="54" y="15" width="14" height="85" rx="4" fill="rgba(255,255,255,.2)"/>
+      <rect x="66" y="20" width="14" height="80" rx="4" fill="rgba(255,255,255,.2)"/>
+      <rect x="0"  y="0"  width="80" height="14" rx="4" fill="rgba(255,255,255,.35)"/>
+    </svg>
+    <svg style="position:absolute;bottom:0;left:0;width:200%;animation:waveFlow 17s linear infinite;" viewBox="0 0 1440 55" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M0,28 C360,52 1080,5 1440,28 L1440,55 L0,55 Z" fill="rgba(13,61,107,.5)"/>
+    </svg>
+    <!-- "E1" label sólido -->
+    <div style="position:absolute;top:8%;left:6%;background:#F5C800;color:#0a2540;font-weight:900;font-size:clamp(14px,2vw,22px);padding:6px 18px;border-radius:6px;letter-spacing:.08em;">EIXO 1</div>
+  </div>
+  <div class="t-huge c-white a1" style="max-width:820px;font-style:italic;margin-top:2em;">
+    A reunião do seu conselho de saúde muda alguma coisa de verdade?
+  </div>
+</div>
+
+
+<!-- S29 — EIXO 1 CONTEÚDO -->
+<div class="slide bg-e1" data-id="29">
+  <div class="deco">
+    <div style="position:absolute;left:5%;top:10%;bottom:10%;width:4px;background:#F5C800;border-radius:2px;"></div>
+  </div>
+  <div style="text-align:left;align-self:flex-start;padding-left:4vw;">
+    <div class="t-label c-white a1 mb3">Democracia · Saúde como Direito · Soberania</div>
+    <div class="t-big c-white a2">Conselhos com <span class="hl">poder real</span></div>
+    <div class="t-big c-white a3 mt2">Participação que <span class="hl">decide</span></div>
+    <div class="t-big c-white a4 mt2">Soberania <span class="hl">sanitária</span></div>
+  </div>
+</div>
+
+
+<!-- S30 — SOBERANIA / PANDEMIA -->
+<div class="slide bg-black" data-id="30">
+  <div class="deco">
+    <!-- seringa/vacina SVG sólida -->
+    <svg style="position:absolute;right:5%;top:50%;transform:translateY(-50%) rotate(30deg);width:min(12vw,100px);animation:floatUp 9s ease-in-out infinite;" viewBox="0 0 40 120" xmlns="http://www.w3.org/2000/svg">
+      <rect x="14" y="0"  width="12" height="80" rx="3" fill="#2E8BC0"/>
+      <rect x="10" y="80" width="20" height="12" rx="2" fill="#1A5EA8"/>
+      <rect x="16" y="92" width="8"  height="28" rx="4" fill="#7EC8E3"/>
+      <rect x="8"  y="35" width="24" height="6"  rx="3" fill="#7EC8E3"/>
+    </svg>
+  </div>
+  <div class="t-label c-dim a1 mb2">A lição da pandemia</div>
+  <div class="t-big c-white a2" style="max-width:740px;">2021: Brasil esperou meses por vacina porque dependia de importação.</div>
+  <div class="t-huge c-gold a3 mt3" style="font-size:clamp(36px,7vw,90px);">Soberania sanitária não é abstração.</div>
+  <div class="t-big c-white a4 mt1">É vida.</div>
+</div>
+
+
+<!-- S31 — EIXO 2 PERGUNTA -->
+<div class="slide bg-e2" data-id="31">
+  <div class="deco">
+    <!-- cifrão SVG sólido azul-escuro -->
+    <svg style="position:absolute;right:5%;top:50%;transform:translateY(-50%);height:80%;width:auto;animation:breathe 9s ease-in-out infinite;" viewBox="0 0 70 200" xmlns="http://www.w3.org/2000/svg">
+      <text x="35" y="165" text-anchor="middle" font-size="200" font-weight="900" fill="#1A5EA8" font-family="Georama,sans-serif">$</text>
+    </svg>
+    <div style="position:absolute;top:8%;left:6%;background:#F5C800;color:#0a2540;font-weight:900;font-size:clamp(14px,2vw,22px);padding:6px 18px;border-radius:6px;letter-spacing:.08em;">EIXO 2</div>
+    <svg style="position:absolute;bottom:0;left:0;width:200%;animation:waveFlow 18s linear infinite;" viewBox="0 0 1440 55" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M0,28 C480,52 960,5 1440,28 L1440,55 L0,55 Z" fill="rgba(245,200,0,.18)"/>
+    </svg>
+  </div>
+  <div style="text-align:left;align-self:flex-start;max-width:68%;margin-top:2em;">
+    <div class="t-big c-gold a2">Lembra do</div>
+    <div class="t-titan c-white asc" style="font-size:clamp(52px,10vw,128px);line-height:.88;">R$1<br>trilhão?</div>
+    <div class="t-body c-dim a3 mt2">Voltamos a ele. É o eixo mais importante.</div>
+  </div>
+</div>
+
+
+<!-- S32 — EIXO 2 META / BARRA -->
+<div class="slide bg-e2" data-id="32">
+  <div class="deco">
+    <div style="position:absolute;left:5%;top:10%;bottom:10%;width:4px;background:#F5C800;border-radius:2px;"></div>
+  </div>
+  <div class="t-label c-white a1 mb3">Meta da 17ª Conferência Nacional</div>
+  <div class="t-titan c-gold asc" style="font-size:clamp(64px,13vw,160px);line-height:.88;">6%<br><span style="font-size:.45em;color:rgba(255,255,255,.8);">do PIB em saúde</span></div>
+  <div class="t-body c-dim a3 mt2 mb2">Hoje: menos da metade.</div>
+  <div class="bar-wrap a4">
+    <div class="t-small c-dim mb1" style="text-align:left;">Gasto público atual em saúde</div>
+    <div class="bar-track">
+      <div class="bar-fill"><span class="t-small c-white">40%</span></div>
+      <div class="bar-ref"></div>
+    </div>
+  </div>
+</div>
+
+
+<!-- S33 — CARREIRA SUS -->
+<div class="slide bg-e2" data-id="33">
+  <div class="deco">
+    <!-- estetoscópio SVG sólido -->
+    <svg style="position:absolute;right:5%;top:50%;transform:translateY(-50%);width:min(16vw,130px);animation:floatUp 9s ease-in-out infinite;" viewBox="0 0 80 120" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="40" cy="105" r="15" fill="#3AAA35"/>
+      <circle cx="40" cy="105" r="8"  fill="#2d8229"/>
+      <path d="M40,90 Q40,55 20,40 Q5,28 8,12" fill="none" stroke="#7EC8E3" stroke-width="7" stroke-linecap="round"/>
+      <path d="M40,90 Q40,55 60,40 Q75,28 72,12" fill="none" stroke="#7EC8E3" stroke-width="7" stroke-linecap="round"/>
+      <circle cx="8"  cy="10" r="9" fill="#7EC8E3"/>
+      <circle cx="72" cy="10" r="9" fill="#7EC8E3"/>
+    </svg>
+    <svg style="position:absolute;bottom:0;left:0;width:200%;animation:waveFlow2 22s linear infinite;" viewBox="0 0 1440 50" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M0,25 C360,48 1080,4 1440,25 L1440,50 L0,50 Z" fill="rgba(58,170,53,.25)"/>
+    </svg>
+  </div>
+  <div style="text-align:left;align-self:flex-start;max-width:72%;">
+    <div class="t-label a1 mb2 badge c-white">Janeiro 2026</div>
+    <div class="t-mid c-white a2 mt2">Aprovada a</div>
+    <div class="t-huge c-gold a3" style="font-size:clamp(32px,6vw,76px);line-height:1.1;">Carreira Única<br>Interfederativa do SUS</div>
+    <div class="t-body c-dim a4 mt2">Valorização dos profissionais.<br>Fim da rotatividade. Fixação em áreas vulneráveis.</div>
+  </div>
+</div>
+
+
+<!-- S34 — EIXO 3 PERGUNTA -->
+<div class="slide bg-terra" data-id="34">
+  <div class="deco">
+    <!-- sol grande cor sólida, canto superior direito -->
+    <svg style="position:absolute;right:-8%;top:-8%;width:min(45vw,380px);animation:rotateSlow 55s linear infinite;" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="100" cy="100" r="55" fill="#F5C800"/>
+      <g stroke="#F5C800" stroke-width="14" stroke-linecap="round">
+        <line x1="100" y1="5"   x2="100" y2="30"/><line x1="100" y1="170" x2="100" y2="195"/>
+        <line x1="5"   y1="100" x2="30"  y2="100"/><line x1="170" y1="100" x2="195" y2="100"/>
+        <line x1="26"  y1="26"  x2="44"  y2="44"/><line x1="156" y1="156" x2="174" y2="174"/>
+        <line x1="174" y1="26"  x2="156" y2="44"/><line x1="44"  y1="156" x2="26"  y2="174"/>
+      </g>
+    </svg>
+    <div style="position:absolute;top:8%;left:6%;background:#14532d;color:#4ECBA0;font-weight:900;font-size:clamp(14px,2vw,22px);padding:6px 18px;border-radius:6px;letter-spacing:.08em;">EIXO 3</div>
+    <svg style="position:absolute;bottom:0;left:0;width:200%;animation:waveFlow 18s linear infinite;" viewBox="0 0 1440 55" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M0,28 C360,52 1080,5 1440,28 L1440,55 L0,55 Z" fill="rgba(0,0,0,.2)"/>
+    </svg>
+  </div>
+  <div class="t-huge c-white a1" style="max-width:820px;font-style:italic;margin-top:2em;">
+    Esse último verão — o calor afetou o atendimento de saúde que você conhece?
+  </div>
+</div>
+
+
+<!-- S35 — DADO CLIMÁTICO 1,5°C -->
+<div class="slide bg-e3" data-id="35">
+  <div class="deco">
+    <!-- termômetro SVG sólido grande, colorido -->
+    <svg style="position:absolute;right:8%;top:50%;transform:translateY(-50%);height:78%;width:auto;animation:breathe 9s ease-in-out infinite;" viewBox="0 0 60 200" xmlns="http://www.w3.org/2000/svg">
+      <!-- corpo do termômetro -->
+      <rect x="20" y="0" width="20" height="155" rx="10" fill="#1c3a28"/>
+      <!-- mercúrio subindo -->
+      <rect x="24" y="35" width="12" height="120" rx="6" fill="#ef4444"/>
+      <!-- marcação 1.5°C -->
+      <rect x="14" y="35" width="12" height="4" rx="2" fill="#F5C800"/>
+      <text x="10" y="33" text-anchor="end" font-size="12" font-weight="900" fill="#F5C800" font-family="Georama,sans-serif">1.5°</text>
+      <!-- bulbo -->
+      <circle cx="30" cy="168" r="22" fill="#ef4444"/>
+    </svg>
+  </div>
+  <div style="text-align:left;align-self:flex-start;max-width:68%;">
+    <div class="t-label c-dim a1 mb2">Realidade global em 2024</div>
+    <div class="t-titan c-white asc" style="font-size:clamp(72px,15vw,188px);line-height:.86;">+1,5°C</div>
+    <div class="t-mid c-dim a2 mt2">acima da temperatura pré-industrial</div>
+    <div class="t-big c-white a3 mt2">Isso não é tendência.<br><span class="c-gold">É o presente.</span></div>
+  </div>
+</div>
+
+
+<!-- S36 — RACISMO AMBIENTAL -->
+<div class="slide bg-e3" data-id="36">
+  <div class="deco">
+    <div style="position:absolute;left:5%;top:10%;bottom:10%;width:4px;background:#4ECBA0;border-radius:2px;"></div>
+    <!-- símbolo de igualdade/equidade SVG sólido -->
+    <svg style="position:absolute;right:6%;bottom:8%;width:min(14vw,120px);animation:floatUp 10s ease-in-out infinite;" viewBox="0 0 80 60" xmlns="http://www.w3.org/2000/svg">
+      <rect x="0" y="10" width="80" height="14" rx="7" fill="#4ECBA0"/>
+      <rect x="0" y="36" width="80" height="14" rx="7" fill="#4ECBA0"/>
+    </svg>
+  </div>
+  <div style="text-align:left;align-self:flex-start;padding-left:4vw;">
+    <div class="t-huge c-white a1" style="font-size:clamp(40px,8vw,100px);">Racismo<br><span style="color:#4ECBA0;">Ambiental</span></div>
+    <div class="t-body c-dim a2 mt2">Os mais pobres, periféricos, negros e indígenas<br>sofrem mais os impactos climáticos.</div>
+    <div class="t-small c-white a3 mt2">Sem saneamento. Sem arborização.<br>Sem abrigo. Com menos acesso ao SUS.</div>
+  </div>
+</div>
+
+
+<!-- S37 — EIXO 4 PERGUNTA -->
+<div class="slide bg-e4" data-id="37">
+  <div class="deco">
+    <!-- bifurcação UBS/PS SVG sólida -->
+    <svg style="position:absolute;right:4%;top:50%;transform:translateY(-50%);width:min(20vw,170px);animation:breathe 10s ease-in-out infinite;" viewBox="0 0 100 160" xmlns="http://www.w3.org/2000/svg">
+      <!-- tronco -->
+      <rect x="44" y="0" width="12" height="70" rx="6" fill="rgba(255,255,255,.35)"/>
+      <!-- braço UBS -->
+      <rect x="5"  y="66" width="50" height="12" rx="6" fill="rgba(255,255,255,.3)"/>
+      <rect x="5"  y="66" width="12" height="50" rx="6" fill="rgba(255,255,255,.3)"/>
+      <!-- braço PS -->
+      <rect x="45" y="66" width="50" height="12" rx="6" fill="#ef4444"/>
+      <rect x="83" y="66" width="12" height="50" rx="6" fill="#ef4444"/>
+      <!-- labels -->
+      <text x="11" y="130" font-size="10" font-weight="900" fill="rgba(255,255,255,.7)" font-family="Georama,sans-serif">UBS</text>
+      <text x="80" y="130" font-size="10" font-weight="900" fill="#ef4444" font-family="Georama,sans-serif">PS</text>
+    </svg>
+    <div style="position:absolute;top:8%;left:6%;background:rgba(12,74,110,.8);color:#7EC8E3;font-weight:900;font-size:clamp(14px,2vw,22px);padding:6px 18px;border-radius:6px;letter-spacing:.08em;border:1px solid #2E8BC0;">EIXO 4</div>
+    <svg style="position:absolute;bottom:0;left:0;width:200%;animation:waveFlow2 21s linear infinite;" viewBox="0 0 1440 55" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M0,28 C480,52 960,5 1440,28 L1440,55 L0,55 Z" fill="rgba(13,61,107,.5)"/>
+    </svg>
+  </div>
+  <div class="t-huge c-white a1" style="max-width:800px;font-style:italic;margin-top:2em;">
+    Quando você adoece, vai à UBS ou direto ao pronto-socorro?
+  </div>
+  <div class="t-big c-gold a2 mt2">Por quê?</div>
+</div>
+
+
+<!-- S38 — EIXO 4 APS -->
+<div class="slide bg-e4" data-id="38">
+  <div class="deco">
+    <!-- cruz médica SVG sólida verde -->
+    <svg style="position:absolute;right:5%;bottom:5%;width:min(16vw,130px);animation:floatUp 10s ease-in-out infinite;" viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg">
+      <rect x="30" y="6"  width="20" height="68" rx="6" fill="#3AAA35"/>
+      <rect x="6"  y="30" width="68" height="20" rx="6" fill="#3AAA35"/>
+    </svg>
+    <div style="position:absolute;left:5%;top:10%;bottom:10%;width:4px;background:#7EC8E3;border-radius:2px;"></div>
+  </div>
+  <div style="text-align:left;align-self:flex-start;padding-left:4vw;">
+    <div class="t-label c-white a1 mb3">O que deveria acontecer</div>
+    <div class="t-big c-white a2"><span class="hl">APS</span> como coordenadora do cuidado</div>
+    <div class="t-big c-white a3 mt2"><span class="hl">Vigilância</span> integrada à atenção primária</div>
+    <div class="t-big c-white a4 mt2"><span class="hl">Equidade</span> racial na saúde</div>
+    <div class="t-big c-white a5 mt2"><span class="hl">Fim</span> da privatização silenciosa</div>
+  </div>
+</div>
+
+
+<!-- S39 — SÍNTESE 4 EIXOS -->
+<div class="slide bg-black" data-id="39">
+  <div class="deco">
+    <!-- 4 quadrados sólidos coloridos como composição lateral -->
+    <svg style="position:absolute;right:5%;top:50%;transform:translateY(-50%);width:min(14vw,120px);" viewBox="0 0 60 130" xmlns="http://www.w3.org/2000/svg">
+      <rect x="0"  y="0"   width="60" height="28" rx="7" fill="#1A5EA8"/>
+      <rect x="0"  y="34"  width="60" height="28" rx="7" fill="#0D3D6B"/>
+      <rect x="0"  y="68"  width="60" height="28" rx="7" fill="#3AAA35"/>
+      <rect x="0"  y="102" width="60" height="28" rx="7" fill="#2E8BC0"/>
+    </svg>
+  </div>
+  <div style="text-align:left;align-self:flex-start;max-width:78%;">
+    <div class="t-mid c-dim a1">Quatro eixos. Um argumento.</div>
+    <div class="t-huge c-white a2 mt2" style="font-size:clamp(32px,6.5vw,82px);">O SUS que você merece depende de como você <span class="c-gold">participa.</span></div>
+  </div>
+</div>
+
+
+<!-- S40 — TÍTULO PARTE 5 -->
+<div class="slide bg-navy" data-id="40">
+  <div class="deco">
+    <!-- lápis/caneta SVG sólido em amarelo -->
+    <svg style="position:absolute;right:6%;bottom:8%;width:min(14vw,120px);animation:floatSide 8s ease-in-out infinite;transform:rotate(-25deg);" viewBox="0 0 40 130" xmlns="http://www.w3.org/2000/svg">
+      <rect x="8" y="20" width="24" height="90" rx="4" fill="#F5C800"/>
+      <polygon points="8,110 32,110 20,130" fill="#e5b800"/>
+      <rect x="8" y="8"  width="24" height="16" rx="3" fill="#9ca3af"/>
+      <rect x="8" y="0"  width="24" height="12" rx="3" fill="#6b7280"/>
+    </svg>
+    <svg style="position:absolute;bottom:0;left:0;width:200%;animation:waveFlow 16s linear infinite;" viewBox="0 0 1440 55" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M0,28 C360,52 1080,5 1440,28 L1440,55 L0,55 Z" fill="#F5C800" fill-opacity=".2"/>
+    </svg>
+    <!-- linha vertical -->
+    <div style="position:absolute;left:5%;top:10%;bottom:10%;width:4px;background:#F5C800;border-radius:2px;"></div>
+  </div>
+  <div style="text-align:left;align-self:flex-start;padding-left:4vw;" class="a1">
+    <div class="t-label c-white mb2 badge">Parte 5</div>
+    <div class="t-titan c-white" style="font-size:clamp(44px,9vw,112px);line-height:.88;margin-top:.6em;">COMO<br>TRANS-<br>FORMAR</div>
+    <div class="t-huge c-gold" style="font-size:clamp(36px,7vw,90px);line-height:.95;">indignação<br>em proposta</div>
+  </div>
+</div>
+
+
+<!-- S41 — PROPOSTA RUIM -->
+<div class="slide bg-red-mid" data-id="41">
+  <div class="deco">
+    <!-- X SVG sólido grande, vermelho escuro, como elemento editorial -->
+    <svg style="position:absolute;right:-2%;top:50%;transform:translateY(-50%);height:90%;width:auto;" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+      <line x1="10" y1="10" x2="90" y2="90" stroke="#6b1f1f" stroke-width="24" stroke-linecap="round"/>
+      <line x1="90" y1="10" x2="10" y2="90" stroke="#6b1f1f" stroke-width="24" stroke-linecap="round"/>
+    </svg>
+    <div style="position:absolute;top:8%;left:6%;background:#6b1f1f;color:#fca5a5;font-weight:900;font-size:clamp(14px,2vw,22px);padding:6px 18px;border-radius:6px;letter-spacing:.08em;">NÃO FUNCIONA</div>
+  </div>
+  <div style="text-align:left;align-self:flex-start;max-width:75%;">
+    <div class="t-huge c-white a1" style="font-size:clamp(52px,10vw,124px);line-height:.9;text-decoration:line-through;text-decoration-color:rgba(255,255,255,.4);">❌</div>
+    <div class="t-mid c-white a2 mt2" style="font-style:italic;opacity:.85;">"Melhorar o atendimento no SUS porque está muito ruim."</div>
+    <div class="t-body c-dim a3 mt3">Sem objeto. Sem prazo.<br>Sem responsável. <strong style="color:#fca5a5;">Inútil.</strong></div>
+  </div>
+</div>
+
+
+<!-- S42 — PROPOSTA BOA -->
+<div class="slide bg-green" data-id="42">
+  <div class="deco">
+    <!-- checkmark SVG sólido grande, verde claro, elemento editorial -->
+    <svg style="position:absolute;right:-2%;top:50%;transform:translateY(-50%);height:90%;width:auto;" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+      <polyline points="12,52 40,80 88,20" stroke="#0d3d20" stroke-width="20" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+    <div style="position:absolute;top:8%;left:6%;background:#052e16;color:#4ECBA0;font-weight:900;font-size:clamp(14px,2vw,22px);padding:6px 18px;border-radius:6px;letter-spacing:.08em;">FUNCIONA</div>
+    <div style="position:absolute;left:5%;top:10%;bottom:10%;width:4px;background:#4ECBA0;border-radius:2px;"></div>
+  </div>
+  <div style="text-align:left;align-self:flex-start;padding-left:4vw;max-width:80%;">
+    <div class="t-huge c-white a1" style="font-size:clamp(52px,10vw,124px);line-height:.9;">✅</div>
+    <div class="t-small c-white a2 mt2" style="font-style:italic;line-height:1.75;">"Garantir equipes de saúde da família completas nas UBS com cobertura inferior a 70%, até dezembro de 2026, com recursos do Bloco de Atenção Primária."</div>
+    <div class="t-label a3 mt2" style="color:#4ECBA0;">Específica · Executável · Com prazo e responsável</div>
+  </div>
+</div>
+
+
+<!-- S43 — FÓRMULA -->
+<div class="slide bg-dark" data-id="43">
+  <div class="deco">
+    <!-- = sign SVG sólido, azul médio, canto -->
+    <svg style="position:absolute;right:5%;bottom:8%;width:min(14vw,120px);animation:breathe 9s ease-in-out infinite;" viewBox="0 0 80 50" xmlns="http://www.w3.org/2000/svg">
+      <rect x="0" y="8"  width="80" height="14" rx="7" fill="#2E8BC0"/>
+      <rect x="0" y="28" width="80" height="14" rx="7" fill="#2E8BC0"/>
+    </svg>
+  </div>
+  <div class="t-label c-dim a1 mb3">A fórmula da boa proposta</div>
+  <div class="formula-row">
+    <div class="fb fb-v a1">VERBO</div>
+    <div class="fp a2">+</div>
+    <div class="fb fb-o a2">OBJETO</div>
+    <div class="fp a3">+</div>
+    <div class="fb fb-r a3">RESPONSÁVEL</div>
+    <div class="fp a4">+</div>
+    <div class="fb fb-p a4">PRAZO</div>
+  </div>
+</div>
+
+
+<!-- S44 — FÓRMULA APLICADA -->
+<div class="slide bg-dark" data-id="44">
+  <div class="deco">
+    <div style="position:absolute;left:5%;top:10%;bottom:10%;width:4px;background:linear-gradient(to bottom,#1A5EA8,#F5C800,#3AAA35,#fff);border-radius:2px;"></div>
+  </div>
+  <div class="t-label c-dim a1 mb3">Na prática</div>
+  <div class="formula-row">
+    <div class="fb fb-v a1">Garantir</div>
+    <div class="fp a2">+</div>
+    <div class="fb fb-o a2">cobertura<br>ESF 80%</div>
+    <div class="fp a3">+</div>
+    <div class="fb fb-r a3">SMS<br>Montes Claros</div>
+    <div class="fp a4">+</div>
+    <div class="fb fb-p a4">dez/2026</div>
+  </div>
+</div>
+
+
+<!-- S45 — PERGUNTA FINAL -->
+<div class="slide bg-wave-dark" data-id="45">
+  <div class="deco">
+    <svg style="position:absolute;bottom:0;left:0;width:200%;animation:waveFlow 14s linear infinite;" viewBox="0 0 1440 100" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M0,50 C240,90 480,10 720,50 C960,90 1200,10 1440,50 L1440,100 L0,100 Z" fill="#F5C800" fill-opacity=".2"/>
+    </svg>
+    <svg style="position:absolute;bottom:0;left:0;width:200%;animation:waveFlow2 22s linear infinite;" viewBox="0 0 1440 75" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M0,38 C480,72 960,4 1440,38 L1440,75 L0,75 Z" fill="rgba(255,255,255,.1)"/>
+    </svg>
+    <!-- ponto de interrogação SVG sólido canto direito -->
+    <svg style="position:absolute;right:4%;top:50%;transform:translateY(-50%);height:75%;width:auto;animation:breathe 9s ease-in-out infinite;" viewBox="0 0 80 200" xmlns="http://www.w3.org/2000/svg">
+      <text x="40" y="160" text-anchor="middle" font-size="185" font-weight="900" fill="#1A5EA8" font-family="Georama,sans-serif">?</text>
+    </svg>
+  </div>
+  <div class="t-huge c-white a1" style="max-width:740px;text-align:left;align-self:flex-start;">
+    O que você quer mudar<br>no SUS de <span class="c-gold">Montes Claros?</span>
+  </div>
+</div>
+
+
+<!-- S46 — FECHAMENTO 1 / 1986 -->
+<div class="slide bg-black" data-id="46">
+  <div class="deco">
+    <!-- constituição/livro SVG sólido, posicionado como elemento central-direito -->
+    <svg style="position:absolute;right:5%;top:50%;transform:translateY(-50%);width:min(20vw,170px);animation:floatUp 10s ease-in-out infinite;" viewBox="0 0 90 110" xmlns="http://www.w3.org/2000/svg">
+      <rect x="10"  y="0"  width="80" height="110" rx="6" fill="#1A5EA8"/>
+      <rect x="0"   y="5"  width="16" height="100" rx="4" fill="#0D3D6B"/>
+      <rect x="20"  y="20" width="52" height="5"  rx="2" fill="rgba(255,255,255,.5)"/>
+      <rect x="20"  y="32" width="40" height="4"  rx="2" fill="rgba(255,255,255,.35)"/>
+      <rect x="20"  y="43" width="48" height="4"  rx="2" fill="rgba(255,255,255,.35)"/>
+      <rect x="20"  y="54" width="35" height="4"  rx="2" fill="rgba(255,255,255,.25)"/>
+      <text x="55" y="90" text-anchor="middle" fill="#F5C800" font-size="12" font-weight="900" font-family="Georama,sans-serif">Art. 196</text>
+    </svg>
+    <!-- linha cronológica horizontal -->
+    <div style="position:absolute;left:5%;right:30%;bottom:28%;height:2px;background:linear-gradient(to right,#F5C800,rgba(245,200,0,.2));"></div>
+    <div style="position:absolute;left:5%;bottom:26%;width:8px;height:8px;background:#F5C800;border-radius:50%;transform:translateY(50%);"></div>
+  </div>
+  <div style="text-align:left;align-self:flex-start;max-width:68%;">
+    <div class="t-big c-dim a1">Em 1986, 4.000 pessoas</div>
+    <div class="t-titan c-white a2" style="font-size:clamp(48px,10vw,126px);line-height:.9;">mudaram a Consti-tuição.</div>
+  </div>
+</div>
+
+
+<!-- S47 — FECHAMENTO 2 -->
+<div class="slide bg-black" data-id="47">
+  <div class="deco">
+    <!-- estrela / símbolo de norte SVG sólida, azul SUS, canto direito -->
+    <svg style="position:absolute;right:4%;top:50%;transform:translateY(-50%);width:min(20vw,170px);animation:rotateSlow 40s linear infinite;" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+      <polygon points="50,2 61,38 97,38 68,60 79,96 50,74 21,96 32,60 3,38 39,38" fill="#1A5EA8"/>
+    </svg>
+    <!-- linha divisória -->
+    <div style="position:absolute;left:0;right:0;top:52%;height:1px;background:linear-gradient(to right,rgba(26,94,168,.6) 60%,transparent);"></div>
+  </div>
+  <div class="t-big c-white a1" style="max-width:780px;text-align:left;align-self:flex-start;font-size:clamp(24px,4vw,52px);">
+    Em 2026, <span class="ul-gold">Montes Claros</span> tem a oportunidade de dizer ao Brasil o que o <span class="ul-gold">Norte de Minas</span> precisa.
+  </div>
+</div>
+
+
+<!-- S48 — FRASE FINAL -->
+<div class="slide bg-wave" data-id="48">
+  <div class="deco">
+    <svg style="position:absolute;bottom:0;left:0;width:200%;animation:waveFlow 11s linear infinite;" viewBox="0 0 1440 120" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M0,60 C240,108 480,12 720,60 C960,108 1200,12 1440,60 L1440,120 L0,120 Z" fill="rgba(255,255,255,.22)"/>
+    </svg>
+    <svg style="position:absolute;bottom:0;left:0;width:200%;animation:waveFlow2 17s linear infinite;" viewBox="0 0 1440 90" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M0,45 C360,84 1080,8 1440,45 L1440,90 L0,90 Z" fill="rgba(13,61,107,.3)"/>
+    </svg>
+    <svg style="position:absolute;top:0;left:0;width:200%;animation:waveFlow 24s linear infinite;" viewBox="0 0 1440 55" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M0,28 C480,4 960,52 1440,28 L1440,0 L0,0 Z" fill="rgba(255,255,255,.12)"/>
+    </svg>
+    <!-- raio/power SVG sólido branco, composição lateral -->
+    <svg style="position:absolute;right:4%;top:50%;transform:translateY(-50%);height:80%;width:auto;animation:breathe 8s ease-in-out infinite;" viewBox="0 0 60 130" xmlns="http://www.w3.org/2000/svg">
+      <polygon points="38,0 8,65 32,65 22,130 58,55 32,55" fill="rgba(255,255,255,.25)"/>
+    </svg>
+  </div>
+  <div class="t-titan c-white asc" style="font-size:clamp(44px,9vw,112px);line-height:.92;max-width:860px;">
+    A indignação cotidiana vira poder político quando produz proposta.
+  </div>
+</div>
+
+
+<!-- S49 — ENCERRAMENTO -->
+<div class="slide bg-encerra" data-id="49">
+  <div class="deco">
+    <svg style="position:absolute;bottom:0;left:0;width:200%;animation:waveFlow 13s linear infinite;" viewBox="0 0 1440 110" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M0,55 C240,100 480,10 720,55 C960,100 1200,10 1440,55 L1440,110 L0,110 Z" fill="rgba(255,255,255,.18)"/>
+    </svg>
+    <svg style="position:absolute;bottom:0;left:0;width:200%;animation:waveFlow2 20s linear infinite;" viewBox="0 0 1440 80" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M0,40 C480,78 960,4 1440,40 L1440,80 L0,80 Z" fill="#F5C800" fill-opacity=".15"/>
+    </svg>
+    <!-- cruz médica SVG sólida azul claro, canto superior direito -->
+    <svg style="position:absolute;right:4%;top:6%;width:min(16vw,130px);animation:breathe 10s ease-in-out infinite;" viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg">
+      <rect x="30" y="5"  width="20" height="70" rx="7" fill="rgba(255,255,255,.2)"/>
+      <rect x="5"  y="30" width="70" height="20" rx="7" fill="rgba(255,255,255,.2)"/>
+    </svg>
+  </div>
+  <div class="t-label c-white a1 mb2">22, 23 e 24 de abril de 2026</div>
+  <div class="t-huge c-white a2" style="font-size:clamp(36px,7vw,90px);line-height:.95;">11ª Conferência<br>Municipal de Saúde</div>
+  <div class="t-big c-gold a3 mt2">Montes Claros</div>
+  <div class="t-body c-dim a4 mt3">Saúde, Democracia, Soberania e SUS:<br>Cuidar do Povo é Cuidar do Brasil</div>
+</div>
+
+
+</div><!-- /deck -->
+
+<script>
+const slides = Array.from(document.querySelectorAll('.slide'));
+let cur = 0;
+const total = slides.length;
+
+function go(n) {
+  if(n < 0 || n >= total) return;
+  slides[cur].classList.remove('active');
+  cur = n;
+  slides[cur].classList.add('active');
+  document.getElementById('slide-num').textContent = (cur+1) + ' / ' + total;
+  document.getElementById('prog-bar').style.width = ((cur+1)/total*100) + '%';
+}
+
+document.addEventListener('keydown', e => {
+  if(['ArrowRight','ArrowDown','PageDown',' '].includes(e.key)){e.preventDefault();go(cur+1);}
+  if(['ArrowLeft','ArrowUp','PageUp'].includes(e.key)){e.preventDefault();go(cur-1);}
+  if(e.key==='Home') go(0);
+  if(e.key==='End') go(total-1);
+  if(e.key==='Escape') document.exitFullscreen?.();
+  if(e.key.toLowerCase()==='f') document.documentElement.requestFullscreen?.();
+});
+
+let tx=0;
+document.addEventListener('touchstart',e=>{tx=e.touches[0].clientX;},{passive:true});
+document.addEventListener('touchend',e=>{
+  const dx=e.changedTouches[0].clientX-tx;
+  if(Math.abs(dx)>50) dx<0?go(cur+1):go(cur-1);
+},{passive:true});
+
+const c=document.getElementById('cur');
+const r=document.getElementById('cring');
+document.addEventListener('mousemove',e=>{
+  c.style.left=e.clientX+'px'; c.style.top=e.clientY+'px';
+  r.style.left=e.clientX+'px'; r.style.top=e.clientY+'px';
+});
+
+let hudT;
+const hud=document.getElementById('hud');
+document.addEventListener('mousemove',()=>{
+  hud.classList.remove('dim');
+  clearTimeout(hudT);
+  hudT=setTimeout(()=>hud.classList.add('dim'),3000);
+});
+
+go(0);
+</script>
+</body>
+</html>

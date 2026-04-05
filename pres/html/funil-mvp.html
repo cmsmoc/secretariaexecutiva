@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Estratégia MVP + Funil — Do Mercado Pra Mesa</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Lato:wght@300;400;600;700&display=swap" rel="stylesheet"/>
+<style>
+  :root{--sage:#5a8a6a;--sage-deep:#3d6b52;--sage-pale:#e8f2ec;--bege:#f7f3ec;--bege-mid:#ede7db;--yellow:#e8c547;--yellow-pale:#fdf6d8;--ink:#1e1e1e;--ink-mid:#3d3d3d;--ink-soft:#6b6b6b;--red:#e74c3c;--white:#fff;--r:12px}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Lato',sans-serif;background:var(--bege);color:var(--ink);line-height:1.7}
+  .wrap{max-width:880px;margin:0 auto;padding:0 24px}
+  h1,h2,h3{font-family:'Playfair Display',serif;line-height:1.2}
+  .page-header{background:var(--sage-deep);color:#fff;padding:56px 24px;text-align:center}
+  .page-header h1{font-size:clamp(1.8rem,4vw,2.6rem);margin-bottom:10px}
+  .page-header p{color:rgba(255,255,255,.7);font-size:1rem;font-weight:300}
+  .section{padding:64px 0;border-bottom:1px solid var(--bege-mid)}
+  .section:last-child{border:none}
+  .eyebrow{display:inline-block;font-size:.7rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--sage);margin-bottom:10px}
+  h2{font-size:clamp(1.5rem,3.5vw,2rem);margin-bottom:8px}
+  h3{font-size:1.05rem;margin-bottom:8px;color:var(--ink)}
+  .card{background:var(--white);border-radius:var(--r);padding:24px;box-shadow:0 2px 14px rgba(0,0,0,.07)}
+
+  /* TIMELINE */
+  .timeline{display:flex;flex-direction:column;gap:0;margin-top:28px;position:relative}
+  .timeline::before{content:'';position:absolute;left:23px;top:0;bottom:0;width:2px;background:var(--bege-mid)}
+  .day{display:flex;gap:20px;position:relative;padding-bottom:32px}
+  .day:last-child{padding-bottom:0}
+  .day__num{flex-shrink:0;width:46px;height:46px;border-radius:50%;background:var(--sage);color:#fff;display:flex;align-items:center;justify-content:center;font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:700;position:relative;z-index:1;box-shadow:0 2px 8px rgba(90,138,106,.3)}
+  .day__num--yellow{background:var(--yellow);color:var(--ink)}
+  .day__body{flex:1;background:var(--white);border-radius:var(--r);padding:20px 22px;box-shadow:0 2px 12px rgba(0,0,0,.07)}
+  .day__title{font-weight:700;font-size:1rem;margin-bottom:6px;color:var(--ink)}
+  .day__focus{display:inline-block;font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;background:var(--sage-pale);color:var(--sage);padding:2px 10px;border-radius:50px;margin-bottom:10px}
+  .day__tasks{list-style:none;display:flex;flex-direction:column;gap:7px}
+  .day__tasks li{display:flex;gap:8px;font-size:.9rem;color:var(--ink-mid)}
+  .day__tasks li::before{content:'✓';color:var(--sage);font-weight:900;flex-shrink:0}
+
+  /* DONTS */
+  .donts{display:grid;gap:12px;margin-top:20px}
+  .dont-item{background:var(--white);border-left:4px solid var(--red);border-radius:0 var(--r) var(--r) 0;padding:14px 18px;font-size:.9rem;color:var(--ink-mid)}
+  .dont-item strong{color:var(--red)}
+  @media(min-width:600px){.donts{grid-template-columns:1fr 1fr}}
+
+  /* FUNNEL */
+  .funnel-stages{display:flex;flex-direction:column;gap:20px;margin-top:28px}
+  .stage{border-radius:var(--r);overflow:hidden;box-shadow:0 2px 14px rgba(0,0,0,.08)}
+  .stage__header{padding:18px 24px;color:#fff;display:flex;align-items:center;justify-content:space-between;gap:16px}
+  .stage__header--green{background:var(--sage)}
+  .stage__header--deep{background:var(--sage-deep)}
+  .stage__header--ink{background:var(--ink)}
+  .stage__badge{background:rgba(255,255,255,.15);padding:4px 14px;border-radius:50px;font-size:.78rem;font-weight:700;letter-spacing:.06em}
+  .stage__title{font-family:'Playfair Display',serif;font-size:1.2rem;color:#fff}
+  .stage__body{background:var(--white);padding:22px 24px}
+  .stage__promise{font-weight:700;font-size:.97rem;margin-bottom:14px;color:var(--ink)}
+  .stage__list{list-style:none;display:flex;flex-direction:column;gap:8px;margin-bottom:16px}
+  .stage__list li{display:flex;gap:8px;font-size:.88rem;color:var(--ink-mid)}
+  .stage__list li::before{content:'→';color:var(--sage);font-weight:700;flex-shrink:0}
+  .stage__copy{background:var(--bege);border-radius:8px;padding:14px 16px;font-size:.88rem;color:var(--ink-mid);font-style:italic;margin-top:12px;border-left:3px solid var(--sage)}
+  .stage__copy strong{font-style:normal;display:block;margin-bottom:4px;font-size:.75rem;text-transform:uppercase;letter-spacing:.08em;color:var(--sage)}
+  .stage__price{font-family:'Playfair Display',serif;font-size:1.8rem;color:var(--sage-deep);font-weight:700}
+  .flow-arrow{text-align:center;font-size:1.5rem;color:var(--sage);margin:-8px 0}
+  .tip{background:var(--yellow-pale);border:1px solid var(--yellow);border-radius:8px;padding:14px 16px;font-size:.88rem;color:var(--ink-mid);margin-top:20px}
+
+  /* METRICS */
+  .metrics{display:grid;gap:14px;margin-top:20px}
+  .metric{background:var(--white);border-radius:var(--r);padding:18px 20px;box-shadow:0 2px 10px rgba(0,0,0,.06);display:flex;gap:14px;align-items:center}
+  .metric__icon{font-size:1.8rem;flex-shrink:0}
+  .metric__label{font-size:.78rem;text-transform:uppercase;letter-spacing:.1em;color:var(--ink-soft);font-weight:700;margin-bottom:2px}
+  .metric__value{font-family:'Playfair Display',serif;font-size:1.4rem;font-weight:700;color:var(--sage-deep)}
+  .metric__note{font-size:.78rem;color:var(--ink-soft)}
+  @media(min-width:600px){.metrics{grid-template-columns:1fr 1fr 1fr}}
+</style>
+</head>
+<body>
+
+<div class="page-header">
+  <div class="wrap">
+    <h1>Estratégia MVP + Funil Completo</h1>
+    <p>Do Mercado Pra Mesa — Entregáveis 4 e 5</p>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════
+     ENTREGA 4 — ESTRATÉGIA MVP
+════════════════════════════════════════ -->
+<section class="section">
+  <div class="wrap">
+    <span class="eyebrow">Entrega 4</span>
+    <h2>Plano de Execução — 7 Dias para Validar</h2>
+    <p style="color:var(--ink-soft);font-weight:300;margin-top:6px;max-width:580px">
+      Velocidade é tudo na validação. O objetivo da primeira semana não é perfeição —
+      é descobrir se as pessoas pagam pelo produto. Você melhora depois.
+    </p>
+
+    <!-- Métricas de validação -->
+    <div class="metrics">
+      <div class="metric">
+        <div class="metric__icon">🎯</div>
+        <div>
+          <div class="metric__label">Meta mínima</div>
+          <div class="metric__value">10 vendas</div>
+          <div class="metric__note">Para validar o produto</div>
+        </div>
+      </div>
+      <div class="metric">
+        <div class="metric__icon">💰</div>
+        <div>
+          <div class="metric__label">Receita esperada</div>
+          <div class="metric__value">R$270+</div>
+          <div class="metric__note">10 vendas × R$27</div>
+        </div>
+      </div>
+      <div class="metric">
+        <div class="metric__icon">📊</div>
+        <div>
+          <div class="metric__label">Investimento inicial</div>
+          <div class="metric__value">R$0–50</div>
+          <div class="metric__note">Orgânico primeiro</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Timeline dos 7 dias -->
+    <div class="timeline" style="margin-top:36px">
+
+      <div class="day">
+        <div class="day__num">1</div>
+        <div class="day__body">
+          <span class="day__focus">Produto</span>
+          <div class="day__title">Produção do PDF</div>
+          <ul class="day__tasks">
+            <li>Escrever lista de compras (manhã)</li>
+            <li>Montar cardápio dos 7 dias (tarde)</li>
+            <li>Escrever 8 receitas simples (noite)</li>
+            <li>Não abrir o Canva ainda — texto primeiro</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="day">
+        <div class="day__num">2</div>
+        <div class="day__body">
+          <span class="day__focus">Produto</span>
+          <div class="day__title">Design + Vídeo</div>
+          <ul class="day__tasks">
+            <li>Montar o PDF no Canva (manhã) — máx. 4h</li>
+            <li>Exportar PDF e testar no celular</li>
+            <li>Gravar vídeo 1 e 2 (tarde) — não regravar mais de 2x</li>
+            <li>Editar no CapCut com legenda automática</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="day">
+        <div class="day__num">3</div>
+        <div class="day__body">
+          <span class="day__focus">Infraestrutura</span>
+          <div class="day__title">Página de vendas + Pagamento</div>
+          <ul class="day__tasks">
+            <li>Subir landing page no GitHub Pages (já pronta)</li>
+            <li>Criar conta na Hotmart ou Kiwify e subir o produto</li>
+            <li>Gerar link de pagamento e testar fluxo completo</li>
+            <li>Gravar vídeo 3 (bônus)</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="day">
+        <div class="day__num__yellow day__num" style="background:var(--yellow);color:var(--ink)">4</div>
+        <div class="day__body">
+          <span class="day__focus" style="background:var(--yellow-pale);color:#a07d00">LANÇAMENTO</span>
+          <div class="day__title">🚀 Publicar e pedir ajuda da rede</div>
+          <ul class="day__tasks">
+            <li>Post no Instagram (feed + stories) com copy direto</li>
+            <li>Mandar mensagem para 30 contatos que se encaixam no público</li>
+            <li>Postar em grupos de faculdade e repúblicas no WhatsApp</li>
+            <li>Oferecer desconto de 24h para primeiros compradores</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="day">
+        <div class="day__num">5</div>
+        <div class="day__body">
+          <span class="day__focus">Tráfego</span>
+          <div class="day__title">Reels + Prova Social</div>
+          <ul class="day__tasks">
+            <li>Publicar Reels mostrando o mercado (filmado no dia 2 ou 3)</li>
+            <li>Recolher depoimento dos primeiros compradores (print do WhatsApp vale)</li>
+            <li>Re-publicar depoimento nos stories</li>
+            <li>Responder todos os comentários e DMs</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="day">
+        <div class="day__num">6</div>
+        <div class="day__body">
+          <span class="day__focus">Análise</span>
+          <div class="day__title">Analisar e ajustar</div>
+          <ul class="day__tasks">
+            <li>Ver taxa de conversão da landing page (Google Analytics ou Hotmart)</li>
+            <li>Ver qual conteúdo gerou mais cliques</li>
+            <li>Se não vendeu: checar preço, copy do botão, título</li>
+            <li>Se vendeu: dobrar o que funcionou</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="day">
+        <div class="day__num">7</div>
+        <div class="day__body">
+          <span class="day__focus">Escala</span>
+          <div class="day__title">Decisão: continuar ou pivotar</div>
+          <ul class="day__tasks">
+            <li>Se validou (5+ vendas): investir R$30–50 em anúncios no Meta</li>
+            <li>Se não validou: entrevistar 3 pessoas do público e ajustar a oferta</li>
+            <li>Planejar conteúdo da semana seguinte baseado na prova social coletada</li>
+            <li>Começar a construir lista de e-mail</li>
+          </ul>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- O que NÃO fazer -->
+    <div style="margin-top:40px">
+      <h3 style="font-size:1.1rem;margin-bottom:14px">⛔ O que NÃO fazer (erros fatais do MVP)</h3>
+      <div class="donts">
+        <div class="dont-item"><strong>Não perfeccionar o design</strong> — Um PDF simples e útil converte. Um design lindo que nunca sai não vende.</div>
+        <div class="dont-item"><strong>Não esperar ter seguidores</strong> — Sua rede pessoal já tem o público certo. Use antes de qualquer anúncio.</div>
+        <div class="dont-item"><strong>Não criar produto novo antes de validar</strong> — Um produto vendendo é mais valioso do que três no papel.</div>
+        <div class="dont-item"><strong>Não ignorar os feedbacks</strong> — O que os compradores reclamam vira a melhoria da v2.</div>
+        <div class="dont-item"><strong>Não botar preço alto de início</strong> — R$27 remove objeção e gera prova social. Sobe depois.</div>
+        <div class="dont-item"><strong>Não depender só de anúncio pago</strong> — Orgânico primeiro. Anúncio amplifica o que já funciona.</div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+
+<!-- ════════════════════════════════════════
+     ENTREGA 5 — FUNIL COMPLETO
+════════════════════════════════════════ -->
+<section class="section">
+  <div class="wrap">
+    <span class="eyebrow">Entrega 5</span>
+    <h2>Funil Completo — 3 Etapas</h2>
+    <p style="color:var(--ink-soft);font-weight:300;margin-top:6px;max-width:560px">
+      Um funil simples de 3 produtos que maximiza o valor por cliente
+      sem precisar de mais tráfego.
+    </p>
+
+    <div class="funnel-stages">
+
+      <!-- TRIPWIRE -->
+      <div class="stage">
+        <div class="stage__header stage__header--green">
+          <div>
+            <div style="font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;opacity:.7;margin-bottom:4px">Etapa 1 — Entrada</div>
+            <div class="stage__title">Tripwire — Checklist Gratuito ou R$9</div>
+          </div>
+          <div class="stage__badge">ISCA</div>
+        </div>
+        <div class="stage__body">
+          <div class="stage__promise">
+            🎯 "Checklist: O que comprar no mercado com R$120 para a semana toda"
+          </div>
+          <ul class="stage__list">
+            <li>PDF de 1 página — lista categorizada por tipo de alimento</li>
+            <li>Pode ser gratuito (para capturar e-mail) ou R$9 (para qualificar lead)</li>
+            <li>Entregue automaticamente após cadastro na Hotmart/Kiwify</li>
+            <li>Ao final do PDF: "Quer o cardápio completo e as receitas?"</li>
+          </ul>
+          <div class="stage__price">Grátis ou R$9</div>
+          <div class="stage__copy">
+            <strong>Copy do CTA no Checklist:</strong>
+            "Você acabou de ver o que comprar. Agora quer saber exatamente o que cozinhar
+            em cada dia da semana, com receitas em 30 minutos? O guia completo está aqui →"
+          </div>
+        </div>
+      </div>
+
+      <div class="flow-arrow">↓</div>
+
+      <!-- LOW TICKET -->
+      <div class="stage">
+        <div class="stage__header stage__header--deep">
+          <div>
+            <div style="font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;opacity:.7;margin-bottom:4px">Etapa 2 — Produto Principal</div>
+            <div class="stage__title">Low Ticket — Guia Completo</div>
+          </div>
+          <div class="stage__badge">CORE</div>
+        </div>
+        <div class="stage__body">
+          <div class="stage__promise">
+            🎯 "7 Dias de Comida com R$120 — Cardápio + Lista + Receitas"
+          </div>
+          <ul class="stage__list">
+            <li>PDF de 28–35 páginas + 3 vídeos bônus</li>
+            <li>Tudo que o cliente precisa para executar na semana</li>
+            <li>Acesso imediato após pagamento</li>
+            <li>Ofertado na landing page principal e no upsell do checklist</li>
+          </ul>
+          <div class="stage__price">R$27</div>
+          <div class="stage__copy">
+            <strong>Mensagem de upsell (logo após compra do checklist):</strong>
+            "Espera! Antes de ir — você acabou de ter a lista. Agora completa o plano:
+            cardápio dos 7 dias + 8 receitas prontas + dicas de economia.
+            Por só R$27 a mais, você tem tudo que precisa. Uma única vez."
+          </div>
+        </div>
+      </div>
+
+      <div class="flow-arrow">↓</div>
+
+      <!-- UPSELL -->
+      <div class="stage">
+        <div class="stage__header stage__header--ink">
+          <div>
+            <div style="font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;opacity:.7;margin-bottom:4px">Etapa 3 — Upsell</div>
+            <div class="stage__title">Plano Mensal — 30 Dias de Comida</div>
+          </div>
+          <div class="stage__badge">UPSELL</div>
+        </div>
+        <div class="stage__body">
+          <div class="stage__promise">
+            🎯 "30 Dias de Comida Planejada — o mês inteiro sem perrengue"
+          </div>
+          <ul class="stage__list">
+            <li>4 semanas de cardápio + 4 listas de compras diferentes</li>
+            <li>Versão avançada com variações e dicas de batch cooking</li>
+            <li>Ofertado na página de obrigado após compra do guia principal</li>
+            <li>Pode incluir acesso a grupo no WhatsApp por 30 dias</li>
+          </ul>
+          <div class="stage__price">R$47–67</div>
+          <div class="stage__copy">
+            <strong>Copy da página de obrigado (upsell):</strong>
+            "Seu guia já está no seu e-mail. Mas uma coisa: a maioria das pessoas
+            usa o método por uma semana e quer continuar. Então criamos o plano do mês
+            inteiro — 30 dias, 4 semanas diferentes, sem repetir o mesmo cardápio.
+            Acesso agora por R$47 — só aparece aqui, uma única vez."
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- LTV estimado -->
+    <div class="tip" style="margin-top:28px">
+      <strong>💰 LTV estimado por cliente:</strong>
+      Se 40% compram o guia após o checklist e 20% compram o upsell:
+      <br>10 clientes do checklist → 4 compram guia (R$108) → 2 compram upsell (R$94)
+      = <strong>~R$202 de receita com 10 leads</strong>. Sem novos anúncios.
+    </div>
+
+    <!-- Fluxo do usuário -->
+    <div class="card" style="margin-top:28px">
+      <h3 style="margin-bottom:16px">🗺️ Fluxo completo do usuário</h3>
+      <div style="font-size:.9rem;color:var(--ink-mid);line-height:2">
+        <strong>1.</strong> Vê Reels/post no Instagram sobre "7 dias de comida com R$120"<br/>
+        <strong>2.</strong> Clica no link da bio → Landing page principal<br/>
+        <strong>3.</strong> Lê a página → Clica no botão → Página de checkout (Hotmart/Kiwify)<br/>
+        <strong>4.</strong> Paga R$27 → Página de obrigado com <em>upsell do plano mensal (R$47)</em><br/>
+        <strong>5.</strong> Recebe PDF + vídeos por e-mail imediatamente<br/>
+        <strong>6.</strong> Usa o produto → Manda print para amigos → Gera prova social orgânica<br/>
+        <strong>7.</strong> Você usa o depoimento para fechar mais vendas
+      </div>
+    </div>
+
+  </div>
+</section>
+
+</body>
+</html>

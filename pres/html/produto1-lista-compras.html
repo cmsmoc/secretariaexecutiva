@@ -1,0 +1,1216 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"/>
+<title>Lista de Compras Inteligente — 7 Dias com R$120</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;800&family=Lato:wght@300;400;600;700;900&display=swap" rel="stylesheet"/>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  
+  body {
+    font-family: 'Lato', sans-serif;
+    background: #fff;
+    color: #1e1e1e;
+    line-height: 1.6;
+  }
+
+  /* ===========================
+     A4 PAGE SETUP
+  =========================== */
+  .page {
+    width: 210mm;
+    min-height: 297mm;
+    margin: 0 auto;
+    padding: 18mm 18mm 16mm 18mm;
+    background: #fff;
+    page-break-after: always;
+    position: relative;
+    overflow: hidden;
+  }
+  .page:last-child { page-break-after: auto; }
+
+  @media print {
+    * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    body { background: #fff; }
+    .page {
+      width: 210mm;
+      min-height: 297mm;
+      margin: 0;
+      padding: 18mm 18mm 16mm 18mm;
+      page-break-after: always;
+      box-shadow: none;
+    }
+    .page:last-child { page-break-after: auto; }
+    @page { size: A4; margin: 0; }
+  }
+
+  @media screen {
+    body { background: #e5e5e5; padding: 20px 0; }
+    .page {
+      box-shadow: 0 4px 30px rgba(0,0,0,0.15);
+      margin: 20px auto;
+    }
+  }
+
+  /* ===========================
+     COLORS
+  =========================== */
+  :root {
+    --green: #3d6b52;
+    --green-light: #5a8a6a;
+    --green-pale: #e8f2ec;
+    --yellow: #e8c547;
+    --yellow-pale: #fdf6d8;
+    --bege: #f7f3ec;
+    --ink: #1e1e1e;
+    --ink-m: #3d3d3d;
+    --ink-s: #6b6b6b;
+    --border: #e0dbd0;
+  }
+
+  /* ===========================
+     CAPA
+  =========================== */
+  .capa {
+    background: var(--green);
+    width: 210mm;
+    min-height: 297mm;
+    margin: 0 auto;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .capa-noise {
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Ccircle cx='30' cy='30' r='2'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+    z-index: 0;
+  }
+
+  .capa-content {
+    position: relative;
+    z-index: 1;
+    padding: 22mm 18mm;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+
+  .capa-top { }
+
+  .capa-brand {
+    display: inline-block;
+    background: rgba(255,255,255,0.12);
+    color: rgba(255,255,255,0.85);
+    font-size: 8.5pt;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    padding: 5px 14px;
+    border-radius: 50px;
+    margin-bottom: 18mm;
+  }
+
+  .capa-badge {
+    display: inline-block;
+    background: var(--yellow);
+    color: var(--ink);
+    font-size: 7.5pt;
+    font-weight: 900;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    padding: 5px 14px;
+    border-radius: 4px;
+    margin-bottom: 10px;
+  }
+
+  .capa h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: 32pt;
+    color: #fff;
+    line-height: 1.1;
+    margin-bottom: 10px;
+    font-weight: 800;
+  }
+
+  .capa h1 em {
+    color: var(--yellow);
+    font-style: italic;
+  }
+
+  .capa-sub {
+    font-size: 11pt;
+    color: rgba(255,255,255,0.7);
+    font-weight: 300;
+    margin-bottom: 14mm;
+    line-height: 1.5;
+  }
+
+  .capa-divider {
+    width: 60px;
+    height: 3px;
+    background: var(--yellow);
+    margin-bottom: 10mm;
+    border-radius: 2px;
+  }
+
+  .capa-features {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 16mm;
+  }
+
+  .capa-feature {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: rgba(255,255,255,0.85);
+    font-size: 10pt;
+  }
+
+  .capa-feature-dot {
+    width: 8px;
+    height: 8px;
+    background: var(--yellow);
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  .capa-bottom {
+    border-top: 1px solid rgba(255,255,255,0.15);
+    padding-top: 8mm;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .capa-price-label {
+    font-size: 8pt;
+    color: rgba(255,255,255,0.5);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+
+  .capa-price {
+    font-family: 'Playfair Display', serif;
+    font-size: 26pt;
+    color: var(--yellow);
+    font-weight: 800;
+    line-height: 1;
+  }
+
+  .capa-series {
+    font-size: 8pt;
+    color: rgba(255,255,255,0.4);
+    text-align: right;
+  }
+
+  /* ===========================
+     PAGE HEADER
+  =========================== */
+  .page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 5mm;
+    border-bottom: 1.5px solid var(--green);
+    margin-bottom: 7mm;
+  }
+
+  .page-header-brand {
+    font-size: 7.5pt;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--green);
+  }
+
+  .page-header-title {
+    font-size: 7.5pt;
+    color: var(--ink-s);
+    font-weight: 400;
+  }
+
+  /* ===========================
+     SECTIONS & HEADINGS
+  =========================== */
+  .section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 18pt;
+    color: var(--ink);
+    margin-bottom: 3mm;
+    font-weight: 700;
+  }
+
+  .section-subtitle {
+    font-size: 9.5pt;
+    color: var(--ink-s);
+    margin-bottom: 6mm;
+    font-weight: 300;
+  }
+
+  .category-header {
+    background: var(--green);
+    color: #fff;
+    padding: 5px 14px;
+    border-radius: 4px;
+    font-size: 9pt;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-bottom: 3mm;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .category-header .cat-total {
+    font-size: 8.5pt;
+    background: rgba(255,255,255,0.2);
+    padding: 2px 9px;
+    border-radius: 20px;
+    font-weight: 600;
+  }
+
+  /* ===========================
+     LISTA TABLE
+  =========================== */
+  .lista-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 6mm;
+    font-size: 9pt;
+  }
+
+  .lista-table thead tr {
+    background: var(--bege);
+  }
+
+  .lista-table thead th {
+    padding: 5px 8px;
+    text-align: left;
+    font-size: 7.5pt;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--ink-s);
+    border-bottom: 1.5px solid var(--border);
+  }
+
+  .lista-table thead th:last-child { text-align: right; }
+  .lista-table thead th:nth-child(2) { text-align: center; }
+  .lista-table thead th:nth-child(3) { text-align: center; }
+
+  .lista-table tbody tr {
+    border-bottom: 1px solid var(--border);
+  }
+
+  .lista-table tbody tr:last-child { border-bottom: none; }
+
+  .lista-table tbody td {
+    padding: 6px 8px;
+    color: var(--ink-m);
+    vertical-align: middle;
+  }
+
+  .lista-table tbody td:nth-child(2) { text-align: center; }
+  .lista-table tbody td:nth-child(3) { text-align: center; color: var(--ink-s); }
+  .lista-table tbody td:last-child { text-align: right; font-weight: 600; color: var(--ink); }
+
+  .check-box {
+    display: inline-block;
+    width: 14px;
+    height: 14px;
+    border: 1.5px solid var(--green-light);
+    border-radius: 3px;
+    vertical-align: middle;
+  }
+
+  .item-name { font-weight: 600; display: block; }
+  .item-tip { font-size: 7.5pt; color: var(--ink-s); font-weight: 300; }
+
+  /* ===========================
+     TOTALS BOX
+  =========================== */
+  .total-box {
+    background: var(--green);
+    border-radius: 6px;
+    padding: 5mm 6mm;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 4mm;
+  }
+
+  .total-box-label {
+    color: rgba(255,255,255,0.75);
+    font-size: 9pt;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+
+  .total-box-value {
+    font-family: 'Playfair Display', serif;
+    font-size: 22pt;
+    color: var(--yellow);
+    font-weight: 800;
+    line-height: 1;
+  }
+
+  .total-box-note {
+    font-size: 7.5pt;
+    color: rgba(255,255,255,0.5);
+    text-align: right;
+    margin-top: 2px;
+  }
+
+  /* ===========================
+     HIGHLIGHT BOX
+  =========================== */
+  .highlight {
+    background: var(--green-pale);
+    border-left: 3px solid var(--green-light);
+    border-radius: 4px;
+    padding: 4mm 5mm;
+    margin-bottom: 5mm;
+  }
+
+  .highlight-title {
+    font-size: 8pt;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--green);
+    margin-bottom: 2mm;
+  }
+
+  .highlight p, .highlight li {
+    font-size: 9pt;
+    color: var(--ink-m);
+    line-height: 1.55;
+  }
+
+  .highlight ul { padding-left: 0; list-style: none; }
+  .highlight ul li { padding-left: 0; margin-bottom: 3px; }
+  .highlight ul li::before { content: "→ "; color: var(--green); font-weight: 700; }
+
+  /* ===========================
+     CTA PAGE
+  =========================== */
+  .cta-page {
+    background: var(--ink);
+    width: 210mm;
+    min-height: 297mm;
+    margin: 0 auto;
+    padding: 22mm 18mm;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    page-break-after: auto;
+  }
+
+  .cta-eyebrow {
+    font-size: 8pt;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--yellow);
+    margin-bottom: 5mm;
+  }
+
+  .cta-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 26pt;
+    color: #fff;
+    line-height: 1.2;
+    margin-bottom: 6mm;
+    font-weight: 800;
+  }
+
+  .cta-title em { color: var(--yellow); font-style: italic; }
+
+  .cta-sub {
+    font-size: 10.5pt;
+    color: rgba(255,255,255,0.65);
+    font-weight: 300;
+    line-height: 1.6;
+    max-width: 130mm;
+    margin: 0 auto 8mm;
+  }
+
+  .cta-divider {
+    width: 50px;
+    height: 2px;
+    background: var(--yellow);
+    margin: 6mm auto;
+  }
+
+  .cta-whats-inside {
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 8px;
+    padding: 6mm 8mm;
+    margin-bottom: 8mm;
+    text-align: left;
+    width: 100%;
+    max-width: 140mm;
+  }
+
+  .cta-whats-inside h4 {
+    font-size: 8pt;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--yellow);
+    margin-bottom: 4mm;
+  }
+
+  .cta-item {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 4px;
+    font-size: 9.5pt;
+    color: rgba(255,255,255,0.8);
+    line-height: 1.45;
+  }
+
+  .cta-item-dot {
+    color: var(--yellow);
+    font-size: 11pt;
+    flex-shrink: 0;
+    margin-top: -1px;
+  }
+
+  .cta-price-box {
+    background: var(--green);
+    border-radius: 8px;
+    padding: 5mm 10mm;
+    margin-bottom: 6mm;
+    text-align: center;
+  }
+
+  .cta-price-label { font-size: 8pt; color: rgba(255,255,255,0.55); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 2px; }
+  .cta-old-price { font-size: 11pt; color: rgba(255,255,255,0.35); text-decoration: line-through; }
+  .cta-new-price { font-family: 'Playfair Display', serif; font-size: 32pt; color: var(--yellow); font-weight: 800; line-height: 1; }
+
+  .cta-note {
+    font-size: 8pt;
+    color: rgba(255,255,255,0.35);
+    margin-top: 6mm;
+    text-align: center;
+  }
+
+  /* ===========================
+     INSTRUCOES
+  =========================== */
+  .instrucoes-steps {
+    display: flex;
+    flex-direction: column;
+    gap: 4mm;
+    margin-bottom: 6mm;
+  }
+
+  .instrucoes-step {
+    display: flex;
+    gap: 4mm;
+    align-items: flex-start;
+    padding: 4mm 5mm;
+    background: var(--bege);
+    border-radius: 5px;
+  }
+
+  .step-num {
+    width: 26px;
+    height: 26px;
+    background: var(--green);
+    color: #fff;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 9pt;
+    font-weight: 900;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+
+  .step-content {
+    flex: 1;
+  }
+
+  .step-title {
+    font-size: 9.5pt;
+    font-weight: 700;
+    color: var(--ink);
+    margin-bottom: 2px;
+  }
+
+  .step-desc {
+    font-size: 8.5pt;
+    color: var(--ink-s);
+    line-height: 1.45;
+  }
+
+  /* ===========================
+     MINI SUMMARY
+  =========================== */
+  .summary-row {
+    display: flex;
+    gap: 3mm;
+    margin-top: 5mm;
+  }
+
+  .summary-cell {
+    flex: 1;
+    background: var(--bege);
+    border-radius: 5px;
+    padding: 3.5mm 4mm;
+    text-align: center;
+  }
+
+  .summary-cell-label {
+    font-size: 7pt;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--ink-s);
+    margin-bottom: 2px;
+  }
+
+  .summary-cell-value {
+    font-family: 'Playfair Display', serif;
+    font-size: 14pt;
+    font-weight: 700;
+    color: var(--green);
+    line-height: 1;
+  }
+</style>
+</head>
+<body>
+
+<!-- ============================
+     PÁGINA 1 — CAPA
+============================= -->
+<div class="capa">
+  <div class="capa-noise"></div>
+  <div class="capa-content">
+    <div class="capa-top">
+      <div class="capa-brand">Do Mercado Pra Mesa</div>
+      <br/>
+      <div class="capa-badge">Lista Inteligente</div>
+      <h1>7 Dias de Compras<br/>com <em>R$120</em></h1>
+      <p class="capa-sub">
+        Tudo que você precisa comprar. Com quantidade certa, preço estimado e ordem de prioridade.<br/>
+        Sem desperdício. Sem falta.
+      </p>
+      <div class="capa-divider"></div>
+      <div class="capa-features">
+        <div class="capa-feature"><div class="capa-feature-dot"></div> Lista completa por categoria — pronta pra usar no mercado</div>
+        <div class="capa-feature"><div class="capa-feature-dot"></div> Quantidade exata de cada item</div>
+        <div class="capa-feature"><div class="capa-feature-dot"></div> Estimativa de preço item a item</div>
+        <div class="capa-feature"><div class="capa-feature-dot"></div> Checkboxes para marcar na hora</div>
+        <div class="capa-feature"><div class="capa-feature-dot"></div> Dicas de compra em cada categoria</div>
+      </div>
+    </div>
+    <div class="capa-bottom">
+      <div>
+        <div class="capa-price-label">Produto 1 — Tripwire</div>
+        <div class="capa-price">R$9</div>
+      </div>
+      <div class="capa-series">
+        Do Mercado Pra Mesa<br/>
+        Série Economia Real
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================
+     PÁGINA 2 — COMO USAR
+============================= -->
+<div class="page">
+  <div class="page-header">
+    <span class="page-header-brand">Do Mercado Pra Mesa</span>
+    <span class="page-header-title">Lista Inteligente — 7 Dias com R$120</span>
+  </div>
+
+  <div class="section-title">Como usar essa lista</div>
+  <p class="section-subtitle">Leia isso antes de ir ao mercado. Faz diferença.</p>
+
+  <div class="instrucoes-steps">
+    <div class="instrucoes-step">
+      <div class="step-num">1</div>
+      <div class="step-content">
+        <div class="step-title">Imprima ou abra no celular</div>
+        <div class="step-desc">Tenha a lista na mão enquanto você compra. Se for no celular, use o modo leitura ou zoom — as fontes são grandes o suficiente.</div>
+      </div>
+    </div>
+    <div class="instrucoes-step">
+      <div class="step-num">2</div>
+      <div class="step-content">
+        <div class="step-title">Vá por ordem de categoria</div>
+        <div class="step-desc">A lista está organizada pela ordem que você caminha no mercado. Hortifruti primeiro, depois proteínas, carboidratos, laticínios e temperos. Isso evita que você volte pra outro corredor.</div>
+      </div>
+    </div>
+    <div class="instrucoes-step">
+      <div class="step-num">3</div>
+      <div class="step-content">
+        <div class="step-title">Marque o ☐ conforme pegar</div>
+        <div class="step-desc">Simples assim. Sem marcar, você esquece. Com a lista marcada, você sai do mercado com tudo e sem estourar o orçamento.</div>
+      </div>
+    </div>
+    <div class="instrucoes-step">
+      <div class="step-num">4</div>
+      <div class="step-content">
+        <div class="step-title">Use os preços como referência</div>
+        <div class="step-desc">Os valores são estimativas baseadas em mercados populares do Brasil em 2024. No seu bairro pode variar — use como guia, não como tabela fixa. O total está calibrado pra caber em R$120 com folga.</div>
+      </div>
+    </div>
+    <div class="instrucoes-step">
+      <div class="step-num">5</div>
+      <div class="step-content">
+        <div class="step-title">Prefira marcas menores no início</div>
+        <div class="step-desc">Especialmente em arroz, feijão e macarrão — as marcas menos conhecidas custam até 40% menos e a qualidade é praticamente igual. Experimente uma vez e veja.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="highlight">
+    <div class="highlight-title">⚠ Antes de sair de casa</div>
+    <ul>
+      <li>Verifique o que já tem na despensa (arroz meio cheio? Pule ou reduza a quantidade)</li>
+      <li>Leve sacola reutilizável — evita taxa no caixa</li>
+      <li>Não vá com fome. Literalmente. Você gasta mais.</li>
+      <li>Se possível, vá em dia de semana e de manhã — filas menores, produtos mais frescos no hortifruti</li>
+    </ul>
+  </div>
+
+  <div class="summary-row">
+    <div class="summary-cell">
+      <div class="summary-cell-label">Orçamento</div>
+      <div class="summary-cell-value">R$120</div>
+    </div>
+    <div class="summary-cell">
+      <div class="summary-cell-label">Dias cobertos</div>
+      <div class="summary-cell-value">7 dias</div>
+    </div>
+    <div class="summary-cell">
+      <div class="summary-cell-label">Itens na lista</div>
+      <div class="summary-cell-value">28 itens</div>
+    </div>
+    <div class="summary-cell">
+      <div class="summary-cell-label">Pessoas</div>
+      <div class="summary-cell-value">1–2</div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================
+     PÁGINA 3 — HORTIFRUTI + PROTEÍNAS
+============================= -->
+<div class="page">
+  <div class="page-header">
+    <span class="page-header-brand">Do Mercado Pra Mesa</span>
+    <span class="page-header-title">Lista Inteligente — 7 Dias com R$120</span>
+  </div>
+
+  <!-- HORTIFRUTI -->
+  <div class="category-header">
+    🥬 Hortifruti
+    <span class="cat-total">~R$28</span>
+  </div>
+
+  <table class="lista-table">
+    <thead>
+      <tr>
+        <th style="width:22px;"></th>
+        <th style="width:42%;">Item</th>
+        <th>Qtd</th>
+        <th>Unid.</th>
+        <th>Preço est.</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="check-box"></span></td>
+        <td><span class="item-name">Banana prata</span><span class="item-tip">Compre o cacho completo — sai mais barato</span></td>
+        <td>1</td>
+        <td>cacho (~1,5kg)</td>
+        <td>R$5,50</td>
+      </tr>
+      <tr>
+        <td><span class="check-box"></span></td>
+        <td><span class="item-name">Cebola</span><span class="item-tip">Base de tudo — nunca falta</span></td>
+        <td>1</td>
+        <td>kg</td>
+        <td>R$4,00</td>
+      </tr>
+      <tr>
+        <td><span class="check-box"></span></td>
+        <td><span class="item-name">Alho</span><span class="item-tip">Cabeça inteira dura a semana toda</span></td>
+        <td>1</td>
+        <td>cabeça</td>
+        <td>R$2,00</td>
+      </tr>
+      <tr>
+        <td><span class="check-box"></span></td>
+        <td><span class="item-name">Tomate</span><span class="item-tip">Escolha firmes — duram mais</span></td>
+        <td>500</td>
+        <td>g</td>
+        <td>R$3,50</td>
+      </tr>
+      <tr>
+        <td><span class="check-box"></span></td>
+        <td><span class="item-name">Couve-folha</span><span class="item-tip">1 maço vale o refogado da semana toda</span></td>
+        <td>1</td>
+        <td>maço</td>
+        <td>R$2,50</td>
+      </tr>
+      <tr>
+        <td><span class="check-box"></span></td>
+        <td><span class="item-name">Abóbora</span><span class="item-tip">Compre o pedaço, não a inteira — menos desperdício</span></td>
+        <td>500</td>
+        <td>g</td>
+        <td>R$3,00</td>
+      </tr>
+      <tr>
+        <td><span class="check-box"></span></td>
+        <td><span class="item-name">Cenoura</span><span class="item-tip">Versátil: cozida, refogada ou crua como lanche</span></td>
+        <td>500</td>
+        <td>g</td>
+        <td>R$3,50</td>
+      </tr>
+      <tr>
+        <td><span class="check-box"></span></td>
+        <td><span class="item-name">Limão</span></td>
+        <td>4</td>
+        <td>unidades</td>
+        <td>R$2,00</td>
+      </tr>
+      <tr>
+        <td><span class="check-box"></span></td>
+        <td><span class="item-name">Cheiro-verde</span><span class="item-tip">1 maço serve a semana. Guarde em copo com água na geladeira</span></td>
+        <td>1</td>
+        <td>maço</td>
+        <td>R$2,50</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div style="height: 4mm;"></div>
+
+  <!-- PROTEÍNAS -->
+  <div class="category-header">
+    🍗 Proteínas
+    <span class="cat-total">~R$35</span>
+  </div>
+
+  <table class="lista-table">
+    <thead>
+      <tr>
+        <th style="width:22px;"></th>
+        <th style="width:42%;">Item</th>
+        <th>Qtd</th>
+        <th>Unid.</th>
+        <th>Preço est.</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="check-box"></span></td>
+        <td><span class="item-name">Coxa/sobrecoxa de frango</span><span class="item-tip">A peça mais barata e versátil do frango. Cozida, assada, desfiada...</span></td>
+        <td>1</td>
+        <td>kg</td>
+        <td>R$11,00</td>
+      </tr>
+      <tr>
+        <td><span class="check-box"></span></td>
+        <td><span class="item-name">Ovos</span><span class="item-tip">Cartela de 12. Café, almoço, jantar — resolve tudo</span></td>
+        <td>12</td>
+        <td>unidades</td>
+        <td>R$9,00</td>
+      </tr>
+      <tr>
+        <td><span class="check-box"></span></td>
+        <td><span class="item-name">Sardinha em lata</span><span class="item-tip">2 latas de molho de tomate. Proteína barata e boa</span></td>
+        <td>2</td>
+        <td>latas</td>
+        <td>R$7,00</td>
+      </tr>
+      <tr>
+        <td><span class="check-box"></span></td>
+        <td><span class="item-name">Feijão carioca</span><span class="item-tip">O pacote de 1kg faz 2 panelas grandes — cozinhe uma e congele</span></td>
+        <td>1</td>
+        <td>kg</td>
+        <td>R$8,00</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="highlight" style="margin-top: 4mm;">
+    <div class="highlight-title">💡 Dica das proteínas</div>
+    <p>Frango + ovos + feijão são os pilares dessa semana. O frango rende mais se você cozinhar na pressão e desfiar — dá pra usar em 3 refeições diferentes com o mesmo pedaço.</p>
+  </div>
+</div>
+
+<!-- ============================
+     PÁGINA 4 — CARBOIDRATOS + LATICÍNIOS + TEMPEROS
+============================= -->
+<div class="page">
+  <div class="page-header">
+    <span class="page-header-brand">Do Mercado Pra Mesa</span>
+    <span class="page-header-title">Lista Inteligente — 7 Dias com R$120</span>
+  </div>
+
+  <!-- CARBOIDRATOS -->
+  <div class="category-header">
+    🍚 Carboidratos & Grãos
+    <span class="cat-total">~R$22</span>
+  </div>
+
+  <table class="lista-table">
+    <thead>
+      <tr>
+        <th style="width:22px;"></th>
+        <th style="width:42%;">Item</th>
+        <th>Qtd</th>
+        <th>Unid.</th>
+        <th>Preço est.</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="check-box"></span></td>
+        <td><span class="item-name">Arroz branco</span><span class="item-tip">Marca popular — qualidade igual, preço menor</span></td>
+        <td>2</td>
+        <td>kg</td>
+        <td>R$9,00</td>
+      </tr>
+      <tr>
+        <td><span class="check-box"></span></td>
+        <td><span class="item-name">Macarrão espaguete</span><span class="item-tip">400g já é bastante pra 2 refeições</span></td>
+        <td>400</td>
+        <td>g</td>
+        <td>R$3,50</td>
+      </tr>
+      <tr>
+        <td><span class="check-box"></span></td>
+        <td><span class="item-name">Batata-doce</span><span class="item-tip">Lanche ou substituição ao arroz em alguns dias</span></td>
+        <td>500</td>
+        <td>g</td>
+        <td>R$4,00</td>
+      </tr>
+      <tr>
+        <td><span class="check-box"></span></td>
+        <td><span class="item-name">Pão de forma</span><span class="item-tip">Café da manhã de 3 a 4 dias</span></td>
+        <td>1</td>
+        <td>pacote (400g)</td>
+        <td>R$5,50</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div style="height: 4mm;"></div>
+
+  <!-- LATICÍNIOS -->
+  <div class="category-header">
+    🥛 Laticínios
+    <span class="cat-total">~R$16</span>
+  </div>
+
+  <table class="lista-table">
+    <thead>
+      <tr>
+        <th style="width:22px;"></th>
+        <th style="width:42%;">Item</th>
+        <th>Qtd</th>
+        <th>Unid.</th>
+        <th>Preço est.</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="check-box"></span></td>
+        <td><span class="item-name">Leite UHT integral</span><span class="item-tip">2 caixas. Café + vitaminas</span></td>
+        <td>2</td>
+        <td>litros</td>
+        <td>R$8,00</td>
+      </tr>
+      <tr>
+        <td><span class="check-box"></span></td>
+        <td><span class="item-name">Queijo muçarela fatiado</span><span class="item-tip">200g — rende bem em lanches e pratos</span></td>
+        <td>200</td>
+        <td>g</td>
+        <td>R$8,00</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div style="height: 4mm;"></div>
+
+  <!-- TEMPEROS -->
+  <div class="category-header">
+    🧂 Temperos & Óleos
+    <span class="cat-total">~R$16</span>
+  </div>
+
+  <table class="lista-table">
+    <thead>
+      <tr>
+        <th style="width:22px;"></th>
+        <th style="width:42%;">Item</th>
+        <th>Qtd</th>
+        <th>Unid.</th>
+        <th>Preço est.</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="check-box"></span></td>
+        <td><span class="item-name">Óleo de soja</span><span class="item-tip">500ml já resolve a semana</span></td>
+        <td>500</td>
+        <td>ml</td>
+        <td>R$4,50</td>
+      </tr>
+      <tr>
+        <td><span class="check-box"></span></td>
+        <td><span class="item-name">Sal refinado</span></td>
+        <td>500</td>
+        <td>g</td>
+        <td>R$1,50</td>
+      </tr>
+      <tr>
+        <td><span class="check-box"></span></td>
+        <td><span class="item-name">Extrato de tomate</span><span class="item-tip">Aquele sachê ou latinha — base do molho e do frango</span></td>
+        <td>2</td>
+        <td>un. (130g)</td>
+        <td>R$4,00</td>
+      </tr>
+      <tr>
+        <td><span class="check-box"></span></td>
+        <td><span class="item-name">Caldo de galinha (tablete)</span><span class="item-tip">Temperão rápido e barato</span></td>
+        <td>1</td>
+        <td>caixa (6 tab)</td>
+        <td>R$3,50</td>
+      </tr>
+      <tr>
+        <td><span class="check-box"></span></td>
+        <td><span class="item-name">Café em pó</span><span class="item-tip">Café simples — se você toma café todo dia, já tem isso em casa</span></td>
+        <td>250</td>
+        <td>g</td>
+        <td>R$6,00</td>
+      </tr>
+      <tr>
+        <td><span class="check-box"></span></td>
+        <td><span class="item-name">Açúcar cristal</span></td>
+        <td>500</td>
+        <td>g</td>
+        <td>R$2,50</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- ============================
+     PÁGINA 5 — RESUMO + TOTAL
+============================= -->
+<div class="page">
+  <div class="page-header">
+    <span class="page-header-brand">Do Mercado Pra Mesa</span>
+    <span class="page-header-title">Lista Inteligente — 7 Dias com R$120</span>
+  </div>
+
+  <div class="section-title">Resumo das compras</div>
+  <p class="section-subtitle">Confira antes de fechar no caixa</p>
+
+  <table class="lista-table" style="margin-bottom: 3mm;">
+    <thead>
+      <tr>
+        <th style="width: 55%;">Categoria</th>
+        <th style="text-align: center;">Itens</th>
+        <th style="text-align: right;">Total estimado</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>🥬 Hortifruti</td>
+        <td style="text-align: center;">9</td>
+        <td style="text-align: right;">R$28,50</td>
+      </tr>
+      <tr>
+        <td>🍗 Proteínas</td>
+        <td style="text-align: center;">4</td>
+        <td style="text-align: right;">R$35,00</td>
+      </tr>
+      <tr>
+        <td>🍚 Carboidratos & Grãos</td>
+        <td style="text-align: center;">4</td>
+        <td style="text-align: right;">R$22,00</td>
+      </tr>
+      <tr>
+        <td>🥛 Laticínios</td>
+        <td style="text-align: center;">2</td>
+        <td style="text-align: right;">R$16,00</td>
+      </tr>
+      <tr>
+        <td>🧂 Temperos & Óleos</td>
+        <td style="text-align: center;">6</td>
+        <td style="text-align: right;">R$16,00</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="total-box">
+    <div>
+      <div class="total-box-label">Total da semana</div>
+      <div class="total-box-note">25 itens · cabe em 1 sacola grande</div>
+    </div>
+    <div style="text-align: right;">
+      <div class="total-box-value">R$117,50</div>
+      <div class="total-box-note">sobra ~R$2,50 de folga</div>
+    </div>
+  </div>
+
+  <div style="height: 5mm;"></div>
+
+  <div class="highlight">
+    <div class="highlight-title">🛒 Ordem recomendada no mercado</div>
+    <ul>
+      <li>Entre e vá direto para o hortifruti (geralmente no fundo ou no lado)</li>
+      <li>Depois açougue / ovos / frios</li>
+      <li>Depois o corredor de secos (arroz, feijão, macarrão, azeite, temperos)</li>
+      <li>Por último laticínios (geladeira — pegar por último mantém frescos)</li>
+      <li>Checkout: confira o troco e o total no visor antes de pagar</li>
+    </ul>
+  </div>
+
+  <div style="height: 4mm;"></div>
+
+  <div class="highlight" style="background: var(--yellow-pale); border-color: #c9a028;">
+    <div class="highlight-title" style="color: #8a6c00;">💰 Se precisar cortar ainda mais</div>
+    <ul>
+      <li>Troque queijo muçarela por requeijão — sai mais barato e rende mais</li>
+      <li>Retire a sardinha se o frango + ovos + feijão já são suficientes</li>
+      <li>Compre a banana quando estiver no limite (bem madura = mais barata, usa nos primeiros dias)</li>
+      <li>Pão de forma: substitua por tapioca (goma de tapioca ~R$3,50 o pacote) se já tiver em casa</li>
+    </ul>
+  </div>
+
+  <div style="height: 5mm;"></div>
+
+  <div style="background: #f0f0f0; border-radius: 6px; padding: 4mm 5mm; font-size: 8pt; color: var(--ink-s); line-height: 1.6;">
+    <strong style="color: var(--ink);">Sobre os preços:</strong> Estimativas com base em supermercados populares de capitais brasileiras (2024). Mercadinhos de bairro podem variar ±15%. Sempre confira os preços no aplicativo do mercado ou na prateleira — e prefira o dia de semana pela manhã para melhores preços no hortifruti.
+  </div>
+</div>
+
+<!-- ============================
+     PÁGINA 6 — LISTA RÁPIDA (IMPRIMÍVEL)
+============================= -->
+<div class="page">
+  <div class="page-header">
+    <span class="page-header-brand">Do Mercado Pra Mesa</span>
+    <span class="page-header-title">Lista Rápida — Leve no bolso</span>
+  </div>
+
+  <div class="section-title">Lista completa — versão rápida</div>
+  <p class="section-subtitle">Imprime, dobra, leva no bolso. Simples.</p>
+
+  <table class="lista-table">
+    <thead>
+      <tr>
+        <th style="width: 22px;"></th>
+        <th>Item</th>
+        <th>Qtd</th>
+        <th style="text-align: right;">Preço</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td><span class="check-box"></span></td><td>Banana prata</td><td>1 cacho</td><td style="text-align:right;">R$5,50</td></tr>
+      <tr><td><span class="check-box"></span></td><td>Cebola</td><td>1 kg</td><td style="text-align:right;">R$4,00</td></tr>
+      <tr><td><span class="check-box"></span></td><td>Alho</td><td>1 cabeça</td><td style="text-align:right;">R$2,00</td></tr>
+      <tr><td><span class="check-box"></span></td><td>Tomate</td><td>500g</td><td style="text-align:right;">R$3,50</td></tr>
+      <tr><td><span class="check-box"></span></td><td>Couve-folha</td><td>1 maço</td><td style="text-align:right;">R$2,50</td></tr>
+      <tr><td><span class="check-box"></span></td><td>Abóbora</td><td>500g</td><td style="text-align:right;">R$3,00</td></tr>
+      <tr><td><span class="check-box"></span></td><td>Cenoura</td><td>500g</td><td style="text-align:right;">R$3,50</td></tr>
+      <tr><td><span class="check-box"></span></td><td>Limão</td><td>4 un.</td><td style="text-align:right;">R$2,00</td></tr>
+      <tr><td><span class="check-box"></span></td><td>Cheiro-verde</td><td>1 maço</td><td style="text-align:right;">R$2,50</td></tr>
+      <tr><td><span class="check-box"></span></td><td>Coxa/sobrecoxa frango</td><td>1 kg</td><td style="text-align:right;">R$11,00</td></tr>
+      <tr><td><span class="check-box"></span></td><td>Ovos</td><td>12 un.</td><td style="text-align:right;">R$9,00</td></tr>
+      <tr><td><span class="check-box"></span></td><td>Sardinha em lata</td><td>2 latas</td><td style="text-align:right;">R$7,00</td></tr>
+      <tr><td><span class="check-box"></span></td><td>Feijão carioca</td><td>1 kg</td><td style="text-align:right;">R$8,00</td></tr>
+      <tr><td><span class="check-box"></span></td><td>Arroz branco</td><td>2 kg</td><td style="text-align:right;">R$9,00</td></tr>
+      <tr><td><span class="check-box"></span></td><td>Macarrão espaguete</td><td>400g</td><td style="text-align:right;">R$3,50</td></tr>
+      <tr><td><span class="check-box"></span></td><td>Batata-doce</td><td>500g</td><td style="text-align:right;">R$4,00</td></tr>
+      <tr><td><span class="check-box"></span></td><td>Pão de forma</td><td>1 pacote</td><td style="text-align:right;">R$5,50</td></tr>
+      <tr><td><span class="check-box"></span></td><td>Leite UHT integral</td><td>2 L</td><td style="text-align:right;">R$8,00</td></tr>
+      <tr><td><span class="check-box"></span></td><td>Queijo muçarela fatiado</td><td>200g</td><td style="text-align:right;">R$8,00</td></tr>
+      <tr><td><span class="check-box"></span></td><td>Óleo de soja</td><td>500ml</td><td style="text-align:right;">R$4,50</td></tr>
+      <tr><td><span class="check-box"></span></td><td>Sal refinado</td><td>500g</td><td style="text-align:right;">R$1,50</td></tr>
+      <tr><td><span class="check-box"></span></td><td>Extrato de tomate</td><td>2 un.</td><td style="text-align:right;">R$4,00</td></tr>
+      <tr><td><span class="check-box"></span></td><td>Caldo de galinha (tablete)</td><td>1 caixa</td><td style="text-align:right;">R$3,50</td></tr>
+      <tr><td><span class="check-box"></span></td><td>Café em pó</td><td>250g</td><td style="text-align:right;">R$6,00</td></tr>
+      <tr><td><span class="check-box"></span></td><td>Açúcar cristal</td><td>500g</td><td style="text-align:right;">R$2,50</td></tr>
+    </tbody>
+  </table>
+
+  <div class="total-box" style="margin-top: 4mm;">
+    <div>
+      <div class="total-box-label">☐ TOTAL</div>
+    </div>
+    <div class="total-box-value">R$117,50</div>
+  </div>
+
+  <div style="margin-top: 4mm; text-align: center; font-size: 8pt; color: var(--ink-s);">
+    Espaço para anotar variações de preço do seu mercado:
+    <div style="margin-top: 3mm; border: 1px dashed var(--border); border-radius: 4px; height: 18mm; width: 100%;"></div>
+  </div>
+</div>
+
+<!-- ============================
+     PÁGINA 7 — CTA PRODUTO 2
+============================= -->
+<div class="cta-page">
+  <div class="cta-eyebrow">Próximo passo</div>
+  <h2 class="cta-title">
+    Você tem a lista.<br/>
+    Agora falta o <em>plano completo.</em>
+  </h2>
+  <p class="cta-sub">
+    Essa lista te leva ao mercado. Mas e depois? Quem cozinha o quê, em qual dia, em quanto tempo, gastando quanto por porção?
+  </p>
+  <div class="cta-divider"></div>
+
+  <div class="cta-whats-inside">
+    <h4>O que tem no Guia Completo:</h4>
+    <div class="cta-item"><span class="cta-item-dot">✓</span><span>Cardápio dos 7 dias completo — café, almoço e jantar</span></div>
+    <div class="cta-item"><span class="cta-item-dot">✓</span><span>10+ receitas passo a passo com tempo de preparo e custo por porção</span></div>
+    <div class="cta-item"><span class="cta-item-dot">✓</span><span>Tabela de substituições (o que fazer quando falta um ingrediente)</span></div>
+    <div class="cta-item"><span class="cta-item-dot">✓</span><span>Dicas reais de economia que fazem diferença no dia a dia</span></div>
+    <div class="cta-item"><span class="cta-item-dot">✓</span><span>Organização semanal: o que preparar antecipado, o que fazer na hora</span></div>
+  </div>
+
+  <div class="cta-price-box">
+    <div class="cta-price-label">Guia Completo "7 Dias de Comida com R$120"</div>
+    <div class="cta-old-price">De R$47</div>
+    <div class="cta-new-price">R$37</div>
+  </div>
+
+  <p style="font-size: 9.5pt; color: rgba(255,255,255,0.65); max-width: 130mm; text-align: center; line-height: 1.6;">
+    Acesso imediato. PDF completo. Sem mensalidade, sem renovação automática.
+  </p>
+
+  <div class="cta-note">
+    Acesse o link na bio ou no grupo onde você recebeu esse produto.
+  </div>
+</div>
+
+</body>
+</html>

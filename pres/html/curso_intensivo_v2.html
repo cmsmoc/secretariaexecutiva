@@ -1,0 +1,1458 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Curso Intensivo — Saúde Pública & WebApps</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,800;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f9f7f3;--bg2:#f0ece3;--bg3:#e5dfd2;--bg4:#d8d0bf;
+  --ink:#1c1b18;--ink2:#4b4a42;--ink3:#8a8780;--ink4:#bdb8ac;
+  --b-teal:#0a6e62;--l-teal:#e3f5f2;--m-teal:#5bbdb0;
+  --b-amber:#9a4f00;--l-amber:#fff4e6;--m-amber:#f5a623;
+  --b-blue:#1a3a6e;--l-blue:#e8f0ff;--m-blue:#4a7eff;
+  --b-red:#8b1a1a;--l-red:#fef0f0;
+  --b-green:#1a5c35;--l-green:#eaf5ef;--m-green:#4caf7d;
+  --b-purple:#4a1a7a;--l-purple:#f3eeff;--m-purple:#9b5de5;
+  --line:rgba(28,27,24,.09);--line2:rgba(28,27,24,.05);
+  --serif:'Playfair Display',Georgia,serif;
+  --body:'Plus Jakarta Sans',system-ui,sans-serif;
+  --mono:'JetBrains Mono',monospace;
+  --rad:8px;--rad-lg:14px;
+  --sh:0 2px 16px rgba(0,0,0,.06);--sh2:0 4px 28px rgba(0,0,0,.1);
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:15px;line-height:1.68;overflow-x:hidden;}
+
+/* ── PROGRESS BAR ── */
+#pgbar{position:fixed;top:0;left:0;right:0;height:3px;background:var(--bg3);z-index:300;}
+#pgfill{height:100%;width:0%;background:linear-gradient(90deg,var(--b-teal),var(--m-amber));transition:width .5s ease;}
+
+/* ── LAYOUT ── */
+.shell{display:grid;grid-template-columns:300px 1fr;min-height:100vh;padding-top:3px;}
+
+/* ══════════════════ SIDEBAR ══════════════════ */
+.sb{
+  background:var(--ink);color:#fff;
+  position:sticky;top:3px;height:calc(100vh - 3px);
+  display:flex;flex-direction:column;overflow:hidden;
+}
+.sb-top{padding:24px 22px 18px;border-bottom:1px solid rgba(255,255,255,.07);}
+.sb-logo{font-family:var(--serif);font-size:16px;font-weight:700;line-height:1.2;letter-spacing:-.01em;}
+.sb-logo .hi{color:var(--m-amber);}
+.sb-tagline{font-family:var(--mono);font-size:10px;color:rgba(255,255,255,.3);letter-spacing:.1em;text-transform:uppercase;margin-top:6px;}
+
+/* Global progress */
+.sb-gp{padding:14px 22px;border-bottom:1px solid rgba(255,255,255,.07);}
+.gp-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:7px;}
+.gp-label{font-family:var(--mono);font-size:10px;color:rgba(255,255,255,.35);letter-spacing:.08em;text-transform:uppercase;}
+.gp-pct{font-family:var(--mono);font-size:12px;color:var(--m-amber);font-weight:500;}
+.gp-bar{height:3px;background:rgba(255,255,255,.1);border-radius:2px;overflow:hidden;}
+.gp-fill{height:100%;background:linear-gradient(90deg,var(--b-teal),var(--m-amber));transition:width .5s;}
+
+/* Module switcher */
+.sb-tabs{display:flex;border-bottom:1px solid rgba(255,255,255,.07);}
+.sb-tab{
+  flex:1;padding:11px 6px;text-align:center;
+  font-family:var(--mono);font-size:10px;letter-spacing:.06em;text-transform:uppercase;
+  color:rgba(255,255,255,.35);border-bottom:2px solid transparent;
+  transition:all .15s;cursor:pointer;
+}
+.sb-tab:hover{color:rgba(255,255,255,.7);}
+.sb-tab.on{color:#fff;border-bottom-color:var(--m-amber);}
+.sb-tab.on.a-mod{border-bottom-color:var(--m-teal);}
+
+/* Nav list */
+.sb-nav{flex:1;overflow-y:auto;padding:8px 0;}
+.sb-nav::-webkit-scrollbar{width:2px;}
+.sb-nav::-webkit-scrollbar-thumb{background:rgba(255,255,255,.12);}
+.nav-phase{
+  padding:12px 22px 4px;
+  font-family:var(--mono);font-size:9px;letter-spacing:.1em;
+  text-transform:uppercase;color:rgba(255,255,255,.25);
+  display:flex;align-items:center;gap:8px;
+}
+.nav-phase::after{content:'';flex:1;height:1px;background:rgba(255,255,255,.06);}
+.nav-item{
+  display:flex;align-items:flex-start;gap:10px;
+  padding:8px 22px;cursor:pointer;
+  transition:background .12s;border-left:2px solid transparent;
+}
+.nav-item:hover{background:rgba(255,255,255,.04);}
+.nav-item.cur{background:rgba(255,255,255,.07);border-left-color:var(--m-teal);}
+.nav-item.cur.b-cur{border-left-color:var(--m-amber);}
+.nav-item.fin .ni-dot{background:var(--m-teal);border-color:var(--m-teal);}
+.nav-item.fin.b-item .ni-dot{background:var(--m-amber);border-color:var(--m-amber);}
+.ni-dot{
+  width:14px;height:14px;border-radius:50%;border:1.5px solid rgba(255,255,255,.2);
+  flex-shrink:0;margin-top:3px;display:flex;align-items:center;justify-content:center;
+  font-size:7px;transition:all .2s;
+}
+.ni-txt{flex:1;}
+.ni-title{font-size:12px;color:rgba(255,255,255,.7);line-height:1.35;transition:color .12s;}
+.nav-item:hover .ni-title,.nav-item.cur .ni-title{color:#fff;}
+.ni-badge{
+  font-family:var(--mono);font-size:9px;color:rgba(255,255,255,.25);
+  letter-spacing:.05em;text-transform:uppercase;display:block;margin-top:2px;
+}
+
+.sb-foot{padding:14px 22px;border-top:1px solid rgba(255,255,255,.07);}
+.gq-btn{
+  width:100%;padding:9px 14px;background:rgba(255,255,255,.05);
+  border:1px solid rgba(255,255,255,.1);border-radius:var(--rad);
+  color:rgba(255,255,255,.6);font-family:var(--mono);font-size:10px;
+  letter-spacing:.06em;text-align:center;cursor:pointer;transition:all .15s;
+}
+.gq-btn:hover{background:rgba(255,255,255,.1);color:#fff;}
+
+/* ══════════════════ MAIN ══════════════════ */
+.main{display:flex;flex-direction:column;min-height:calc(100vh - 3px);}
+
+/* Lesson chrome */
+.lc{
+  position:sticky;top:3px;z-index:50;
+  background:var(--bg);border-bottom:1px solid var(--line);
+  padding:18px 52px 14px;
+}
+.lc-crumb{
+  font-family:var(--mono);font-size:10px;color:var(--ink3);letter-spacing:.06em;
+  margin-bottom:8px;display:flex;gap:5px;align-items:center;
+}
+.lc-crumb .sep{opacity:.4;}
+.lc-row{display:flex;align-items:flex-start;gap:12px;flex-wrap:wrap;}
+.lc-badge{
+  padding:3px 10px;border-radius:20px;
+  font-family:var(--mono);font-size:10px;letter-spacing:.06em;font-weight:500;flex-shrink:0;
+}
+.bd-aula{background:var(--l-teal);color:var(--b-teal);}
+.bd-mapa{background:var(--l-blue);color:var(--b-blue);}
+.bd-quiz{background:var(--l-amber);color:var(--b-amber);}
+.bd-ex{background:var(--l-green);color:var(--b-green);}
+.bd-gq{background:var(--ink);color:#fff;}
+.lc-title{font-family:var(--serif);font-size:clamp(18px,2.5vw,26px);font-weight:700;line-height:1.15;letter-spacing:-.01em;}
+.lc-title.amb{color:var(--b-amber);}
+
+/* Lesson progress */
+.lp{background:var(--bg2);border-bottom:1px solid var(--line);padding:0 52px;}
+.lp-inner{display:flex;align-items:center;gap:14px;padding:10px 0;}
+.lp-lbl{font-family:var(--mono);font-size:10px;color:var(--ink3);}
+.lp-bar{flex:1;height:3px;background:var(--bg3);border-radius:2px;overflow:hidden;}
+.lp-bar-fill{height:100%;border-radius:2px;transition:width .5s;}
+.lp-teal{background:var(--b-teal);}
+.lp-amber{background:var(--m-amber);}
+.lp-n{font-family:var(--mono);font-size:10px;color:var(--ink3);min-width:30px;text-align:right;}
+
+/* ══════════════════ CONTENT AREA ══════════════════ */
+.content{flex:1;padding:44px 52px;max-width:820px;}
+
+/* ── MAP OPENER ── */
+.map-opener{
+  background:#fff;border:1px solid var(--line);border-radius:var(--rad-lg);
+  padding:28px 32px;margin:0 0 28px;box-shadow:var(--sh);
+  display:flex;gap:24px;align-items:flex-start;
+}
+.mo-icon{font-size:36px;flex-shrink:0;margin-top:2px;}
+.mo-label{font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--b-teal);margin-bottom:6px;}
+.mo-label.amb{color:var(--b-amber);}
+.mo-title{font-family:var(--serif);font-size:20px;font-weight:700;margin-bottom:8px;line-height:1.2;}
+.mo-desc{font-size:14px;color:var(--ink2);line-height:1.65;}
+
+/* ── SVG DIAGRAMS ── */
+.diag{
+  border:1px solid var(--line);border-radius:var(--rad-lg);overflow:hidden;
+  margin:20px 0;background:#fff;box-shadow:var(--sh);
+}
+.diag svg{display:block;width:100%;height:auto;}
+.diag-caption{
+  padding:10px 18px;background:var(--bg2);border-top:1px solid var(--line);
+  font-family:var(--mono);font-size:11px;color:var(--ink3);
+}
+
+/* ── CONCEPT CARDS ── */
+.cc{
+  background:#fff;border:1px solid var(--line);border-radius:var(--rad-lg);
+  padding:26px 30px;margin:20px 0;box-shadow:var(--sh);
+}
+.cc-lbl{font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--b-teal);margin-bottom:10px;}
+.cc-lbl.amb{color:var(--b-amber);}
+.cc h3{font-family:var(--serif);font-size:21px;font-weight:700;margin-bottom:10px;line-height:1.2;}
+.cc p{font-size:14px;color:var(--ink2);line-height:1.72;margin-bottom:8px;}
+.cc p:last-child{margin-bottom:0;}
+
+/* ── VOCAB GRID ── */
+.vg{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:18px 0;}
+.vi{background:var(--bg2);border-radius:var(--rad);padding:14px 16px;border-left:3px solid var(--b-teal);}
+.vi.amb{border-left-color:var(--b-amber);}
+.vi.blu{border-left-color:var(--b-blue);}
+.vi.grn{border-left-color:var(--b-green);}
+.vi.pur{border-left-color:var(--b-purple);}
+.vt{font-family:var(--mono);font-size:11px;font-weight:500;color:var(--ink);margin-bottom:4px;}
+.vd{font-size:12px;color:var(--ink3);line-height:1.55;}
+
+/* ── ANALOGY ── */
+.al{border-left:3px solid var(--b-teal);padding:14px 18px;margin:16px 0;border-radius:0 var(--rad) var(--rad) 0;background:var(--l-teal);font-size:14px;color:var(--ink2);line-height:1.65;}
+.al.amb{border-left-color:var(--b-amber);background:var(--l-amber);}
+.al .al-label{font-family:var(--mono);font-size:9px;letter-spacing:.1em;text-transform:uppercase;font-weight:500;color:var(--b-teal);display:block;margin-bottom:5px;}
+.al.amb .al-label{color:var(--b-amber);}
+
+/* ── CALLOUT ── */
+.call{border-radius:var(--rad);padding:14px 18px;margin:16px 0;font-size:14px;line-height:1.65;}
+.call-info{background:var(--l-blue);color:var(--b-blue);}
+.call-warn{background:var(--l-amber);color:var(--b-amber);}
+.call-tip{background:var(--l-green);color:var(--b-green);}
+.call-key{background:var(--ink);color:#fff;}
+.call .cl{font-family:var(--mono);font-size:9px;letter-spacing:.1em;text-transform:uppercase;font-weight:500;display:block;margin-bottom:5px;opacity:.7;}
+.call strong{font-weight:600;}
+
+/* ── CODE ── */
+.code{background:#1c1b18;border-radius:var(--rad);padding:18px 22px;margin:16px 0;font-family:var(--mono);font-size:12px;color:#c8e6c9;line-height:1.85;overflow-x:auto;}
+.ck{color:#80cbc4;}.cv{color:#ffcc80;}.cs{color:#a5d6a7;}.cm{color:rgba(255,255,255,.28);}
+
+/* ── EXERCISE ── */
+.ex{background:#fff;border:2px solid var(--m-green);border-radius:var(--rad-lg);padding:24px 28px;margin:24px 0;box-shadow:var(--sh);}
+.ex-lbl{font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--b-green);margin-bottom:8px;font-weight:500;}
+.ex h3{font-family:var(--serif);font-size:18px;font-weight:700;margin-bottom:10px;}
+.ex-desc{font-size:14px;color:var(--ink2);line-height:1.68;margin-bottom:16px;}
+.ex-steps{display:flex;flex-direction:column;gap:10px;}
+.ex-step{display:flex;gap:12px;align-items:flex-start;}
+.ex-n{min-width:22px;height:22px;border-radius:50%;background:var(--b-green);color:#fff;font-family:var(--mono);font-size:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px;}
+.ex-t{font-size:13px;color:var(--ink2);line-height:1.6;}
+.ex-hint{margin-top:14px;padding:11px 14px;background:var(--l-green);border-radius:var(--rad);font-size:13px;color:var(--b-green);}
+
+/* ── H2/H3 ── */
+.content h2{font-family:var(--serif);font-size:22px;font-weight:700;margin:30px 0 12px;color:var(--ink);}
+.content h3{font-family:var(--serif);font-size:18px;font-weight:700;margin:22px 0 8px;color:var(--ink);}
+.content p{font-size:14px;color:var(--ink2);line-height:1.72;margin-bottom:12px;}
+.content ul,.content ol{padding-left:20px;margin:10px 0;}
+.content li{font-size:14px;color:var(--ink2);line-height:1.68;margin-bottom:4px;}
+.content strong{font-weight:600;color:var(--ink);}
+.sep{height:1px;background:var(--line);margin:28px 0;}
+
+/* ── TAGS / PILLS ── */
+.pill{display:inline-block;padding:2px 8px;border-radius:20px;font-family:var(--mono);font-size:10px;font-weight:500;margin:2px 3px 2px 0;}
+.p-teal{background:var(--l-teal);color:var(--b-teal);}
+.p-amber{background:var(--l-amber);color:var(--b-amber);}
+.p-blue{background:var(--l-blue);color:var(--b-blue);}
+.p-green{background:var(--l-green);color:var(--b-green);}
+
+/* ══════════════════ QUIZ ══════════════════ */
+.qz{padding:40px 52px;max-width:820px;}
+.qz-title{font-family:var(--serif);font-size:24px;font-weight:700;margin-bottom:6px;}
+.qz-sub{font-size:14px;color:var(--ink3);margin-bottom:28px;}
+.qb{background:#fff;border:1px solid var(--line);border-radius:var(--rad-lg);padding:22px 26px;margin-bottom:14px;box-shadow:var(--sh);}
+.qb-num{font-family:var(--mono);font-size:10px;color:var(--ink3);letter-spacing:.07em;margin-bottom:7px;display:flex;justify-content:space-between;align-items:center;}
+.qb-q{font-size:15px;font-weight:500;color:var(--ink);margin-bottom:14px;line-height:1.45;}
+.q-opts{display:flex;flex-direction:column;gap:7px;}
+.q-opt{
+  padding:11px 14px;border:1.5px solid var(--line);border-radius:var(--rad);
+  font-size:13px;color:var(--ink2);text-align:left;background:#fff;
+  transition:all .12s;display:flex;align-items:center;gap:10px;cursor:pointer;
+}
+.q-opt:hover:not(:disabled){border-color:var(--b-teal);background:var(--l-teal);color:var(--ink);}
+.q-opt:hover:not(:disabled) .opt-i{border-color:var(--b-teal);}
+.q-opt.ok{border-color:var(--b-green)!important;background:var(--l-green)!important;color:var(--b-green)!important;}
+.q-opt.no{border-color:var(--b-red)!important;background:var(--l-red)!important;color:var(--b-red)!important;}
+.opt-i{width:18px;height:18px;border-radius:50%;border:1.5px solid var(--ink4);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:9px;font-family:var(--mono);}
+.q-exp{margin-top:10px;padding:11px 14px;background:var(--l-teal);border-radius:var(--rad);font-size:13px;color:var(--b-teal);line-height:1.6;display:none;}
+.q-exp.vis{display:block;}
+.qz-res{background:#fff;border:1px solid var(--line);border-radius:var(--rad-lg);padding:32px;text-align:center;margin-top:20px;display:none;box-shadow:var(--sh);}
+.qz-res.vis{display:block;}
+.res-big{font-family:var(--serif);font-size:52px;font-weight:700;color:var(--b-teal);}
+.res-lbl{font-size:13px;color:var(--ink3);margin-bottom:16px;}
+.res-msg{font-size:15px;color:var(--ink2);line-height:1.6;margin-bottom:24px;}
+.res-acts{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;}
+
+/* ── BUTTONS ── */
+.btn{padding:10px 22px;border-radius:var(--rad);font-family:var(--mono);font-size:11px;letter-spacing:.06em;text-transform:uppercase;font-weight:500;transition:all .15s;border:none;cursor:pointer;display:inline-flex;align-items:center;gap:6px;}
+.btn-teal{background:var(--b-teal);color:#fff;}
+.btn-teal:hover{background:#085047;}
+.btn-amber{background:var(--b-amber);color:#fff;}
+.btn-amber:hover{background:#7a3e00;}
+.btn-ghost{background:var(--bg2);color:var(--ink2);border:1px solid var(--line);}
+.btn-ghost:hover{background:var(--bg3);color:var(--ink);}
+.btn-sm{padding:7px 14px;font-size:10px;}
+
+/* ── BOTTOM NAV ── */
+.lesson-foot{
+  padding:20px 52px 36px;
+  display:flex;align-items:center;justify-content:space-between;
+  border-top:1px solid var(--line);
+}
+.done-btn{
+  display:flex;align-items:center;gap:8px;
+  padding:9px 18px;border-radius:var(--rad);
+  border:1.5px solid var(--b-teal);color:var(--b-teal);
+  background:transparent;font-family:var(--mono);font-size:10px;
+  letter-spacing:.06em;text-transform:uppercase;cursor:pointer;transition:all .15s;
+}
+.done-btn.on{background:var(--b-teal);color:#fff;border-color:var(--b-teal);}
+.done-btn:hover{background:var(--b-teal);color:#fff;}
+.done-btn.amb{border-color:var(--b-amber);color:var(--b-amber);}
+.done-btn.amb:hover,.done-btn.amb.on{background:var(--b-amber);color:#fff;border-color:var(--b-amber);}
+.pn{display:flex;gap:8px;}
+
+/* ── WELCOME ── */
+.welcome{padding:56px 52px;max-width:820px;}
+.welcome h1{font-family:var(--serif);font-size:clamp(32px,4vw,54px);font-weight:800;line-height:1.0;letter-spacing:-.02em;margin-bottom:18px;}
+.welcome h1 em{font-style:italic;color:var(--b-teal);}
+.w-desc{font-size:16px;color:var(--ink2);line-height:1.75;margin-bottom:32px;max-width:600px;}
+.w-mods{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:32px;}
+.w-mod{background:#fff;border:1px solid var(--line);border-radius:var(--rad-lg);padding:22px 24px;box-shadow:var(--sh);}
+.w-mod.a{border-top:3px solid var(--b-teal);}
+.w-mod.b{border-top:3px solid var(--b-amber);}
+.wm-n{font-family:var(--mono);font-size:9px;color:var(--ink3);letter-spacing:.1em;margin-bottom:7px;}
+.wm-t{font-family:var(--serif);font-size:17px;font-weight:700;margin-bottom:6px;}
+.wm-d{font-size:12px;color:var(--ink3);line-height:1.6;margin-bottom:10px;}
+.wm-s{display:flex;gap:12px;}
+.wm-st{font-family:var(--mono);font-size:10px;color:var(--ink3);}
+.wm-st span{color:var(--ink);font-weight:500;}
+.w-acts{display:flex;gap:10px;flex-wrap:wrap;}
+
+/* ── PHASE MAP ── */
+.phase-map{background:#fff;border:1px solid var(--line);border-radius:var(--rad-lg);padding:26px 30px;margin:20px 0;box-shadow:var(--sh);}
+.pm-title{font-family:var(--serif);font-size:19px;font-weight:700;margin-bottom:18px;}
+.pm-phases{display:flex;flex-direction:column;gap:0;}
+.pm-phase{
+  display:grid;grid-template-columns:90px 1fr;gap:0;position:relative;
+}
+.pm-phase::before{content:'';position:absolute;left:82px;top:30px;bottom:0;width:1px;background:var(--line);}
+.pm-phase:last-child::before{display:none;}
+.pm-period{font-family:var(--mono);font-size:11px;color:var(--b-teal);padding:18px 0;letter-spacing:.04em;}
+.pm-period.amb{color:var(--b-amber);}
+.pm-body{padding:14px 0 20px 22px;border-left:1px solid var(--line);}
+.pm-dot{width:10px;height:10px;border-radius:50%;background:var(--b-teal);position:absolute;left:78px;top:20px;}
+.pm-dot.amb{background:var(--b-amber);}
+.pm-name{font-size:14px;font-weight:500;color:var(--ink);margin-bottom:6px;}
+.pm-items{display:flex;flex-direction:column;gap:4px;}
+.pm-it{font-size:12px;color:var(--ink3);display:flex;gap:6px;}
+.pm-it::before{content:'→';color:var(--b-teal);font-family:var(--mono);font-size:10px;flex-shrink:0;}
+.pm-it.amb::before{color:var(--b-amber);}
+
+/* ── STICKY DISCOVER PROMPT ── */
+.discover-prompt{
+  background:var(--bg2);border:1px solid var(--line);border-radius:var(--rad);
+  padding:16px 20px;margin:0 0 24px;
+  border-left:3px solid var(--m-purple);
+}
+.dp-lbl{font-family:var(--mono);font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--b-purple);margin-bottom:5px;font-weight:500;}
+.dp-q{font-size:14px;color:var(--ink2);line-height:1.55;font-style:italic;}
+
+/* RESPONSIVE */
+@media(max-width:860px){
+  .shell{grid-template-columns:1fr;}
+  .sb{position:static;height:auto;max-height:240px;}
+  .lc,.lp,.content,.qz,.welcome,.lesson-foot{padding-left:18px;padding-right:18px;}
+  .vg,.w-mods{grid-template-columns:1fr;}
+}
+</style>
+</head>
+<body>
+<div id="pgbar"><div id="pgfill"></div></div>
+
+<div class="shell">
+<!-- ════════════ SIDEBAR ════════════ -->
+<aside class="sb">
+  <div class="sb-top">
+    <div class="sb-logo">Curso<br>Intensivo <span class="hi">Pessoal</span></div>
+    <div class="sb-tagline">Saúde Pública · WebApps · IA</div>
+  </div>
+  <div class="sb-gp">
+    <div class="gp-row">
+      <span class="gp-label">Progresso geral</span>
+      <span class="gp-pct" id="gp-pct">0%</span>
+    </div>
+    <div class="gp-bar"><div class="gp-fill" id="gp-fill" style="width:0%"></div></div>
+  </div>
+  <div class="sb-tabs">
+    <div class="sb-tab on a-mod" id="tab-a" onclick="switchTab('a')">Módulo B — Saúde</div>
+    <div class="sb-tab" id="tab-b" onclick="switchTab('b')">Módulo A — Web</div>
+  </div>
+  <div class="sb-nav" id="sb-nav"></div>
+  <div class="sb-foot">
+    <div class="gq-btn" onclick="goTo('__gq__')">🎯 Quiz Geral Final</div>
+  </div>
+</aside>
+
+<!-- ════════════ MAIN ════════════ -->
+<main class="main" id="main"></main>
+</div>
+
+<script>
+// ═══════════════════════════════════════════════════
+// CURRICULUM
+// ═══════════════════════════════════════════════════
+const CUR = {
+  // ──────────── MÓDULO B — SAÚDE (prioritário) ────────────
+  b:{
+    key:'b', label:'Módulo B — Saúde Pública & Dados',
+    tabLabel:'Módulo B — Saúde',
+    phases:[
+      {
+        id:'b0', label:'Fase 0 — Mapa do Território',
+        lessons:[
+          {
+            id:'b0.1', type:'mapa', title:'Visão Geral: o Sistema de Saúde Brasileiro',
+            badge:'bd-mapa', badgeTxt:'Mapa visual',
+            content:`
+<div class="map-opener">
+  <div class="mo-icon">🗺️</div>
+  <div>
+    <div class="mo-label amb">Ponto de partida — Descoberta ativa</div>
+    <div class="mo-title">Antes de ler: o que você já sabe?</div>
+    <div class="mo-desc">Antes de ver a estrutura, pense 60 segundos: <em>Quem decide o que acontece em uma UBS? De onde vem o dinheiro? Quem controla?</em> Anote mentalmente — então confira o mapa abaixo.</div>
+  </div>
+</div>
+
+<div class="diag">
+<svg viewBox="0 0 680 310" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <marker id="arr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto">
+      <path d="M2 2L8 5L2 8" fill="none" stroke="#8a8780" stroke-width="1.5"/>
+    </marker>
+  </defs>
+  <!-- Federal -->
+  <rect x="20" y="20" width="640" height="68" rx="8" fill="#fff4e6" stroke="#9a4f00" stroke-width="1.5"/>
+  <text x="340" y="46" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="11" fill="#9a4f00" font-weight="500">FEDERAL — Ministério da Saúde</text>
+  <text x="340" y="63" text-anchor="middle" font-family="'Plus Jakarta Sans',sans-serif" font-size="11" fill="#4b4a42">Define política nacional · financia via transferências · DATASUS · RNDS · e-SUS · normas</text>
+  <text x="340" y="79" text-anchor="middle" font-family="'Plus Jakarta Sans',sans-serif" font-size="10" fill="#8a8780">Fundo Nacional de Saúde (FNS) → repasse fundo a fundo → municípios</text>
+  <!-- Arrows down -->
+  <line x1="340" y1="88" x2="340" y2="112" stroke="#8a8780" stroke-width="1" stroke-dasharray="4,3" marker-end="url(#arr)"/>
+  <!-- Estadual -->
+  <rect x="60" y="112" width="560" height="56" rx="8" fill="#e6f4ec" stroke="#1a5c35" stroke-width="1.5"/>
+  <text x="340" y="136" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="11" fill="#1a5c35" font-weight="500">ESTADUAL — Secretaria Estadual de Saúde (SES-MG)</text>
+  <text x="340" y="153" text-anchor="middle" font-family="'Plus Jakarta Sans',sans-serif" font-size="11" fill="#4b4a42">Coordenação regional · regulação · hospitais de referência · apoio técnico</text>
+  <!-- Arrows down -->
+  <line x1="340" y1="168" x2="340" y2="192" stroke="#8a8780" stroke-width="1" stroke-dasharray="4,3" marker-end="url(#arr)"/>
+  <!-- Municipal -->
+  <rect x="20" y="192" width="640" height="70" rx="8" fill="#e3f5f2" stroke="#0a6e62" stroke-width="2"/>
+  <text x="340" y="218" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="11" fill="#0a6e62" font-weight="500">MUNICIPAL — Secretaria Municipal de Saúde (SMS) ← VOCÊ ESTÁ AQUI</text>
+  <text x="340" y="235" text-anchor="middle" font-family="'Plus Jakarta Sans',sans-serif" font-size="11" fill="#4b4a42">Executa na ponta · UBS · ESF · ACS · Vigilâncias · Conselho de Saúde</text>
+  <text x="340" y="252" text-anchor="middle" font-family="'Plus Jakarta Sans',sans-serif" font-size="10" fill="#0a6e62">É onde o dado NASCE e onde a IA age com mais impacto</text>
+  <!-- Fundo Municipal -->
+  <rect x="220" y="278" width="240" height="26" rx="6" fill="#1c1b18"/>
+  <text x="340" y="295" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="10" fill="#fff">Fundo Municipal de Saúde (FMS)</text>
+</svg>
+<div class="diag-caption">O SUS é descentralizado: federal define → estadual coordena → municipal executa. O dinheiro federal chega direto ao FMS sem passar pelo Tesouro.</div>
+</div>
+
+<div class="call call-key"><span class="cl">Por que isso importa para você</span>
+O município é onde tudo acontece — e onde seus sistemas têm impacto real. Quando você propõe uma solução, é à SMS que você fala, usando recursos que vieram do federal e passaram pelo estadual. Cada dado que você automatiza nasceu em uma UBS de Montes Claros.
+</div>
+
+<div class="vg">
+  <div class="vi amb"><div class="vt">Gestão plena municipal</div><div class="vd">Montes Claros tem gestão plena — assume total responsabilidade pelas ações. Isso amplia escopo e recursos, mas exige mais prestação de contas.</div></div>
+  <div class="vi amb"><div class="vt">Habilitação</div><div class="vd">Certificação que autoriza o município a receber recursos específicos. Exige cumprimento de indicadores.</div></div>
+  <div class="vi amb"><div class="vt">Pactuação</div><div class="vd">Acordo formal de metas entre município, estado e federal. O Conselho aprova o PAS — Plano de Ação em Saúde.</div></div>
+  <div class="vi amb"><div class="vt">Repasse fundo a fundo</div><div class="vd">Dinheiro do FNS vai direto ao FMS, sem passar pelo Tesouro. Bloqueio por metas ruins = sem verba.</div></div>
+</div>`
+          },
+          {
+            id:'b0.2', type:'aula', title:'A APS por dentro: UBS, ESF, ACS e o fluxo real',
+            badge:'bd-aula', badgeTxt:'Micro-aula · 15 min',
+            content:`
+<div class="discover-prompt">
+  <div class="dp-lbl">Descoberta ativa — pense antes de ler</div>
+  <div class="dp-q">Se você soubesse que 80% dos problemas de saúde de uma cidade poderiam ser resolvidos sem hospital, onde você colocaria os recursos? O que faria uma "consulta de baixa complexidade" no local certo?</div>
+</div>
+
+<div class="cc">
+  <div class="cc-lbl amb">Conceito Central</div>
+  <h3>A APS é a porta de entrada e o coração do SUS</h3>
+  <p>Atenção Primária à Saúde (APS) é o nível onde a maioria dos servidores que você encontrará na SMS trabalha — e onde a maioria dos dados de saúde nasce. É a camada mais próxima do cidadão.</p>
+</div>
+
+<div class="diag">
+<svg viewBox="0 0 680 240" xmlns="http://www.w3.org/2000/svg">
+  <defs><marker id="arr2" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M2 2L8 5L2 8" fill="none" stroke="#8a8780" stroke-width="1.5"/></marker></defs>
+  <!-- UBS box -->
+  <rect x="20" y="20" width="180" height="200" rx="10" fill="#fff4e6" stroke="#9a4f00" stroke-width="1.5"/>
+  <text x="110" y="50" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="11" fill="#9a4f00" font-weight="500">UBS</text>
+  <text x="110" y="67" text-anchor="middle" font-family="'Plus Jakarta Sans',sans-serif" font-size="10" fill="#4b4a42">Unidade Básica de Saúde</text>
+  <line x1="40" y1="78" x2="180" y2="78" stroke="#9a4f00" stroke-width=".8" stroke-dasharray="4,3"/>
+  <text x="110" y="96" text-anchor="middle" font-family="'Plus Jakarta Sans',sans-serif" font-size="10" fill="#4b4a42">Pré-natal · Vacinação</text>
+  <text x="110" y="112" text-anchor="middle" font-family="'Plus Jakarta Sans',sans-serif" font-size="10" fill="#4b4a42">HAS · DM · Saúde mental</text>
+  <text x="110" y="128" text-anchor="middle" font-family="'Plus Jakarta Sans',sans-serif" font-size="10" fill="#4b4a42">Procedimentos básicos</text>
+  <text x="110" y="155" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="10" fill="#9a4f00">Cadastro de ~3.000 pessoas</text>
+  <text x="110" y="170" text-anchor="middle" font-family="'Plus Jakarta Sans',sans-serif" font-size="10" fill="#8a8780">por equipe ESF</text>
+  <!-- ESF -->
+  <rect x="240" y="20" width="200" height="200" rx="10" fill="#e3f5f2" stroke="#0a6e62" stroke-width="1.5"/>
+  <text x="340" y="50" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="11" fill="#0a6e62" font-weight="500">Equipe ESF</text>
+  <text x="340" y="67" text-anchor="middle" font-family="'Plus Jakarta Sans',sans-serif" font-size="10" fill="#4b4a42">Estratégia Saúde da Família</text>
+  <line x1="260" y1="78" x2="420" y2="78" stroke="#0a6e62" stroke-width=".8" stroke-dasharray="4,3"/>
+  <text x="340" y="99" text-anchor="middle" font-family="'Plus Jakarta Sans',sans-serif" font-size="10" fill="#4b4a42">Médico de família</text>
+  <text x="340" y="114" text-anchor="middle" font-family="'Plus Jakarta Sans',sans-serif" font-size="10" fill="#4b4a42">Enfermeiro</text>
+  <text x="340" y="129" text-anchor="middle" font-family="'Plus Jakarta Sans',sans-serif" font-size="10" fill="#4b4a42">Técnico de enfermagem</text>
+  <text x="340" y="144" text-anchor="middle" font-family="'Plus Jakarta Sans',sans-serif" font-size="10" fill="#4b4a42">Dentista + auxiliar</text>
+  <text x="340" y="163" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="10" fill="#0a6e62">ACS (4–6 por equipe)</text>
+  <text x="340" y="178" text-anchor="middle" font-family="'Plus Jakarta Sans',sans-serif" font-size="10" fill="#8a8780">Cada ACS = ~150 famílias</text>
+  <!-- ACS -->
+  <rect x="480" y="20" width="180" height="200" rx="10" fill="#e6f4ec" stroke="#1a5c35" stroke-width="1.5"/>
+  <text x="570" y="50" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="11" fill="#1a5c35" font-weight="500">ACS</text>
+  <text x="570" y="67" text-anchor="middle" font-family="'Plus Jakarta Sans',sans-serif" font-size="10" fill="#4b4a42">Agente Comunitário</text>
+  <line x1="500" y1="78" x2="640" y2="78" stroke="#1a5c35" stroke-width=".8" stroke-dasharray="4,3"/>
+  <text x="570" y="96" text-anchor="middle" font-family="'Plus Jakarta Sans',sans-serif" font-size="10" fill="#4b4a42">Visita domiciliar semanal</text>
+  <text x="570" y="111" text-anchor="middle" font-family="'Plus Jakarta Sans',sans-serif" font-size="10" fill="#4b4a42">Cadastro de famílias</text>
+  <text x="570" y="126" text-anchor="middle" font-family="'Plus Jakarta Sans',sans-serif" font-size="10" fill="#4b4a42">Acompanha HAS e DM</text>
+  <text x="570" y="141" text-anchor="middle" font-family="'Plus Jakarta Sans',sans-serif" font-size="10" fill="#4b4a42">Notifica problemas</text>
+  <text x="570" y="163" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="10" fill="#1a5c35">Gera dados no e-SUS</text>
+  <text x="570" y="178" text-anchor="middle" font-family="'Plus Jakarta Sans',sans-serif" font-size="10" fill="#8a8780">Principal fonte de dado da APS</text>
+  <!-- Arrows -->
+  <line x1="200" y1="120" x2="238" y2="120" stroke="#8a8780" stroke-width="1" stroke-dasharray="4,3" marker-end="url(#arr2)"/>
+  <line x1="440" y1="120" x2="478" y2="120" stroke="#8a8780" stroke-width="1" stroke-dasharray="4,3" marker-end="url(#arr2)"/>
+</svg>
+<div class="diag-caption">Uma UBS típica tem 1 a 4 equipes ESF, cada uma com território definido. O ACS é o elo campo-sistema — sem ele, o dado não chega ao e-SUS.</div>
+</div>
+
+<div class="al amb">
+  <span class="al-label">Analogia com arquitetura de sistema</span>
+  A <strong>UBS</strong> é o frontend — onde o usuário (cidadão) interage.<br>
+  O <strong>e-SUS</strong> é o backend — onde os dados são processados e persistidos.<br>
+  O <strong>ACS</strong> é o agente de coleta — a API que traz dados do campo para o sistema.<br>
+  O <strong>Conselho de Saúde</strong> é a camada de auditoria — controle e validação dos outputs.
+</div>
+
+<div class="vg">
+  <div class="vi amb"><div class="vt">NASF / eMulti</div><div class="vd">Equipe de apoio às ESF: psicólogo, fisioterapeuta, nutricionista, AS. Suporte especializado sem tirar o paciente da APS.</div></div>
+  <div class="vi amb"><div class="vt">Previne Brasil</div><div class="vd">Programa federal que vincula recursos ao desempenho em indicadores de APS. Indicador ruim = menos verba. Dado crítico.</div></div>
+  <div class="vi amb"><div class="vt">Cobertura da APS</div><div class="vd">% da população com equipe ESF. Meta nacional: 100%. Montes Claros: ~90%. Indicador estratégico monitorado pelo Ministério.</div></div>
+  <div class="vi amb"><div class="vt">Território</div><div class="vd">Área geográfica sob responsabilidade de uma equipe ESF. A intervenção de IA mais impactante é georreferenciada por território.</div></div>
+</div>
+
+<div class="call call-tip"><span class="cl">Dica de campo</span>
+Quando você falar com um coordenador de UBS, nunca diga "resolver o problema do paciente" — diga <strong>"fortalecer o vínculo da equipe com o território"</strong>. A linguagem certa abre portas que a certa não abre.
+</div>`
+          },
+          {
+            id:'b0.3', type:'aula', title:'Os 8 sistemas de informação que você precisa conhecer',
+            badge:'bd-aula', badgeTxt:'Micro-aula · 15 min',
+            content:`
+<div class="discover-prompt">
+  <div class="dp-lbl">Descoberta ativa</div>
+  <div class="dp-q">Se você precisasse saber: (1) quem tem dengue na cidade, (2) quantas crianças foram vacinadas, (3) quais medicamentos saíram da farmácia — em que sistema cada informação estaria? Tente adivinhar antes de ler.</div>
+</div>
+
+<div class="cc">
+  <div class="cc-lbl amb">Ecossistema de dados</div>
+  <h3>O labirinto dos sistemas — e como navegar nele</h3>
+  <p>A saúde pública brasileira tem dezenas de sistemas de informação que <em>não conversam entre si</em>. Essa fragmentação é o problema que você pode resolver — mas para isso precisa conhecê-los.</p>
+</div>
+
+<div class="vg">
+  <div class="vi amb"><div class="vt">e-SUS PEC / AB</div><div class="vd">Sistema principal da APS. Prontuário eletrônico, fichas de atendimento, cadastro de famílias e território. Alimentado diariamente nas UBSs.</div></div>
+  <div class="vi blu"><div class="vt">SINAN</div><div class="vd">Sistema de Informação de Notificação de Agravos. Dengue, sífilis, tuberculose, meningite, violência. Alimentado pela Vigilância Epidemiológica.</div></div>
+  <div class="vi grn"><div class="vt">SIM</div><div class="vd">Sistema de Informação sobre Mortalidade. Registra óbitos e causas. Fundamental para análise de mortalidade evitável e materna.</div></div>
+  <div class="vi grn"><div class="vt">SINASC</div><div class="vd">Sistema de Nascidos Vivos. Declarações de nascimento, dados do recém-nascido e da mãe. Cruza com o SIM para calcular mortalidade infantil.</div></div>
+  <div class="vi"><div class="vt">CNES</div><div class="vd">Cadastro Nacional de Estabelecimentos de Saúde. Toda UBS, hospital e clínica registrada. Tem API pública para consulta.</div></div>
+  <div class="vi"><div class="vt">Horus</div><div class="vd">Gestão da assistência farmacêutica. Dispensação de medicamentos, estoque de farmácia básica. Dado crítico para hipertensos e diabéticos.</div></div>
+  <div class="vi amb"><div class="vt">RNDS</div><div class="vd">Rede Nacional de Dados em Saúde. Infraestrutura de APIs do Ministério para integrar todos os sistemas. Padrão FHIR. É o futuro — e o seu campo de atuação.</div></div>
+  <div class="vi blu"><div class="vt">DATASUS / TabNet</div><div class="vd">Portal de dados abertos do Ministério. Dados históricos de todos os sistemas. Acesso público — é sua matéria-prima para dashboards.</div></div>
+</div>
+
+<div class="call call-warn"><span class="cl">O problema central que você resolve</span>
+Esses sistemas <strong>não conversam entre si</strong>. Um médico precisa de 5 logins para ver o histórico completo de um paciente. Esse é exatamente o problema que APIs e integração de sistemas resolvem — e você já sabe fazer isso.
+</div>
+
+<h2>Como cada sistema alimenta o próximo</h2>
+<div class="diag">
+<svg viewBox="0 0 680 160" xmlns="http://www.w3.org/2000/svg">
+  <defs><marker id="arr3" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M2 2L8 5L2 8" fill="none" stroke="#8a8780" stroke-width="1.5"/></marker></defs>
+  <rect x="20" y="55" width="100" height="50" rx="6" fill="#fff4e6" stroke="#9a4f00" stroke-width="1.5"/>
+  <text x="70" y="77" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="10" fill="#9a4f00">ACS / UBS</text>
+  <text x="70" y="92" text-anchor="middle" font-family="'Plus Jakarta Sans',sans-serif" font-size="10" fill="#4b4a42">Coleta dado</text>
+  <line x1="120" y1="80" x2="148" y2="80" stroke="#8a8780" stroke-width="1" marker-end="url(#arr3)"/>
+  <rect x="150" y="55" width="110" height="50" rx="6" fill="#e3f5f2" stroke="#0a6e62" stroke-width="1.5"/>
+  <text x="205" y="77" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="10" fill="#0a6e62">e-SUS / SINAN</text>
+  <text x="205" y="92" text-anchor="middle" font-family="'Plus Jakarta Sans',sans-serif" font-size="10" fill="#4b4a42">Registra dado</text>
+  <line x1="260" y1="80" x2="288" y2="80" stroke="#8a8780" stroke-width="1" marker-end="url(#arr3)"/>
+  <rect x="290" y="55" width="110" height="50" rx="6" fill="#e6f4ec" stroke="#1a5c35" stroke-width="1.5"/>
+  <text x="345" y="77" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="10" fill="#1a5c35">DATASUS</text>
+  <text x="345" y="92" text-anchor="middle" font-family="'Plus Jakarta Sans',sans-serif" font-size="10" fill="#4b4a42">Consolida dados</text>
+  <line x1="400" y1="80" x2="428" y2="80" stroke="#8a8780" stroke-width="1" marker-end="url(#arr3)"/>
+  <rect x="430" y="55" width="110" height="50" rx="6" fill="#e8f0ff" stroke="#1a3a6e" stroke-width="1.5"/>
+  <text x="485" y="77" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="10" fill="#1a3a6e">Dashboard</text>
+  <text x="485" y="92" text-anchor="middle" font-family="'Plus Jakarta Sans',sans-serif" font-size="10" fill="#4b4a42">Visualiza dado</text>
+  <line x1="540" y1="80" x2="568" y2="80" stroke="#8a8780" stroke-width="1" marker-end="url(#arr3)"/>
+  <rect x="570" y="55" width="90" height="50" rx="6" fill="#1c1b18"/>
+  <text x="615" y="77" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="10" fill="#fff">Decisão</text>
+  <text x="615" y="92" text-anchor="middle" font-family="'Plus Jakarta Sans',sans-serif" font-size="10" fill="rgba(255,255,255,.6)">Gestor age</text>
+  <!-- Labels above -->
+  <text x="205" y="40" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="9" fill="#9a4f00">problema: dados atrasados</text>
+  <text x="485" y="40" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="9" fill="#0a6e62">solução: sua automação</text>
+</svg>
+<div class="diag-caption">O dado nasce no campo, passa pelo sistema, chega ao dashboard, vira decisão. Cada etapa pode ser acelerada com automação.</div>
+</div>`
+          },
+          {
+            id:'b0.q', type:'quiz', title:'Quiz Fase 0 — Mapa do Território',
+            badge:'bd-quiz', badgeTxt:'Quiz · 4 questões',
+            quiz:[
+              {q:'Em qual esfera de governo o dado de saúde nasce e o cidadão é atendido?',opts:['Federal — Ministério da Saúde','Estadual — SES-MG','Municipal — SMS e UBSs','Federal e estadual conjuntamente'],ans:2,exp:'É no município — nas UBSs, equipes ESF, pelo ACS — onde o atendimento acontece e o dado é gerado. A SMS é o nível operacional do SUS.'},
+              {q:'O que é o SINAN?',opts:['Sistema de cadastro de estabelecimentos de saúde','Sistema de notificação de doenças de notificação compulsória (dengue, sífilis, tuberculose)','Sistema de mortalidade e óbitos','Sistema de gestão de farmácias'],ans:1,exp:'SINAN = Sistema de Informação de Notificação de Agravos. Registra casos de doenças como dengue, tuberculose, sífilis, violência. É onde a Vigilância Epidemiológica trabalha.'},
+              {q:'O que o ACS (Agente Comunitário de Saúde) faz na prática?',opts:['Coordena hospitais regionais','Gerencia o orçamento da UBS','Faz visitas domiciliares e conecta famílias ao sistema de saúde','Coordena exames especializados'],ans:2,exp:'O ACS é o elo entre a UBS e as famílias — faz visitas semanais, cadastra famílias, acompanha condições crônicas e registra no e-SUS. É a maior fonte de dado da APS.'},
+              {q:'O que é a RNDS?',opts:['Uma rede de hospitais públicos federais','Infraestrutura de APIs do Ministério da Saúde para integrar sistemas usando padrão FHIR','Sistema de regulação de consultas especializadas','Rede de distribuição de medicamentos'],ans:1,exp:'A RNDS é exatamente o tipo de integração que você pode implementar — APIs federais para conectar os sistemas de saúde que hoje são ilhas isoladas.'},
+            ]
+          },
+        ]
+      },
+      {
+        id:'b1', label:'Fase 1 — Gestão, Dados e Indicadores',
+        lessons:[
+          {
+            id:'b1.1', type:'aula', title:'Indicadores: a língua que gestores falam',
+            badge:'bd-aula', badgeTxt:'Micro-aula · 15 min',
+            content:`
+<div class="discover-prompt">
+  <div class="dp-lbl">Descoberta ativa</div>
+  <div class="dp-q">Um gestor de saúde te pede "um dashboard útil". Que número você colocaria em destaque? Antes de ler, pense: qual informação faria um secretário de saúde tomar uma decisão agora?</div>
+</div>
+
+<div class="cc">
+  <div class="cc-lbl amb">Gestão por indicadores</div>
+  <h3>Indicadores são a linguagem de todo gestor de saúde</h3>
+  <p>Todo gestor da SMS pensa em metas, coberturas e taxas. Dominar esse vocabulário é falar na língua deles — e entregar dashboards que eles realmente usam.</p>
+</div>
+
+<div class="vg">
+  <div class="vi amb"><div class="vt">Cobertura vacinal</div><div class="vd">% da população-alvo vacinada. Meta: 95%. Abaixo de 70% = alerta de surto. Montes Claros é endêmica para dengue — dado crítico.</div></div>
+  <div class="vi amb"><div class="vt">Taxa de incidência</div><div class="vd">Novos casos de doença por 100.000 habitantes em período definido. Base da vigilância epidemiológica. Ex: 45 casos de dengue/100 mil hab.</div></div>
+  <div class="vi"><div class="vt">RDQA</div><div class="vd">Razão de Digitação e Qualidade de Ações. Mede qualidade do preenchimento do e-SUS. Dado ruim no e-SUS = punição financeira federal.</div></div>
+  <div class="vi"><div class="vt">Produção das equipes</div><div class="vd">Quantas consultas, visitas domiciliares e procedimentos cada equipe ESF realizou. Base para avaliação e planejamento de recursos.</div></div>
+  <div class="vi grn"><div class="vt">SISPACTO</div><div class="vd">Sistema de monitoramento das metas pactuadas entre município, estado e federal. É o "boletim escolar" da SMS — metas ruins = menos recursos.</div></div>
+  <div class="vi grn"><div class="vt">Previne Brasil</div><div class="vd">Programa que vincula $ federal ao desempenho em 7 indicadores de APS. Gestores monitora isso diariamente. É o principal driver financeiro atual.</div></div>
+</div>
+
+<h2>Os 5 indicadores mais cobrados hoje</h2>
+<div class="call call-warn"><span class="cl">Indicadores que determinam o repasse federal agora</span>
+<strong>1. Proporção de gestantes com pré-natal no 1º trimestre</strong> — meta: 60%<br>
+<strong>2. Proporção de gestantes com 6+ consultas de pré-natal</strong> — meta: 60%<br>
+<strong>3. Cobertura de vacinação em crianças</strong> — especialmente pentavalente e sarampo<br>
+<strong>4. Proporção de hipertensos com pressão controlada</strong> — meta: 70%<br>
+<strong>5. Proporção de diabéticos com hemoglobina glicada solicitada</strong> — meta: 70%
+</div>
+
+<div class="al amb">
+  <span class="al-label">O que isso significa para seus sistemas</span>
+  Quando você constrói um dashboard, o gestor não quer "dados brutos" — quer ver esses indicadores em tempo real, por UBS, por equipe. A diferença entre "lista de gestantes" e <strong>"proporção de gestantes com pré-natal no 1º trimestre por território"</strong> é o que separa uma planilha de um sistema de inteligência.
+</div>`
+          },
+          {
+            id:'b1.2', type:'aula', title:'Controle social: o poder do Conselho de Saúde',
+            badge:'bd-aula', badgeTxt:'Micro-aula · 15 min',
+            content:`
+<div class="cc">
+  <div class="cc-lbl amb">Controle Social</div>
+  <h3>O Conselho não é grupo de estudo — é poder deliberativo constitucional</h3>
+  <p>O Conselho Municipal de Saúde tem poder deliberativo garantido na Constituição Federal e na Lei 8.142/90. Isso muda o peso político de tudo que você faz como Secretário Executivo.</p>
+</div>
+
+<div class="vg">
+  <div class="vi amb"><div class="vt">Lei 8.142/90</div><div class="vd">Criou os Conselhos de Saúde com poder deliberativo. Composição paritária: 50% usuários, 25% trabalhadores, 25% gestores e prestadores.</div></div>
+  <div class="vi amb"><div class="vt">Poder deliberativo</div><div class="vd">O Conselho não apenas opina — delibera. Suas resoluções têm força normativa sobre a SMS. Diferente de conselho consultivo.</div></div>
+  <div class="vi"><div class="vt">PAS — Plano de Ação em Saúde</div><div class="vd">Planejamento anual da SMS aprovado pelo Conselho. Sem aprovação do Conselho, o FMS não acessa recursos federais.</div></div>
+  <div class="vi"><div class="vt">Relatório de Gestão</div><div class="vd">Prestação de contas quadrimestral da SMS ao Conselho. Exigência legal. Aprovação = acesso continuado a recursos.</div></div>
+  <div class="vi grn"><div class="vt">Conferência de Saúde</div><div class="vd">Evento a cada 4 anos para avaliar saúde e propor diretrizes. Começa no município, sobe ao estado e ao nacional.</div></div>
+  <div class="vi grn"><div class="vt">Plenária</div><div class="vd">A reunião plena onde as deliberações são tomadas. É o ato oficial do controle social — tudo que você documenta no sistema tem valor legal aqui.</div></div>
+</div>
+
+<div class="call call-key"><span class="cl">Insight estratégico — sua alavanca real</span>
+O Conselho precisa aprovar o PAS para que o município acesse recursos federais. Isso significa que gestores da SMS <strong>dependem</strong> do Conselho funcionar bem e com eficiência. Um Conselho digital funciona melhor — e isso beneficia diretamente a SMS. <strong>Seu sistema não é só burocracia — é infraestrutura de governança.</strong>
+</div>`
+          },
+          {
+            id:'b1.3', type:'aula', title:'Fluxos reais e onde a IA entra de verdade',
+            badge:'bd-aula', badgeTxt:'Micro-aula · 20 min',
+            content:`
+<div class="discover-prompt">
+  <div class="dp-lbl">Descoberta ativa — antes de ler</div>
+  <div class="dp-q">Pense em um processo da SMS que você já viu acontecer ou ouviu reclamações. Onde ele trava? Onde alguém espera por alguém, ou um dado fica parado?</div>
+</div>
+
+<div class="cc">
+  <div class="cc-lbl amb">Diagnóstico operacional</div>
+  <h3>Os fluxos reais — onde o dado nasce, trava e precisa chegar</h3>
+  <p>Para propor soluções de IA relevantes, você precisa conhecer os fluxos operacionais. Aqui estão os principais com os gargalos onde automação age.</p>
+</div>
+
+<h2>Fluxo 1 — Notificação epidemiológica</h2>
+<div class="diag">
+<svg viewBox="0 0 680 130" xmlns="http://www.w3.org/2000/svg">
+  <defs><marker id="a4" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M2 2L8 5L2 8" fill="none" stroke="#8a8780" stroke-width="1.5"/></marker></defs>
+  <!-- Boxes -->
+  <rect x="10" y="40" width="95" height="50" rx="6" fill="#fff4e6" stroke="#9a4f00" stroke-width="1.5"/>
+  <text x="57" y="63" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="9" fill="#9a4f00">Caso suspeito</text>
+  <text x="57" y="78" text-anchor="middle" font-family="'Plus Jakarta Sans',sans-serif" font-size="9" fill="#4b4a42">UBS notifica</text>
+  <line x1="105" y1="65" x2="122" y2="65" stroke="#8a8780" stroke-width="1" marker-end="url(#a4)"/>
+  <rect x="124" y="40" width="100" height="50" rx="6" fill="#fef0f0" stroke="#8b1a1a" stroke-width="1.5" stroke-dasharray="5,3"/>
+  <text x="174" y="60" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="9" fill="#8b1a1a">Papel / email</text>
+  <text x="174" y="75" text-anchor="middle" font-family="'Plus Jakarta Sans',sans-serif" font-size="9" fill="#8b1a1a">digitação tardia</text>
+  <text x="174" y="90" text-anchor="middle" font-family="'Plus Jakarta Sans',sans-serif" font-size="8" fill="#8b1a1a">GARGALO</text>
+  <line x1="224" y1="65" x2="240" y2="65" stroke="#8a8780" stroke-width="1" marker-end="url(#a4)"/>
+  <rect x="242" y="40" width="110" height="50" rx="6" fill="#fef0f0" stroke="#8b1a1a" stroke-width="1.5" stroke-dasharray="5,3"/>
+  <text x="297" y="63" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="9" fill="#8b1a1a">Consolidação</text>
+  <text x="297" y="78" text-anchor="middle" font-family="'Plus Jakarta Sans',sans-serif" font-size="9" fill="#8b1a1a">manual — dias</text>
+  <line x1="352" y1="65" x2="370" y2="65" stroke="#8a8780" stroke-width="1" marker-end="url(#a4)"/>
+  <rect x="372" y="40" width="110" height="50" rx="6" fill="#e3f5f2" stroke="#0a6e62" stroke-width="1.5"/>
+  <text x="427" y="60" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="9" fill="#0a6e62">Dashboard IA</text>
+  <text x="427" y="75" text-anchor="middle" font-family="'Plus Jakarta Sans',sans-serif" font-size="9" fill="#4b4a42">alerta automático</text>
+  <text x="427" y="90" text-anchor="middle" font-family="'Plus Jakarta Sans',sans-serif" font-size="8" fill="#0a6e62">SOLUÇÃO</text>
+  <line x1="482" y1="65" x2="500" y2="65" stroke="#8a8780" stroke-width="1" marker-end="url(#a4)"/>
+  <rect x="502" y="40" width="90" height="50" rx="6" fill="#1c1b18"/>
+  <text x="547" y="63" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="9" fill="#fff">Ação de</text>
+  <text x="547" y="78" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="9" fill="#fff">controle</text>
+  <!-- Labels -->
+  <text x="174" y="25" text-anchor="middle" font-family="'Plus Jakarta Sans',sans-serif" font-size="9" fill="#8b1a1a">como é hoje</text>
+  <text x="427" y="25" text-anchor="middle" font-family="'Plus Jakarta Sans',sans-serif" font-size="9" fill="#0a6e62">com automação</text>
+</svg>
+<div class="diag-caption">Fluxo 1: notificação que leva dias pode virar alerta em horas com webhook + dashboard.</div>
+</div>
+
+<h2>Fluxo 2 — Produção das equipes ESF</h2>
+<p><strong>Como é hoje:</strong> Relatório extraído do e-SUS manualmente → salvo em planilha local → enviado por email → analisado uma vez por mês → planejamento intuitivo.</p>
+<p><strong>Com automação:</strong> Dado sai do e-SUS via API → consolidação automática → dashboard por UBS/equipe → alerta para equipes abaixo da meta → gestor age antes do fim do mês.</p>
+
+<h2>Fluxo 3 — Regulação e fila de especialidade</h2>
+<p><strong>Como é hoje:</strong> Médico preenche formulário em papel → regulação digita → paciente entra em fila opaca → sem retorno → reclamação no Conselho.</p>
+<p><strong>Com automação:</strong> Status de solicitação por CPF no site. Painel de tempo médio de espera por especialidade. Alerta para filas críticas. Transparência real.</p>
+
+<div class="call call-info"><span class="cl">A pergunta-chave para qualquer gargalo</span>
+Antes de propor solução, pergunte: <strong>"Onde o dado nasce, onde ele trava, e onde o gestor precisa que chegue?"</strong> A automação resolve o "trava" — e o dashboard mostra onde chegou.
+</div>`
+          },
+          {
+            id:'b1.4', type:'aula', title:'LGPD e dados de saúde: o que o jurista precisa saber',
+            badge:'bd-aula', badgeTxt:'Micro-aula · 12 min',
+            content:`
+<div class="cc">
+  <div class="cc-lbl amb">Segurança jurídica</div>
+  <h3>Dados de saúde são categoria especial — e você tem vantagem aqui</h3>
+  <p>Como bacharel em Direito, você pode ler a LGPD e entender implicações que técnicos de TI normalmente ignoram. Isso é diferencial competitivo real — e responsabilidade concreta.</p>
+</div>
+
+<div class="vg">
+  <div class="vi blu"><div class="vt">Dado pessoal sensível</div><div class="vd">Categoria especial da LGPD. Dados de saúde, raça, religião, biometria, genética. Proteção reforçada — bases legais mais restritas.</div></div>
+  <div class="vi blu"><div class="vt">Bases legais para saúde pública</div><div class="vd">"Tutela da saúde" e "interesse público" são as bases que geralmente dispensam consentimento para ações de saúde pública. Art. 11, II, f e g da LGPD.</div></div>
+  <div class="vi"><div class="vt">Anonimização</div><div class="vd">Remove identificação permanentemente. Dado anônimo não é "dado pessoal" — pode ser usado livremente para análise e dashboards públicos.</div></div>
+  <div class="vi"><div class="vt">Pseudonimização</div><div class="vd">Substitui identificadores por códigos. Dado ainda é pessoal mas com proteção adicional. Ex: trocar CPF por hash interno.</div></div>
+  <div class="vi grn"><div class="vt">DPO / Encarregado</div><div class="vd">Responsável pelo compliance LGPD na organização. A SMS deve ter um. Seus projetos de integração precisam passar por ele.</div></div>
+  <div class="vi grn"><div class="vt">Log de auditoria</div><div class="vd">Registro de quem acessou dado de saúde, quando e para quê. Obrigatório para dados sensíveis. Você já sabe construir isso — é um sistema de auditoria.</div></div>
+</div>
+
+<div class="call call-warn"><span class="cl">Regra prática para seus sistemas</span>
+<strong>Dashboard público com dados agregados e anonimizados:</strong> pode. Exemplo: "327 casos de dengue no bairro X em junho" — sem CPF, sem nome.<br>
+<strong>Dados individuais de pacientes:</strong> base legal obrigatória, acesso restrito, log de acesso.<br>
+<strong>Nunca:</strong> dado de saúde identificado em Sheets públicas ou compartilhamento irrestrito de link.
+</div>`
+          },
+          {
+            id:'b1.q', type:'quiz', title:'Quiz Fase 1 — Gestão e Dados',
+            badge:'bd-quiz', badgeTxt:'Quiz · 5 questões',
+            quiz:[
+              {q:'O que é o SISPACTO?',opts:['Sistema de notificação de doenças','Sistema de monitoramento das metas pactuadas entre município, estado e federal','Sistema de cadastro de estabelecimentos','Sistema de gestão de farmácias'],ans:1,exp:'SISPACTO monitora o cumprimento das metas pactuadas entre as três esferas de governo. É o "boletim escolar" da SMS — indicadores ruins resultam em menor repasse federal.'},
+              {q:'O Conselho de Saúde tem poder:',opts:['Consultivo — apenas recomenda','Deliberativo — suas resoluções vinculam a gestão','Executivo — implementa políticas','Fiscalizatório — sem poder de deliberação'],ans:1,exp:'Poder deliberativo garantido pela Lei 8.142/90. O Conselho não apenas opina — suas resoluções têm força normativa. Sem aprovação do PAS pelo Conselho, o FMS não acessa recursos federais.'},
+              {q:'Pela LGPD, dados de saúde são classificados como:',opts:['Dados públicos — uso livre','Dados pessoais comuns','Dados pessoais sensíveis — categoria especial com proteção reforçada','Dados sigilosos — acesso judicial'],ans:2,exp:'Dados de saúde são dados pessoais sensíveis pela LGPD — exigem bases legais específicas e proteção reforçada. Na saúde pública, as bases "tutela da saúde" e "interesse público" geralmente se aplicam.'},
+              {q:'O que é "cobertura vacinal"?',opts:['Total de doses de vacina aplicadas no mês','Percentual da população-alvo que recebeu a vacina','Quantidade de postos de vacinação disponíveis','Estoque de vacinas no almoxarifado'],ans:1,exp:'Cobertura vacinal é o percentual da população-alvo que recebeu a vacina. Meta nacional: 95%. Abaixo de 70% em doenças prevenidas é alerta de surto.'},
+              {q:'Em que situação você pode publicar dados de saúde em um dashboard público sem restrições?',opts:['Sempre, pois é serviço público','Quando os dados forem agregados e anonimizados — sem identificação individual','Apenas com autorização do Ministério da Saúde','Nunca — dados de saúde nunca podem ser públicos'],ans:1,exp:'Dados de saúde agregados e anonimizados (ex: "327 casos de dengue no bairro X") podem ser publicados. O problema é quando há identificação individual — aí entram as restrições da LGPD.'},
+            ]
+          },
+          {
+            id:'b1.ex', type:'exercicio', title:'Exercício — Mapear um gargalo real',
+            badge:'bd-ex', badgeTxt:'Exercício de campo',
+            content:`
+<div class="ex">
+  <div class="ex-lbl">Exercício de Campo — Use o que você observa</div>
+  <h3>Mapeie um gargalo real da SMS</h3>
+  <div class="ex-desc">Escolha um processo que você sabe que trava — pode ser dentro do Conselho ou algo que você ouviu gestores da SMS mencionarem. O resultado desse exercício pode virar uma proposta real.</div>
+  <div class="ex-steps">
+    <div class="ex-step"><div class="ex-n">1</div><div class="ex-t"><strong>Descreva o fluxo atual</strong> passo a passo: "a coordenadora extrai relatório do e-SUS, salva em planilha, manda por email para a chefia, que consolida manualmente uma vez por mês..."</div></div>
+    <div class="ex-step"><div class="ex-n">2</div><div class="ex-t"><strong>Identifique onde o dado trava:</strong> onde há espera, erro humano, dado desatualizado ou ausência de informação para decisão</div></div>
+    <div class="ex-step"><div class="ex-n">3</div><div class="ex-t"><strong>Descreva o fluxo ideal</strong> se fosse automatizado: quem acessa o quê, como e quando</div></div>
+    <div class="ex-step"><div class="ex-n">4</div><div class="ex-t"><strong>Identifique o sistema de origem do dado</strong> (e-SUS? SINAN? planilha interna?) e onde precisa chegar</div></div>
+    <div class="ex-step"><div class="ex-n">5</div><div class="ex-t"><strong>Verifique a questão LGPD:</strong> o dado é identificado? Precisa de anonimização? Qual a base legal?</div></div>
+  </div>
+  <div class="ex-hint">💡 Esse mapeamento bem feito é a base de uma proposta de projeto. Você pode apresentá-lo para o PEP, para o setor de Inteligência Estratégica, ou usar como case para oficinas.</div>
+</div>`
+          },
+        ]
+      },
+      {
+        id:'b2', label:'Fase 2 — Vocabulário e IA Aplicada',
+        lessons:[
+          {
+            id:'b2.1', type:'aula', title:'Vocabulário técnico: os termos que aparecem toda semana',
+            badge:'bd-aula', badgeTxt:'Micro-aula · 15 min',
+            content:`
+<div class="cc">
+  <div class="cc-lbl amb">Glossário de campo</div>
+  <h3>Os termos que você precisa reconhecer imediatamente</h3>
+  <p>Este vocabulário aparece em reuniões, documentos e conversas com profissionais de saúde. Reconhecê-los muda sua posição de "visitante" para "interlocutor".</p>
+</div>
+
+<div class="vg">
+  <div class="vi amb"><div class="vt">NT — Nota Técnica</div><div class="vd">Documento interno que orienta procedimentos, define critérios ou explica normas. Muito comum como referência para decisões na SMS.</div></div>
+  <div class="vi amb"><div class="vt">FMS — Fundo Municipal de Saúde</div><div class="vd">A conta bancária do sistema de saúde. Todos os recursos do SUS entram aqui. Todo pagamento da SMS sai do FMS.</div></div>
+  <div class="vi"><div class="vt">Regulação assistencial</div><div class="vd">Sistema de organização do acesso a serviços especializados (consultas, exames, internações). É a "fila da fila" — central de vagas.</div></div>
+  <div class="vi"><div class="vt">Contrarreferência</div><div class="vd">Quando o especialista devolve o paciente para a APS com orientações. Parte do fluxo de cuidado — fecha o ciclo.</div></div>
+  <div class="vi grn"><div class="vt">Linha de cuidado</div><div class="vd">Protocolo de como o paciente com determinada condição é atendido ao longo do tempo. Ex: linha de cuidado do diabético — da UBS ao hospital.</div></div>
+  <div class="vi grn"><div class="vt">Matriciamento</div><div class="vd">Quando equipes especializadas (NASF/eMulti) apoiam as ESF com casos complexos. Reunião de suporte técnico-clínico entre equipes.</div></div>
+  <div class="vi blu"><div class="vt">Morbidade</div><div class="vd">Conjunto de doenças em uma população. "Morbidade prevalente" = doenças mais comuns. Opõe-se a mortalidade.</div></div>
+  <div class="vi blu"><div class="vt">Epidemiologia descritiva</div><div class="vd">Quem adoece, onde e quando. Descreve o padrão da doença — é a base dos dashboards epidemiológicos que você constrói.</div></div>
+  <div class="vi"><div class="vt">Emenda parlamentar</div><div class="vd">Recursos alocados por deputados/senadores para saúde. Aparecem no orçamento da SMS e exigem prestação de contas específica.</div></div>
+  <div class="vi"><div class="vt">CAB — Caderno de Atenção Básica</div><div class="vd">Publicação do Ministério com protocolos clínicos de APS. O "manual" oficial. Referência em qualquer discussão técnica de conteúdo clínico.</div></div>
+</div>`
+          },
+          {
+            id:'b2.2', type:'aula', title:'O que a IA pode fazer na saúde pública — sem machine learning',
+            badge:'bd-aula', badgeTxt:'Micro-aula · 15 min',
+            content:`
+<div class="cc">
+  <div class="cc-lbl amb">IA aplicada</div>
+  <h3>O que você já consegue entregar — e o que abre o caminho</h3>
+  <p>IA na saúde pública não é robô cirurgião nem diagnóstico automático. Na maioria dos casos práticos e de alto impacto, é automação de análise, alertas inteligentes e integração de dados dispersos. Isso você já sabe fazer.</p>
+</div>
+
+<div class="vg">
+  <div class="vi amb"><div class="vt">Vigilância epidemiológica ativa</div><div class="vd">Sistemas que detectam padrões de doença automaticamente. Ex: alerta quando casos de dengue superam limiar sazonal em um bairro. Você faz com GAS + webhook.</div></div>
+  <div class="vi amb"><div class="vt">Dashboard de indicadores em tempo real</div><div class="vd">Cobertura vacinal por território, produção de equipes, metas do Previne Brasil. Você faz com Sheets + Looker Studio — entrega amanhã.</div></div>
+  <div class="vi"><div class="vt">Consolidação automática de produção</div><div class="vd">Extrair dados do e-SUS, consolidar por UBS/equipe, enviar relatório automático para gestores no dia 1 de cada mês. GAS + Forms + email automático.</div></div>
+  <div class="vi"><div class="vt">Gestão de filas com transparência</div><div class="vd">Status de solicitação de especialidade por CPF. Painel de tempo médio de espera. Alerta para filas críticas. Sistema que você já construiu variações.</div></div>
+  <div class="vi grn"><div class="vt">Análise preditiva básica</div><div class="vd">Usando série histórica para prever demanda. Ex: projeta casos de dengue no próximo mês baseado em histórico + chuva. Possível com Sheets e algumas fórmulas.</div></div>
+  <div class="vi grn"><div class="vt">Chatbot de orientação ao cidadão</div><div class="vd">WhatsApp Business com respostas automáticas, agendamento e orientação de sintomas. N8n + API do WhatsApp. Próximo passo após dominar webhooks.</div></div>
+</div>
+
+<div class="call call-key"><span class="cl">Conclusão estratégica</span>
+Com GAS + Sheets + Looker Studio você já entrega: vigilância epidemiológica simples, dashboard de indicadores, alertas automáticos, consolidação de produção de equipes. <strong>Isso já é IA aplicada à saúde pública. Você não precisa de machine learning para ter impacto real agora.</strong>
+</div>
+
+<div class="phase-map">
+  <div class="pm-title">Seu roteiro de 6 meses em saúde pública + tecnologia</div>
+  <div class="pm-phases">
+    <div class="pm-phase">
+      <div class="pm-period">Ago–Set</div>
+      <div class="pm-dot"></div>
+      <div class="pm-body">
+        <div class="pm-name">Vocabulário e mapa — você está aqui</div>
+        <div class="pm-items">
+          <div class="pm-it">Terminar este curso</div>
+          <div class="pm-it">Officinas 01 e 02 no PEP/SMS</div>
+          <div class="pm-it">5 certificados ENAP concluídos</div>
+        </div>
+      </div>
+    </div>
+    <div class="pm-phase">
+      <div class="pm-period amb">Out–Nov</div>
+      <div class="pm-dot amb"></div>
+      <div class="pm-body">
+        <div class="pm-name">Projetos âncora na SMS</div>
+        <div class="pm-items">
+          <div class="pm-it amb">Dashboard de indicadores Previne Brasil</div>
+          <div class="pm-it amb">Alerta epidemiológico de dengue para Montes Claros</div>
+          <div class="pm-it amb">Apresentar case do Conselho Digital no COSEMS-MG</div>
+        </div>
+      </div>
+    </div>
+    <div class="pm-phase">
+      <div class="pm-period">Dez–Jan</div>
+      <div class="pm-dot"></div>
+      <div class="pm-body">
+        <div class="pm-name">Expansão e reconhecimento</div>
+        <div class="pm-items">
+          <div class="pm-it">Dominar n8n e webhooks</div>
+          <div class="pm-it">Proposta de curso para ENAP / EV.G</div>
+          <div class="pm-it">Primeiros projetos externos (verificar Estatuto)</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>`
+          },
+          {
+            id:'b2.q', type:'quiz', title:'Quiz Fase 2 — Vocabulário e IA',
+            badge:'bd-quiz', badgeTxt:'Quiz · 4 questões',
+            quiz:[
+              {q:'O que é "matriciamento" na saúde pública?',opts:['Cadastro de pacientes na UBS','Apoio de equipes especializadas (NASF/eMulti) às equipes ESF para casos complexos','Mapeamento do território de uma equipe','Processo de habilitação de municípios'],ans:1,exp:'Matriciamento é o apoio técnico-clínico que equipes especializadas (NASF, eMulti) oferecem às equipes de Saúde da Família para lidar com casos mais complexos.'},
+              {q:'O que é o FMS?',opts:['Formulário de Monitoramento de Saúde','Fundo Municipal de Saúde — a conta bancária do sistema de saúde municipal','Ficha de Marcadores de Saúde do e-SUS','Formulário de Manutenção de Sistemas'],ans:1,exp:'O Fundo Municipal de Saúde é onde todos os recursos do SUS destinados ao município entram e são geridos. Todo pagamento da SMS sai do FMS.'},
+              {q:'O que você já consegue entregar como "IA aplicada à saúde pública" com GAS + Sheets?',opts:['Diagnóstico automático de doenças','Cirurgia robótica assistida','Dashboard de indicadores em tempo real, alertas automáticos, consolidação de produção de equipes','Sequenciamento genômico de pacientes'],ans:2,exp:'Com GAS + Sheets + Looker Studio você já entrega dashboards de indicadores, alertas automáticos por limiar, consolidação automática de produção — isso é IA aplicada com impacto real.'},
+              {q:'O que é "epidemiologia descritiva"?',opts:['Estudo de intervenções para controlar epidemias','Descrição de quem adoece, onde e quando — a base dos dashboards epidemiológicos','Análise genética de patógenos','Protocolo de notificação de doenças'],ans:1,exp:'Epidemiologia descritiva responde: quem adoece? Onde? Quando? É a base dos dashboards epidemiológicos — o que você constrói quando cria um mapa de dengue por bairro.'},
+            ]
+          },
+        ]
+      },
+    ]
+  },
+
+  // ──────────── MÓDULO A — WEBAPPS ────────────
+  a:{
+    key:'a', label:'Módulo A — Fundamentos de WebApps',
+    tabLabel:'Módulo A — Web',
+    phases:[
+      {
+        id:'a0', label:'Fase 0 — A Arquitetura',
+        lessons:[
+          {
+            id:'a0.1', type:'mapa', title:'O mapa do território: como um WebApp funciona',
+            badge:'bd-mapa', badgeTxt:'Mapa visual',
+            content:`
+<div class="map-opener">
+  <div class="mo-icon">🏗️</div>
+  <div>
+    <div class="mo-label">Antes de ler — descoberta ativa</div>
+    <div class="mo-title">Pense por 60 segundos</div>
+    <div class="mo-desc">Quando você clica em "Confirmar Presença" no seu sistema do Conselho — o que acontece entre esse clique e o dado aparecer na planilha? Tente descrever as etapas antes de ver o diagrama.</div>
+  </div>
+</div>
+
+<div class="cc">
+  <div class="cc-lbl">Arquitetura Central</div>
+  <h3>Todo sistema digital tem três camadas — você já trabalha com todas</h3>
+</div>
+
+<div class="diag">
+<svg viewBox="0 0 680 180" xmlns="http://www.w3.org/2000/svg">
+  <defs><marker id="a5" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M2 2L8 5L2 8" fill="none" stroke="#8a8780" stroke-width="1.5"/></marker></defs>
+  <rect x="20" y="30" width="180" height="120" rx="10" fill="#e3f5f2" stroke="#0a6e62" stroke-width="1.5"/>
+  <text x="110" y="62" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="11" fill="#0a6e62" font-weight="500">FRONTEND</text>
+  <text x="110" y="80" text-anchor="middle" font-family="'Plus Jakarta Sans',sans-serif" font-size="10" fill="#4b4a42">HTML · CSS · JavaScript</text>
+  <text x="110" y="96" text-anchor="middle" font-family="'Plus Jakarta Sans',sans-serif" font-size="10" fill="#4b4a42">O que o usuário vê e usa</text>
+  <text x="110" y="118" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="10" fill="#0a6e62">≈ Seu PWA</text>
+  <path d="M200 90 L235 90" stroke="#8a8780" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#a5)"/>
+  <text x="218" y="80" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="8" fill="#8a8780">requisição</text>
+  <path d="M235 100 L200 100" stroke="#8a8780" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#a5)"/>
+  <text x="218" y="115" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="8" fill="#8a8780">resposta</text>
+  <rect x="237" y="30" width="200" height="120" rx="10" fill="#fff4e6" stroke="#9a4f00" stroke-width="1.5"/>
+  <text x="337" y="62" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="11" fill="#9a4f00" font-weight="500">BACKEND</text>
+  <text x="337" y="80" text-anchor="middle" font-family="'Plus Jakarta Sans',sans-serif" font-size="10" fill="#4b4a42">Google Apps Script</text>
+  <text x="337" y="96" text-anchor="middle" font-family="'Plus Jakarta Sans',sans-serif" font-size="10" fill="#4b4a42">Lógica e processamento</text>
+  <text x="337" y="118" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="10" fill="#9a4f00">≈ Seu GAS</text>
+  <path d="M437 90 L472 90" stroke="#8a8780" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#a5)"/>
+  <path d="M472 100 L437 100" stroke="#8a8780" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#a5)"/>
+  <rect x="474" y="30" width="186" height="120" rx="10" fill="#e6f4ec" stroke="#1a5c35" stroke-width="1.5"/>
+  <text x="567" y="62" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="11" fill="#1a5c35" font-weight="500">BANCO DE DADOS</text>
+  <text x="567" y="80" text-anchor="middle" font-family="'Plus Jakarta Sans',sans-serif" font-size="10" fill="#4b4a42">Google Sheets</text>
+  <text x="567" y="96" text-anchor="middle" font-family="'Plus Jakarta Sans',sans-serif" font-size="10" fill="#4b4a42">Onde os dados vivem</text>
+  <text x="567" y="118" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="10" fill="#1a5c35">≈ Sua planilha</text>
+</svg>
+<div class="diag-caption">Você já implementa essa arquitetura. google.script.run é exatamente o frontend chamando o backend. appendRow() é o backend escrevendo no banco.</div>
+</div>
+
+<div class="al"><span class="al-label">Analogia — Restaurante</span>
+<strong>Frontend</strong> = salão e cardápio (o cliente interage aqui).<br>
+<strong>Backend</strong> = cozinha (onde o pedido é processado).<br>
+<strong>Banco de dados</strong> = despensa (onde os ingredientes ficam guardados).<br>
+A <strong>API</strong> é o protocolo entre o garçom e a cozinha — o que pode ser pedido e em que formato.
+</div>`
+          },
+          {
+            id:'a0.2', type:'aula', title:'CRUD: o DNA de qualquer sistema',
+            badge:'bd-aula', badgeTxt:'Micro-aula · 12 min',
+            content:`
+<div class="discover-prompt">
+  <div class="dp-lbl">Descoberta ativa</div>
+  <div class="dp-q">Seu sistema do Conselho. Pense: quais são as 4 coisas básicas que qualquer pessoa faz com dados — adicionar, ver, mudar e apagar. Você consegue identificar onde cada uma acontece no seu PWA?</div>
+</div>
+
+<div class="cc">
+  <div class="cc-lbl">CRUD — Create Read Update Delete</div>
+  <h3>95% dos sistemas do mundo são variações de 4 operações</h3>
+</div>
+
+<div class="vg">
+  <div class="vi"><div class="vt">C — Create (Criar)</div><div class="vd">Adicionar novo dado. Ex: conselheiro confirma presença → nova linha na planilha.</div></div>
+  <div class="vi"><div class="vt">R — Read (Ler)</div><div class="vd">Buscar e exibir dados. Ex: carregar lista de presença, mostrar documentos da biblioteca.</div></div>
+  <div class="vi"><div class="vt">U — Update (Atualizar)</div><div class="vd">Modificar dado existente. Ex: corrigir nome de conselheiro, atualizar status de deliberação.</div></div>
+  <div class="vi"><div class="vt">D — Delete (Deletar)</div><div class="vd">Remover dado. Ex: excluir inscrição duplicada, remover documento desatualizado.</div></div>
+</div>
+
+<div class="code">
+<span class="cm">// CREATE — novo registro de presença</span><br>
+planilha.<span class="ck">appendRow</span>([nome, cpf, timestamp]);<br><br>
+<span class="cm">// READ — carregar lista para exibir</span><br>
+<span class="cv">const</span> dados = planilha.<span class="ck">getDataRange</span>().<span class="ck">getValues</span>();<br><br>
+<span class="cm">// UPDATE — corrigir um campo</span><br>
+planilha.<span class="ck">getRange</span>(linha, coluna).<span class="ck">setValue</span>(novoValor);<br><br>
+<span class="cm">// DELETE — remover linha</span><br>
+planilha.<span class="ck">deleteRow</span>(numeroLinha);
+</div>
+
+<div class="call call-tip"><span class="cl">Como usar CRUD no briefing de um projeto</span>
+Quando receber um pedido de sistema, primeira pergunta: <strong>"Quais dados precisam de CRUD?"</strong> A resposta define 90% do escopo. Se o cliente não sabe responder, você conduz com: "Quem vai adicionar dados? Quem vai ver? Alguém vai editar ou apagar?"
+</div>`
+          },
+          {
+            id:'a0.3', type:'aula', title:'Estado e APIs: por que o sistema lembra das coisas',
+            badge:'bd-aula', badgeTxt:'Micro-aula · 12 min',
+            content:`
+<div class="cc">
+  <div class="cc-lbl">Estado e comunicação</div>
+  <h3>Estado é a "memória atual" do sistema — APIs são como os sistemas se comunicam</h3>
+</div>
+
+<div class="vg">
+  <div class="vi"><div class="vt">Estado na planilha (banco)</div><div class="vd">Persistente. Sobrevive ao fechar o navegador. Ex: quem está inscrito, qual reunião aconteceu.</div></div>
+  <div class="vi"><div class="vt">Estado na tela (frontend/JS)</div><div class="vd">Temporário. Some quando a página recarrega. Ex: campos preenchidos agora, filtros ativos.</div></div>
+  <div class="vi grn"><div class="vt">API (Application Programming Interface)</div><div class="vd">O "protocolo de conversa" entre sistemas. Define o que pode ser pedido, em que formato, e o que será devolvido.</div></div>
+  <div class="vi grn"><div class="vt">Webhook</div><div class="vd">API "ao contrário" — o servidor avisa o cliente quando algo acontece. Ex: e-SUS avisa seu sistema quando nova notificação de dengue é registrada.</div></div>
+</div>
+
+<div class="al"><span class="al-label">Analogia — Webhook vs API tradicional</span>
+<strong>API tradicional:</strong> você liga para o banco todo dia perguntando "chegou algum pagamento?" Isso é ineficiente.<br>
+<strong>Webhook:</strong> você cadastra um número e o banco te liga só quando algo acontece. Muito mais eficiente — e é assim que alertas epidemiológicos automáticos funcionam.
+</div>
+
+<div class="call call-warn"><span class="cl">Bugs de estado são os mais traiçoeiros</span>
+Quando algo "sumiu misteriosamente" no seu sistema, é quase sempre bug de estado: o que está na tela não reflete o que está na planilha. Pergunta-chave: <strong>"Onde esse dado deveria viver — na tela (temporário) ou na planilha (permanente)?"</strong>
+</div>`
+          },
+          {
+            id:'a0.q', type:'quiz', title:'Quiz Fase 0 — Arquitetura e Fundamentos',
+            badge:'bd-quiz', badgeTxt:'Quiz · 4 questões',
+            quiz:[
+              {q:'No seu sistema do Conselho, o Google Apps Script representa qual camada?',opts:['Frontend — o que o usuário vê','Banco de dados','Backend — onde a lógica processa','Deploy'],ans:2,exp:'O GAS é o backend — onde a lógica roda, o processamento acontece e os dados são manipulados antes de ir para a planilha (banco de dados).'},
+              {q:'Quando você usa appendRow() no GAS, qual operação CRUD está fazendo?',opts:['Read — lendo dados','Update — atualizando dado existente','Delete — removendo dado','Create — criando novo registro'],ans:3,exp:'appendRow() adiciona uma nova linha — é o C de CRUD: Create. Cria um novo registro na planilha/banco de dados.'},
+              {q:'Qual a diferença entre estado na tela (frontend) e estado na planilha?',opts:['Não há diferença prática para o usuário','Estado na tela é temporário; na planilha é permanente entre sessões','Estado na planilha é mais rápido','Estado na tela é mais seguro para dados sensíveis'],ans:1,exp:'Estado no frontend (JS) desaparece quando a página fecha. Estado no banco (planilha) persiste — é permanente entre sessões. Bugs entre esses dois estados são os mais comuns.'},
+              {q:'O que é um webhook?',opts:['Uma URL de documentação de API','Uma API onde o servidor notifica o cliente quando algo acontece','Um banco de dados distribuído','Um método de autenticação de usuários'],ans:1,exp:'Webhook é uma API "ao contrário" — em vez de você perguntar "tem novidade?", o servidor te avisa automaticamente quando algo acontece. Essencial para alertas em tempo real.'},
+            ]
+          },
+        ]
+      },
+      {
+        id:'a1', label:'Fase 1 — Padrões e Vocabulário',
+        lessons:[
+          {
+            id:'a1.1', type:'aula', title:'Padrões de sistema: reconhecer antes de construir',
+            badge:'bd-aula', badgeTxt:'Micro-aula · 15 min',
+            content:`
+<div class="cc">
+  <div class="cc-lbl">Modelos mentais</div>
+  <h3>Todo sistema é uma variação de padrões conhecidos</h3>
+  <p>Assim como existe a planta de um quarto ou de uma cozinha, em software existem padrões recorrentes. Reconhecê-los antes de construir economiza semanas e evita gambiarras.</p>
+</div>
+
+<div class="vg">
+  <div class="vi"><div class="vt">CRUD App</div><div class="vd">Cadastro, listagem, edição, exclusão. Base de 95% dos sistemas. Ex: cadastro de conselheiros, biblioteca de documentos.</div></div>
+  <div class="vi"><div class="vt">Dashboard</div><div class="vd">Visualização de dados em tempo real. Filtros, gráficos, status. Ex: lista de presença ao vivo, painel de indicadores.</div></div>
+  <div class="vi grn"><div class="vt">Workflow System</div><div class="vd">Processo com etapas e estados definidos. Ex: inscrição → validação → credenciamento → emissão de certificado.</div></div>
+  <div class="vi grn"><div class="vt">Sistema de Notificação</div><div class="vd">Dispara mensagens quando algo acontece. Ex: envio automático de certificados e alertas epidemiológicos.</div></div>
+  <div class="vi blu"><div class="vt">Sistema de Auditoria / Log</div><div class="vd">Registra tudo que aconteceu, quem fez e quando. Crítico para gestão pública e LGPD.</div></div>
+  <div class="vi blu"><div class="vt">CMS (Content Management)</div><div class="vd">Gerencia conteúdo: textos, documentos, páginas. Ex: biblioteca de atas e avisos do Conselho.</div></div>
+</div>
+
+<h2>Seu PWA do Conselho em padrões</h2>
+<p>Você construiu um sistema que combina múltiplos padrões simultaneamente:</p>
+<ul>
+  <li><span class="pill p-teal">CRUD App</span> — biblioteca de documentos, cadastro de conselheiros</li>
+  <li><span class="pill p-teal">Dashboard</span> — lista de presença ao vivo</li>
+  <li><span class="pill p-green">Workflow System</span> — reunião → presença → certificado</li>
+  <li><span class="pill p-green">Notificação</span> — envio automático de certificados</li>
+  <li><span class="pill p-blue">CMS</span> — avisos e comunicados da mesa diretora</li>
+</ul>
+
+<div class="call call-tip"><span class="cl">Como usar isso para clientes</span>
+Antes de construir qualquer sistema, pergunte: <strong>"Qual padrão isso é?"</strong> A resposta já sugere a estrutura de dados, os estados necessários e o fluxo principal. Isso transforma um briefing vago em escopo claro.
+</div>`
+          },
+          {
+            id:'a1.2', type:'aula', title:'Glossário técnico: os 12 termos que mudam sua comunicação',
+            badge:'bd-aula', badgeTxt:'Micro-aula · 12 min',
+            content:`
+<div class="cc">
+  <div class="cc-lbl">Vocabulário técnico</div>
+  <h3>Não para impressionar — para ser preciso e confiante</h3>
+  <p>Vocabulário correto reduz mal-entendidos, aumenta credibilidade e te permite participar de conversas técnicas como igual.</p>
+</div>
+
+<div class="vg">
+  <div class="vi"><div class="vt">Stack</div><div class="vd">Conjunto de tecnologias que um sistema usa. Sua stack: HTML · JS · GAS · Sheets · GitHub Pages.</div></div>
+  <div class="vi"><div class="vt">Deploy</div><div class="vd">Publicar o sistema para que outros acessem. Você já faz deploy via GitHub Pages e GAS Web App.</div></div>
+  <div class="vi grn"><div class="vt">Endpoint</div><div class="vd">URL específica de uma API. Ex: viacep.com.br/ws/39401002/json/ é um endpoint que retorna dados de um CEP.</div></div>
+  <div class="vi grn"><div class="vt">JSON</div><div class="vd">Formato padrão de troca de dados entre sistemas. Ex: {"nome":"João","cpf":"123"}. Você já usa ao fazer fetch de APIs.</div></div>
+  <div class="vi blu"><div class="vt">Async / Await</div><div class="vd">Código que espera uma resposta antes de continuar. Necessário para chamadas de API que podem demorar.</div></div>
+  <div class="vi blu"><div class="vt">Callback</div><div class="vd">Função chamada quando algo termina. Ex: withSuccessHandler(callback) no google.script.run — você já usa isso.</div></div>
+  <div class="vi"><div class="vt">Variável de ambiente</div><div class="vd">Configuração secreta (chave de API, senha) que não vai no código. No GAS: PropertiesService.getScriptProperties().</div></div>
+  <div class="vi"><div class="vt">Versionamento / Git</div><div class="vd">Controle de histórico do código. Você já usa com GitHub. Cada commit é uma versão — você pode voltar a qualquer ponto.</div></div>
+  <div class="vi grn"><div class="vt">Refatoração</div><div class="vd">Melhorar o código sem mudar o que ele faz. Organizar, renomear variáveis, simplificar lógica repetida.</div></div>
+  <div class="vi grn"><div class="vt">Escalabilidade</div><div class="vd">Capacidade de crescer sem quebrar. Sheets/GAS tem limite — para muitos usuários simultâneos, precisa Firebase ou SQL.</div></div>
+  <div class="vi amb"><div class="vt">PWA (Progressive Web App)</div><div class="vd">WebApp instalável, com ícone na tela, funciona parcialmente offline. Você já faz isso — e tem o nome certo para explicar.</div></div>
+  <div class="vi amb"><div class="vt">Log de auditoria</div><div class="vd">Registro de quem fez o quê, quando. Crítico para gestão pública. Uma aba na planilha com timestamp + usuário + ação já é um log funcional.</div></div>
+</div>`
+          },
+          {
+            id:'a1.q', type:'quiz', title:'Quiz Fase 1 — Padrões e Vocabulário',
+            badge:'bd-quiz', badgeTxt:'Quiz · 4 questões',
+            quiz:[
+              {q:'Qual padrão de sistema tem "etapas e estados (pendente, aprovado, concluído)"?',opts:['CRUD App','Dashboard','Workflow System','CMS'],ans:2,exp:'Workflow System é processo com etapas e estados definidos. Ex: inscrição → validação → credenciamento → emissão de certificado.'},
+              {q:'O que é um "endpoint"?',opts:['O banco de dados principal do sistema','URL específica que uma API expõe para receber ou retornar dados','O arquivo de configuração do deploy','O último componente de uma stack'],ans:1,exp:'Endpoint é uma URL específica de uma API. Ao fazer fetch("https://viacep.com.br/ws/CEP/json/") você está acessando um endpoint que retorna dados de um CEP.'},
+              {q:'O que é "refatoração"?',opts:['Criar um sistema do zero com nova tecnologia','Melhorar o código sem mudar o que ele faz','Fazer deploy de uma nova versão com funcionalidades','Migrar de Google Sheets para banco de dados SQL'],ans:1,exp:'Refatoração é reorganizar, limpar e melhorar o código mantendo o comportamento idêntico. É manutenção de qualidade, não nova funcionalidade.'},
+              {q:'Por que Sheets/GAS tem limitações de escalabilidade?',opts:['Sheets não suporta fórmulas complexas','Sheets tem limites de tamanho, velocidade de resposta e concorrência para muitos usuários simultâneos','GAS não consegue fazer chamadas de API externas','Sheets não suporta CRUD completo'],ans:1,exp:'Para projetos pequenos e médios, Sheets funciona muito bem. Para escala real (muitos usuários simultâneos, grande volume), você precisará de Firebase, Supabase ou SQL.'},
+            ]
+          },
+          {
+            id:'a1.ex', type:'exercicio', title:'Exercício — Documentar o PWA do Conselho',
+            badge:'bd-ex', badgeTxt:'Exercício prático',
+            content:`
+<div class="ex">
+  <div class="ex-lbl">Exercício — Documentação técnica do seu sistema</div>
+  <h3>Escreva a ficha técnica do PWA do Conselho com vocabulário correto</h3>
+  <div class="ex-desc">Use os conceitos desta fase para documentar seu sistema como um profissional. Esse documento vai para o portfólio — e pode ser enviado para o PEP, apresentado na SMS ou submetido a prêmios de inovação pública.</div>
+  <div class="ex-steps">
+    <div class="ex-step"><div class="ex-n">1</div><div class="ex-t"><strong>Stack:</strong> liste as tecnologias usadas usando os termos corretos (ex: "Frontend: HTML5 · CSS3 · JavaScript ES6 · Backend: Google Apps Script · Banco: Google Sheets · Deploy: GitHub Pages")</div></div>
+    <div class="ex-step"><div class="ex-n">2</div><div class="ex-t"><strong>Padrões implementados:</strong> identifique quais dos 6 padrões (CRUD, Dashboard, Workflow, Notificação, Log, CMS) seu sistema usa e onde</div></div>
+    <div class="ex-step"><div class="ex-n">3</div><div class="ex-t"><strong>CRUD por funcionalidade:</strong> para a lista de presença, descreva as 4 operações — qual botão/ação faz cada uma</div></div>
+    <div class="ex-step"><div class="ex-n">4</div><div class="ex-t"><strong>Estado:</strong> identifique onde os estados principais vivem — na planilha (permanente) ou na tela (temporário)</div></div>
+    <div class="ex-step"><div class="ex-n">5</div><div class="ex-t"><strong>APIs usadas:</strong> liste chamadas externas que seu sistema faz (se houver) e quais endpoints internos (funções GAS) são expostos</div></div>
+  </div>
+  <div class="ex-hint">💡 Essa ficha técnica é o esqueleto do README.md do seu repositório GitHub — e a base do case para portfólio. Use o Prompt 1 do Kit de Portfólio que construímos antes para gerar a versão completa.</div>
+</div>`
+          },
+        ]
+      },
+    ]
+  }
+};
+
+// ═══════════════════════════════════════════════════
+// QUIZ GERAL
+// ═══════════════════════════════════════════════════
+const QUIZ_GERAL = [
+  // SAÚDE
+  {m:'B',q:'Em qual esfera o dado de saúde nasce e o cidadão é atendido?',opts:['Federal — Ministério da Saúde','Estadual — SES-MG','Municipal — UBSs e SMS','Em todas igualmente'],ans:2,exp:'É no município, nas UBSs e pelo trabalho das equipes ESF e ACS, onde o atendimento acontece e o dado é gerado.'},
+  {m:'B',q:'O SINAN registra:',opts:['Mortalidade e óbitos','Notificações de doenças como dengue, tuberculose e sífilis','Medicamentos dispensados','Nascidos vivos e dados da mãe'],ans:1,exp:'SINAN = Sistema de Informação de Notificação de Agravos — onde a Vigilância Epidemiológica registra doenças de notificação compulsória.'},
+  {m:'B',q:'O Conselho de Saúde tem poder deliberativo. O que isso significa?',opts:['Apenas recomenda sem poder vinculante','Suas resoluções têm força normativa — a SMS deve cumprir','Executa as políticas de saúde diretamente','Apenas fiscaliza sem poder de decisão'],ans:1,exp:'Poder deliberativo garantido pela Lei 8.142/90: as decisões do Conselho vinculam a gestão. Sem aprovação do PAS pelo Conselho, o FMS não acessa recursos federais.'},
+  {m:'B',q:'Dados de saúde pela LGPD são:',opts:['Dados públicos — uso livre','Dados pessoais comuns','Dados pessoais sensíveis — proteção reforçada','Dados sigilosos com acesso restrito a juízes'],ans:2,exp:'Dados de saúde são dados pessoais sensíveis pela LGPD — exigem bases legais específicas. Na saúde pública, "tutela da saúde" e "interesse público" geralmente se aplicam.'},
+  {m:'B',q:'O que é "cobertura vacinal"?',opts:['Total de doses aplicadas no período','% da população-alvo que recebeu a vacina','Quantidade de postos de vacinação','Estoque de vacinas disponível'],ans:1,exp:'Cobertura vacinal é o percentual da população-alvo vacinada. Meta nacional: 95%. Indicador crítico do Previne Brasil.'},
+  {m:'B',q:'O que é matriciamento?',opts:['Cadastro de pacientes na UBS','Apoio de equipes especializadas às equipes ESF para casos complexos','Mapeamento geográfico do território','Processo de habilitação municipal'],ans:1,exp:'Matriciamento é o suporte técnico-clínico que equipes como NASF/eMulti oferecem às equipes de Saúde da Família para casos mais complexos.'},
+  {m:'B',q:'O que você já consegue entregar como IA aplicada à saúde pública com GAS + Sheets?',opts:['Diagnóstico automático de doenças','Cirurgia robótica assistida','Dashboard de indicadores, alertas automáticos, consolidação de dados','Análise genômica de pacientes'],ans:2,exp:'Com GAS + Sheets + Looker Studio você já entrega dashboards de indicadores em tempo real, alertas automáticos por limiar e consolidação de produção — impacto real sem machine learning.'},
+  // WEBAPPS
+  {m:'A',q:'No modelo de três camadas, o Google Apps Script representa:',opts:['Frontend — o que o usuário vê','Banco de dados','Backend — onde a lógica processa','Deploy e versionamento'],ans:2,exp:'GAS é o backend — onde a lógica roda, os dados são processados e manipulados antes de ir para a planilha (banco de dados).'},
+  {m:'A',q:'Qual operação CRUD corresponde a appendRow()?',opts:['Read','Update','Delete','Create'],ans:3,exp:'appendRow() adiciona nova linha — é o C de CRUD: Create. Cria um novo registro na planilha.'},
+  {m:'A',q:'O que é um webhook?',opts:['URL de documentação','API onde o servidor notifica o cliente quando algo acontece','Banco de dados distribuído','Método de autenticação'],ans:1,exp:'Webhook é API "ao contrário" — em vez de você perguntar "tem novidade?", o servidor te avisa automaticamente. Essencial para alertas em tempo real.'},
+  {m:'A',q:'Qual padrão tem etapas e estados (pendente, aprovado, concluído)?',opts:['CRUD App','Dashboard','Workflow System','CMS'],ans:2,exp:'Workflow System é processo com etapas e estados definidos. Ex: inscrição → validação → credenciamento → emissão de certificado.'},
+  {m:'A',q:'O que é refatoração?',opts:['Criar funcionalidade nova','Melhorar código sem mudar o que ele faz','Fazer deploy de nova versão','Migrar para outra tecnologia'],ans:1,exp:'Refatoração é reorganizar e melhorar o código mantendo o comportamento idêntico — manutenção de qualidade, não nova funcionalidade.'},
+  {m:'A',q:'Sua stack atual para o PWA do Conselho é:',opts:['React · Node · MongoDB','HTML · JS · GAS · Sheets · GitHub Pages','Angular · Python · PostgreSQL','Vue · Firebase · Vercel'],ans:1,exp:'HTML/JS no frontend, Google Apps Script como backend, Google Sheets como banco de dados, GitHub Pages para deploy — essa é sua stack.'},
+];
+
+// ═══════════════════════════════════════════════════
+// STATE
+// ═══════════════════════════════════════════════════
+let activeMod = 'b'; // Saúde é prioritário — começa aqui
+let curLesson = null;
+let done = new Set(JSON.parse(localStorage.getItem('ci-done') || '[]'));
+
+function allLessons(mod) {
+  return CUR[mod].phases.flatMap(p => p.lessons);
+}
+function totalLessons() {
+  return allLessons('a').length + allLessons('b').length;
+}
+function saveProgress() {
+  localStorage.setItem('ci-done', JSON.stringify([...done]));
+  const pct = Math.round((done.size / totalLessons()) * 100);
+  document.getElementById('gp-fill').style.width = pct + '%';
+  document.getElementById('gp-pct').textContent = pct + '%';
+  document.getElementById('pgfill').style.width = pct + '%';
+}
+function modPct(mod) {
+  const all = allLessons(mod);
+  const cnt = all.filter(l => done.has(l.id)).length;
+  return Math.round((cnt / all.length) * 100);
+}
+function getLesson(id) {
+  for (const m of ['a', 'b']) {
+    for (const p of CUR[m].phases) {
+      for (const l of p.lessons) {
+        if (l.id === id) return { lesson: l, mod: m };
+      }
+    }
+  }
+  return null;
+}
+
+// ═══════════════════════════════════════════════════
+// SIDEBAR
+// ═══════════════════════════════════════════════════
+function renderNav() {
+  const nav = document.getElementById('sb-nav');
+  nav.innerHTML = '';
+  const mod = CUR[activeMod];
+  const isB = activeMod === 'b';
+  mod.phases.forEach(phase => {
+    const ph = document.createElement('div');
+    ph.className = 'nav-phase';
+    ph.textContent = phase.label;
+    nav.appendChild(ph);
+    phase.lessons.forEach(l => {
+      const el = document.createElement('div');
+      const isDone = done.has(l.id);
+      const isCur = curLesson === l.id;
+      el.className = `nav-item${isCur ? ' cur' + (isB ? ' b-cur' : '') : ''}${isDone ? ' fin' + (isB ? ' b-item' : '') : ''}`;
+      const typeMap = { aula: 'aula', mapa: 'mapa visual', quiz: 'quiz', exercicio: 'exercício' };
+      el.innerHTML = `<div class="ni-dot">${isDone ? '✓' : ''}</div>
+        <div class="ni-txt">
+          <div class="ni-title">${l.title}</div>
+          <span class="ni-badge">${typeMap[l.type] || l.type}</span>
+        </div>`;
+      el.onclick = () => goTo(l.id);
+      nav.appendChild(el);
+    });
+  });
+}
+function switchTab(mod) {
+  activeMod = mod;
+  document.getElementById('tab-a').classList.toggle('on', mod === 'b');
+  document.getElementById('tab-a').classList.toggle('a-mod', mod === 'b');
+  document.getElementById('tab-b').classList.toggle('on', mod === 'a');
+  document.getElementById('tab-b').classList.toggle('a-mod', false);
+  renderNav();
+}
+
+// ═══════════════════════════════════════════════════
+// NAVIGATION
+// ═══════════════════════════════════════════════════
+function flatAll() {
+  return [...allLessons('b'), ...allLessons('a')];
+}
+function goTo(id) {
+  if (id === '__gq__') { showQuizGeral(); curLesson = '__gq__'; return; }
+  const found = getLesson(id);
+  if (!found) return;
+  curLesson = id;
+  activeMod = found.mod;
+  // sync tab
+  if (found.mod === 'b') {
+    document.getElementById('tab-a').classList.add('on', 'a-mod');
+    document.getElementById('tab-b').classList.remove('on');
+  } else {
+    document.getElementById('tab-b').classList.add('on');
+    document.getElementById('tab-a').classList.remove('on', 'a-mod');
+  }
+  renderNav();
+  const l = found.lesson;
+  if (l.type === 'quiz') renderQuiz(l, found.mod);
+  else renderLesson(l, found.mod);
+  window.scrollTo(0, 0);
+}
+function prevNext(dir) {
+  const all = flatAll();
+  const idx = all.findIndex(l => l.id === curLesson);
+  if (idx < 0) return;
+  const n = all[idx + dir];
+  if (n) goTo(n.id);
+}
+function markDone(id, btn) {
+  if (done.has(id)) done.delete(id);
+  else done.add(id);
+  const on = done.has(id);
+  btn.className = `done-btn${on ? ' on' : ''}${id.startsWith('b') ? ' amb' : ''}`;
+  btn.textContent = on ? '✓ Concluído' : 'Marcar como concluído';
+  saveProgress();
+  renderNav();
+}
+
+// ═══════════════════════════════════════════════════
+// RENDER LESSON
+// ═══════════════════════════════════════════════════
+function chrome(l, mod) {
+  const isB = mod === 'b';
+  const phaseLabel = (() => {
+    for (const p of CUR[mod].phases)
+      for (const a of p.lessons)
+        if (a.id === l.id) return p.label;
+    return '';
+  })();
+  const pct = modPct(mod);
+  return `
+<div class="lc">
+  <div class="lc-crumb"><span>${CUR[mod].label}</span><span class="sep">/</span><span>${phaseLabel}</span></div>
+  <div class="lc-row">
+    <span class="lc-badge ${l.badge}">${l.badgeTxt}</span>
+  </div>
+  <div class="lc-title${isB ? ' amb' : ''}">${l.title}</div>
+</div>
+<div class="lp">
+  <div class="lp-inner">
+    <span class="lp-lbl">Progresso do módulo</span>
+    <div class="lp-bar"><div class="lp-bar-fill ${isB ? 'lp-amber' : 'lp-teal'}" style="width:${pct}%"></div></div>
+    <span class="lp-n">${pct}%</span>
+  </div>
+</div>`;
+}
+function foot(id, mod) {
+  const isB = mod === 'b';
+  const on = done.has(id);
+  return `
+<div class="lesson-foot">
+  <button class="done-btn${on ? ' on' : ''}${isB ? ' amb' : ''}" onclick="markDone('${id}',this)">
+    ${on ? '✓ Concluído' : 'Marcar como concluído'}
+  </button>
+  <div class="pn">
+    <button class="btn btn-ghost btn-sm" onclick="prevNext(-1)">← Anterior</button>
+    <button class="btn ${isB ? 'btn-amber' : 'btn-teal'} btn-sm" onclick="prevNext(1)">Próxima →</button>
+  </div>
+</div>`;
+}
+function renderLesson(l, mod) {
+  document.getElementById('main').innerHTML =
+    chrome(l, mod) +
+    `<div class="content">${l.content}</div>` +
+    foot(l.id, mod);
+}
+
+// ═══════════════════════════════════════════════════
+// RENDER QUIZ
+// ═══════════════════════════════════════════════════
+function renderQuiz(l, mod) {
+  const isB = mod === 'b';
+  let html = chrome(l, mod) + `<div class="qz">
+    <div class="qz-title">${l.title}</div>
+    <div class="qz-sub">Responda todas as questões — a explicação aparece após cada resposta.</div>`;
+  l.quiz.forEach((q, qi) => {
+    html += `<div class="qb" id="qb${qi}">
+      <div class="qb-num"><span>Questão ${qi + 1} de ${l.quiz.length}</span></div>
+      <div class="qb-q">${q.q}</div>
+      <div class="q-opts">`;
+    q.opts.forEach((opt, oi) => {
+      html += `<button class="q-opt" onclick="answerQ(this,${qi},${oi},${q.ans},'${l.id}','${q.exp.replace(/'/g, "\\'")}','${mod}')">
+        <span class="opt-i">${String.fromCharCode(65 + oi)}</span>${opt}</button>`;
+    });
+    html += `</div><div class="q-exp" id="qexp${qi}">💡 ${q.exp}</div></div>`;
+  });
+  html += `<div class="qz-res" id="qzres">
+    <div class="res-big" id="rsbig">0/${l.quiz.length}</div>
+    <div class="res-lbl">respostas corretas</div>
+    <div class="res-msg" id="rsmsg"></div>
+    <div class="res-acts">
+      <button class="btn btn-ghost" onclick="renderQuiz(window._cq.l,window._cq.m)">🔄 Refazer</button>
+      <button class="btn ${isB ? 'btn-amber' : 'btn-teal'}" onclick="prevNext(1)">Próxima →</button>
+    </div>
+  </div></div>` + foot(l.id, mod);
+  document.getElementById('main').innerHTML = html;
+  window._cq = { l, m: mod, answers: {}, total: l.quiz.length };
+}
+function answerQ(btn, qi, oi, ans, lid, exp, mod) {
+  const blk = document.getElementById('qb' + qi);
+  if (blk.dataset.answered) return;
+  blk.dataset.answered = '1';
+  blk.querySelectorAll('.q-opt').forEach(b => b.disabled = true);
+  blk.querySelectorAll('.q-opt')[ans].classList.add('ok');
+  if (oi !== ans) btn.classList.add('no');
+  document.getElementById('qexp' + qi).classList.add('vis');
+  window._cq.answers[qi] = oi === ans;
+  if (Object.keys(window._cq.answers).length === window._cq.total) {
+    const ok = Object.values(window._cq.answers).filter(Boolean).length;
+    const pct = Math.round(ok / window._cq.total * 100);
+    document.getElementById('rsbig').textContent = ok + '/' + window._cq.total;
+    document.getElementById('rsmsg').textContent = pct >= 80
+      ? '🎯 Excelente! Você domina o conteúdo desta fase.'
+      : pct >= 60 ? '✅ Bom resultado! Revise as questões que errou.'
+      : '📚 Recomendo rever o conteúdo antes de avançar.';
+    document.getElementById('qzres').classList.add('vis');
+    if (pct >= 60) { done.add(lid); saveProgress(); renderNav(); }
+  }
+}
+
+// ═══════════════════════════════════════════════════
+// QUIZ GERAL
+// ═══════════════════════════════════════════════════
+function showQuizGeral() {
+  let html = `<div class="lc">
+    <div class="lc-crumb"><span>Avaliação Final</span></div>
+    <div class="lc-row"><span class="lc-badge bd-gq">Quiz Geral — ${QUIZ_GERAL.length} questões</span></div>
+    <div class="lc-title">Quiz Completo — Saúde Pública & WebApps</div>
+  </div>
+  <div class="qz">
+    <div class="qz-title">Avaliação Integrada Final</div>
+    <div class="qz-sub">${QUIZ_GERAL.length} questões cobrindo os dois módulos. Cada questão indica de qual módulo vem.</div>`;
+  QUIZ_GERAL.forEach((q, qi) => {
+    const isB = q.m === 'B';
+    html += `<div class="qb" id="gqb${qi}">
+      <div class="qb-num">
+        <span>Questão ${qi + 1}/${QUIZ_GERAL.length}</span>
+        <span style="color:${isB ? 'var(--b-amber)' : 'var(--b-teal)'}">Módulo ${q.m}</span>
+      </div>
+      <div class="qb-q">${q.q}</div>
+      <div class="q-opts">`;
+    q.opts.forEach((opt, oi) => {
+      html += `<button class="q-opt" onclick="gAnswer(this,${qi},${oi},${q.ans},'${q.exp.replace(/'/g, "\\'")}')">
+        <span class="opt-i">${String.fromCharCode(65 + oi)}</span>${opt}</button>`;
+    });
+    html += `</div><div class="q-exp" id="gqexp${qi}">💡 ${q.exp}</div></div>`;
+  });
+  html += `<div class="qz-res" id="gqzres">
+    <div class="res-big" id="grsbig">0/${QUIZ_GERAL.length}</div>
+    <div class="res-lbl">respostas corretas</div>
+    <div class="res-msg" id="grsmsg"></div>
+    <div class="res-acts">
+      <button class="btn btn-ghost" onclick="showQuizGeral()">🔄 Refazer Quiz Geral</button>
+    </div>
+  </div></div>`;
+  document.getElementById('main').innerHTML = html;
+  window._gq = { answers: {}, total: QUIZ_GERAL.length };
+}
+function gAnswer(btn, qi, oi, ans, exp) {
+  const blk = document.getElementById('gqb' + qi);
+  if (blk.dataset.answered) return;
+  blk.dataset.answered = '1';
+  blk.querySelectorAll('.q-opt').forEach(b => b.disabled = true);
+  blk.querySelectorAll('.q-opt')[ans].classList.add('ok');
+  if (oi !== ans) btn.classList.add('no');
+  document.getElementById('gqexp' + qi).classList.add('vis');
+  window._gq.answers[qi] = oi === ans;
+  if (Object.keys(window._gq.answers).length === window._gq.total) {
+    const ok = Object.values(window._gq.answers).filter(Boolean).length;
+    const pct = Math.round(ok / window._gq.total * 100);
+    document.getElementById('grsbig').textContent = ok + '/' + window._gq.total;
+    document.getElementById('grsmsg').textContent = pct >= 80
+      ? '🎯 Excelente! Você domina os fundamentos das duas frentes. Pronto para ensinar.'
+      : pct >= 60 ? '✅ Bom resultado! Revise os pontos que errou e refaça.'
+      : '📚 Recomende rever os módulos antes de avançar. O conteúdo está no menu lateral.';
+    document.getElementById('gqzres').classList.add('vis');
+  }
+}
+
+// ═══════════════════════════════════════════════════
+// WELCOME
+// ═══════════════════════════════════════════════════
+function showWelcome() {
+  const bDone = allLessons('b').filter(l => done.has(l.id)).length;
+  const aDone = allLessons('a').filter(l => done.has(l.id)).length;
+  document.getElementById('main').innerHTML = `
+<div class="welcome">
+  <h1>Curso Intensivo<br><em>Pessoal</em></h1>
+  <p class="w-desc">Dois módulos paralelos e complementares, organizados em micro-aulas de 15–20 minutos com mapas visuais, analogias, exercícios de campo e quizzes com progresso salvo automaticamente.</p>
+  <div class="w-mods">
+    <div class="w-mod b" style="border-top-color:var(--b-amber)">
+      <div class="wm-n">PRIORITÁRIO · Módulo B</div>
+      <div class="wm-t">Saúde Pública & Dados</div>
+      <div class="wm-d">SUS, APS, sistemas de informação, indicadores, Conselho, fluxos reais, LGPD e IA aplicada. O vocabulário que os profissionais de saúde usam todo dia — para você falar com autoridade na SMS.</div>
+      <div class="wm-s">
+        <div class="wm-st"><span>${allLessons('b').length}</span> aulas</div>
+        <div class="wm-st"><span>${bDone}</span> concluídas</div>
+      </div>
+    </div>
+    <div class="w-mod a">
+      <div class="wm-n">Módulo A</div>
+      <div class="wm-t">Fundamentos de WebApps</div>
+      <div class="wm-d">Arquitetura, CRUD, estado, APIs, padrões de sistema e vocabulário técnico. Do que você já faz ao nome correto para cada coisa — para construir e comunicar com precisão.</div>
+      <div class="wm-s">
+        <div class="wm-st"><span>${allLessons('a').length}</span> aulas</div>
+        <div class="wm-st"><span>${aDone}</span> concluídas</div>
+      </div>
+    </div>
+  </div>
+  <div class="w-acts">
+    <button class="btn btn-amber" onclick="goTo('b0.1')">Começar pelo prioritário → Saúde Pública</button>
+    <button class="btn btn-ghost" onclick="goTo('a0.1')">Começar por WebApps</button>
+    <button class="btn btn-ghost" onclick="showQuizGeral()">🎯 Quiz Geral Final</button>
+  </div>
+</div>`;
+}
+
+// INIT
+renderNav();
+showWelcome();
+saveProgress();
+</script>
+</body>
+</html>

@@ -1,0 +1,898 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Calendário de Conteúdo — Semanas 2 a 6 | Uso Pessoal</title>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:#0E0F13; --bg-2:#14161C; --bg-3:#1C1F28; --bg-4:#242836;
+  --border:rgba(255,255,255,.08); --border-hi:rgba(255,255,255,.16);
+  --txt:#E8EAF0; --txt-dim:#8890A4; --txt-faint:#4A5168;
+  --accent:#4B9FFF; --accent-dim:rgba(75,159,255,.15); --accent-border:rgba(75,159,255,.35);
+  --gold:#F5C842; --gold-dim:rgba(245,200,66,.12); --gold-border:rgba(245,200,66,.3);
+  --green:#4ECBA0; --green-dim:rgba(78,203,160,.12);
+  --red:#FF6B6B; --red-dim:rgba(255,107,107,.12);
+  --violet:#A78BFA; --violet-dim:rgba(167,139,250,.12);
+  --orange:#FB923C; --orange-dim:rgba(251,146,60,.12);
+  --font:'Sora',sans-serif; --mono:'JetBrains Mono',monospace;
+  --r:10px; --r-sm:6px;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{font-family:var(--font);background:var(--bg);color:var(--txt);line-height:1.6;font-size:14px;}
+
+body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:1000;opacity:.025;
+background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");background-size:180px;}
+
+/* HERO */
+.hero{padding:52px 28px 48px;background:linear-gradient(170deg,#0E0F13 0%,#0f1520 60%,#0E0F13 100%);border-bottom:1px solid var(--border);position:relative;overflow:hidden;}
+.hero::after{content:'';position:absolute;top:-100px;right:-100px;width:400px;height:400px;border-radius:50%;background:radial-gradient(circle,rgba(245,200,66,.05) 0%,transparent 70%);pointer-events:none;}
+.hero-inner{max-width:860px;margin:0 auto;}
+.hero-eye{font-family:var(--mono);font-size:11px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:var(--gold);margin-bottom:16px;display:flex;align-items:center;gap:10px;}
+.hero-eye::before{content:'';display:block;width:24px;height:1px;background:var(--gold);}
+.hero h1{font-size:clamp(24px,4vw,40px);font-weight:800;line-height:1.1;color:var(--txt);margin-bottom:10px;letter-spacing:-.02em;}
+.hero h1 em{color:var(--gold);font-style:normal;}
+.hero .sub{font-size:13px;color:var(--txt-dim);max-width:520px;margin-bottom:24px;line-height:1.65;}
+.hero-tags{display:flex;flex-wrap:wrap;gap:8px;}
+.htag{font-family:var(--mono);font-size:11px;font-weight:600;padding:4px 12px;border-radius:999px;background:var(--bg-3);border:1px solid var(--border-hi);color:var(--txt-dim);}
+
+/* WEEK NAV */
+.week-nav{background:var(--bg-2);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:500;}
+.week-nav-inner{max-width:860px;margin:0 auto;display:flex;overflow-x:auto;}
+.wbtn{flex-shrink:0;padding:13px 16px;font-family:var(--font);font-size:12px;font-weight:600;color:var(--txt-faint);background:none;border:none;border-bottom:2px solid transparent;cursor:pointer;transition:color .2s,border-color .2s;white-space:nowrap;}
+.wbtn:hover{color:var(--txt-dim);}
+.wbtn.active{color:var(--gold);border-bottom-color:var(--gold);}
+
+/* PANEL */
+.week-panel{display:none;max-width:860px;margin:0 auto;padding:32px 20px 72px;}
+.week-panel.active{display:block;}
+
+/* WEEK HEADER */
+.wk-header{margin:0 0 20px;}
+.wk-label{font-family:var(--mono);font-size:10px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);margin-bottom:4px;display:flex;align-items:center;gap:8px;}
+.wk-label::before{content:'//';opacity:.5;}
+.wk-header h2{font-size:22px;font-weight:800;color:var(--txt);letter-spacing:-.01em;margin-bottom:4px;}
+.wk-header p{font-size:13px;color:var(--txt-dim);}
+
+/* DAY CARD */
+.cal-day{background:var(--bg-2);border:1px solid var(--border);border-radius:var(--r);margin-bottom:14px;overflow:hidden;}
+.cal-day-header{display:flex;align-items:center;gap:14px;padding:13px 18px;background:var(--bg-3);border-bottom:1px solid transparent;cursor:pointer;user-select:none;transition:background .2s;}
+.cal-day-header:hover{background:var(--bg-4);}
+.cal-day.open .cal-day-header{border-bottom-color:var(--border);}
+.cal-day-num{font-family:var(--mono);font-size:26px;font-weight:700;color:var(--accent);line-height:1;flex-shrink:0;width:40px;text-align:center;}
+.cal-day-info h3{font-size:13px;font-weight:700;color:var(--txt);}
+.cal-day-info p{font-size:11px;color:var(--txt-faint);margin-top:1px;}
+.day-badges{margin-left:auto;display:flex;gap:6px;flex-shrink:0;}
+.dbadge{font-size:10px;font-weight:700;padding:2px 8px;border-radius:999px;letter-spacing:.06em;text-transform:uppercase;}
+.db-ig{background:var(--violet-dim);color:var(--violet);border:1px solid rgba(167,139,250,.3);}
+.db-wpp{background:var(--green-dim);color:var(--green);border:1px solid rgba(78,203,160,.3);}
+.toggle-arr{font-size:12px;color:var(--txt-faint);transition:transform .25s;flex-shrink:0;margin-left:6px;}
+.cal-day.open .toggle-arr{transform:rotate(180deg);}
+
+.cal-body{display:none;}
+.cal-day.open .cal-body{display:block;}
+
+/* PIECE */
+.piece{padding:15px 18px;border-bottom:1px solid var(--border);}
+.piece:last-child{border-bottom:none;}
+.piece-hd{display:flex;align-items:center;gap:9px;margin-bottom:10px;flex-wrap:wrap;}
+.ptype{font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:3px 9px;border-radius:999px;}
+.pt-r1{background:var(--violet-dim);color:var(--violet);border:1px solid rgba(167,139,250,.3);}
+.pt-r2{background:var(--accent-dim);color:var(--accent);border:1px solid var(--accent-border);}
+.pt-au{background:var(--green-dim);color:var(--green);border:1px solid rgba(78,203,160,.3);}
+.ptitle{font-size:13px;font-weight:700;color:var(--txt);}
+.pmeta{font-family:var(--mono);font-size:11px;color:var(--txt-faint);margin-left:auto;}
+
+/* ROTEIRO */
+.rt{background:var(--bg-3);border:1px solid var(--border);border-radius:var(--r-sm);margin:8px 0;overflow:hidden;}
+.rt-row{display:flex;gap:0;border-bottom:1px solid var(--border);}
+.rt-row:last-child{border-bottom:none;}
+.rt-seg{font-family:var(--mono);font-size:10px;color:var(--txt-faint);background:var(--bg-4);padding:8px 10px;min-width:78px;flex-shrink:0;line-height:1.4;border-right:1px solid var(--border);}
+.rt-fala{flex:1;font-size:13px;color:var(--txt);padding:8px 12px;line-height:1.65;}
+.hook{color:var(--gold);font-weight:700;}
+.dado{color:var(--accent);font-weight:700;}
+.cta{color:var(--green);}
+.critica{color:var(--red);}
+
+/* STRATEGY NOTE */
+.snote{background:var(--gold-dim);border:1px solid var(--gold-border);border-radius:var(--r-sm);padding:9px 13px;font-size:12px;color:var(--txt-dim);margin:8px 0;display:flex;gap:7px;line-height:1.5;}
+.snote::before{content:'◈';color:var(--gold);flex-shrink:0;font-size:13px;}
+
+/* SEMANA INFO */
+.sem-info{background:var(--bg-2);border:1px solid var(--border);border-radius:var(--r);padding:16px 20px;margin-bottom:20px;display:flex;gap:16px;align-items:flex-start;}
+.sem-icon{font-size:28px;flex-shrink:0;}
+.sem-text h3{font-size:14px;font-weight:700;color:var(--txt);margin-bottom:3px;}
+.sem-text p{font-size:13px;color:var(--txt-dim);line-height:1.55;}
+
+/* HI */
+.hi{border-radius:var(--r-sm);padding:11px 15px;font-size:13px;margin:12px 0;line-height:1.6;}
+.hi-gold{background:var(--gold-dim);border:1px solid var(--gold-border);color:var(--txt);}
+.hi-gold strong{color:var(--gold);}
+.hi-acc{background:var(--accent-dim);border:1px solid var(--accent-border);color:var(--txt);}
+.hi-green{background:var(--green-dim);border:1px solid rgba(78,203,160,.3);color:var(--green);}
+
+/* SEP */
+.sep{border:none;border-top:1px solid var(--border);margin:20px 0;}
+
+footer{border-top:1px solid var(--border);background:var(--bg-2);text-align:center;padding:20px;font-size:12px;color:var(--txt-faint);}
+footer strong{color:var(--accent);}
+
+@keyframes fadeUp{from{opacity:0;transform:translateY(12px);}to{opacity:1;transform:none;}}
+.week-panel.active>.sem-info,.week-panel.active>.cal-day,.week-panel.active>.wk-header,.week-panel.active>.hi-gold{animation:fadeUp .28s ease both;}
+.week-panel.active>*:nth-child(2){animation-delay:.04s;}
+.week-panel.active>*:nth-child(3){animation-delay:.08s;}
+.week-panel.active>*:nth-child(4){animation-delay:.12s;}
+
+@media(max-width:600px){.pmeta{display:none;}.day-badges{display:none;}}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="hero-inner">
+    <div class="hero-eye">Calendário Editorial — Semanas 2 a 6 · Uso Pessoal</div>
+    <h1>Roteiros Completos<br><em>25 de março → 24 de abril</em></h1>
+    <p class="sub">29 dias · 58 reels · 29 áudios · roteiros linha a linha com gancho, desenvolvimento, CTA e nota estratégica.</p>
+    <div class="hero-tags">
+      <span class="htag">// semana 2 — aprofundamento</span>
+      <span class="htag">// semana 3 — propostas</span>
+      <span class="htag">// semana 4 — urgência</span>
+      <span class="htag">// semana 5 — véspera</span>
+      <span class="htag">// semana 6 — ao vivo</span>
+    </div>
+  </div>
+</header>
+
+<nav class="week-nav">
+  <div class="week-nav-inner">
+    <button class="wbtn active" onclick="showWeek('s2')">Semana 2 · 25–31 mar</button>
+    <button class="wbtn" onclick="showWeek('s3')">Semana 3 · 1–7 abr</button>
+    <button class="wbtn" onclick="showWeek('s4')">Semana 4 · 8–14 abr</button>
+    <button class="wbtn" onclick="showWeek('s5')">Semana 5 · 15–21 abr</button>
+    <button class="wbtn" onclick="showWeek('s6')">Semana 6 · 22–24 abr</button>
+  </div>
+</nav>
+
+
+<!-- ══════════════════════════════════
+     SEMANA 2 — 25–31 MAR
+     APROFUNDAMENTO DOS EIXOS
+══════════════════════════════════ -->
+<div class="week-panel active" id="week-s2">
+
+  <div class="wk-header">
+    <div class="wk-label">Semana 2 · 25 a 31 de março</div>
+    <h2>Domínio técnico em público</h2>
+    <p>Um eixo por dia, com dado forte + conexão local. Você demonstra profundidade sem ser chato. Quem acompanha a semana inteira termina sabendo mais do que 90% dos participantes da conferência.</p>
+  </div>
+
+  <div class="sem-info">
+    <div class="sem-icon">🎯</div>
+    <div class="sem-text">
+      <h3>Objetivo estratégico da semana</h3>
+      <p>Transição de "quem explica o contexto" para "quem domina os temas". Cada vídeo deve fazer o espectador pensar: <em>esse nível de detalhe não é de quem só ouviu falar.</em> É o momento de consolidar a reputação técnica.</p>
+    </div>
+  </div>
+
+  <!-- DIA 8 · 25 mar -->
+  <div class="cal-day" id="d8">
+    <div class="cal-day-header" onclick="tog('d8')">
+      <div class="cal-day-num">25</div>
+      <div class="cal-day-info"><h3>Eixo 1 a fundo — democracia participativa real</h3><p>Quarta · a diferença entre voto e poder</p></div>
+      <div class="day-badges"><span class="dbadge db-ig">2× Reel</span><span class="dbadge db-wpp">Áudio</span></div>
+      <span class="toggle-arr">▾</span>
+    </div>
+    <div class="cal-body">
+      <div class="piece">
+        <div class="piece-hd"><span class="ptype pt-r1">Reel 1</span><span class="ptitle">Democracia não é só votar de 4 em 4 anos</span><span class="pmeta">~60 seg</span></div>
+        <div class="rt">
+          <div class="rt-row"><div class="rt-seg">GANCHO</div><div class="rt-fala"><span class="hook">Se democracia fosse só votar, a saúde pública não dependeria de quem grita mais alto. Existe um modelo diferente — e o SUS foi construído em cima dele.</span></div></div>
+          <div class="rt-row"><div class="rt-seg">Conceito</div><div class="rt-fala">Democracia participativa significa que entre uma eleição e outra, a população tem instrumentos reais de decisão. Na saúde, esses instrumentos se chamam: Conselho Municipal de Saúde e Conferência de Saúde. Não são sugestões ao gestor — são instâncias deliberativas com poder legal.</div></div>
+          <div class="rt-row"><div class="rt-seg">Dado</div><div class="rt-fala">A OMS reconheceu em 2024 a participação social como elemento central das políticas de saúde. O Brasil exporta esse modelo para o mundo — e às vezes não valoriza o que tem aqui dentro.</div></div>
+          <div class="rt-row"><div class="rt-seg">CTA</div><div class="rt-fala"><span class="cta">Amanhã: soberania sanitária — o que a pandemia ensinou sobre dependência tecnológica. Salva pra não perder.</span></div></div>
+        </div>
+      </div>
+      <div class="piece">
+        <div class="piece-hd"><span class="ptype pt-r2">Reel 2</span><span class="ptitle">Big Tech e dados do SUS — quem controla esse tesouro?</span><span class="pmeta">~50 seg</span></div>
+        <div class="rt">
+          <div class="rt-row"><div class="rt-seg">GANCHO</div><div class="rt-fala"><span class="hook">Os dados de saúde de milhões de brasileiros no SUS valem bilhões no mercado global de tecnologia. Quem garante que eles não virem mercadoria?</span></div></div>
+          <div class="rt-row"><div class="rt-seg">Contexto</div><div class="rt-fala">O documento da 18ª CNS é explícito: a governança da saúde digital precisa estar sob soberania nacional, não nas mãos das Big Techs. Seus dados de consulta, exame e internação são patrimônio coletivo — não produto para venda.</div></div>
+          <div class="rt-row"><div class="rt-seg">Local</div><div class="rt-fala">A pergunta que a conferência precisa responder: o SUS Digital de Montes Claros tem proteção de dados adequada? Quem gerencia os sistemas? Sob que contrato?</div></div>
+          <div class="rt-row"><div class="rt-seg">CTA</div><div class="rt-fala"><span class="cta">Esse é um ponto de soberania que quase ninguém discute nas conferências locais. Vamos colocar na pauta.</span></div></div>
+        </div>
+        <div class="snote">Estratégia: tema tech/dados surpreende quem espera só "mais médico no posto". Sinaliza sofisticação de análise — diferencial de autoridade.</div>
+      </div>
+      <div class="piece">
+        <div class="piece-hd"><span class="ptype pt-au">Áudio WPP</span><span class="ptitle">Por que o controle social virou alvo</span><span class="pmeta">~2 min</span></div>
+        <div class="rt">
+          <div class="rt-row"><div class="rt-seg">Abertura</div><div class="rt-fala">O documento traz algo que precisa ser dito com clareza: a fragilização dos conselhos de saúde não é acidente. É estratégia. Um sistema de saúde universal exige Estado forte e controle social ativo — exatamente o oposto do que interessa a quem lucra com a privatização da saúde.</div></div>
+          <div class="rt-row"><div class="rt-seg">Exemplo</div><div class="rt-fala">Quando uma reunião do conselho não tem quórum porque os representantes não foram notificados a tempo, isso parece descuido. Mas o resultado é o mesmo: deliberação que não acontece. Participação que não incomoda.</div></div>
+          <div class="rt-row"><div class="rt-seg">Fechamento</div><div class="rt-fala">Por isso a conferência precisa produzir propostas sobre o fortalecimento dos próprios conselhos. É a base de tudo o mais.</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- DIA 9 · 26 mar -->
+  <div class="cal-day" id="d9">
+    <div class="cal-day-header" onclick="tog('d9')">
+      <div class="cal-day-num">26</div>
+      <div class="cal-day-info"><h3>Eixo 2 a fundo — por que o SUS é pobre num país rico</h3><p>Quinta · sistema tributário e escolhas políticas</p></div>
+      <div class="day-badges"><span class="dbadge db-ig">2× Reel</span><span class="dbadge db-wpp">Áudio</span></div>
+      <span class="toggle-arr">▾</span>
+    </div>
+    <div class="cal-body">
+      <div class="piece">
+        <div class="piece-hd"><span class="ptype pt-r1">Reel 1</span><span class="ptitle">O Brasil não é pobre. O dinheiro vai para outro lugar.</span><span class="pmeta">~60 seg</span></div>
+        <div class="rt">
+          <div class="rt-row"><div class="rt-seg">GANCHO</div><div class="rt-fala"><span class="hook">O Brasil tem a nona maior economia do mundo. Por que o SUS parece sempre no limite?</span></div></div>
+          <div class="rt-row"><div class="rt-seg">Explicação</div><div class="rt-fala">Não é falta de dinheiro. É uma questão de para onde o dinheiro vai. O sistema tributário brasileiro é regressivo: quem ganha menos paga proporcionalmente mais imposto. Os super-ricos e o sistema financeiro têm isenções e ganham com os juros altos que drenam o orçamento público.</div></div>
+          <div class="rt-row"><div class="rt-seg">Dado concreto</div><div class="rt-fala"><span class="dado">R$1 trilhão em juros da dívida em 2025. R$253 bilhões no SUS.</span> Quatro vezes menos. Essa não é uma equação técnica — é uma decisão política que pode ser mudada.</div></div>
+          <div class="rt-row"><div class="rt-seg">CTA</div><div class="rt-fala"><span class="cta">Taxar grandes fortunas, reduzir juros reais, acabar com isenção para planos privados — isso é o que a conferência pode propor. E precisa propor.</span></div></div>
+        </div>
+      </div>
+      <div class="piece">
+        <div class="piece-hd"><span class="ptype pt-r2">Reel 2</span><span class="ptitle">A Carreira Única do SUS foi aprovada. Você sabia?</span><span class="pmeta">~45 seg</span></div>
+        <div class="rt">
+          <div class="rt-row"><div class="rt-seg">GANCHO</div><div class="rt-fala"><span class="hook">Em janeiro de 2026, o Conselho Nacional de Saúde aprovou a Carreira Única Interfederativa do SUS. Uma conquista histórica — que a maioria das pessoas não ficou sabendo.</span></div></div>
+          <div class="rt-row"><div class="rt-seg">O que é</div><div class="rt-fala">É uma carreira nacional para os trabalhadores do SUS, com salários justos, condições dignas e plano de progressão. O objetivo é acabar com a alta rotatividade — que prejudica a continuidade do cuidado — e fixar profissionais em áreas vulneráveis.</div></div>
+          <div class="rt-row"><div class="rt-seg">Desafio</div><div class="rt-fala">Aprovada no papel, precisa ser viabilizada na prática. A conferência é o lugar para cobrar isso.</div></div>
+          <div class="rt-row"><div class="rt-seg">CTA</div><div class="rt-fala"><span class="cta">Você que trabalha no SUS: como é a sua situação de vínculo hoje? Comenta.</span></div></div>
+        </div>
+        <div class="snote">Estratégia: engaja diretamente o segmento de trabalhadores — 25% dos delegados. Cria identificação e aumenta alcance orgânico nesse público.</div>
+      </div>
+      <div class="piece">
+        <div class="piece-hd"><span class="ptype pt-au">Áudio WPP</span><span class="ptitle">A armadilha das emendas parlamentares na saúde</span><span class="pmeta">~90 seg</span></div>
+        <div class="rt">
+          <div class="rt-row"><div class="rt-seg">Abertura</div><div class="rt-fala">Quero falar de um ponto que vai aparecer na conferência e precisa de atenção: emendas parlamentares. Em 2025, elas representaram 12% do orçamento das ações e serviços de saúde — doze vezes mais do que no período 2008–2013.</div></div>
+          <div class="rt-row"><div class="rt-seg">Problema</div><div class="rt-fala">O problema não é o recurso em si. É que emenda parlamentar não segue o Plano Municipal de Saúde. O vereador ou deputado destina para onde quer mostrar resultado político, não necessariamente para onde a necessidade epidemiológica aponta. Isso fragmenta o planejamento e cria dependência política.</div></div>
+          <div class="rt-row"><div class="rt-seg">Proposta</div><div class="rt-fala">Nossa conferência pode propor que as emendas destinadas à saúde precisem ser previamente aprovadas pelo Conselho Municipal, vinculadas ao Plano de Saúde vigente. Isso é controle social na prática.</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- DIA 10 · 27 mar -->
+  <div class="cal-day" id="d10">
+    <div class="cal-day-header" onclick="tog('d10')">
+      <div class="cal-day-num">27</div>
+      <div class="cal-day-info"><h3>Eixo 3 a fundo — a pandemia que ninguém viu chegar</h3><p>Sexta · clima, doenças emergentes, uma saúde</p></div>
+      <div class="day-badges"><span class="dbadge db-ig">2× Reel</span><span class="dbadge db-wpp">Áudio</span></div>
+      <span class="toggle-arr">▾</span>
+    </div>
+    <div class="cal-body">
+      <div class="piece">
+        <div class="piece-hd"><span class="ptype pt-r1">Reel 1</span><span class="ptitle">Covid não foi surpresa. A próxima também não precisa ser.</span><span class="pmeta">~60 seg</span></div>
+        <div class="rt">
+          <div class="rt-row"><div class="rt-seg">GANCHO</div><div class="rt-fala"><span class="hook">O vírus da Covid-19 surgiu de um animal. Assim como o Ebola, a gripe H1N1 e outros. Não é coincidência — é consequência da destruição dos ecossistemas naturais.</span></div></div>
+          <div class="rt-row"><div class="rt-seg">Conceito</div><div class="rt-fala">Existe um conceito chamado Saúde Única — reconhecido pela OMS, FAO e outras organizações internacionais: a saúde humana, animal e ambiental são indissociáveis. Quando destruímos florestas e contaminamos rios, criamos as condições para novas pandemias.</div></div>
+          <div class="rt-row"><div class="rt-seg">Local</div><div class="rt-fala">No Norte de Minas: desmatamento, queimadas, contaminação de mananciais pelo agronegócio. Tudo isso tem impacto direto no perfil epidemiológico da região.</div></div>
+          <div class="rt-row"><div class="rt-seg">CTA</div><div class="rt-fala"><span class="cta">A conferência pode propor que a vigilância em saúde ambiental seja fortalecida no município. Isso é prevenção de pandemias.</span></div></div>
+        </div>
+      </div>
+      <div class="piece">
+        <div class="piece-hd"><span class="ptype pt-r2">Reel 2</span><span class="ptitle">Saneamento privatizado: quem perde mais?</span><span class="pmeta">~50 seg</span></div>
+        <div class="rt">
+          <div class="rt-row"><div class="rt-seg">GANCHO</div><div class="rt-fala"><span class="hook">Água é bem comum ou mercadoria? Essa decisão está sendo feita agora — e o SUS paga a conta quando ela é feita errado.</span></div></div>
+          <div class="rt-row"><div class="rt-seg">Argumento</div><div class="rt-fala">Quando o saneamento é privatizado, as empresas concentram investimento onde há retorno financeiro: centros urbanos consolidados. Periferia, área rural, quilombos e comunidades tradicionais ficam sem cobertura adequada — porque não são lucrativos.</div></div>
+          <div class="rt-row"><div class="rt-seg">Consequência</div><div class="rt-fala">Doenças de veiculação hídrica, diarreias, leptospirose — tudo isso sobrecarrega o SUS. Para cada R$1 não investido em saneamento, o SUS gasta até R$4 em tratamento.</div></div>
+          <div class="rt-row"><div class="rt-seg">CTA</div><div class="rt-fala"><span class="cta">Isso conecta diretamente com o eixo de financiamento. Prevenção não é gasto — é economia.</span></div></div>
+        </div>
+      </div>
+      <div class="piece">
+        <div class="piece-hd"><span class="ptype pt-au">Áudio WPP</span><span class="ptitle">AdaptaSUS — o que ele prevê para municípios como o nosso</span><span class="pmeta">~90 seg</span></div>
+        <div class="rt">
+          <div class="rt-row"><div class="rt-seg">Abertura</div><div class="rt-fala">Vou falar do AdaptaSUS porque é um programa recente — lançado na COP30 em Belém, novembro de 2025 — que pouquíssimas pessoas conhecem, mas que tem 27 metas e 93 ações até 2035 que afetam diretamente os municípios.</div></div>
+          <div class="rt-row"><div class="rt-seg">Detalhes</div><div class="rt-fala">O programa prevê, entre outras coisas: UBS com autonomia energética e hídrica para resistir a eventos extremos; sistemas de alerta para doenças sensíveis ao clima como dengue e leptospirose; e protocolos clínicos adaptados para calor extremo. Tudo isso deveria chegar ao nível municipal.</div></div>
+          <div class="rt-row"><div class="rt-seg">Proposta</div><div class="rt-fala">Nossa conferência pode propor que o município formule seu plano local de implementação do AdaptaSUS. Isso é viável, tem base normativa, e conecta com a realidade climática do Norte de Minas.</div></div>
+        </div>
+        <div class="snote">Estratégia: citar o AdaptaSUS com esse nível de detalhe (27 metas, 93 ações, COP30, novembro de 2025) sinaliza que você acompanhou o debate nacional em tempo real. Isso é raro e altamente diferenciador.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- DIA 11 · 28 mar -->
+  <div class="cal-day" id="d11">
+    <div class="cal-day-header" onclick="tog('d11')">
+      <div class="cal-day-num">28</div>
+      <div class="cal-day-info"><h3>Eixo 4 a fundo — gestão pública ou gestão por terceiros</h3><p>Sábado · o debate que define o SUS local</p></div>
+      <div class="day-badges"><span class="dbadge db-ig">2× Reel</span><span class="dbadge db-wpp">Áudio</span></div>
+      <span class="toggle-arr">▾</span>
+    </div>
+    <div class="cal-body">
+      <div class="piece">
+        <div class="piece-hd"><span class="ptype pt-r1">Reel 1</span><span class="ptitle">Privatização silenciosa: como o SUS é vendido por dentro</span><span class="pmeta">~60 seg</span></div>
+        <div class="rt">
+          <div class="rt-row"><div class="rt-seg">GANCHO</div><div class="rt-fala"><span class="hook">Ninguém anuncia: "estamos privatizando o SUS". Mas ele é privatizado todos os dias, em silêncio, por dentro.</span></div></div>
+          <div class="rt-row"><div class="rt-seg">Explicação</div><div class="rt-fala">Quando a gestão de um hospital ou UBS é transferida para uma Organização Social sem transparência nem controle social real, isso é privatização por dentro. A fachada é pública. A lógica é de mercado. E o controle social perde acesso.</div></div>
+          <div class="rt-row"><div class="rt-seg">Consequência</div><div class="rt-fala">Alta rotatividade de profissionais, contratos precários, fragmentação do orçamento, dificuldade de fiscalização. O resultado aparece na qualidade do atendimento que chega ao usuário final.</div></div>
+          <div class="rt-row"><div class="rt-seg">CTA</div><div class="rt-fala"><span class="cta">Você sabe como é gerida a unidade de saúde que você frequenta? É diretamente pela Prefeitura ou por uma OS/empresa terceirizada?</span></div></div>
+        </div>
+      </div>
+      <div class="piece">
+        <div class="piece-hd"><span class="ptype pt-r2">Reel 2</span><span class="ptitle">Vigilância em Saúde não é só vigilância sanitária</span><span class="pmeta">~50 seg</span></div>
+        <div class="rt">
+          <div class="rt-row"><div class="rt-seg">GANCHO</div><div class="rt-fala"><span class="hook">Muita gente acha que Vigilância em Saúde é só fiscalizar restaurante. É muito mais do que isso — e o SUS precisa usar esse potencial.</span></div></div>
+          <div class="rt-row"><div class="rt-seg">O que é</div><div class="rt-fala">Vigilância epidemiológica, sanitária, ambiental, laboratorial e saúde do trabalhador. Quando integrada à Atenção Primária, ela antecipa riscos antes de virarem doença. É a inteligência estratégica do cuidado.</div></div>
+          <div class="rt-row"><div class="rt-seg">Problema</div><div class="rt-fala">No Brasil, vigilância e atenção ainda funcionam em silos. O agente epidemiológico não fala com o ACS; o sanitarista não fala com o médico de família. Isso precisa mudar.</div></div>
+          <div class="rt-row"><div class="rt-seg">CTA</div><div class="rt-fala"><span class="cta">Integrar vigilância e atenção primária é uma das propostas mais potentes que podem sair da nossa conferência.</span></div></div>
+        </div>
+      </div>
+      <div class="piece">
+        <div class="piece-hd"><span class="ptype pt-au">Áudio WPP</span><span class="ptitle">Montes Claros como polo: o desafio da atenção especializada</span><span class="pmeta">~2 min</span></div>
+        <div class="rt">
+          <div class="rt-row"><div class="rt-seg">Abertura</div><div class="rt-fala">Vou falar de um desafio específico de Montes Claros que o documento nacional aborda indiretamente: a gente é polo macrorregional. Isso significa que nossa atenção especializada atende o Norte de Minas inteiro, mas o financiamento não acompanha essa responsabilidade.</div></div>
+          <div class="rt-row"><div class="rt-seg">Contexto</div><div class="rt-fala">A Política Nacional de Atenção Especializada em Saúde — a PNAES, aprovada pelo CNS em 2023 — estabelece diretrizes para organizar isso. Mas a implementação depende de pactuação interfederativa — ou seja, negociação entre municípios da região, estado e União sobre quem paga o quê.</div></div>
+          <div class="rt-row"><div class="rt-seg">Proposta</div><div class="rt-fala">A conferência de Montes Claros pode propor um mecanismo de financiamento solidário para a atenção especializada regional — onde quem usa o serviço de outro município também contribui financeiramente. Isso existe na teoria. Raramente na prática. E a gente pode cobrar isso.</div></div>
+        </div>
+        <div class="snote">Estratégia: proposta original, técnica, específica para MC. Ninguém mais vai trazer isso com esse nível de detalhe. Consolida autoridade local.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- DIA 12–14 · 29–31 mar (condensados) -->
+  <div class="cal-day" id="d12">
+    <div class="cal-day-header" onclick="tog('d12')">
+      <div class="cal-day-num">29–31</div>
+      <div class="cal-day-info"><h3>Saúde da população negra + equidade + encerramento da semana</h3><p>Dom–Ter · temas transversais que amarram tudo</p></div>
+      <div class="day-badges"><span class="dbadge db-ig">6× Reel</span><span class="dbadge db-wpp">3× Áudio</span></div>
+      <span class="toggle-arr">▾</span>
+    </div>
+    <div class="cal-body">
+
+      <div class="piece">
+        <div class="piece-hd"><span class="ptype pt-r1">Dia 29 · Reel 1</span><span class="ptitle">Racismo mata — e os dados de saúde provam isso</span><span class="pmeta">~55 seg</span></div>
+        <div class="rt">
+          <div class="rt-row"><div class="rt-seg">GANCHO</div><div class="rt-fala"><span class="hook">A mortalidade materna de mulheres negras no Brasil é mais do que o dobro da de mulheres brancas. Isso não é biologia — é racismo.</span></div></div>
+          <div class="rt-row"><div class="rt-seg">Contexto</div><div class="rt-fala">Racismo institucional na saúde significa que pessoas negras recebem menos anestesia em cirurgias, esperam mais por atendimento, têm menos acesso a diagnóstico precoce. São décadas de pesquisa que documentam isso.</div></div>
+          <div class="rt-row"><div class="rt-seg">Política</div><div class="rt-fala">Existe a Política Nacional de Saúde Integral da População Negra desde 2009. A conferência precisa cobrar sua implementação efetiva no município — com dados, metas e orçamento.</div></div>
+          <div class="rt-row"><div class="rt-seg">CTA</div><div class="rt-fala"><span class="cta">Equidade não é tratar todos igual. É garantir que quem precisa mais receba mais. Isso é o SUS constitucional.</span></div></div>
+        </div>
+      </div>
+
+      <div class="piece">
+        <div class="piece-hd"><span class="ptype pt-r2">Dia 29 · Reel 2</span><span class="ptitle">Saúde mental no SUS — o invisível que adoece mais gente</span><span class="pmeta">~50 seg</span></div>
+        <div class="rt">
+          <div class="rt-row"><div class="rt-seg">GANCHO</div><div class="rt-fala"><span class="hook">Depressão e ansiedade são as doenças que mais afastam trabalhadores no Brasil. O SUS trata isso como deveria?</span></div></div>
+          <div class="rt-row"><div class="rt-seg">Problema</div><div class="rt-fala">Saúde mental historicamente foi tratada como especialidade separada, distante da atenção primária. O resultado: quem precisa de apoio psicológico espera meses por uma consulta, ou vai parar no pronto-socorro em crise.</div></div>
+          <div class="rt-row"><div class="rt-seg">Proposta</div><div class="rt-fala">Integrar saúde mental à APS — com psicólogos nas equipes de saúde da família — é uma das propostas mais impactantes e viáveis que podem sair da nossa conferência.</div></div>
+        </div>
+        <div class="snote">Estratégia: saúde mental tem alto engajamento orgânico. Vídeo com alto potencial de compartilhamento além da bolha do controle social.</div>
+      </div>
+
+      <div class="piece">
+        <div class="piece-hd"><span class="ptype pt-au">Dia 29 · Áudio WPP</span><span class="ptitle">Equidade: o conceito que muda tudo na prática</span><span class="pmeta">~90 seg</span></div>
+        <div class="rt">
+          <div class="rt-row"><div class="rt-seg">Abertura</div><div class="rt-fala">Quero falar de equidade porque é um termo que aparece muito na conferência e é muito mal compreendido. Equidade não é dar a mesma coisa para todo mundo. É dar mais para quem tem menos — porque as condições de partida são diferentes.</div></div>
+          <div class="rt-row"><div class="rt-seg">Exemplo</div><div class="rt-fala">Um quilombo sem estrada de acesso não recebe atendimento igual ao de um bairro central com UBS completa. Isso é inequidade de acesso. Equidade significa criar condições para que esse quilombo também tenha saúde de qualidade — o que exige mais investimento, não igual investimento.</div></div>
+          <div class="rt-row"><div class="rt-seg">Aplicação</div><div class="rt-fala">Quando propusermos ações na conferência, precisamos perguntar: essa proposta chega a quem mais precisa? Ou beneficia principalmente quem já tem mais acesso?</div></div>
+        </div>
+      </div>
+
+      <div class="piece">
+        <div class="piece-hd"><span class="ptype pt-r1">Dia 30 · Reel 1</span><span class="ptitle">Saúde bucal é saúde — e o SUS precisa tratar assim</span><span class="pmeta">~45 seg</span></div>
+        <div class="rt">
+          <div class="rt-row"><div class="rt-seg">GANCHO</div><div class="rt-fala"><span class="hook">Dente doendo afeta concentração, alimentação, sono, autoestima e produtividade. Saúde bucal não é luxo nem especialidade separada — é parte indissociável da saúde.</span></div></div>
+          <div class="rt-row"><div class="rt-seg">Avanço</div><div class="rt-fala">Em 2023, o Brasil aprovou a Lei da Política Nacional de Saúde Bucal. Isso é histórico — mas a implementação depende de financiamento e equipes. Quantas UBS de Montes Claros têm equipe completa de saúde bucal?</div></div>
+          <div class="rt-row"><div class="rt-seg">CTA</div><div class="rt-fala"><span class="cta">A conferência pode propor cobertura 100% de saúde bucal na atenção primária do município. Isso é direito constitucional.</span></div></div>
+        </div>
+      </div>
+
+      <div class="piece">
+        <div class="piece-hd"><span class="ptype pt-r2">Dia 30 · Reel 2</span><span class="ptitle">Saúde indígena e os ataques que o SUS precisa responder</span><span class="pmeta">~50 seg</span></div>
+        <div class="rt">
+          <div class="rt-row"><div class="rt-seg">GANCHO</div><div class="rt-fala"><span class="hook">Garimpo ilegal, mercúrio nos rios, ameaças territoriais — tudo isso é pauta de saúde. E a conferência nacional coloca isso explicitamente no documento.</span></div></div>
+          <div class="rt-row"><div class="rt-seg">Contexto</div><div class="rt-fala">A saúde indígena é garantida pela PNASPI — Política Nacional de Atenção à Saúde dos Povos Indígenas. Mas a 6ª Conferência Nacional de Saúde Indígena, em 2022, apontou que a regularização fundiária é determinante de saúde: sem terra demarcada, não há saúde indígena possível.</div></div>
+          <div class="rt-row"><div class="rt-seg">CTA</div><div class="rt-fala"><span class="cta">No Norte de Minas temos populações tradicionais e quilombolas. Seus direitos entram na nossa conferência.</span></div></div>
+        </div>
+      </div>
+
+      <div class="piece">
+        <div class="piece-hd"><span class="ptype pt-r1">Dia 31 · Reel 1</span><span class="ptitle">Resumão da semana: o que você aprendeu nos últimos 7 dias</span><span class="pmeta">~60 seg</span></div>
+        <div class="rt">
+          <div class="rt-row"><div class="rt-seg">GANCHO</div><div class="rt-fala"><span class="hook">Sete dias, quatro eixos temáticos, dezenas de dados. Vou fazer o resumo rápido.</span></div></div>
+          <div class="rt-row"><div class="rt-seg">Recap</div><div class="rt-fala"><span class="dado">Eixo 1</span>: democracia participativa — conselhos com poder real, soberania dos dados. <span class="dado">Eixo 2</span>: R$1tri em juros vs R$253bi no SUS — escolha política. <span class="dado">Eixo 3</span>: clima já chegou ao SUS — AdaptaSUS, saneamento, Saúde Única. <span class="dado">Eixo 4</span>: APS no centro, vigilância integrada, sem privatização silenciosa.</div></div>
+          <div class="rt-row"><div class="rt-seg">CTA</div><div class="rt-fala"><span class="cta">Próxima semana: como transformar tudo isso em proposta concreta. Salva e compartilha.</span></div></div>
+        </div>
+        <div class="snote">Estratégia: vídeo de recap aumenta retenção e alcança quem entrou no perfil durante a semana. Serve de porta de entrada para toda a série.</div>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+
+
+<!-- ══════════════════════════════════
+     SEMANA 3 — 1–7 ABR
+     COMO FAZER PROPOSTAS
+══════════════════════════════════ -->
+<div class="week-panel" id="week-s3">
+
+  <div class="wk-header">
+    <div class="wk-label">Semana 3 · 1 a 7 de abril</div>
+    <h2>De analista a mobilizador</h2>
+    <p>Você já estabeleceu domínio técnico. Agora ensina como agir. Quem aprende a fazer proposta boa vira protagonista — e percebe que você criou a estrutura para isso.</p>
+  </div>
+
+  <div class="sem-info"><div class="sem-icon">✍️</div><div class="sem-text"><h3>Objetivo estratégico</h3><p>Posicionar-se como quem não só sabe — mas ensina e viabiliza a participação qualificada dos outros. Autoridade que se multiplica.</p></div></div>
+
+  <!-- DIAS 15–21 -->
+  <div class="cal-day" id="d15">
+    <div class="cal-day-header" onclick="tog('d15')">
+      <div class="cal-day-num">01</div>
+      <div class="cal-day-info"><h3>A diferença entre diretriz e proposta</h3><p>Quarta · o erro que invalida 80% das propostas de conferência</p></div>
+      <div class="day-badges"><span class="dbadge db-ig">2× Reel</span><span class="dbadge db-wpp">Áudio</span></div>
+      <span class="toggle-arr">▾</span>
+    </div>
+    <div class="cal-body">
+      <div class="piece">
+        <div class="piece-hd"><span class="ptype pt-r1">Reel 1</span><span class="ptitle">Por que a maioria das propostas de conferência não servem para nada</span><span class="pmeta">~60 seg</span></div>
+        <div class="rt">
+          <div class="rt-row"><div class="rt-seg">GANCHO</div><div class="rt-fala"><span class="hook">A maioria das propostas aprovadas em conferências de saúde nunca vira política pública. Não é porque são ignoradas — é porque são inaplicáveis desde o início.</span></div></div>
+          <div class="rt-row"><div class="rt-seg">Problema</div><div class="rt-fala">Quando a proposta diz "melhorar o SUS" ou "investir mais em saúde" — isso é diretriz, não proposta. É uma intenção, não uma ação. Nenhum gestor consegue executar isso porque não diz o quê, como, quando, com quanto e quem responde.</div></div>
+          <div class="rt-row"><div class="rt-seg">Solução</div><div class="rt-fala">Uma boa proposta tem: <span class="dado">verbo de ação + objeto específico + responsável + prazo ou meta.</span> "Ampliar a cobertura da ESF para 80% até dezembro de 2026, priorizando bairros com IVS acima de 0,5" — isso é proposta.</div></div>
+          <div class="rt-row"><div class="rt-seg">CTA</div><div class="rt-fala"><span class="cta">Nos próximos dias vou trazer o passo a passo para construir uma boa proposta. Segue pra não perder.</span></div></div>
+        </div>
+        <div class="snote">Estratégia: criticar a qualidade das propostas sem apontar pessoas — critica o processo, não participantes específicos. Posiciona você como quem quer melhorar, não rebaixar.</div>
+      </div>
+      <div class="piece">
+        <div class="piece-hd"><span class="ptype pt-r2">Reel 2</span><span class="ptitle">Proposta boa vs proposta ruim — exemplos reais</span><span class="pmeta">~55 seg</span></div>
+        <div class="rt">
+          <div class="rt-row"><div class="rt-seg">GANCHO</div><div class="rt-fala"><span class="hook">Deixa eu mostrar a diferença na prática. Duas propostas sobre o mesmo tema — uma que avança, uma que não serve.</span></div></div>
+          <div class="rt-row"><div class="rt-seg">Ruim</div><div class="rt-fala"><span class="critica">❌ "Aumentar o número de médicos no SUS pois a saúde está precária e o povo precisa de mais atenção."</span> — sem número, sem prazo, sem responsável. Impossível de cobrar.</div></div>
+          <div class="rt-row"><div class="rt-seg">Boa</div><div class="rt-fala"><span class="cta">✅ "Garantir a recomposição das equipes de saúde da família nas UBS com cobertura inferior a 70% do território adscrito, até junho de 2026, com recursos do Bloco de Atenção Primária."</span></div></div>
+          <div class="rt-row"><div class="rt-seg">CTA</div><div class="rt-fala"><span class="cta">A diferença é especificidade. Essa semana você vai aprender a formular assim.</span></div></div>
+        </div>
+      </div>
+      <div class="piece">
+        <div class="piece-hd"><span class="ptype pt-au">Áudio WPP</span><span class="ptitle">Como usar os eixos como guia para formular propostas</span><span class="pmeta">~2 min</span></div>
+        <div class="rt">
+          <div class="rt-row"><div class="rt-seg">Abertura</div><div class="rt-fala">Quando você vai para o GT de um eixo, a primeira coisa é entender qual problema local você quer resolver e qual eixo ele pertence. Isso não é burocracia — é estratégia. Proposta no eixo certo tem mais chance de sobreviver nas etapas seguintes.</div></div>
+          <div class="rt-row"><div class="rt-seg">Método</div><div class="rt-fala">Use as questões mobilizadoras do eixo como ponto de partida. Elas já apontam os problemas que o documento nacional identificou. Sua proposta deve ser a resposta concreta a uma dessas questões, traduzida para a realidade de Montes Claros.</div></div>
+          <div class="rt-row"><div class="rt-seg">Prática</div><div class="rt-fala">Antes da conferência, tente formular pelo menos uma proposta completa por eixo que você vai trabalhar. Traga escrita. Delegado que chega com proposta pronta lidera o GT.</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="cal-day" id="d16">
+    <div class="cal-day-header" onclick="tog('d16')">
+      <div class="cal-day-num">02–03</div>
+      <div class="cal-day-info"><h3>Abrangência + base legal das propostas</h3><p>Qui–Sex · os dois ingredientes que profissionalizam qualquer proposta</p></div>
+      <div class="day-badges"><span class="dbadge db-ig">4× Reel</span><span class="dbadge db-wpp">2× Áudio</span></div>
+      <span class="toggle-arr">▾</span>
+    </div>
+    <div class="cal-body">
+      <div class="piece">
+        <div class="piece-hd"><span class="ptype pt-r1">02 · Reel 1</span><span class="ptitle">Municipal, estadual ou nacional? Por que isso muda tudo</span><span class="pmeta">~55 seg</span></div>
+        <div class="rt">
+          <div class="rt-row"><div class="rt-seg">GANCHO</div><div class="rt-fala"><span class="hook">Uma proposta para o Ministério da Saúde não serve à Prefeitura de Montes Claros. Parece óbvio — mas é o erro mais comum nas conferências.</span></div></div>
+          <div class="rt-row"><div class="rt-seg">Explicação</div><div class="rt-fala">Cada proposta deve ter uma abrangência clara: municipal — para a SMS e Prefeitura executarem; estadual — para o governo de MG; nacional — para o Ministério da Saúde. Quando você mistura, o gestor não sabe a quem se reportar e a proposta morre na fila.</div></div>
+          <div class="rt-row"><div class="rt-seg">Alerta</div><div class="rt-fala">Se mais de 70% das propostas da nossa conferência forem de abrangência nacional, saímos sem agenda local. Isso é o que o documento chama de "esvaziamento municipal" — e é real.</div></div>
+          <div class="rt-row"><div class="rt-seg">CTA</div><div class="rt-fala"><span class="cta">Para cada proposta que você pensar: quem tem poder de executar isso? Essa é a pergunta que define a abrangência.</span></div></div>
+        </div>
+      </div>
+      <div class="piece">
+        <div class="piece-hd"><span class="ptype pt-r2">02 · Reel 2</span><span class="ptitle">Base legal: o segredo que faz sua proposta ser levada a sério</span><span class="pmeta">~50 seg</span></div>
+        <div class="rt">
+          <div class="rt-row"><div class="rt-seg">GANCHO</div><div class="rt-fala"><span class="hook">Dois delegados fazem a mesma proposta. Um cita o Art. 196 da Constituição e a Lei 8.080. O outro não cita nada. Qual dos dois é levado mais a sério?</span></div></div>
+          <div class="rt-row"><div class="rt-seg">Por quê</div><div class="rt-fala">Citar base legal não é pedantismo. É mostrar que você sabe que o que está pedindo já é obrigação — não favor. E que o gestor que não cumprir está descumprindo lei, não apenas ignorando uma sugestão.</div></div>
+          <div class="rt-row"><div class="rt-seg">Referências úteis</div><div class="rt-fala">Art. 196 CF/1988 para qualquer proposta de direito à saúde. Lei 8.080/90 para organização do SUS. Lei 8.142/90 para participação social. PNAES para atenção especializada. AdaptaSUS para emergências climáticas.</div></div>
+          <div class="rt-row"><div class="rt-seg">CTA</div><div class="rt-fala"><span class="cta">Não é necessário decorar — é necessário saber onde buscar. Compartilha esse vídeo com quem vai à conferência.</span></div></div>
+        </div>
+        <div class="snote">Estratégia: ensinar algo prático e aplicável imediatamente gera compartilhamento orgânico. Quem compartilha vai indicar você como fonte.</div>
+      </div>
+      <div class="piece">
+        <div class="piece-hd"><span class="ptype pt-r1">03 · Reel 1</span><span class="ptitle">5 temas que Montes Claros precisa colocar na conferência</span><span class="pmeta">~60 seg</span></div>
+        <div class="rt">
+          <div class="rt-row"><div class="rt-seg">GANCHO</div><div class="rt-fala"><span class="hook">Cinco propostas que eu acho que precisam entrar na conferência de Montes Claros. Na minha opinião — mas com base no documento orientador e na realidade local.</span></div></div>
+          <div class="rt-row"><div class="rt-seg">Lista</div><div class="rt-fala"><span class="dado">1</span> Protocolo municipal para emergências climáticas no SUS. <span class="dado">2</span> Saúde mental integrada à APS — psicólogos nas equipes ESF. <span class="dado">3</span> Emendas parlamentares vinculadas ao Plano Municipal de Saúde. <span class="dado">4</span> Financiamento solidário para atenção especializada regional. <span class="dado">5</span> Publicação obrigatória das deliberações do CMS em linguagem acessível.</div></div>
+          <div class="rt-row"><div class="rt-seg">CTA</div><div class="rt-fala"><span class="cta">Concorda? Discorda? Quer adicionar alguma? Comenta. Vou usar isso nos debates.</span></div></div>
+        </div>
+        <div class="snote">Estratégia: pedir opinião nos comentários gera engajamento E sinaliza que você está construindo propostas coletivamente — não impondo agenda. Liderança horizontal visível.</div>
+      </div>
+      <div class="piece">
+        <div class="piece-hd"><span class="ptype pt-r2">03 · Reel 2</span><span class="ptitle">Como é o dia a dia da conferência — prepare-se para não chegar perdido</span><span class="pmeta">~55 seg</span></div>
+        <div class="rt">
+          <div class="rt-row"><div class="rt-seg">GANCHO</div><div class="rt-fala"><span class="hook">Se você nunca participou de uma conferência de saúde, pode se sentir perdido no primeiro dia. Deixa eu explicar como funciona.</span></div></div>
+          <div class="rt-row"><div class="rt-seg">Estrutura</div><div class="rt-fala">Dia 1: abertura com palestras e contextualização. Dia 2: Grupos de Trabalho por eixo — você debate e vota propostas. Dia 3: Plenária Final — votação das propostas dos GTs e eleição de delegados para a etapa estadual.</div></div>
+          <div class="rt-row"><div class="rt-seg">Dica</div><div class="rt-fala">Chegue com pelo menos uma proposta formulada por escrito. Escolha o eixo que você quer trabalhar com antecedência. Leve caneta e papel. E ouça antes de falar.</div></div>
+          <div class="rt-row"><div class="rt-seg">CTA</div><div class="rt-fala"><span class="cta">22 a 24 de abril. Anota na agenda. Link de inscrição no perfil.</span></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="cal-day" id="d17">
+    <div class="cal-day-header" onclick="tog('d17')">
+      <div class="cal-day-num">04–07</div>
+      <div class="cal-day-info"><h3>Delegados, moções e encerramento da semana de propostas</h3><p>Sáb–Ter · papel do delegado + mobilização crescente</p></div>
+      <div class="day-badges"><span class="dbadge db-ig">8× Reel</span><span class="dbadge db-wpp">4× Áudio</span></div>
+      <span class="toggle-arr">▾</span>
+    </div>
+    <div class="cal-body">
+      <div class="piece">
+        <div class="piece-hd"><span class="ptype pt-r1">04 · Reel 1</span><span class="ptitle">O que é ser delegado e por que isso importa mais do que parece</span><span class="pmeta">~55 seg</span></div>
+        <div class="rt">
+          <div class="rt-row"><div class="rt-seg">GANCHO</div><div class="rt-fala"><span class="hook">Delegado de saúde não é um título honorífico. É um mandato representativo. Você está lá para defender a posição de quem te elegeu — não a sua opinião pessoal.</span></div></div>
+          <div class="rt-row"><div class="rt-seg">O que faz</div><div class="rt-fala">O delegado tem direito a voz e voto nas plenárias e nos grupos de trabalho. Pode apresentar e defender propostas. Pode ser eleito para representar Montes Claros na etapa estadual. É o protagonista do processo deliberativo.</div></div>
+          <div class="rt-row"><div class="rt-seg">Responsabilidade</div><div class="rt-fala">Mas também tem dever: prestar contas ao grupo que representou. O que foi aprovado? Como você votou? Por quê? Esse retorno fecha o ciclo do controle social.</div></div>
+          <div class="rt-row"><div class="rt-seg">CTA</div><div class="rt-fala"><span class="cta">Você foi eleito delegado ou conhece alguém que foi? Marca nos comentários.</span></div></div>
+        </div>
+      </div>
+      <div class="piece">
+        <div class="piece-hd"><span class="ptype pt-r2">04 · Reel 2</span><span class="ptitle">O que é uma moção e quando usar</span><span class="pmeta">~45 seg</span></div>
+        <div class="rt">
+          <div class="rt-row"><div class="rt-seg">GANCHO</div><div class="rt-fala"><span class="hook">Na conferência tem um instrumento pouco usado e muito poderoso: a moção. Você sabia?</span></div></div>
+          <div class="rt-row"><div class="rt-seg">O que é</div><div class="rt-fala">Moção é uma declaração política aprovada pela plenária — de repúdio, de apoio ou de solidariedade. Não é proposta de política pública, mas é posicionamento coletivo com peso político. Precisa de assinatura de um percentual dos delegados e é votada na plenária final.</div></div>
+          <div class="rt-row"><div class="rt-seg">Quando usar</div><div class="rt-fala">Para situações que merecem posicionamento urgente — ataque aos direitos sociais, violação de políticas públicas, solidariedade com populações em situação de vulnerabilidade.</div></div>
+        </div>
+      </div>
+      <div class="piece">
+        <div class="piece-hd"><span class="ptype pt-r1">05 · Reel 1</span><span class="ptitle">Controle social é coisa de quem ama o SUS ou de quem quer poder?</span><span class="pmeta">~60 seg</span></div>
+        <div class="rt">
+          <div class="rt-row"><div class="rt-seg">GANCHO</div><div class="rt-fala"><span class="hook">Tem gente que participa do controle social porque acredita no SUS. E tem gente que participa porque quer influenciar contratos e indicações. A conferência é campo de disputa das duas lógicas ao mesmo tempo.</span></div></div>
+          <div class="rt-row"><div class="rt-seg">Ponto</div><div class="rt-fala">Isso não é julgamento — é realidade. O documento orientador reconhece o risco de "captura por interesses corporativos". A resposta não é ingenuidade — é método. Regimento claro, votação transparente, proposta específica. Isso blinda o processo.</div></div>
+          <div class="rt-row"><div class="rt-seg">CTA</div><div class="rt-fala"><span class="cta">Quanto mais as pessoas chegam informadas, menos espaço para quem quer capturar o processo. Por isso esse conteúdo importa.</span></div></div>
+        </div>
+        <div class="snote">Estratégia: nomear o problema sem atacar pessoas específicas consolida você como alguém que vê o todo — não apenas um lado do debate. Isso é postura de liderança técnica.</div>
+      </div>
+      <div class="piece">
+        <div class="piece-hd"><span class="ptype pt-r1">06 · Reel 1</span><span class="ptitle">Semana que vem começa o sprint final — o que você precisa fazer agora</span><span class="pmeta">~55 seg</span></div>
+        <div class="rt">
+          <div class="rt-row"><div class="rt-seg">GANCHO</div><div class="rt-fala"><span class="hook">Faltam menos de 3 semanas para a conferência. Se você chegou até aqui assistindo esses vídeos, você já está mais preparado do que a maioria. Mas tem algumas coisas práticas para fazer agora.</span></div></div>
+          <div class="rt-row"><div class="rt-seg">Checklist</div><div class="rt-fala"><span class="dado">1</span> Confirmar inscrição ou delegação. <span class="dado">2</span> Escolher qual eixo você vai trabalhar no GT. <span class="dado">3</span> Rascunhar pelo menos uma proposta completa. <span class="dado">4</span> Conversar com quem te elegeu delegado sobre prioridades.</div></div>
+          <div class="rt-row"><div class="rt-seg">CTA</div><div class="rt-fala"><span class="cta">Na próxima semana vou falar sobre urgência: por que cada voz importa e o que acontece depois da conferência.</span></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+
+<!-- ══════════════════════════════════
+     SEMANA 4 — 8–14 ABR
+     URGÊNCIA E CONVOCAÇÃO
+══════════════════════════════════ -->
+<div class="week-panel" id="week-s4">
+
+  <div class="wk-header">
+    <div class="wk-label">Semana 4 · 8 a 14 de abril</div>
+    <h2>A urgência que cria ação</h2>
+    <p>Menos análise, mais convocação. O gatilho emocional entra — mas sempre fundado em dado real. Você não manipula — você contextualiza a urgência que já existe.</p>
+  </div>
+
+  <div class="sem-info"><div class="sem-icon">⏰</div><div class="sem-text"><h3>Objetivo estratégico</h3><p>Converter seguidores e ouvintes em participantes ativos. A autoridade já está estabelecida — agora ela gera movimento.</p></div></div>
+
+  <div class="cal-day" id="d22">
+    <div class="cal-day-header" onclick="tog('d22')">
+      <div class="cal-day-num">08</div>
+      <div class="cal-day-info"><h3>O que acontece se você não for</h3><p>Quarta · consequências reais da ausência</p></div>
+      <div class="day-badges"><span class="dbadge db-ig">2× Reel</span><span class="dbadge db-wpp">Áudio</span></div>
+      <span class="toggle-arr">▾</span>
+    </div>
+    <div class="cal-body">
+      <div class="piece">
+        <div class="piece-hd"><span class="ptype pt-r1">Reel 1</span><span class="ptitle">Quem não vai à conferência também decide — deixando a decisão para outros</span><span class="pmeta">~55 seg</span></div>
+        <div class="rt">
+          <div class="rt-row"><div class="rt-seg">GANCHO</div><div class="rt-fala"><span class="hook">Não ir à conferência não é neutro. É uma decisão — a decisão de deixar que outros decidam por você.</span></div></div>
+          <div class="rt-row"><div class="rt-seg">Argumento</div><div class="rt-fala">As propostas aprovadas na conferência municipal vão para a etapa estadual e influenciam as diretrizes nacionais do SUS. Quando pessoas comprometidas com o bem público não comparecem, o espaço é ocupado por quem tem interesse em resultados específicos — nem sempre o interesse coletivo.</div></div>
+          <div class="rt-row"><div class="rt-seg">Convocação</div><div class="rt-fala">Você passou essas semanas aprendendo sobre o processo. Esse conhecimento é inútil se não for para a sala onde as decisões acontecem.</div></div>
+          <div class="rt-row"><div class="rt-seg">CTA</div><div class="rt-fala"><span class="cta">22 a 24 de abril. Montes Claros. Inscrições abertas. Link no perfil.</span></div></div>
+        </div>
+      </div>
+      <div class="piece">
+        <div class="piece-hd"><span class="ptype pt-r2">Reel 2</span><span class="ptitle">Por que a sua proposta específica importa</span><span class="pmeta">~50 seg</span></div>
+        <div class="rt">
+          <div class="rt-row"><div class="rt-seg">GANCHO</div><div class="rt-fala"><span class="hook">Você pode achar que uma proposta a mais ou a menos não muda nada. Vou te mostrar por que essa lógica está errada.</span></div></div>
+          <div class="rt-row"><div class="rt-seg">Exemplo</div><div class="rt-fala">Em 2012, o movimento Saúde +10 coletou 2,2 milhões de assinaturas para ampliar o financiamento do SUS. Essa pressão resultou na EC 86/2015, que fixou o piso federal em 15% da receita. Uma conquista imperfeita, mas real — nascida de participação organizada.</div></div>
+          <div class="rt-row"><div class="rt-seg">Lógica</div><div class="rt-fala">Cada proposta bem formulada que entra no processo é mais uma voz que não pode ser ignorada. E propostas locais específicas têm mais chance de implementação do que abstrações nacionais.</div></div>
+          <div class="rt-row"><div class="rt-seg">CTA</div><div class="rt-fala"><span class="cta">Qual é a sua proposta? Pensa em uma e comenta aqui.</span></div></div>
+        </div>
+      </div>
+      <div class="piece">
+        <div class="piece-hd"><span class="ptype pt-au">Áudio WPP</span><span class="ptitle">O que me motiva nessa conferência</span><span class="pmeta">~90 seg</span></div>
+        <div class="rt">
+          <div class="rt-row"><div class="rt-seg">Pessoal</div><div class="rt-fala">Quero compartilhar o que me motiva a trazer esse conteúdo todo dia. Não é protocolo. É a convicção de que a conferência só funciona quando as pessoas chegam preparadas. E que preparação é responsabilidade coletiva — não só de quem organiza.</div></div>
+          <div class="rt-row"><div class="rt-seg">Autocrítica</div><div class="rt-fala">Tenho visto processos participativos esvaziados por falta de informação — não por má-fé. Quando alguém não sabe o que é um delegado, o que é uma proposta, como funciona uma plenária — essa pessoa participa formalmente mas não deliberativamente. E isso é uma perda para todos.</div></div>
+          <div class="rt-row"><div class="rt-seg">Convite</div><div class="rt-fala">Por isso esse trabalho todo. Quem chegar preparado à conferência vai fazer diferença — independente do segmento ou da posição.</div></div>
+        </div>
+        <div class="snote">Estratégia: vulnerabilidade estratégica — mostrar motivação pessoal humaniza e cria conexão emocional. Aumenta a credibilidade de toda a série anterior.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="cal-day" id="d23">
+    <div class="cal-day-header" onclick="tog('d23')">
+      <div class="cal-day-num">09–14</div>
+      <div class="cal-day-info"><h3>Sprint de mobilização — roteiros de urgência</h3><p>Qui–Ter · conteúdo de alta frequência com gatilhos de ação</p></div>
+      <div class="day-badges"><span class="dbadge db-ig">12× Reel</span><span class="dbadge db-wpp">6× Áudio</span></div>
+      <span class="toggle-arr">▾</span>
+    </div>
+    <div class="cal-body">
+
+      <div class="piece">
+        <div class="piece-hd"><span class="ptype pt-r1">09 · Reel 1</span><span class="ptitle">Faltam 13 dias. O que você ainda precisa saber.</span><span class="pmeta">~50 seg</span></div>
+        <div class="rt">
+          <div class="rt-row"><div class="rt-seg">GANCHO</div><div class="rt-fala"><span class="hook"><span class="dado">13 dias</span> para a maior decisão sobre saúde de Montes Claros nos próximos anos. Checklist rápido.</span></div></div>
+          <div class="rt-row"><div class="rt-seg">Lista</div><div class="rt-fala">Você sabe o que é a conferência? ✓ Você entende os 4 eixos? ✓ Você sabe como fazer uma proposta? ✓ Você está inscrito ou vai como delegado? <span class="critica">← Se não, resolve hoje.</span></div></div>
+          <div class="rt-row"><div class="rt-seg">CTA</div><div class="rt-fala"><span class="cta">Link de inscrição no perfil. Compartilha com quem deveria estar lá.</span></div></div>
+        </div>
+      </div>
+
+      <div class="piece">
+        <div class="piece-hd"><span class="ptype pt-r2">09 · Reel 2</span><span class="ptitle">Perguntas que você pode fazer no GT — e que fazem diferença</span><span class="pmeta">~55 seg</span></div>
+        <div class="rt">
+          <div class="rt-row"><div class="rt-seg">GANCHO</div><div class="rt-fala"><span class="hook">Às vezes não é a fala que muda o debate — é a pergunta certa feita no momento certo.</span></div></div>
+          <div class="rt-row"><div class="rt-seg">Exemplos</div><div class="rt-fala">"Quem é o responsável por executar essa proposta?" — força a especificidade. "Essa proposta chega a quem mais precisa?" — introduz equidade. "Como saberemos se foi implementada?" — introduz mecanismo de monitoramento. "Isso é diretriz ou proposta?" — organiza o debate.</div></div>
+          <div class="rt-row"><div class="rt-seg">CTA</div><div class="rt-fala"><span class="cta">Guarda essas perguntas. Leva para o GT.</span></div></div>
+        </div>
+        <div class="snote">Estratégia: ensinar perguntas em vez de respostas é a forma mais sofisticada de exercer liderança num debate coletivo — e demonstra domínio metodológico sem exposição desnecessária.</div>
+      </div>
+
+      <div class="piece">
+        <div class="piece-hd"><span class="ptype pt-r1">10 · Reel 1</span><span class="ptitle">Por que o relatório final importa tanto quanto o debate</span><span class="pmeta">~50 seg</span></div>
+        <div class="rt">
+          <div class="rt-row"><div class="rt-seg">GANCHO</div><div class="rt-fala"><span class="hook">Você pode ter o melhor debate da história da conferência. Se o relatório final for mal sistematizado, tudo se perde.</span></div></div>
+          <div class="rt-row"><div class="rt-seg">Problema</div><div class="rt-fala">O maior gargalo de qualquer conferência não é a participação — é a relatoria. Propostas que não são registradas adequadamente não chegam à etapa estadual. E propostas mal redigidas não são reconhecidas como propostas pelos avaliadores.</div></div>
+          <div class="rt-row"><div class="rt-seg">O que fazer</div><div class="rt-fala">Se houver oportunidade de ser relator de GT, faça. É uma das posições mais estratégicas do evento — e raramente disputada.</div></div>
+        </div>
+      </div>
+
+      <div class="piece">
+        <div class="piece-hd"><span class="ptype pt-r1">11 · Reel 1</span><span class="ptitle">O SUS na véspera das eleições de 2026</span><span class="pmeta">~60 seg</span></div>
+        <div class="rt">
+          <div class="rt-row"><div class="rt-seg">GANCHO</div><div class="rt-fala"><span class="hook">A 18ª CNS acontece às vésperas das eleições de 2026. O documento reconhece isso explicitamente. Por quê isso importa?</span></div></div>
+          <div class="rt-row"><div class="rt-seg">Contexto</div><div class="rt-fala">Em períodos eleitorais, discursos autoritários ganham força e políticas sociais viram alvo de desinformação. A conferência de saúde é o momento de criar consenso técnico e político que resista às ondas eleitorais — independentemente de quem ganhar.</div></div>
+          <div class="rt-row"><div class="rt-seg">Ponto</div><div class="rt-fala">Propostas concretas e bem fundamentadas se tornam referência para qualquer gestor que assuma. O SUS não pode ser refém de cada ciclo eleitoral.</div></div>
+          <div class="rt-row"><div class="rt-seg">CTA</div><div class="rt-fala"><span class="cta">Por isso a qualidade das nossas propostas importa agora mais do que nunca.</span></div></div>
+        </div>
+      </div>
+
+      <div class="piece">
+        <div class="piece-hd"><span class="ptype pt-r1">12–14 · Reels</span><span class="ptitle">Depoimentos / perguntas respondidas / mobilização final</span><span class="pmeta">Estrutura livre</span></div>
+        <div class="rt">
+          <div class="rt-row"><div class="rt-seg">12/abr</div><div class="rt-fala"><span class="hook">Responda dúvidas enviadas nos comentários das semanas anteriores.</span> Formato: "me perguntaram X — a resposta é Y". Isso valida a comunidade e demonstra que você acompanha o engajamento.</div></div>
+          <div class="rt-row"><div class="rt-seg">13/abr</div><div class="rt-fala"><span class="hook">Convite pessoal e direto.</span> "Estarei lá nos três dias. Se você quiser conversar, tirar dúvidas, entender melhor qualquer coisa — me procura." Esse é o vídeo mais humano e próximo da série inteira.</div></div>
+          <div class="rt-row"><div class="rt-seg">14/abr</div><div class="rt-fala"><span class="hook">Última chamada antes da semana da conferência.</span> Recap de datas, locais, o que levar, como se inscrever. Tom: "está tudo pronto, agora é aparecer."</div></div>
+        </div>
+        <div class="snote">Estratégia: o dia 13 é o mais importante da semana 4. Presença pessoal direta — "me procura" — gera vínculos reais e posiciona você como referência acessível, não distante.</div>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+
+
+<!-- ══════════════════════════════════
+     SEMANA 5 — 15–21 ABR
+     VÉSPERA DA CONFERÊNCIA
+══════════════════════════════════ -->
+<div class="week-panel" id="week-s5">
+
+  <div class="wk-header">
+    <div class="wk-label">Semana 5 · 15 a 21 de abril</div>
+    <h2>Preparação final e antecipação</h2>
+    <p>Você para de convencer e começa a preparar. O tom muda: de mobilizador para guia. Quem chegar preparado vai sentir que você fez parte disso.</p>
+  </div>
+
+  <div class="sem-info"><div class="sem-icon">🗓️</div><div class="sem-text"><h3>Objetivo estratégico</h3><p>Ser o ponto de referência na véspera. Quem assistiu toda a série vai entrar na conferência sentindo que tem um guia. Isso não se esquece.</p></div></div>
+
+  <div class="cal-day" id="d29">
+    <div class="cal-day-header" onclick="tog('d29')">
+      <div class="cal-day-num">15–17</div>
+      <div class="cal-day-info"><h3>Preparação prática + o que esperar de cada dia</h3><p>Ter–Qui · logística, mentalidade, o que levar</p></div>
+      <div class="day-badges"><span class="dbadge db-ig">6× Reel</span><span class="dbadge db-wpp">3× Áudio</span></div>
+      <span class="toggle-arr">▾</span>
+    </div>
+    <div class="cal-body">
+      <div class="piece">
+        <div class="piece-hd"><span class="ptype pt-r1">15 · Reel 1</span><span class="ptitle">O que levar para a conferência — guia prático</span><span class="pmeta">~45 seg</span></div>
+        <div class="rt">
+          <div class="rt-row"><div class="rt-seg">GANCHO</div><div class="rt-fala"><span class="hook">Você se inscreveu, sabe o tema, entende os eixos. Agora: o que levar no dia?</span></div></div>
+          <div class="rt-row"><div class="rt-seg">Lista</div><div class="rt-fala"><span class="dado">Documento de identidade</span> — sem ele não tem credenciamento. <span class="dado">Proposta escrita</span> — pelo menos uma, completa, no papel. <span class="dado">Caneta e caderno</span> — para registrar o que for discutido. <span class="dado">O Documento Orientador</span> — ou ao menos o resumo dos eixos. <span class="dado">Paciência e escuta ativa</span> — para a plenária final.</div></div>
+          <div class="rt-row"><div class="rt-seg">CTA</div><div class="rt-fala"><span class="cta">Simples, mas a maioria não faz. Quem faz, lidera.</span></div></div>
+        </div>
+      </div>
+      <div class="piece">
+        <div class="piece-hd"><span class="ptype pt-r2">15 · Reel 2</span><span class="ptitle">O que vai acontecer no Dia 1 da conferência</span><span class="pmeta">~50 seg</span></div>
+        <div class="rt">
+          <div class="rt-row"><div class="rt-seg">GANCHO</div><div class="rt-fala"><span class="hook">22 de abril, dia de abertura. Deixa eu antecipar o que esperar para você não chegar sem saber o que está acontecendo.</span></div></div>
+          <div class="rt-row"><div class="rt-seg">Programação</div><div class="rt-fala">Credenciamento pela manhã — chegue cedo. Plenária de abertura com falas institucionais. Palestras temáticas contextualizando os eixos. À tarde, primeiros Grupos de Trabalho ou apresentações por eixo.</div></div>
+          <div class="rt-row"><div class="rt-seg">Dica</div><div class="rt-fala">Apresente-se às pessoas do seu segmento. Construa aliança antes de precisar de voto. O dia 1 é de escuta, articulação e posicionamento. As propostas e votações vêm depois.</div></div>
+        </div>
+        <div class="snote">Estratégia: antecipar a programação demonstra que você não só conhece o conteúdo — conhece o processo operacional. Dupla camada de autoridade.</div>
+      </div>
+      <div class="piece">
+        <div class="piece-hd"><span class="ptype pt-r1">16 · Reel 1</span><span class="ptitle">Como se comportar no GT para maximizar o impacto da sua proposta</span><span class="pmeta">~60 seg</span></div>
+        <div class="rt">
+          <div class="rt-row"><div class="rt-seg">GANCHO</div><div class="rt-fala"><span class="hook">Você pode ter a melhor proposta do mundo e ela não avançar se você não souber apresentá-la. Não é sobre retórica — é sobre método.</span></div></div>
+          <div class="rt-row"><div class="rt-seg">Dicas</div><div class="rt-fala"><span class="dado">1</span> Apresente o problema antes da solução — cria consenso. <span class="dado">2</span> Cite o eixo e a questão mobilizadora que fundamenta sua proposta. <span class="dado">3</span> Seja específico no responsável e no prazo — isso diferencia do resto. <span class="dado">4</span> Aceite emendas de outros delegados — propostas coletivas têm mais respaldo.</div></div>
+          <div class="rt-row"><div class="rt-seg">CTA</div><div class="rt-fala"><span class="cta">Você não vai ao GT para ganhar o debate. Vai para aprovar proposta boa. São coisas diferentes.</span></div></div>
+        </div>
+      </div>
+      <div class="piece">
+        <div class="piece-hd"><span class="ptype pt-r1">17 · Reel 1</span><span class="ptitle">O que acontece depois da conferência — o ciclo não acaba no dia 24</span><span class="pmeta">~55 seg</span></div>
+        <div class="rt">
+          <div class="rt-row"><div class="rt-seg">GANCHO</div><div class="rt-fala"><span class="hook">A conferência termina no dia 24. Mas o trabalho de controle social não.</span></div></div>
+          <div class="rt-row"><div class="rt-seg">O que vem depois</div><div class="rt-fala">O relatório final vai para o Conselho Estadual. Delegados eleitos representam MC na etapa estadual. As propostas aprovadas devem ser acompanhadas pelo CMS — cobradas do gestor, monitoradas na execução, avaliadas nos relatórios quadrimestrais.</div></div>
+          <div class="rt-row"><div class="rt-seg">Responsabilidade</div><div class="rt-fala">Controle social que funciona só no evento não é controle — é cerimônia. O que fazemos depois é o que define se a conferência terá impacto real.</div></div>
+          <div class="rt-row"><div class="rt-seg">CTA</div><div class="rt-fala"><span class="cta">Vou continuar trazendo conteúdo sobre isso após a conferência. Segue o perfil.</span></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="cal-day" id="d32">
+    <div class="cal-day-header" onclick="tog('d32')">
+      <div class="cal-day-num">18–21</div>
+      <div class="cal-day-info"><h3>Últimos dias antes do evento — aquecimento máximo</h3><p>Sex–Ter · expectativa, mobilização final, bastidores</p></div>
+      <div class="day-badges"><span class="dbadge db-ig">8× Reel</span><span class="dbadge db-wpp">4× Áudio</span></div>
+      <span class="toggle-arr">▾</span>
+    </div>
+    <div class="cal-body">
+      <div class="piece">
+        <div class="piece-hd"><span class="ptype pt-r1">18 · Reel 1</span><span class="ptitle">O que mais me preocupa nessa conferência</span><span class="pmeta">~55 seg</span></div>
+        <div class="rt">
+          <div class="rt-row"><div class="rt-seg">GANCHO</div><div class="rt-fala"><span class="hook">Vou ser honesto sobre o que me preocupa nessa conferência. Não é o conteúdo — é o processo.</span></div></div>
+          <div class="rt-row"><div class="rt-seg">Preocupação</div><div class="rt-fala">Conferências podem ser esvaziadas não por falta de gente, mas por falta de método. Debates sem proposta concreta. Plenárias sem quórum. Relatório mal feito. Delegados eleitos que não sabem o que é um delegado. Isso é o risco real.</div></div>
+          <div class="rt-row"><div class="rt-seg">O que fazer</div><div class="rt-fala">É por isso que esse conteúdo existe. Quanto mais pessoas chegarem preparadas, menor o risco de que a conferência seja um ritual esvaziado em vez de um instrumento de poder real.</div></div>
+          <div class="rt-row"><div class="rt-seg">CTA</div><div class="rt-fala"><span class="cta">Compartilha esses vídeos com quem vai participar. Isso importa agora.</span></div></div>
+        </div>
+        <div class="snote">Estratégia: nomear o risco real — conferência como ritual vazio — sem atacar a coordenadoria diretamente. A crítica institucional fica implícita, mas poderosa.</div>
+      </div>
+      <div class="piece">
+        <div class="piece-hd"><span class="ptype pt-r1">19 · Reel 1</span><span class="ptitle">Amanhã começa. Você está pronto?</span><span class="pmeta">~40 seg</span></div>
+        <div class="rt">
+          <div class="rt-row"><div class="rt-seg">GANCHO</div><div class="rt-fala"><span class="hook">Amanhã começa a 11ª Conferência Municipal de Saúde de Montes Claros. Começa de verdade.</span></div></div>
+          <div class="rt-row"><div class="rt-seg">Recap emocional</div><div class="rt-fala">Faz mais de um mês que estou trazendo conteúdo sobre isso. Contexto, eixos, propostas, delegados, metodologia. Agora é a hora de usar tudo isso.</div></div>
+          <div class="rt-row"><div class="rt-seg">Tom pessoal</div><div class="rt-fala">Estarei lá. Se você aprendeu algo com esse conteúdo e quiser trocar ideia, me encontra. Vamos fazer uma conferência de verdade.</div></div>
+          <div class="rt-row"><div class="rt-seg">CTA</div><div class="rt-fala"><span class="cta">Nos vemos amanhã em [local]. 📍</span></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+
+<!-- ══════════════════════════════════
+     SEMANA 6 — 22–24 ABR
+     AO VIVO
+══════════════════════════════════ -->
+<div class="week-panel" id="week-s6">
+
+  <div class="wk-header">
+    <div class="wk-label">Semana 6 · 22 a 24 de abril</div>
+    <h2>Cobertura ao vivo — você está no centro</h2>
+    <p>Nos três dias do evento, você não é só participante. É o repórter de dentro. Quem não pôde ir acompanha por você. Quem foi sente que a conferência foi documentada com seriedade.</p>
+  </div>
+
+  <div class="sem-info"><div class="sem-icon">🎬</div><div class="sem-text"><h3>Objetivo estratégico</h3><p>Consolidar a posição de referência no pós-evento. Quem documentou a conferência com seriedade e perspectiva é lembrado como figura central — independente do cargo formal que ocupou.</p></div></div>
+
+  <div class="cal-day" id="d36">
+    <div class="cal-day-header" onclick="tog('d36')">
+      <div class="cal-day-num">22</div>
+      <div class="cal-day-info"><h3>Dia 1 — abertura e primeiros debates</h3><p>Quarta · cobertura da abertura e posicionamento inicial</p></div>
+      <div class="day-badges"><span class="dbadge db-ig">2× Reel</span><span class="dbadge db-wpp">Áudio</span></div>
+      <span class="toggle-arr">▾</span>
+    </div>
+    <div class="cal-body">
+      <div class="piece">
+        <div class="piece-hd"><span class="ptype pt-r1">Reel 1 — manhã</span><span class="ptitle">"Estamos aqui" — abertura da conferência</span><span class="pmeta">~30 seg, direto</span></div>
+        <div class="rt">
+          <div class="rt-row"><div class="rt-seg">Tom</div><div class="rt-fala">Espontâneo, filmado no local, antes ou depois da abertura. <span class="hook">"A conferência começou. Estamos em [local]. Nos próximos três dias, as decisões sobre saúde de Montes Claros para os próximos anos serão feitas aqui."</span> Sem roteiro rígido — autenticidade vale mais que perfeição técnica.</div></div>
+          <div class="rt-row"><div class="rt-seg">CTA</div><div class="rt-fala"><span class="cta">"Vou trazer o que acontecer aqui direto. Acompanha nos stories."</span></div></div>
+        </div>
+        <div class="snote">Estratégia: vídeo ao vivo de dentro cria presença. Você não apenas comenta de fora — você está lá. Isso vale mais do que qualquer análise prévia.</div>
+      </div>
+      <div class="piece">
+        <div class="piece-hd"><span class="ptype pt-r2">Reel 2 — tarde</span><span class="ptitle">Primeiras impressões — o que o debate está mostrando</span><span class="pmeta">~60 seg</span></div>
+        <div class="rt">
+          <div class="rt-row"><div class="rt-seg">Tom</div><div class="rt-fala">Análise do que foi debatido no dia 1. Sem revelar informações sigilosas ou identificar conflitos específicos com nomes. Foco: "os temas que mais geraram debate foram X e Y — e isso faz sentido porque…". Demonstra capacidade analítica em tempo real.</div></div>
+          <div class="rt-row"><div class="rt-seg">CTA</div><div class="rt-fala"><span class="cta">"Amanhã é o dia dos Grupos de Trabalho. É onde as propostas são construídas e votadas. Vou trazer como foi."</span></div></div>
+        </div>
+      </div>
+      <div class="piece">
+        <div class="piece-hd"><span class="ptype pt-au">Áudio WPP — noite</span><span class="ptitle">Impressões do dia 1 — para o grupo interno</span><span class="pmeta">~2–3 min</span></div>
+        <div class="rt">
+          <div class="rt-row"><div class="rt-seg">Tom mais direto</div><div class="rt-fala">No WPP você pode ser mais direto e analítico. Fale sobre o que funcionou, o que preocupou, o que foi surpreendente. O grupo interno merece uma leitura mais franca do que o público do Instagram.</div></div>
+          <div class="rt-row"><div class="rt-seg">Exemplo</div><div class="rt-fala">"O debate sobre financiamento foi o mais acalorado. Percebi que muitos delegados chegaram sem entender a diferença entre piso constitucional e emendas parlamentares — exatamente o que eu falei que ia acontecer. Amanhã o GT vai ser o teste real."</div></div>
+        </div>
+        <div class="snote">Estratégia: "exatamente o que eu falei que ia acontecer" — isso não é arrogância se dito com tom de preocupação genuína. Valida retroativamente toda a série de conteúdo anterior.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="cal-day" id="d37">
+    <div class="cal-day-header" onclick="tog('d37')">
+      <div class="cal-day-num">23</div>
+      <div class="cal-day-info"><h3>Dia 2 — Grupos de Trabalho</h3><p>Quinta · o coração do processo deliberativo</p></div>
+      <div class="day-badges"><span class="dbadge db-ig">2× Reel</span><span class="dbadge db-wpp">Áudio</span></div>
+      <span class="toggle-arr">▾</span>
+    </div>
+    <div class="cal-body">
+      <div class="piece">
+        <div class="piece-hd"><span class="ptype pt-r1">Reel 1 — manhã/tarde</span><span class="ptitle">Os Grupos de Trabalho — como funciona por dentro</span><span class="pmeta">~60 seg</span></div>
+        <div class="rt">
+          <div class="rt-row"><div class="rt-seg">Descrição</div><div class="rt-fala"><span class="hook">"Agora é onde acontece o trabalho real. Quatro grupos simultâneos, um por eixo. Cada delegado apresenta proposta, debate, vota."</span> Explique rapidamente o processo para quem acompanha de fora — transforma o espectador em testemunha do processo democrático.</div></div>
+          <div class="rt-row"><div class="rt-seg">Perspectiva</div><div class="rt-fala">Sem expor conteúdo deliberativo em tempo real — isso seria inapropriado. Mas contextualizar o processo demonstra que você entende o que está acontecendo em profundidade.</div></div>
+        </div>
+      </div>
+      <div class="piece">
+        <div class="piece-hd"><span class="ptype pt-r2">Reel 2 — final do dia</span><span class="ptitle">As propostas que saíram do GT — primeiras impressões</span><span class="pmeta">~60 seg</span></div>
+        <div class="rt">
+          <div class="rt-row"><div class="rt-seg">Conteúdo</div><div class="rt-fala">Sem revelar votações ou deliberações antes da plenária final — respeitar o processo é parte da autoridade. Mas você pode falar sobre os temas que dominaram, os eixos que mais geraram propostas, e a qualidade geral do debate. <span class="hook">"Hoje foi um dia de trabalho real. As propostas que vi sendo construídas têm mais qualidade do que em processos anteriores."</span></div></div>
+          <div class="rt-row"><div class="rt-seg">CTA</div><div class="rt-fala"><span class="cta">"Amanhã: plenária final. É onde tudo é votado. Acompanha."</span></div></div>
+        </div>
+        <div class="snote">Estratégia: "mais qualidade do que em processos anteriores" — sutil comparação que posiciona você como alguém com memória institucional e capacidade avaliativa longitudinal.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="cal-day" id="d38">
+    <div class="cal-day-header" onclick="tog('d38')">
+      <div class="cal-day-num">24</div>
+      <div class="cal-day-info"><h3>Dia 3 — Plenária Final e encerramento</h3><p>Sexta · o fechamento e a memória do processo</p></div>
+      <div class="day-badges"><span class="dbadge db-ig">2× Reel</span><span class="dbadge db-wpp">Áudio</span></div>
+      <span class="toggle-arr">▾</span>
+    </div>
+    <div class="cal-body">
+      <div class="piece">
+        <div class="piece-hd"><span class="ptype pt-r1">Reel 1 — tarde</span><span class="ptitle">A conferência deliberou. O que foi aprovado importa.</span><span class="pmeta">~60 seg</span></div>
+        <div class="rt">
+          <div class="rt-row"><div class="rt-seg">Abertura</div><div class="rt-fala"><span class="hook">"A 11ª Conferência Municipal de Saúde de Montes Claros encerrou hoje. E as deliberações que saíram daqui vão para a etapa estadual representar a nossa cidade."</span></div></div>
+          <div class="rt-row"><div class="rt-seg">Análise</div><div class="rt-fala">Comente o que foi aprovado em termos gerais — eixos, temas dominantes, propostas de destaque que você pode tornar públicas. Não os números de votação — o tom do que aconteceu.</div></div>
+          <div class="rt-row"><div class="rt-seg">Perspectiva</div><div class="rt-fala">O que você achou da qualidade do processo? O que foi melhor do que esperado? O que ainda precisa melhorar? Tom honesto e analítico — sem panegírico e sem niilismo.</div></div>
+          <div class="rt-row"><div class="rt-seg">CTA</div><div class="rt-fala"><span class="cta">"Vou continuar acompanhando o caminho dessas propostas até a etapa estadual. Segue o perfil."</span></div></div>
+        </div>
+      </div>
+      <div class="piece">
+        <div class="piece-hd"><span class="ptype pt-r2">Reel 2 — encerramento</span><span class="ptitle">O que fica — e o que começa agora</span><span class="pmeta">~60 seg</span></div>
+        <div class="rt">
+          <div class="rt-row"><div class="rt-seg">Tom</div><div class="rt-fala">O vídeo mais pessoal e reflexivo de toda a série. <span class="hook">"Passamos mais de um mês falando sobre isso. Hoje o evento terminou — mas o controle social não termina com o evento."</span></div></div>
+          <div class="rt-row"><div class="rt-seg">Continuidade</div><div class="rt-fala">Anuncie o que vem depois: acompanhar o relatório final, cobrar as propostas aprovadas, continuar com conteúdo sobre controle social. O público que acompanhou toda a série merece saber que o compromisso é contínuo.</div></div>
+          <div class="rt-row"><div class="rt-seg">Fechamento</div><div class="rt-fala"><span class="cta">"Obrigado a quem acompanhou, participou e fez perguntas. Isso foi construído junto. Continuamos."</span></div></div>
+        </div>
+        <div class="snote">Estratégia: "isso foi construído junto" — postura colaborativa que valoriza a audiência sem ser condescendente. E "continuamos" abre o próximo ciclo de conteúdo antes mesmo de terminar esse.</div>
+      </div>
+      <div class="piece">
+        <div class="piece-hd"><span class="ptype pt-au">Áudio WPP — noite</span><span class="ptitle">Avaliação franca do processo — para o grupo</span><span class="pmeta">~3 min</span></div>
+        <div class="rt">
+          <div class="rt-row"><div class="rt-seg">Tom</div><div class="rt-fala">No grupo interno, você pode ser mais direto. Avalie o que funcionou, o que foi problemático, o que precisa melhorar nas próximas edições. Não em tom de reclamação — em tom de quem já está pensando no próximo ciclo. Quem fala do próximo ciclo é quem lidera o atual.</div></div>
+          <div class="rt-row"><div class="rt-seg">Proposta</div><div class="rt-fala">"Já estou pensando em como a gente pode melhorar a preparação dos delegados para a etapa estadual. Se alguém quiser colaborar nisso, me chama." — Convocação para ação continuada, liderança pela iniciativa.</div></div>
+        </div>
+        <div class="snote">Estratégia: finalizar falando do próximo passo, não do que acabou. Liderança real se mede pela disposição de continuar quando o holofote apaga.</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<footer>
+  <strong>Calendário Semanas 2–6 · Documento pessoal de uso exclusivo</strong><br>
+  11ª CMS Montes Claros · 22–24 abr 2026 · Baseado no Doc. Orientador 18ª CNS · CNS Brasil · Mar 2026
+</footer>
+
+<script>
+function showWeek(id) {
+  document.querySelectorAll('.week-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.wbtn').forEach(b => b.classList.remove('active'));
+  document.getElementById('week-' + id).classList.add('active');
+  const map = ['s2','s3','s4','s5','s6'];
+  document.querySelectorAll('.wbtn')[map.indexOf(id)].classList.add('active');
+  window.scrollTo({ top: document.querySelector('.week-nav').offsetTop - 2, behavior: 'smooth' });
+}
+
+function tog(id) {
+  const el = document.getElementById(id);
+  el.classList.toggle('open');
+}
+</script>
+</body>
+</html>

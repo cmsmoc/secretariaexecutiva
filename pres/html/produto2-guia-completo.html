@@ -1,0 +1,1536 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"/>
+<title>7 Dias de Comida com R$120 — Guia Completo</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;800&family=Lato:wght@300;400;600;700;900&display=swap" rel="stylesheet"/>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Lato', sans-serif;
+    background: #fff;
+    color: #1e1e1e;
+    line-height: 1.65;
+  }
+
+  :root {
+    --green: #3d6b52;
+    --green-light: #5a8a6a;
+    --green-pale: #e8f2ec;
+    --yellow: #e8c547;
+    --yellow-pale: #fdf6d8;
+    --bege: #f7f3ec;
+    --bege-m: #ede7db;
+    --ink: #1e1e1e;
+    --ink-m: #3d3d3d;
+    --ink-s: #6b6b6b;
+    --border: #e0dbd0;
+    --red: #c0392b;
+  }
+
+  .page {
+    width: 210mm;
+    min-height: 297mm;
+    margin: 0 auto;
+    padding: 16mm 18mm 14mm 18mm;
+    background: #fff;
+    page-break-after: always;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .page:last-child { page-break-after: auto; }
+
+  @media print {
+    * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    body { background: #fff; }
+    .page {
+      width: 210mm;
+      min-height: 297mm;
+      margin: 0;
+      padding: 16mm 18mm 14mm 18mm;
+      page-break-after: always;
+      box-shadow: none;
+    }
+    .page:last-child { page-break-after: auto; }
+    @page { size: A4; margin: 0; }
+  }
+
+  @media screen {
+    body { background: #e5e5e5; padding: 20px 0; }
+    .page {
+      box-shadow: 0 4px 30px rgba(0,0,0,0.15);
+      margin: 20px auto;
+    }
+  }
+
+  /* CAPA */
+  .capa {
+    background: var(--green);
+    width: 210mm;
+    min-height: 297mm;
+    margin: 0 auto;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .capa::before {
+    content: '';
+    position: absolute;
+    right: -80px; top: -80px;
+    width: 350px; height: 350px;
+    background: radial-gradient(circle, rgba(255,255,255,0.07) 0%, transparent 70%);
+    border-radius: 50%;
+  }
+
+  .capa::after {
+    content: '';
+    position: absolute;
+    left: -100px; bottom: -60px;
+    width: 300px; height: 300px;
+    background: radial-gradient(circle, rgba(232,197,71,0.1) 0%, transparent 70%);
+    border-radius: 50%;
+  }
+
+  .capa-inner {
+    position: relative;
+    z-index: 1;
+    padding: 20mm 18mm;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+
+  .capa-brand {
+    display: inline-block;
+    background: rgba(255,255,255,0.12);
+    color: rgba(255,255,255,0.8);
+    font-size: 8pt;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    padding: 5px 14px;
+    border-radius: 50px;
+    margin-bottom: 20mm;
+  }
+
+  .capa-flag {
+    display: inline-block;
+    background: var(--yellow);
+    color: var(--ink);
+    font-size: 8pt;
+    font-weight: 900;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 4px 12px;
+    border-radius: 4px;
+    margin-bottom: 8px;
+  }
+
+  .capa h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: 38pt;
+    color: #fff;
+    line-height: 1.05;
+    font-weight: 800;
+    margin-bottom: 8px;
+  }
+
+  .capa h1 em { color: var(--yellow); font-style: italic; }
+
+  .capa-tagline {
+    font-size: 11.5pt;
+    color: rgba(255,255,255,0.65);
+    font-weight: 300;
+    line-height: 1.5;
+    margin-bottom: 10mm;
+  }
+
+  .capa-divider { width: 60px; height: 3px; background: var(--yellow); margin: 8mm 0; border-radius: 2px; }
+
+  .capa-includes {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6px;
+    margin-bottom: 14mm;
+  }
+
+  .capa-include-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    font-size: 9.5pt;
+    color: rgba(255,255,255,0.82);
+    line-height: 1.4;
+  }
+
+  .ci-dot {
+    width: 16px;
+    height: 16px;
+    background: var(--yellow);
+    border-radius: 50%;
+    flex-shrink: 0;
+    margin-top: 2px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 8pt;
+    font-weight: 900;
+    color: var(--ink);
+  }
+
+  .capa-bottom {
+    border-top: 1px solid rgba(255,255,255,0.15);
+    padding-top: 6mm;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+  }
+
+  .capa-price { font-family: 'Playfair Display', serif; font-size: 28pt; color: var(--yellow); font-weight: 800; }
+  .capa-price-label { font-size: 8pt; color: rgba(255,255,255,0.45); text-transform: uppercase; letter-spacing: 0.1em; }
+  .capa-pages { font-size: 8pt; color: rgba(255,255,255,0.35); text-align: right; line-height: 1.6; }
+
+  /* PAGE HEADER */
+  .ph {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 4mm;
+    border-bottom: 1.5px solid var(--green);
+    margin-bottom: 6mm;
+  }
+
+  .ph-brand { font-size: 7pt; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--green); }
+  .ph-title { font-size: 7pt; color: var(--ink-s); }
+
+  /* TYPOGRAPHY */
+  .sec-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 20pt;
+    color: var(--ink);
+    margin-bottom: 2mm;
+    font-weight: 700;
+  }
+
+  .sec-sub {
+    font-size: 9.5pt;
+    color: var(--ink-s);
+    margin-bottom: 5mm;
+    font-weight: 300;
+  }
+
+  .chapter-divider {
+    background: var(--green);
+    color: #fff;
+    padding: 8px 14px;
+    border-radius: 5px;
+    font-size: 8.5pt;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-bottom: 4mm;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  /* CARDS */
+  .highlight {
+    background: var(--green-pale);
+    border-left: 3px solid var(--green-light);
+    border-radius: 4px;
+    padding: 3.5mm 4.5mm;
+    margin-bottom: 4mm;
+  }
+
+  .highlight-title {
+    font-size: 7.5pt;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--green);
+    margin-bottom: 2mm;
+  }
+
+  .highlight p, .highlight li { font-size: 9pt; color: var(--ink-m); line-height: 1.55; }
+  .highlight ul { list-style: none; padding: 0; }
+  .highlight ul li { margin-bottom: 3px; padding-left: 14px; position: relative; }
+  .highlight ul li::before { content: "→"; position: absolute; left: 0; color: var(--green); font-weight: 700; }
+
+  .yellow-box {
+    background: var(--yellow-pale);
+    border-left: 3px solid #c9a028;
+    border-radius: 4px;
+    padding: 3.5mm 4.5mm;
+    margin-bottom: 4mm;
+  }
+
+  .yellow-box-title { font-size: 7.5pt; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: #8a6c00; margin-bottom: 2mm; }
+  .yellow-box p, .yellow-box li { font-size: 9pt; color: var(--ink-m); line-height: 1.55; }
+
+  /* TABELA LISTA DE COMPRAS */
+  .lista-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 4mm;
+    font-size: 8.5pt;
+  }
+
+  .lista-table thead tr { background: var(--bege); }
+  .lista-table thead th {
+    padding: 5px 7px;
+    text-align: left;
+    font-size: 7pt;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--ink-s);
+    border-bottom: 1.5px solid var(--border);
+  }
+
+  .lista-table tbody tr { border-bottom: 1px solid var(--border); }
+  .lista-table tbody tr:last-child { border-bottom: none; }
+  .lista-table tbody td { padding: 5px 7px; color: var(--ink-m); vertical-align: middle; }
+  .lista-table tbody td.price { text-align: right; font-weight: 600; color: var(--ink); }
+
+  /* CARDÁPIO */
+  .card-dia {
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    overflow: hidden;
+    margin-bottom: 4mm;
+  }
+
+  .card-dia-header {
+    background: var(--green);
+    color: #fff;
+    padding: 5px 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .card-dia-title { font-family: 'Playfair Display', serif; font-size: 11pt; font-weight: 700; }
+  .card-dia-sub { font-size: 8pt; color: rgba(255,255,255,0.6); }
+
+  .card-dia-body {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+  }
+
+  .card-refeicao {
+    padding: 5px 10px;
+    border-right: 1px solid var(--border);
+  }
+
+  .card-refeicao:last-child { border-right: none; }
+
+  .cr-label {
+    font-size: 7pt;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--green);
+    margin-bottom: 3px;
+    display: block;
+  }
+
+  .cr-main { font-size: 8.5pt; font-weight: 600; color: var(--ink); display: block; }
+  .cr-extra { font-size: 7.5pt; color: var(--ink-s); display: block; }
+
+  /* RECEITAS */
+  .receita-card {
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    margin-bottom: 5mm;
+    overflow: hidden;
+  }
+
+  .receita-header {
+    background: var(--bege);
+    padding: 5px 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .receita-nome { font-family: 'Playfair Display', serif; font-size: 12pt; font-weight: 700; color: var(--ink); }
+  .receita-meta { display: flex; gap: 10px; }
+  .receita-tag {
+    background: var(--green-pale);
+    color: var(--green);
+    font-size: 7pt;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 20px;
+  }
+
+  .receita-body {
+    display: grid;
+    grid-template-columns: 1fr 1.6fr;
+    gap: 0;
+  }
+
+  .receita-ingredientes {
+    padding: 8px 12px;
+    border-right: 1px solid var(--border);
+    background: #fafafa;
+  }
+
+  .receita-modo { padding: 8px 12px; }
+
+  .receita-col-title {
+    font-size: 7pt;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--ink-s);
+    margin-bottom: 5px;
+    padding-bottom: 3px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .receita-ingredientes ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .receita-ingredientes ul li {
+    font-size: 8pt;
+    color: var(--ink-m);
+    line-height: 1.6;
+    padding-left: 10px;
+    position: relative;
+  }
+
+  .receita-ingredientes ul li::before { content: "·"; position: absolute; left: 2px; color: var(--green); font-weight: 700; }
+
+  .receita-modo ol {
+    padding-left: 16px;
+    margin: 0;
+  }
+
+  .receita-modo ol li {
+    font-size: 8pt;
+    color: var(--ink-m);
+    line-height: 1.6;
+    margin-bottom: 3px;
+  }
+
+  .receita-footer {
+    background: var(--bege);
+    border-top: 1px solid var(--border);
+    padding: 4px 12px;
+    display: flex;
+    gap: 16px;
+    font-size: 7.5pt;
+    color: var(--ink-s);
+  }
+
+  .rf-item span { color: var(--green); font-weight: 700; }
+
+  /* TABELA SUBSTITUIÇÕES */
+  .subs-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 8.5pt;
+    margin-bottom: 4mm;
+  }
+
+  .subs-table thead tr { background: var(--green); }
+  .subs-table thead th { padding: 6px 10px; color: #fff; text-align: left; font-size: 7.5pt; font-weight: 700; }
+  .subs-table tbody tr { border-bottom: 1px solid var(--border); }
+  .subs-table tbody tr:nth-child(even) { background: var(--bege); }
+  .subs-table tbody td { padding: 6px 10px; color: var(--ink-m); }
+  .subs-table tbody td:first-child { font-weight: 600; color: var(--ink); }
+  .subs-table tbody td.arrow { text-align: center; color: var(--green); font-weight: 700; width: 30px; }
+
+  /* DICAS DE ECONOMIA */
+  .dica-card {
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 4mm 5mm;
+    margin-bottom: 3mm;
+    display: flex;
+    gap: 4mm;
+    align-items: flex-start;
+  }
+
+  .dica-icon { font-size: 16pt; flex-shrink: 0; line-height: 1; margin-top: 2px; }
+  .dica-content { flex: 1; }
+  .dica-title { font-size: 9.5pt; font-weight: 700; color: var(--ink); margin-bottom: 2px; }
+  .dica-text { font-size: 8.5pt; color: var(--ink-m); line-height: 1.5; }
+
+  /* ORGANIZAÇÃO SEMANAL */
+  .org-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 8.5pt;
+    margin-bottom: 4mm;
+  }
+
+  .org-table thead tr { background: var(--green); }
+  .org-table thead th { padding: 6px 8px; color: #fff; font-size: 7.5pt; font-weight: 700; }
+  .org-table tbody tr { border-bottom: 1px solid var(--border); }
+  .org-table tbody tr:nth-child(even) { background: var(--bege); }
+  .org-table tbody td { padding: 6px 8px; color: var(--ink-m); vertical-align: top; }
+  .org-table tbody td:first-child { font-weight: 700; color: var(--ink); white-space: nowrap; }
+
+  /* TOTAL BOX */
+  .total-box {
+    background: var(--green);
+    border-radius: 6px;
+    padding: 4mm 5mm;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .total-label { color: rgba(255,255,255,0.7); font-size: 8.5pt; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; }
+  .total-value { font-family: 'Playfair Display', serif; font-size: 20pt; color: var(--yellow); font-weight: 800; }
+  .total-note { font-size: 7pt; color: rgba(255,255,255,0.45); text-align: right; margin-top: 1px; }
+
+  /* CTA */
+  .cta-page {
+    background: var(--ink);
+    width: 210mm;
+    min-height: 297mm;
+    margin: 0 auto;
+    padding: 22mm 18mm;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    page-break-after: auto;
+  }
+
+  .cta-eyebrow { font-size: 8pt; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; color: var(--yellow); margin-bottom: 4mm; }
+  .cta-title { font-family: 'Playfair Display', serif; font-size: 26pt; color: #fff; line-height: 1.2; margin-bottom: 5mm; font-weight: 800; }
+  .cta-title em { color: var(--yellow); font-style: italic; }
+  .cta-sub { font-size: 10pt; color: rgba(255,255,255,0.6); font-weight: 300; line-height: 1.6; max-width: 130mm; margin: 0 auto 7mm; }
+  .cta-divider { width: 50px; height: 2px; background: var(--yellow); margin: 5mm auto; }
+
+  .cta-box {
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 8px;
+    padding: 6mm 8mm;
+    margin-bottom: 7mm;
+    text-align: left;
+    width: 100%;
+    max-width: 140mm;
+  }
+
+  .cta-box h4 { font-size: 7.5pt; font-weight: 700; text-transform: uppercase; letter-spacing: 0.12em; color: var(--yellow); margin-bottom: 3mm; }
+
+  .cta-item { display: flex; gap: 8px; margin-bottom: 4px; font-size: 9.5pt; color: rgba(255,255,255,0.8); line-height: 1.45; }
+  .cta-dot { color: var(--yellow); flex-shrink: 0; }
+
+  .price-block { background: var(--green); border-radius: 8px; padding: 5mm 10mm; margin-bottom: 5mm; }
+  .price-old { font-size: 10pt; color: rgba(255,255,255,0.35); text-decoration: line-through; }
+  .price-new { font-family: 'Playfair Display', serif; font-size: 30pt; color: var(--yellow); font-weight: 800; }
+
+  .cta-note { font-size: 8pt; color: rgba(255,255,255,0.3); margin-top: 5mm; }
+
+  p { font-size: 9.5pt; color: var(--ink-m); line-height: 1.65; margin-bottom: 3mm; }
+  strong { font-weight: 700; }
+</style>
+</head>
+<body>
+
+<!-- CAPA -->
+<div class="capa">
+  <div class="capa-inner">
+    <div>
+      <div class="capa-brand">Do Mercado Pra Mesa</div>
+      <br/>
+      <div class="capa-flag">Guia Completo</div>
+      <h1>7 Dias de<br/>Comida com<br/><em>R$120</em></h1>
+      <p class="capa-tagline">
+        Do carrinho de compras até o prato.<br/>
+        Lista, cardápio, receitas e dicas de economia — tudo pronto pra usar.
+      </p>
+      <div class="capa-divider"></div>
+      <div class="capa-includes">
+        <div class="capa-include-item"><div class="ci-dot">✓</div><span>Cardápio 7 dias completo</span></div>
+        <div class="capa-include-item"><div class="ci-dot">✓</div><span>10+ receitas passo a passo</span></div>
+        <div class="capa-include-item"><div class="ci-dot">✓</div><span>Lista de compras detalhada</span></div>
+        <div class="capa-include-item"><div class="ci-dot">✓</div><span>Tabela de substituições</span></div>
+        <div class="capa-include-item"><div class="ci-dot">✓</div><span>Dicas reais de economia</span></div>
+        <div class="capa-include-item"><div class="ci-dot">✓</div><span>Organização da semana</span></div>
+      </div>
+    </div>
+    <div class="capa-bottom">
+      <div>
+        <div class="capa-price-label">Produto 2 — Principal</div>
+        <div class="capa-price">R$37</div>
+      </div>
+      <div class="capa-pages">
+        Do Mercado Pra Mesa<br/>
+        Série Economia Real · Vol. 1
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- INTRODUÇÃO -->
+<div class="page">
+  <div class="ph">
+    <span class="ph-brand">Do Mercado Pra Mesa</span>
+    <span class="ph-title">7 Dias de Comida com R$120</span>
+  </div>
+
+  <div class="sec-title">Antes de começar</div>
+  <p class="sec-sub">Duas páginas que fazem diferença.</p>
+
+  <p>Esse guia existe porque tem gente que chega no fim do mês sem dinheiro, sem ideia do que cozinhar, e sem conseguir transformar uma lista de ingredientes básicos numa refeição decente. Não é falta de inteligência. É falta de um sistema.</p>
+
+  <p>O que você tem nas mãos resolve esse problema. Do começo ao fim. Com R$120 você consegue comer bem — não gourmet, mas bem — durante 7 dias. Com variedade, sabor e sem passar necessidade.</p>
+
+  <div class="chapter-divider">📌 O que esse guia não é</div>
+
+  <div class="dica-card">
+    <div class="dica-icon">❌</div>
+    <div class="dica-content">
+      <div class="dica-title">Não é dieta</div>
+      <div class="dica-text">Não tem contagem de calorias, macros ou regras de cortar grupos alimentares. É comida real, equilibrada, do jeito que a maioria das pessoas come.</div>
+    </div>
+  </div>
+
+  <div class="dica-card">
+    <div class="dica-icon">❌</div>
+    <div class="dica-content">
+      <div class="dica-title">Não é luxo</div>
+      <div class="dica-text">Não tem ingredientes caros, defasados ou difíceis de achar. Tudo que está aqui você encontra no mercadinho do seu bairro.</div>
+    </div>
+  </div>
+
+  <div class="dica-card">
+    <div class="dica-icon">❌</div>
+    <div class="dica-content">
+      <div class="dica-title">Não é complicado</div>
+      <div class="dica-text">As receitas têm no máximo 6 ingredientes. Os passos são diretos. Qualquer um que saiba ligar um fogão consegue fazer.</div>
+    </div>
+  </div>
+
+  <div style="height: 4mm;"></div>
+  <div class="chapter-divider">✅ O que você vai conseguir</div>
+
+  <div class="highlight">
+    <ul>
+      <li>Fazer as compras da semana sem estourar o orçamento de R$120</li>
+      <li>Ter café, almoço e jantar planejados para os 7 dias — sem depender de delivery</li>
+      <li>Cozinhar rápido (20–40 minutos por refeição) mesmo sem experiência</li>
+      <li>Reduzir o desperdício de alimentos em casa</li>
+      <li>Entender quais ingredientes são mais versáteis e rendem mais</li>
+    </ul>
+  </div>
+
+  <div class="yellow-box" style="margin-top: 4mm;">
+    <div class="yellow-box-title">💡 Como usar o guia</div>
+    <p>Comece pela lista de compras — faça as compras antes de qualquer outra coisa. Depois olhe o cardápio dos 7 dias para entender o fluxo da semana. Aí sim consulte as receitas quando chegar a hora de cada refeição. Não precisa decorar nada — é pra consultar na hora.</p>
+  </div>
+</div>
+
+<!-- LISTA DE COMPRAS COMPLETA -->
+<div class="page">
+  <div class="ph">
+    <span class="ph-brand">Do Mercado Pra Mesa</span>
+    <span class="ph-title">Lista de Compras Completa</span>
+  </div>
+
+  <div class="sec-title">Lista de compras</div>
+  <p class="sec-sub">Tudo que você vai precisar para a semana. Não falta nada aqui.</p>
+
+  <div class="chapter-divider">🥬 Hortifruti</div>
+  <table class="lista-table">
+    <thead><tr><th>Item</th><th>Qtd</th><th>Unid.</th><th>Est. Preço</th></tr></thead>
+    <tbody>
+      <tr><td>Banana prata</td><td>1</td><td>cacho (~1,5kg)</td><td class="price">R$5,50</td></tr>
+      <tr><td>Cebola</td><td>1</td><td>kg</td><td class="price">R$4,00</td></tr>
+      <tr><td>Alho</td><td>1</td><td>cabeça</td><td class="price">R$2,00</td></tr>
+      <tr><td>Tomate</td><td>500</td><td>g</td><td class="price">R$3,50</td></tr>
+      <tr><td>Couve-folha</td><td>1</td><td>maço</td><td class="price">R$2,50</td></tr>
+      <tr><td>Abóbora</td><td>500</td><td>g</td><td class="price">R$3,00</td></tr>
+      <tr><td>Cenoura</td><td>500</td><td>g</td><td class="price">R$3,50</td></tr>
+      <tr><td>Limão</td><td>4</td><td>unidades</td><td class="price">R$2,00</td></tr>
+      <tr><td>Cheiro-verde</td><td>1</td><td>maço</td><td class="price">R$2,50</td></tr>
+    </tbody>
+  </table>
+
+  <div class="chapter-divider">🍗 Proteínas</div>
+  <table class="lista-table">
+    <thead><tr><th>Item</th><th>Qtd</th><th>Unid.</th><th>Est. Preço</th></tr></thead>
+    <tbody>
+      <tr><td>Coxa/sobrecoxa de frango</td><td>1</td><td>kg</td><td class="price">R$11,00</td></tr>
+      <tr><td>Ovos</td><td>12</td><td>unidades</td><td class="price">R$9,00</td></tr>
+      <tr><td>Sardinha em lata (molho de tomate)</td><td>2</td><td>latas</td><td class="price">R$7,00</td></tr>
+      <tr><td>Feijão carioca</td><td>1</td><td>kg</td><td class="price">R$8,00</td></tr>
+    </tbody>
+  </table>
+
+  <div class="chapter-divider">🍚 Carboidratos</div>
+  <table class="lista-table">
+    <thead><tr><th>Item</th><th>Qtd</th><th>Unid.</th><th>Est. Preço</th></tr></thead>
+    <tbody>
+      <tr><td>Arroz branco</td><td>2</td><td>kg</td><td class="price">R$9,00</td></tr>
+      <tr><td>Macarrão espaguete</td><td>400</td><td>g</td><td class="price">R$3,50</td></tr>
+      <tr><td>Batata-doce</td><td>500</td><td>g</td><td class="price">R$4,00</td></tr>
+      <tr><td>Pão de forma</td><td>1</td><td>pacote (400g)</td><td class="price">R$5,50</td></tr>
+    </tbody>
+  </table>
+
+  <div class="chapter-divider">🥛 Laticínios</div>
+  <table class="lista-table">
+    <thead><tr><th>Item</th><th>Qtd</th><th>Unid.</th><th>Est. Preço</th></tr></thead>
+    <tbody>
+      <tr><td>Leite UHT integral</td><td>2</td><td>litros</td><td class="price">R$8,00</td></tr>
+      <tr><td>Queijo muçarela fatiado</td><td>200</td><td>g</td><td class="price">R$8,00</td></tr>
+    </tbody>
+  </table>
+
+  <div class="chapter-divider">🧂 Temperos & Básicos</div>
+  <table class="lista-table">
+    <thead><tr><th>Item</th><th>Qtd</th><th>Unid.</th><th>Est. Preço</th></tr></thead>
+    <tbody>
+      <tr><td>Óleo de soja</td><td>500</td><td>ml</td><td class="price">R$4,50</td></tr>
+      <tr><td>Sal refinado</td><td>500</td><td>g</td><td class="price">R$1,50</td></tr>
+      <tr><td>Extrato de tomate</td><td>2</td><td>un. (130g)</td><td class="price">R$4,00</td></tr>
+      <tr><td>Caldo de galinha (tablete)</td><td>1</td><td>caixa (6 tab)</td><td class="price">R$3,50</td></tr>
+      <tr><td>Café em pó</td><td>250</td><td>g</td><td class="price">R$6,00</td></tr>
+      <tr><td>Açúcar cristal</td><td>500</td><td>g</td><td class="price">R$2,50</td></tr>
+    </tbody>
+  </table>
+
+  <div class="total-box">
+    <div>
+      <div class="total-label">Total estimado</div>
+      <div class="total-note">25 itens · para 1–2 pessoas · 7 dias</div>
+    </div>
+    <div style="text-align: right;">
+      <div class="total-value">R$117,50</div>
+      <div class="total-note">sobra ~R$2,50</div>
+    </div>
+  </div>
+</div>
+
+<!-- CARDÁPIO — DIAS 1–4 -->
+<div class="page">
+  <div class="ph">
+    <span class="ph-brand">Do Mercado Pra Mesa</span>
+    <span class="ph-title">Cardápio — Dias 1 a 4</span>
+  </div>
+
+  <div class="sec-title">Cardápio da semana</div>
+  <p class="sec-sub">Dias 1 a 4. As receitas de cada refeição estão nas páginas seguintes.</p>
+
+  <div class="card-dia">
+    <div class="card-dia-header">
+      <div class="card-dia-title">Segunda-feira — Dia 1</div>
+      <div class="card-dia-sub">Frango como base do almoço</div>
+    </div>
+    <div class="card-dia-body">
+      <div class="card-refeicao">
+        <span class="cr-label">☕ Café da manhã</span>
+        <span class="cr-main">Café com leite</span>
+        <span class="cr-extra">+ 2 fatias de pão com queijo</span>
+      </div>
+      <div class="card-refeicao">
+        <span class="cr-label">🍽 Almoço</span>
+        <span class="cr-main">Arroz + feijão</span>
+        <span class="cr-extra">+ frango ensopado + couve refogada</span>
+      </div>
+      <div class="card-refeicao">
+        <span class="cr-label">🌙 Jantar</span>
+        <span class="cr-main">Omelete de queijo</span>
+        <span class="cr-extra">+ pão torrado</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="card-dia">
+    <div class="card-dia-header">
+      <div class="card-dia-title">Terça-feira — Dia 2</div>
+      <div class="card-dia-sub">Aproveitar o frango do dia anterior</div>
+    </div>
+    <div class="card-dia-body">
+      <div class="card-refeicao">
+        <span class="cr-label">☕ Café da manhã</span>
+        <span class="cr-main">Café com leite</span>
+        <span class="cr-extra">+ banana + pão</span>
+      </div>
+      <div class="card-refeicao">
+        <span class="cr-label">🍽 Almoço</span>
+        <span class="cr-main">Arroz + frango desfiado</span>
+        <span class="cr-extra">+ cenoura refogada + feijão</span>
+      </div>
+      <div class="card-refeicao">
+        <span class="cr-label">🌙 Jantar</span>
+        <span class="cr-main">Macarrão com sardinha</span>
+        <span class="cr-extra">+ molho de tomate simples</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="card-dia">
+    <div class="card-dia-header">
+      <div class="card-dia-title">Quarta-feira — Dia 3</div>
+      <div class="card-dia-sub">Ovos como proteína principal</div>
+    </div>
+    <div class="card-dia-body">
+      <div class="card-refeicao">
+        <span class="cr-label">☕ Café da manhã</span>
+        <span class="cr-main">Ovos mexidos</span>
+        <span class="cr-extra">+ café + banana</span>
+      </div>
+      <div class="card-refeicao">
+        <span class="cr-label">🍽 Almoço</span>
+        <span class="cr-main">Arroz + feijão</span>
+        <span class="cr-extra">+ abóbora cozida + ovo frito</span>
+      </div>
+      <div class="card-refeicao">
+        <span class="cr-label">🌙 Jantar</span>
+        <span class="cr-main">Sopa de legumes</span>
+        <span class="cr-extra">cenoura + batata-doce + caldo</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="card-dia">
+    <div class="card-dia-header">
+      <div class="card-dia-title">Quinta-feira — Dia 4</div>
+      <div class="card-dia-sub">Frango restante + ovos</div>
+    </div>
+    <div class="card-dia-body">
+      <div class="card-refeicao">
+        <span class="cr-label">☕ Café da manhã</span>
+        <span class="cr-main">Café com leite + pão</span>
+        <span class="cr-extra">+ banana</span>
+      </div>
+      <div class="card-refeicao">
+        <span class="cr-label">🍽 Almoço</span>
+        <span class="cr-main">Arroz + frango grelhado</span>
+        <span class="cr-extra">+ couve refogada + feijão</span>
+      </div>
+      <div class="card-refeicao">
+        <span class="cr-label">🌙 Jantar</span>
+        <span class="cr-main">Ovo cozido com batata-doce</span>
+        <span class="cr-extra">+ limão e sal</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="yellow-box">
+    <div class="yellow-box-title">🍗 Dica do frango</div>
+    <p>Cozinhe 1kg de frango na pressão no domingo ou no Dia 1 — desfie tudo e guarde na geladeira. Rende para 3 a 4 refeições diferentes sem precisar cozinhar de novo. O frango na pressão fica pronto em 25 minutos e é quase impossível errar.</p>
+  </div>
+</div>
+
+<!-- CARDÁPIO — DIAS 5–7 -->
+<div class="page">
+  <div class="ph">
+    <span class="ph-brand">Do Mercado Pra Mesa</span>
+    <span class="ph-title">Cardápio — Dias 5 a 7</span>
+  </div>
+
+  <div class="sec-title">Cardápio — continuação</div>
+  <p class="sec-sub">Dias 5, 6 e 7. Fechando a semana com o que ainda tem na despensa.</p>
+
+  <div class="card-dia">
+    <div class="card-dia-header">
+      <div class="card-dia-title">Sexta-feira — Dia 5</div>
+      <div class="card-dia-sub">Sardinha + ovos + limpeza da despensa</div>
+    </div>
+    <div class="card-dia-body">
+      <div class="card-refeicao">
+        <span class="cr-label">☕ Café da manhã</span>
+        <span class="cr-main">Café + pão com queijo</span>
+        <span class="cr-extra">último do pão de forma</span>
+      </div>
+      <div class="card-refeicao">
+        <span class="cr-label">🍽 Almoço</span>
+        <span class="cr-main">Arroz + sardinha ensopada</span>
+        <span class="cr-extra">+ feijão + tomate picado</span>
+      </div>
+      <div class="card-refeicao">
+        <span class="cr-label">🌙 Jantar</span>
+        <span class="cr-main">Omelete com cenoura</span>
+        <span class="cr-extra">+ arroz do almoço</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="card-dia">
+    <div class="card-dia-header">
+      <div class="card-dia-title">Sábado — Dia 6</div>
+      <div class="card-dia-sub">Dia mais tranquilo — aproveitar sobras</div>
+    </div>
+    <div class="card-dia-body">
+      <div class="card-refeicao">
+        <span class="cr-label">☕ Café da manhã</span>
+        <span class="cr-main">Vitamina de banana</span>
+        <span class="cr-extra">banana + leite + açúcar</span>
+      </div>
+      <div class="card-refeicao">
+        <span class="cr-label">🍽 Almoço</span>
+        <span class="cr-main">Macarrão ao molho de tomate</span>
+        <span class="cr-extra">+ ovo mexido + queijo</span>
+      </div>
+      <div class="card-refeicao">
+        <span class="cr-label">🌙 Jantar</span>
+        <span class="cr-main">Arroz + feijão + ovo</span>
+        <span class="cr-extra">o trio clássico que nunca decepciona</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="card-dia">
+    <div class="card-dia-header">
+      <div class="card-dia-title">Domingo — Dia 7</div>
+      <div class="card-dia-sub">Fechar a semana + planejar a próxima</div>
+    </div>
+    <div class="card-dia-body">
+      <div class="card-refeicao">
+        <span class="cr-label">☕ Café da manhã</span>
+        <span class="cr-main">Café + banana</span>
+        <span class="cr-extra">simples e rápido</span>
+      </div>
+      <div class="card-refeicao">
+        <span class="cr-label">🍽 Almoço</span>
+        <span class="cr-main">Frango na pressão</span>
+        <span class="cr-extra">+ arroz + couve + abóbora cozida</span>
+      </div>
+      <div class="card-refeicao">
+        <span class="cr-label">🌙 Jantar</span>
+        <span class="cr-main">Sopa geral</span>
+        <span class="cr-extra">tudo que sobrou + caldo de galinha</span>
+      </div>
+    </div>
+  </div>
+
+  <div style="height: 4mm;"></div>
+
+  <div class="highlight">
+    <div class="highlight-title">📊 Resumo de custos por refeição</div>
+    <ul>
+      <li>Café da manhã: ~R$2,00 a R$3,50 por dia</li>
+      <li>Almoço: ~R$5,00 a R$7,00 por dia</li>
+      <li>Jantar: ~R$3,00 a R$5,00 por dia</li>
+      <li>Total médio por dia: R$12,00 a R$16,00</li>
+      <li>Total da semana: R$84 a R$112 — dentro dos R$120</li>
+    </ul>
+  </div>
+</div>
+
+<!-- RECEITAS 1–3 -->
+<div class="page">
+  <div class="ph">
+    <span class="ph-brand">Do Mercado Pra Mesa</span>
+    <span class="ph-title">Receitas</span>
+  </div>
+
+  <div class="sec-title">As receitas</div>
+  <p class="sec-sub">Passo a passo direto. Sem enrolação.</p>
+
+  <div class="receita-card">
+    <div class="receita-header">
+      <div class="receita-nome">Frango Ensopado Simples</div>
+      <div class="receita-meta">
+        <span class="receita-tag">⏱ 35 min</span>
+        <span class="receita-tag">💰 ~R$3,20/porção</span>
+      </div>
+    </div>
+    <div class="receita-body">
+      <div class="receita-ingredientes">
+        <div class="receita-col-title">Ingredientes (2 porções)</div>
+        <ul>
+          <li>500g coxa/sobrecoxa de frango</li>
+          <li>1 cebola média picada</li>
+          <li>3 dentes de alho amassados</li>
+          <li>1 sachê de extrato de tomate</li>
+          <li>Sal, pimenta e caldo de galinha a gosto</li>
+          <li>1 col. sopa de óleo</li>
+        </ul>
+      </div>
+      <div class="receita-modo">
+        <div class="receita-col-title">Modo de preparo</div>
+        <ol>
+          <li>Tempere o frango com sal, alho e caldo de galinha. Deixe por 10 minutos.</li>
+          <li>Aqueça o óleo em panela média. Refogue a cebola até dourar (~3 min).</li>
+          <li>Junte o frango e doure dos dois lados (~5 min cada).</li>
+          <li>Adicione o extrato de tomate + 1 copo de água. Misture.</li>
+          <li>Tampe e cozinhe em fogo médio por 20 minutos.</li>
+          <li>Prove o sal e sirva.</li>
+        </ol>
+      </div>
+    </div>
+    <div class="receita-footer">
+      <div class="rf-item">Rende: <span>2 porções grandes</span></div>
+      <div class="rf-item">Tempo ativo: <span>15 min</span></div>
+      <div class="rf-item">Serve com: <span>arroz + feijão + couve</span></div>
+    </div>
+  </div>
+
+  <div class="receita-card">
+    <div class="receita-header">
+      <div class="receita-nome">Feijão Básico (o que não pode faltar)</div>
+      <div class="receita-meta">
+        <span class="receita-tag">⏱ 45 min</span>
+        <span class="receita-tag">💰 ~R$1,20/porção</span>
+      </div>
+    </div>
+    <div class="receita-body">
+      <div class="receita-ingredientes">
+        <div class="receita-col-title">Ingredientes (4 porções)</div>
+        <ul>
+          <li>500g feijão carioca (deixar de molho 4h antes)</li>
+          <li>1 cebola pequena picada</li>
+          <li>3 dentes de alho amassados</li>
+          <li>1 col. sopa de óleo</li>
+          <li>Sal e folha de louro (se tiver)</li>
+          <li>Cheiro-verde pra finalizar</li>
+        </ul>
+      </div>
+      <div class="receita-modo">
+        <div class="receita-col-title">Modo de preparo</div>
+        <ol>
+          <li>Escorra a água do molho. Coloque o feijão na pressão com água (cobrindo 3cm acima).</li>
+          <li>Cozinhe na pressão por 20 minutos após pegar pressão.</li>
+          <li>Aguarde sair a pressão. Em outra panela, refogue cebola e alho no óleo.</li>
+          <li>Transfira o feijão (com caldo) para a panela. Misture e ajuste o sal.</li>
+          <li>Cozinhe em fogo baixo por 10 min. Finalize com cheiro-verde.</li>
+        </ol>
+      </div>
+    </div>
+    <div class="receita-footer">
+      <div class="rf-item">Rende: <span>4 porções</span></div>
+      <div class="rf-item">Congele: <span>metade para a semana</span></div>
+      <div class="rf-item">Dica: <span>sem molho de mão não tem almoço</span></div>
+    </div>
+  </div>
+
+  <div class="receita-card">
+    <div class="receita-header">
+      <div class="receita-nome">Omelete de Queijo (jantar em 10 min)</div>
+      <div class="receita-meta">
+        <span class="receita-tag">⏱ 10 min</span>
+        <span class="receita-tag">💰 ~R$2,80/porção</span>
+      </div>
+    </div>
+    <div class="receita-body">
+      <div class="receita-ingredientes">
+        <div class="receita-col-title">Ingredientes (1 porção)</div>
+        <ul>
+          <li>3 ovos</li>
+          <li>2 fatias de muçarela (ou requeijão)</li>
+          <li>Sal e cheiro-verde</li>
+          <li>1 fio de óleo ou manteiga</li>
+        </ul>
+      </div>
+      <div class="receita-modo">
+        <div class="receita-col-title">Modo de preparo</div>
+        <ol>
+          <li>Bata os ovos com sal e cheiro-verde num prato fundo.</li>
+          <li>Aqueça a frigideira em fogo médio com o óleo.</li>
+          <li>Despeje os ovos e não mexa — deixe firmar nas bordas (~2 min).</li>
+          <li>Coloque o queijo no centro. Dobre a omelete ao meio.</li>
+          <li>Vire e deixe mais 1 minuto. Sirva imediatamente.</li>
+        </ol>
+      </div>
+    </div>
+    <div class="receita-footer">
+      <div class="rf-item">Rende: <span>1 porção</span></div>
+      <div class="rf-item">Variações: <span>com cenoura, tomate ou couve picada</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- RECEITAS 4–7 -->
+<div class="page">
+  <div class="ph">
+    <span class="ph-brand">Do Mercado Pra Mesa</span>
+    <span class="ph-title">Receitas — continuação</span>
+  </div>
+
+  <div class="receita-card">
+    <div class="receita-header">
+      <div class="receita-nome">Macarrão com Sardinha</div>
+      <div class="receita-meta">
+        <span class="receita-tag">⏱ 20 min</span>
+        <span class="receita-tag">💰 ~R$3,00/porção</span>
+      </div>
+    </div>
+    <div class="receita-body">
+      <div class="receita-ingredientes">
+        <div class="receita-col-title">Ingredientes (2 porções)</div>
+        <ul>
+          <li>200g de macarrão espaguete</li>
+          <li>1 lata de sardinha (no molho de tomate)</li>
+          <li>2 tomates picados</li>
+          <li>3 dentes de alho amassados</li>
+          <li>1 col. sopa de óleo</li>
+          <li>Sal + cheiro-verde</li>
+        </ul>
+      </div>
+      <div class="receita-modo">
+        <div class="receita-col-title">Modo de preparo</div>
+        <ol>
+          <li>Cozinhe o macarrão em água com sal seguindo a embalagem.</li>
+          <li>Na mesma frigideira, refogue alho no óleo (~2 min).</li>
+          <li>Adicione o tomate picado + sardinha com o líquido da lata.</li>
+          <li>Amasse a sardinha grosseiramente. Misture e cozinhe 5 min.</li>
+          <li>Escorra o macarrão e misture com o molho. Finalize com cheiro-verde.</li>
+        </ol>
+      </div>
+    </div>
+    <div class="receita-footer">
+      <div class="rf-item">Rende: <span>2 porções</span></div>
+      <div class="rf-item">Dica: <span>a sardinha tem omega-3 — mais saudável do que parece</span></div>
+    </div>
+  </div>
+
+  <div class="receita-card">
+    <div class="receita-header">
+      <div class="receita-nome">Sopa de Legumes com Caldo</div>
+      <div class="receita-meta">
+        <span class="receita-tag">⏱ 30 min</span>
+        <span class="receita-tag">💰 ~R$2,20/porção</span>
+      </div>
+    </div>
+    <div class="receita-body">
+      <div class="receita-ingredientes">
+        <div class="receita-col-title">Ingredientes (2 porções)</div>
+        <ul>
+          <li>1 cenoura cortada em rodelas</li>
+          <li>200g batata-doce em cubos</li>
+          <li>200g abóbora em cubos</li>
+          <li>1 caldo de galinha</li>
+          <li>Alho e cebola a gosto</li>
+          <li>Sal e cheiro-verde</li>
+        </ul>
+      </div>
+      <div class="receita-modo">
+        <div class="receita-col-title">Modo de preparo</div>
+        <ol>
+          <li>Refogue o alho e a cebola no óleo numa panela.</li>
+          <li>Adicione 1 litro de água + caldo de galinha. Ferva.</li>
+          <li>Coloque cenoura, batata-doce e abóbora. Cozinhe por 20 min.</li>
+          <li>Quando os legumes estiverem macios, ajuste o sal.</li>
+          <li>Finalize com cheiro-verde. Pode servir com pão.</li>
+        </ol>
+      </div>
+    </div>
+    <div class="receita-footer">
+      <div class="rf-item">Rende: <span>2 porções grandes</span></div>
+      <div class="rf-item">Dica: <span>ótimo pra usar sobras da semana</span></div>
+    </div>
+  </div>
+
+  <div class="receita-card">
+    <div class="receita-header">
+      <div class="receita-nome">Couve Refogada com Alho</div>
+      <div class="receita-meta">
+        <span class="receita-tag">⏱ 8 min</span>
+        <span class="receita-tag">💰 ~R$0,90/porção</span>
+      </div>
+    </div>
+    <div class="receita-body">
+      <div class="receita-ingredientes">
+        <div class="receita-col-title">Ingredientes (2 porções)</div>
+        <ul>
+          <li>1/2 maço de couve-folha</li>
+          <li>3 dentes de alho amassados</li>
+          <li>1 col. sopa de óleo</li>
+          <li>Sal e limão a gosto</li>
+        </ul>
+      </div>
+      <div class="receita-modo">
+        <div class="receita-col-title">Modo de preparo</div>
+        <ol>
+          <li>Lave e seque bem a couve. Enrole as folhas e fatie fino (tirinhas).</li>
+          <li>Aqueça o óleo e doure o alho rapidamente (~1 min).</li>
+          <li>Jogue a couve de uma vez. Refogue em fogo alto por 3–4 min.</li>
+          <li>Tempere com sal e limão. Sirva imediatamente.</li>
+        </ol>
+      </div>
+    </div>
+    <div class="receita-footer">
+      <div class="rf-item">Dica: <span>não deixa cozinhar demais — murcha e perde cor</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- RECEITAS 8–10 -->
+<div class="page">
+  <div class="ph">
+    <span class="ph-brand">Do Mercado Pra Mesa</span>
+    <span class="ph-title">Receitas — continuação</span>
+  </div>
+
+  <div class="receita-card">
+    <div class="receita-header">
+      <div class="receita-nome">Frango Desfiado na Pressão</div>
+      <div class="receita-meta">
+        <span class="receita-tag">⏱ 30 min</span>
+        <span class="receita-tag">💰 ~R$2,50/porção</span>
+      </div>
+    </div>
+    <div class="receita-body">
+      <div class="receita-ingredientes">
+        <div class="receita-col-title">Ingredientes (4 porções)</div>
+        <ul>
+          <li>1 kg coxa/sobrecoxa de frango</li>
+          <li>Sal, alho e caldo de galinha</li>
+          <li>1 copo de água</li>
+        </ul>
+      </div>
+      <div class="receita-modo">
+        <div class="receita-col-title">Modo de preparo</div>
+        <ol>
+          <li>Tempere o frango com sal, alho amassado e caldo de galinha.</li>
+          <li>Coloque na panela de pressão com 1 copo de água.</li>
+          <li>Tampe e cozinhe por 25 minutos após pegar pressão.</li>
+          <li>Espere sair a pressão. Retire o frango — desfie com dois garfos.</li>
+          <li>Guarde o caldo — serve de base para sopas e molhos.</li>
+        </ol>
+      </div>
+    </div>
+    <div class="receita-footer">
+      <div class="rf-item">Rende: <span>4 porções</span></div>
+      <div class="rf-item">Conserva: <span>5 dias na geladeira, 30 dias no freezer</span></div>
+    </div>
+  </div>
+
+  <div class="receita-card">
+    <div class="receita-header">
+      <div class="receita-nome">Ovos Mexidos com Tomate</div>
+      <div class="receita-meta">
+        <span class="receita-tag">⏱ 8 min</span>
+        <span class="receita-tag">💰 ~R$1,80/porção</span>
+      </div>
+    </div>
+    <div class="receita-body">
+      <div class="receita-ingredientes">
+        <div class="receita-col-title">Ingredientes (1 porção)</div>
+        <ul>
+          <li>3 ovos</li>
+          <li>1 tomate médio picado</li>
+          <li>Cebola picada (opcional)</li>
+          <li>Sal e cheiro-verde</li>
+          <li>1 fio de óleo</li>
+        </ul>
+      </div>
+      <div class="receita-modo">
+        <div class="receita-col-title">Modo de preparo</div>
+        <ol>
+          <li>Refogue o tomate (e cebola se usar) no óleo por 2 minutos.</li>
+          <li>Bata os ovos com sal e jogue na frigideira.</li>
+          <li>Mexa delicadamente com espátula em fogo baixo.</li>
+          <li>Tire do fogo quando ainda estiver cremoso. Finaliza com cheiro-verde.</li>
+        </ol>
+      </div>
+    </div>
+    <div class="receita-footer">
+      <div class="rf-item">Dica: <span>ovo mexido no ponto é cremoso, não borrachudo</span></div>
+    </div>
+  </div>
+
+  <div class="receita-card">
+    <div class="receita-header">
+      <div class="receita-nome">Vitamina de Banana (café rápido)</div>
+      <div class="receita-meta">
+        <span class="receita-tag">⏱ 3 min</span>
+        <span class="receita-tag">💰 ~R$1,50/porção</span>
+      </div>
+    </div>
+    <div class="receita-body">
+      <div class="receita-ingredientes">
+        <div class="receita-col-title">Ingredientes (1 porção)</div>
+        <ul>
+          <li>2 bananas (de preferência geladas)</li>
+          <li>200ml de leite</li>
+          <li>1 col. chá de açúcar (opcional)</li>
+        </ul>
+      </div>
+      <div class="receita-modo">
+        <div class="receita-col-title">Modo de preparo</div>
+        <ol>
+          <li>Coloque banana + leite + açúcar no liquidificador.</li>
+          <li>Bata por 30 segundos.</li>
+          <li>Sirva imediatamente. Pronto.</li>
+        </ol>
+      </div>
+    </div>
+    <div class="receita-footer">
+      <div class="rf-item">Dica: <span>banana congelada deixa mais cremoso — congele as que estiverem amadurecendo</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- RECEITAS 11 + DICAS DE ECONOMIA -->
+<div class="page">
+  <div class="ph">
+    <span class="ph-brand">Do Mercado Pra Mesa</span>
+    <span class="ph-title">Receitas + Dicas de Economia</span>
+  </div>
+
+  <div class="receita-card">
+    <div class="receita-header">
+      <div class="receita-nome">Arroz Soltinho (do jeito certo)</div>
+      <div class="receita-meta">
+        <span class="receita-tag">⏱ 25 min</span>
+        <span class="receita-tag">💰 ~R$0,80/porção</span>
+      </div>
+    </div>
+    <div class="receita-body">
+      <div class="receita-ingredientes">
+        <div class="receita-col-title">Ingredientes (3 porções)</div>
+        <ul>
+          <li>1 xícara de arroz</li>
+          <li>2 xícaras de água fervente</li>
+          <li>2 dentes de alho amassados</li>
+          <li>Sal e 1 fio de óleo</li>
+        </ul>
+      </div>
+      <div class="receita-modo">
+        <div class="receita-col-title">Modo de preparo</div>
+        <ol>
+          <li>Refogue o alho no óleo até começar a dourar.</li>
+          <li>Adicione o arroz seco (não lavado). Refogue por 2 min mexendo.</li>
+          <li>Jogue a água fervente + sal. Mexa uma vez.</li>
+          <li>Tampe, fogo baixo, 15 min. Não abra antes.</li>
+          <li>Desligue. Deixe tampado por 5 min. Solte com garfo.</li>
+        </ol>
+      </div>
+    </div>
+    <div class="receita-footer">
+      <div class="rf-item">Segredo: <span>água fervente + não mexer = arroz soltinho</span></div>
+    </div>
+  </div>
+
+  <div style="height: 3mm;"></div>
+  <div class="chapter-divider">💡 Dicas reais de economia</div>
+
+  <div class="dica-card">
+    <div class="dica-icon">🛒</div>
+    <div class="dica-content">
+      <div class="dica-title">Compre com lista. Sempre.</div>
+      <div class="dica-text">Quem vai ao mercado sem lista gasta em média 30% a mais. Você pega coisa que não precisa, esquece o que precisava e sai sem o essencial. Lista é dinheiro.</div>
+    </div>
+  </div>
+
+  <div class="dica-card">
+    <div class="dica-icon">📦</div>
+    <div class="dica-content">
+      <div class="dica-title">Embalagem grande não é sempre mais barato</div>
+      <div class="dica-text">Antes de comprar o pacote maior, calcule o preço por 100g ou 100ml. Às vezes o pacote médio é mais barato por unidade — e você não vai usar tudo antes de estragar.</div>
+    </div>
+  </div>
+
+  <div class="dica-card">
+    <div class="dica-icon">🌅</div>
+    <div class="dica-content">
+      <div class="dica-title">Hortifruti de tarde ou no fim de semana cedo</div>
+      <div class="dica-text">O mercadinho de bairro costuma baixar os preços de hortifruti no final do dia para não deixar estragar da noite. Ideal para comprar o que você vai usar nos próximos 2 dias.</div>
+    </div>
+  </div>
+
+  <div class="dica-card">
+    <div class="dica-icon">❄️</div>
+    <div class="dica-content">
+      <div class="dica-title">Frango e feijão em quantidade — congele metade</div>
+      <div class="dica-text">Cozinhar 1kg de frango na pressão no mesmo momento em que você faz o feijão economiza gás, tempo e esforço. Congele o que não vai usar em 2 dias e já tem proteína para a próxima semana quase de graça.</div>
+    </div>
+  </div>
+
+  <div class="dica-card">
+    <div class="dica-icon">📱</div>
+    <div class="dica-content">
+      <div class="dica-title">Baixe o app do supermercado</div>
+      <div class="dica-text">Vários supermercados têm ofertas exclusivas pelo app — especialmente de proteínas e laticínios. Vale verificar antes de ir ao mercado, especialmente sexta e sábado que são os dias com mais promoções.</div>
+    </div>
+  </div>
+</div>
+
+<!-- SUBSTITUIÇÕES -->
+<div class="page">
+  <div class="ph">
+    <span class="ph-brand">Do Mercado Pra Mesa</span>
+    <span class="ph-title">Tabela de Substituições</span>
+  </div>
+
+  <div class="sec-title">Tabela de substituições</div>
+  <p class="sec-sub">Acabou um ingrediente ou está caro demais? Use essa tabela.</p>
+
+  <table class="subs-table">
+    <thead>
+      <tr>
+        <th>Se não tiver...</th>
+        <th class="arrow"></th>
+        <th>Use no lugar</th>
+        <th>Observação</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>Frango</td><td class="arrow">→</td><td>Ovo (3 unidades)</td><td>Mesma proteína, custo menor</td></tr>
+      <tr><td>Frango</td><td class="arrow">→</td><td>Sardinha em lata</td><td>2 latas substituem 500g de frango</td></tr>
+      <tr><td>Feijão carioca</td><td class="arrow">→</td><td>Lentilha ou feijão preto</td><td>Cozinha mais rápido, sem precisar molho</td></tr>
+      <tr><td>Queijo muçarela</td><td class="arrow">→</td><td>Requeijão cremoso</td><td>Mais barato e rende mais em sanduíche</td></tr>
+      <tr><td>Batata-doce</td><td class="arrow">→</td><td>Mandioca (macaxeira)</td><td>Preço similar, saciedade equivalente</td></tr>
+      <tr><td>Batata-doce</td><td class="arrow">→</td><td>Inhame ou cará</td><td>Mesmo grupo, mesma função na receita</td></tr>
+      <tr><td>Couve-folha</td><td class="arrow">→</td><td>Repolho refogado</td><td>Mais barato, igualmente nutritivo</td></tr>
+      <tr><td>Tomate</td><td class="arrow">→</td><td>Extrato de tomate + água</td><td>2 col. sopa de extrato + ½ copo água</td></tr>
+      <tr><td>Arroz</td><td class="arrow">→</td><td>Macarrão simples</td><td>Custo por porção similar</td></tr>
+      <tr><td>Macarrão espaguete</td><td class="arrow">→</td><td>Qualquer massa curta</td><td>Cotovelo, parafuso, etc — mesma receita</td></tr>
+      <tr><td>Pão de forma</td><td class="arrow">→</td><td>Tapioca (goma)</td><td>~R$3,50 o pacote · mais nutritivo</td></tr>
+      <tr><td>Leite UHT</td><td class="arrow">→</td><td>Leite em pó diluído</td><td>Mais barato por litro se você usar bastante</td></tr>
+      <tr><td>Óleo de soja</td><td class="arrow">→</td><td>Qualquer óleo vegetal</td><td>Girassol, milho — mesma função</td></tr>
+      <tr><td>Abóbora</td><td class="arrow">→</td><td>Chuchu ou abobrinha</td><td>Geralmente mais baratos, cozinham mais rápido</td></tr>
+      <tr><td>Cenoura</td><td class="arrow">→</td><td>Beterraba</td><td>Diferente no sabor, parecido no preço</td></tr>
+    </tbody>
+  </table>
+
+  <div class="highlight">
+    <div class="highlight-title">💡 Regra geral das substituições</div>
+    <p>Substitua dentro do mesmo grupo: proteína por proteína, carboidrato por carboidrato, vegetal por vegetal. Se você manter os grupos, a semana fica equilibrada mesmo trocando os ingredientes específicos. O que não pode é tirar um grupo inteiro.</p>
+  </div>
+
+  <div style="height: 3mm;"></div>
+
+  <div class="yellow-box">
+    <div class="yellow-box-title">🥚 O ovo é o melhor amigo do orçamento</div>
+    <p>Sempre que uma proteína estiver cara ou acabou antes do tempo, o ovo resolve. Frito, mexido, cozido, omelete — 3 ovos por refeição são 18g de proteína por ~R$2,25. Não existe proteína mais barata e versátil.</p>
+  </div>
+</div>
+
+<!-- ORGANIZAÇÃO SEMANAL -->
+<div class="page">
+  <div class="ph">
+    <span class="ph-brand">Do Mercado Pra Mesa</span>
+    <span class="ph-title">Organização Semanal</span>
+  </div>
+
+  <div class="sec-title">Organização da semana</div>
+  <p class="sec-sub">O que fazer antecipado e o que deixar pra hora H.</p>
+
+  <div class="highlight" style="margin-bottom: 5mm;">
+    <div class="highlight-title">🗓 A lógica da semana</div>
+    <p>Cozinhar todo dia do zero cansa e desmotiva. A estratégia é preparar os alimentos que mais demoram no domingo (ou no primeiro dia da semana) e usar o que está pronto durante os outros dias. Menos tempo na cozinha, mais consistência.</p>
+  </div>
+
+  <table class="org-table">
+    <thead>
+      <tr>
+        <th>Quando</th>
+        <th>O que preparar</th>
+        <th>Quanto tempo</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Domingo / antes de começar</td>
+        <td>Fazer as compras com a lista. Lavar e secar o cheiro-verde. Guardar o cheiro-verde em copo com água na geladeira.</td>
+        <td>40–60 min</td>
+      </tr>
+      <tr>
+        <td>Dia 1 — manhã ou tarde</td>
+        <td>Cozinhar 1kg de frango na pressão + desfiar. Fazer 500g de feijão (suficiente pra 4 dias). Guardar metade do feijão congelado.</td>
+        <td>50 min</td>
+      </tr>
+      <tr>
+        <td>Dias 1–4 (almoço)</td>
+        <td>Cozinhar arroz na hora (15 min). Usar o frango já pronto da geladeira. Refogar o vegetal do dia.</td>
+        <td>15–20 min</td>
+      </tr>
+      <tr>
+        <td>Dias 1–4 (jantar)</td>
+        <td>Omelete / ovo mexido / macarrão rápido. Usar sobras do almoço se tiver.</td>
+        <td>10–20 min</td>
+      </tr>
+      <tr>
+        <td>Dia 4 ou 5</td>
+        <td>Descongelar o feijão do freezer. Verificar o que ainda tem e o que está acabando — ajustar cardápio se necessário.</td>
+        <td>5 min</td>
+      </tr>
+      <tr>
+        <td>Dia 7 (domingo)</td>
+        <td>Fazer a sopa geral com tudo que sobrou. Planejar as compras da próxima semana. Verificar o que não precisa comprar de novo.</td>
+        <td>30 min</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div style="height: 4mm;"></div>
+
+  <div class="chapter-divider">⏱ Tempo na cozinha por dia</div>
+
+  <table class="org-table">
+    <thead>
+      <tr>
+        <th>Dia</th>
+        <th>Café da manhã</th>
+        <th>Almoço</th>
+        <th>Jantar</th>
+        <th>Total</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>Dia 1</td><td>5 min</td><td>20 min + preparo base</td><td>10 min</td><td>~35 min*</td></tr>
+      <tr><td>Dia 2</td><td>5 min</td><td>15 min</td><td>20 min</td><td>~40 min</td></tr>
+      <tr><td>Dia 3</td><td>10 min</td><td>15 min</td><td>25 min</td><td>~50 min</td></tr>
+      <tr><td>Dia 4</td><td>5 min</td><td>15 min</td><td>10 min</td><td>~30 min</td></tr>
+      <tr><td>Dia 5</td><td>5 min</td><td>20 min</td><td>10 min</td><td>~35 min</td></tr>
+      <tr><td>Dia 6</td><td>5 min</td><td>20 min</td><td>10 min</td><td>~35 min</td></tr>
+      <tr><td>Dia 7</td><td>3 min</td><td>25 min</td><td>30 min</td><td>~60 min</td></tr>
+    </tbody>
+  </table>
+  <p style="font-size: 7.5pt; color: var(--ink-s); margin-top: 2mm;">*O Dia 1 tem o preparo do frango e feijão incluído — mas rende para o resto da semana.</p>
+
+  <div class="yellow-box" style="margin-top: 4mm;">
+    <div class="yellow-box-title">📦 Organização na geladeira</div>
+    <p>Separe o frango desfiado num pote com tampa. O feijão em outro pote (ou saquinho). O cheiro-verde num copo com água. Ovos no lugar que a geladeira indica. Sobras do almoço na parte da frente — o que está mais visível você usa. O que está escondido estraga.</p>
+  </div>
+</div>
+
+<!-- CTA FINAL -->
+<div class="cta-page">
+  <div class="cta-eyebrow">Você terminou a semana</div>
+  <h2 class="cta-title">E se todo mês<br/>fosse <em>assim?</em></h2>
+  <p class="cta-sub">
+    Você acabou de passar 7 dias com comida de qualidade gastando R$120. Imagina fazer isso todo mês, com cardápios diferentes, novas receitas e estratégias que se ajustam ao seu bolso conforme ele cresce.
+  </p>
+  <div class="cta-divider"></div>
+
+  <div class="cta-box">
+    <h4>O que tem no Plano Mensal:</h4>
+    <div class="cta-item"><span class="cta-dot">✓</span><span>4 semanas de cardápio novo por mês</span></div>
+    <div class="cta-item"><span class="cta-dot">✓</span><span>Receitas exclusivas com novos ingredientes</span></div>
+    <div class="cta-item"><span class="cta-dot">✓</span><span>Variações de orçamento: R$80, R$120 e R$180</span></div>
+    <div class="cta-item"><span class="cta-dot">✓</span><span>Dicas de promoção e sazonalidade (o que está barato no mês)</span></div>
+    <div class="cta-item"><span class="cta-dot">✓</span><span>Acesso ao grupo de compradores com dicas em tempo real</span></div>
+  </div>
+
+  <div class="price-block">
+    <div style="font-size: 8pt; color: rgba(255,255,255,0.5); margin-bottom: 2px;">Plano Mensal — Do Mercado Pra Mesa</div>
+    <div class="price-old">Preço cheio: R$87/mês</div>
+    <div class="price-new">R$57<span style="font-size: 14pt;">/mês</span></div>
+  </div>
+
+  <p style="font-size: 9pt; color: rgba(255,255,255,0.5); max-width: 130mm; text-align: center; line-height: 1.6;">
+    Cancele quando quiser. Sem fidelidade, sem taxa de cancelamento.
+  </p>
+
+  <div class="cta-note">Acesse o link na bio ou no grupo onde você recebeu esse produto.</div>
+</div>
+
+</body>
+</html>

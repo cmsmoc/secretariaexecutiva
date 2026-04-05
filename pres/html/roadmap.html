@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Protótipos + Mapa do Negócio — Do Mercado Pra Mesa</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Lato:wght@300;400;600;700&display=swap" rel="stylesheet"/>
+<style>
+  :root{--sage:#5a8a6a;--sage-deep:#3d6b52;--sage-pale:#e8f2ec;--bege:#f7f3ec;--bege-mid:#ede7db;--yellow:#e8c547;--yellow-pale:#fdf6d8;--ink:#1e1e1e;--ink-mid:#3d3d3d;--ink-soft:#6b6b6b;--white:#fff;--r:14px}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Lato',sans-serif;background:var(--bege);color:var(--ink);line-height:1.7}
+  .wrap{max-width:880px;margin:0 auto;padding:0 24px}
+  h1,h2,h3,h4{font-family:'Playfair Display',serif;line-height:1.2}
+  .page-header{background:var(--ink);color:#fff;padding:56px 24px;text-align:center}
+  .page-header h1{font-size:clamp(1.8rem,4vw,2.6rem);margin-bottom:10px}
+  .page-header p{color:rgba(255,255,255,.6);font-size:1rem;font-weight:300}
+  .section{padding:64px 0;border-bottom:1px solid var(--bege-mid)}
+  .section:last-child{border:none}
+  .eyebrow{display:inline-block;font-size:.7rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--sage);margin-bottom:10px}
+  h2{font-size:clamp(1.5rem,3.5vw,2rem);margin-bottom:8px}
+
+  /* PRODUCT CARDS */
+  .products-grid{display:grid;gap:24px;margin-top:28px}
+  .product-card{background:var(--white);border-radius:var(--r);overflow:hidden;box-shadow:0 4px 20px rgba(0,0,0,.08)}
+  .product-card__header{padding:20px 24px;color:#fff}
+  .product-card__header--a{background:var(--sage)}
+  .product-card__header--b{background:var(--sage-deep)}
+  .product-card__header--c{background:var(--ink)}
+  .product-card__type{font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.12em;opacity:.75;margin-bottom:6px}
+  .product-card__name{font-family:'Playfair Display',serif;font-size:1.25rem;color:#fff;margin-bottom:4px}
+  .product-card__price{font-size:1.8rem;font-weight:700;color:var(--yellow)}
+  .product-card__body{padding:22px 24px}
+  .product-card__promise{font-weight:700;font-size:.97rem;color:var(--sage-deep);margin-bottom:14px;line-height:1.4}
+  .prod-section{margin-bottom:16px}
+  .prod-section h4{font-size:.8rem;text-transform:uppercase;letter-spacing:.1em;color:var(--ink-soft);font-family:'Lato',sans-serif;font-weight:700;margin-bottom:8px}
+  .prod-list{list-style:none;display:flex;flex-direction:column;gap:6px}
+  .prod-list li{display:flex;gap:8px;font-size:.88rem;color:var(--ink-mid)}
+  .prod-list li::before{content:'·';color:var(--sage);font-weight:900;font-size:1.2rem;line-height:1;flex-shrink:0}
+  .diff-tag{display:inline-block;background:var(--yellow-pale);border:1px solid var(--yellow);color:#a07d00;font-size:.75rem;font-weight:700;padding:3px 10px;border-radius:50px;margin:2px}
+  .format-badges{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+  .format-badge{background:var(--sage-pale);color:var(--sage-deep);font-size:.75rem;font-weight:700;padding:4px 12px;border-radius:50px}
+  @media(min-width:720px){.products-grid{grid-template-columns:1fr 1fr 1fr}}
+
+  /* ROADMAP 30 DIAS */
+  .weeks{display:flex;flex-direction:column;gap:28px;margin-top:28px}
+  .week{border-radius:var(--r);overflow:hidden;box-shadow:0 2px 14px rgba(0,0,0,.07)}
+  .week__header{padding:16px 22px;color:#fff;display:flex;align-items:center;justify-content:space-between}
+  .week__header--1{background:var(--sage)}
+  .week__header--2{background:var(--sage-deep)}
+  .week__header--3{background:#2c5f44}
+  .week__header--4{background:var(--ink)}
+  .week__num{font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:700}
+  .week__theme{font-size:.8rem;opacity:.8;font-weight:600;letter-spacing:.06em}
+  .week__meta{background:rgba(255,255,255,.12);padding:4px 12px;border-radius:50px;font-size:.75rem;font-weight:700}
+  .week__body{background:var(--white);padding:22px 24px}
+  .week__goal{font-weight:700;color:var(--sage-deep);font-size:.97rem;margin-bottom:14px;display:flex;align-items:center;gap:8px}
+  .week__goal::before{content:'🎯';font-size:1rem}
+  .days-grid{display:grid;gap:10px}
+  .day-row{background:var(--bege);border-radius:8px;padding:10px 14px;display:flex;gap:12px;align-items:flex-start}
+  .day-label{flex-shrink:0;font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--sage);min-width:44px;margin-top:2px}
+  .day-tasks{font-size:.87rem;color:var(--ink-mid);line-height:1.5}
+  .week__kpi{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
+  .kpi{background:var(--sage-pale);color:var(--sage-deep);font-size:.78rem;font-weight:700;padding:4px 12px;border-radius:50px}
+  .kpi--yellow{background:var(--yellow-pale);color:#a07d00}
+  @media(min-width:600px){.days-grid{grid-template-columns:1fr 1fr}}
+
+  /* SUMMARY TABLE */
+  .summary-table{width:100%;border-collapse:collapse;margin-top:20px;font-size:.88rem;background:var(--white);border-radius:var(--r);overflow:hidden;box-shadow:0 2px 14px rgba(0,0,0,.07)}
+  .summary-table th{background:var(--sage);color:#fff;padding:12px 16px;text-align:left;font-size:.75rem;text-transform:uppercase;letter-spacing:.08em;font-weight:700}
+  .summary-table td{padding:12px 16px;border-bottom:1px solid var(--bege-mid);color:var(--ink-mid);vertical-align:top}
+  .summary-table tr:last-child td{border:none}
+  .summary-table .val{font-weight:700;color:var(--sage-deep);font-family:'Playfair Display',serif;font-size:1.1rem}
+</style>
+</head>
+<body>
+
+<div class="page-header">
+  <div class="wrap">
+    <h1>Protótipos dos Produtos + Mapa do Negócio</h1>
+    <p>Do Mercado Pra Mesa — Entregáveis 6 e 7</p>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════
+     ENTREGA 6 — PROTÓTIPOS DOS PRODUTOS
+════════════════════════════════════════ -->
+<section class="section">
+  <div class="wrap">
+    <span class="eyebrow">Entrega 6</span>
+    <h2>Protótipos dos 3 Produtos</h2>
+    <p style="color:var(--ink-soft);font-weight:300;margin-top:6px">
+      Cada produto tem seu papel no funil. Juntos, maximizam o valor por cliente.
+    </p>
+
+    <div class="products-grid">
+
+      <!-- TRIPWIRE -->
+      <div class="product-card">
+        <div class="product-card__header product-card__header--a">
+          <div class="product-card__type">Produto 1 — Tripwire / Isca</div>
+          <div class="product-card__name">Checklist do Mercado</div>
+          <div class="product-card__price">Grátis ou R$9</div>
+        </div>
+        <div class="product-card__body">
+          <div class="product-card__promise">
+            "A lista exata do que comprar no mercado para 7 dias de comida por R$120"
+          </div>
+
+          <div class="prod-section">
+            <h4>Conteúdo</h4>
+            <ul class="prod-list">
+              <li>Lista categorizada: hortifruti, proteínas, grãos, laticínios, temperos</li>
+              <li>Quantidade exata de cada item</li>
+              <li>Custo estimado por item</li>
+              <li>Dicas de onde comprar mais barato (feira vs. mercado)</li>
+              <li>CTA para o guia completo no final</li>
+            </ul>
+          </div>
+
+          <div class="prod-section">
+            <h4>Formato</h4>
+            <div class="format-badges">
+              <span class="format-badge">PDF 2 páginas</span>
+              <span class="format-badge">Canva</span>
+              <span class="format-badge">Imprimível</span>
+            </div>
+          </div>
+
+          <div class="prod-section">
+            <h4>Diferencial</h4>
+            <div>
+              <span class="diff-tag">Imprimível para colar na geladeira</span>
+              <span class="diff-tag">Checklist marcável</span>
+              <span class="diff-tag">Tempo de uso: no mercado</span>
+            </div>
+          </div>
+
+          <div class="prod-section">
+            <h4>Papel no funil</h4>
+            <p style="font-size:.87rem;color:var(--ink-soft)">
+              Captura e-mail ou qualifica o lead com um pequeno pagamento.
+              Filtra quem realmente quer resolver o problema e prepara
+              para a oferta do guia completo.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- LOW TICKET -->
+      <div class="product-card">
+        <div class="product-card__header product-card__header--b">
+          <div class="product-card__type">Produto 2 — Core / Low Ticket</div>
+          <div class="product-card__name">7 Dias de Comida com R$120</div>
+          <div class="product-card__price">R$27</div>
+        </div>
+        <div class="product-card__body">
+          <div class="product-card__promise">
+            "Guia completo para comer bem por 7 dias com R$120: cardápio, receitas e lista de compras prontos"
+          </div>
+
+          <div class="prod-section">
+            <h4>Conteúdo</h4>
+            <ul class="prod-list">
+              <li>Lista de compras completa (3 pgs)</li>
+              <li>Cardápio 7 dias — café, almoço, jantar (7 pgs)</li>
+              <li>8 receitas simples passo a passo (12 pgs)</li>
+              <li>Dicas de economia e reaproveitamento (2 pgs)</li>
+              <li>3 vídeos bônus — mercado, organização e preparo</li>
+            </ul>
+          </div>
+
+          <div class="prod-section">
+            <h4>Formato</h4>
+            <div class="format-badges">
+              <span class="format-badge">PDF 30 páginas</span>
+              <span class="format-badge">3 vídeos</span>
+              <span class="format-badge">Acesso imediato</span>
+            </div>
+          </div>
+
+          <div class="prod-section">
+            <h4>Diferencial</h4>
+            <div>
+              <span class="diff-tag">Tudo junto em um lugar</span>
+              <span class="diff-tag">Testado na vida real</span>
+              <span class="diff-tag">Para quem nunca cozinhou</span>
+              <span class="diff-tag">Funciona no celular</span>
+            </div>
+          </div>
+
+          <div class="prod-section">
+            <h4>Papel no funil</h4>
+            <p style="font-size:.87rem;color:var(--ink-soft)">
+              Produto principal. Resolve o problema central do cliente.
+              Gera prova social que alimenta novas vendas. Porta de entrada
+              para o upsell do plano mensal.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- UPSELL -->
+      <div class="product-card">
+        <div class="product-card__header product-card__header--c">
+          <div class="product-card__type">Produto 3 — Upsell</div>
+          <div class="product-card__name">Plano Mensal — 30 Dias</div>
+          <div class="product-card__price">R$47–67</div>
+        </div>
+        <div class="product-card__body">
+          <div class="product-card__promise">
+            "O mês inteiro de alimentação planejada — 4 semanas diferentes, sem repetir, sem perrengue"
+          </div>
+
+          <div class="prod-section">
+            <h4>Conteúdo</h4>
+            <ul class="prod-list">
+              <li>4 cardápios semanais diferentes (28 dias)</li>
+              <li>4 listas de compras — uma por semana</li>
+              <li>20+ receitas (além das do guia principal)</li>
+              <li>Guia de batch cooking (preparar no domingo)</li>
+              <li>Bônus: acesso a grupo WhatsApp por 30 dias</li>
+              <li>Planilha de controle de gastos alimentares</li>
+            </ul>
+          </div>
+
+          <div class="prod-section">
+            <h4>Formato</h4>
+            <div class="format-badges">
+              <span class="format-badge">PDF 80+ páginas</span>
+              <span class="format-badge">Planilha Google Sheets</span>
+              <span class="format-badge">Grupo WhatsApp</span>
+            </div>
+          </div>
+
+          <div class="prod-section">
+            <h4>Diferencial</h4>
+            <div>
+              <span class="diff-tag">Nunca repete o mesmo cardápio</span>
+              <span class="diff-tag">Comunidade de suporte</span>
+              <span class="diff-tag">Controle de gastos incluso</span>
+            </div>
+          </div>
+
+          <div class="prod-section">
+            <h4>Papel no funil</h4>
+            <p style="font-size:.87rem;color:var(--ink-soft)">
+              Ofertado na página de obrigado após compra do guia.
+              Triplica o LTV sem precisar de novo tráfego. Crie este
+              produto na semana 3 do roadmap.
+            </p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+<!-- ════════════════════════════════════════
+     ENTREGA 7 — MAPA DO NEGÓCIO 30 DIAS
+════════════════════════════════════════ -->
+<section class="section">
+  <div class="wrap">
+    <span class="eyebrow">Entrega 7</span>
+    <h2>Roadmap de 30 Dias</h2>
+    <p style="color:var(--ink-soft);font-weight:300;margin-top:6px;max-width:560px">
+      Mês 1 focado em validação e primeiras receitas.
+      Cada semana tem um objetivo claro e ações práticas.
+    </p>
+
+    <div class="weeks">
+
+      <!-- SEMANA 1 -->
+      <div class="week">
+        <div class="week__header week__header--1">
+          <div>
+            <div class="week__num">Semana 1 — Dias 1 a 7</div>
+            <div class="week__theme">CONSTRUIR + LANÇAR</div>
+          </div>
+          <div class="week__meta">Foco: produto no ar</div>
+        </div>
+        <div class="week__body">
+          <div class="week__goal">Ter o produto no ar e as primeiras 5 vendas</div>
+          <div class="days-grid">
+            <div class="day-row">
+              <div class="day-label">Seg–Ter</div>
+              <div class="day-tasks">Produzir PDF completo e gravar os 3 vídeos bônus</div>
+            </div>
+            <div class="day-row">
+              <div class="day-label">Qua</div>
+              <div class="day-tasks">Subir landing page no GitHub Pages + cadastrar produto na Hotmart/Kiwify</div>
+            </div>
+            <div class="day-row">
+              <div class="day-label">Qui</div>
+              <div class="day-tasks">🚀 LANÇAMENTO: post no feed, stories, grupos WhatsApp, mensagens diretas</div>
+            </div>
+            <div class="day-row">
+              <div class="day-label">Sex–Dom</div>
+              <div class="day-tasks">Publicar Reels com prova, recolher depoimentos, responder DMs</div>
+            </div>
+          </div>
+          <div class="week__kpi">
+            <span class="kpi">Meta: 5+ vendas</span>
+            <span class="kpi">Meta: R$135+</span>
+            <span class="kpi">Meta: 3 depoimentos</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- SEMANA 2 -->
+      <div class="week">
+        <div class="week__header week__header--2">
+          <div>
+            <div class="week__num">Semana 2 — Dias 8 a 14</div>
+            <div class="week__theme">AMPLIAR + OTIMIZAR</div>
+          </div>
+          <div class="week__meta">Foco: tráfego e conversão</div>
+        </div>
+        <div class="week__body">
+          <div class="week__goal">Dobrar as vendas usando prova social e anúncios simples</div>
+          <div class="days-grid">
+            <div class="day-row">
+              <div class="day-label">Seg</div>
+              <div class="day-tasks">Analisar dados: qual conteúdo gerou cliques? Qual CTA converteu mais?</div>
+            </div>
+            <div class="day-row">
+              <div class="day-label">Ter</div>
+              <div class="day-tasks">Criar anúncio simples no Meta Ads com R$10–15/dia — usar depoimento como criativo</div>
+            </div>
+            <div class="day-row">
+              <div class="day-label">Qua–Qui</div>
+              <div class="day-tasks">Publicar 2 Reels: um mostrando compras reais, outro montando o cardápio</div>
+            </div>
+            <div class="day-row">
+              <div class="day-label">Sex–Dom</div>
+              <div class="day-tasks">Responder todos os comentários. Criar enquete nos stories sobre dores do público.</div>
+            </div>
+          </div>
+          <div class="week__kpi">
+            <span class="kpi">Meta: 10+ vendas</span>
+            <span class="kpi">Meta: R$270+</span>
+            <span class="kpi--yellow">Meta: ROI positivo em anúncio</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- SEMANA 3 -->
+      <div class="week">
+        <div class="week__header week__header--3">
+          <div>
+            <div class="week__num">Semana 3 — Dias 15 a 21</div>
+            <div class="week__theme">UPSELL + RETENÇÃO</div>
+          </div>
+          <div class="week__meta">Foco: LTV</div>
+        </div>
+        <div class="week__body">
+          <div class="week__goal">Lançar o produto de upsell e aumentar valor médio por cliente</div>
+          <div class="days-grid">
+            <div class="day-row">
+              <div class="day-label">Seg–Ter</div>
+              <div class="day-tasks">Produzir o Plano Mensal (30 dias) — aproveite o formato do guia principal</div>
+            </div>
+            <div class="day-row">
+              <div class="day-label">Qua</div>
+              <div class="day-tasks">Configurar upsell automático na página de obrigado do Hotmart/Kiwify</div>
+            </div>
+            <div class="day-row">
+              <div class="day-label">Qui</div>
+              <div class="day-tasks">E-mail para compradores anteriores oferecendo o plano mensal com desconto</div>
+            </div>
+            <div class="day-row">
+              <div class="day-label">Sex–Dom</div>
+              <div class="day-tasks">Criar grupo WhatsApp para compradores do plano mensal. Postar receita exclusiva.</div>
+            </div>
+          </div>
+          <div class="week__kpi">
+            <span class="kpi">Meta: 5+ upsells</span>
+            <span class="kpi--yellow">Meta: R$500+ total acumulado</span>
+            <span class="kpi">Meta: grupo ativo</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- SEMANA 4 -->
+      <div class="week">
+        <div class="week__header week__header--4">
+          <div>
+            <div class="week__num">Semana 4 — Dias 22 a 30</div>
+            <div class="week__theme">ESCALAR + PLANEJAR MÊS 2</div>
+          </div>
+          <div class="week__meta">Foco: crescimento sustentável</div>
+        </div>
+        <div class="week__body">
+          <div class="week__goal">Estabilizar receita, refinar o funil e planejar próximo produto</div>
+          <div class="days-grid">
+            <div class="day-row">
+              <div class="day-label">Seg–Ter</div>
+              <div class="day-tasks">Revisão geral: o que funcionou, o que não funcionou, ajustes na landing page</div>
+            </div>
+            <div class="day-row">
+              <div class="day-label">Qua</div>
+              <div class="day-tasks">Aumentar budget de anúncio (se ROI positivo) ou testar novo criativo</div>
+            </div>
+            <div class="day-row">
+              <div class="day-label">Qui</div>
+              <div class="day-tasks">Entrevistar 3 clientes via WhatsApp: o que amaram, o que falta, o que melhorar</div>
+            </div>
+            <div class="day-row">
+              <div class="day-label">Sex–Dom</div>
+              <div class="day-tasks">Planejar produto de mês 2 com base nos feedbacks. Começa com o que o cliente pediu.</div>
+            </div>
+          </div>
+          <div class="week__kpi">
+            <span class="kpi">Meta: 25+ vendas no mês</span>
+            <span class="kpi--yellow">Meta: R$700+ no mês</span>
+            <span class="kpi">Meta: definir produto v2</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Tabela resumo -->
+    <h3 style="margin-top:40px;margin-bottom:4px;font-size:1.1rem">📊 Resumo de metas do mês</h3>
+    <table class="summary-table">
+      <tr>
+        <th>Semana</th>
+        <th>Foco</th>
+        <th>Vendas meta</th>
+        <th>Receita meta</th>
+      </tr>
+      <tr>
+        <td><strong>Semana 1</strong></td>
+        <td>Lançamento e primeiras vendas</td>
+        <td class="val">5+</td>
+        <td class="val">R$135</td>
+      </tr>
+      <tr>
+        <td><strong>Semana 2</strong></td>
+        <td>Anúncio + prova social</td>
+        <td class="val">10+</td>
+        <td class="val">R$270</td>
+      </tr>
+      <tr>
+        <td><strong>Semana 3</strong></td>
+        <td>Upsell + grupo</td>
+        <td class="val">5 upsells</td>
+        <td class="val">R$235+</td>
+      </tr>
+      <tr>
+        <td><strong>Semana 4</strong></td>
+        <td>Escala + otimização</td>
+        <td class="val">5+ extras</td>
+        <td class="val">R$135+</td>
+      </tr>
+      <tr style="background:var(--sage-pale)">
+        <td><strong>Total do mês</strong></td>
+        <td><strong>Meta conservadora</strong></td>
+        <td class="val">25+ vendas</td>
+        <td class="val">R$700+</td>
+      </tr>
+    </table>
+
+    <div style="background:var(--yellow-pale);border:1px solid var(--yellow);border-radius:10px;padding:18px 20px;margin-top:20px;font-size:.9rem;color:var(--ink-mid)">
+      <strong>💡 Lembre-se:</strong> Esses números são metas conservadoras com esforço consistente.
+      Casos reais com boa prova social e Reels viralizando podem multiplicar esses resultados em 3–5x
+      já no primeiro mês. O segredo é manter a constância e usar cada venda como combustível para a próxima.
+    </div>
+
+  </div>
+</section>
+
+</body>
+</html>

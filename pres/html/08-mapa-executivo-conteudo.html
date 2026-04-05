@@ -1,0 +1,979 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mapa Executivo + Estratégia de Conteúdo — Uso Pessoal</title>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0E0F13;
+  --bg-2: #14161C;
+  --bg-3: #1C1F28;
+  --bg-4: #242836;
+  --border: rgba(255,255,255,.08);
+  --border-hi: rgba(255,255,255,.16);
+  --txt: #E8EAF0;
+  --txt-dim: #8890A4;
+  --txt-faint: #4A5168;
+  --accent: #4B9FFF;
+  --accent-dim: rgba(75,159,255,.15);
+  --accent-border: rgba(75,159,255,.35);
+  --gold: #F5C842;
+  --gold-dim: rgba(245,200,66,.12);
+  --gold-border: rgba(245,200,66,.3);
+  --green: #4ECBA0;
+  --green-dim: rgba(78,203,160,.12);
+  --red: #FF6B6B;
+  --red-dim: rgba(255,107,107,.12);
+  --violet: #A78BFA;
+  --violet-dim: rgba(167,139,250,.12);
+  --font: 'Sora', sans-serif;
+  --mono: 'JetBrains Mono', monospace;
+  --r: 10px; --r-sm: 6px;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: var(--font); background: var(--bg); color: var(--txt);
+  line-height: 1.6; font-size: 14px; min-height: 100vh;
+}
+
+/* ── GRAIN OVERLAY ── */
+body::before {
+  content: ''; position: fixed; inset: 0; pointer-events: none; z-index: 1000; opacity: .025;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 180px;
+}
+
+/* ── HERO ── */
+.hero {
+  padding: 64px 28px 56px;
+  background: linear-gradient(170deg, #0E0F13 0%, #12172A 60%, #0E0F13 100%);
+  border-bottom: 1px solid var(--border);
+  position: relative; overflow: hidden;
+}
+.hero::after {
+  content: ''; position: absolute; top: -120px; right: -120px;
+  width: 500px; height: 500px; border-radius: 50%;
+  background: radial-gradient(circle, rgba(75,159,255,.06) 0%, transparent 70%);
+  pointer-events: none;
+}
+.hero-inner { max-width: 820px; margin: 0 auto; }
+.hero-eyebrow {
+  font-family: var(--mono); font-size: 11px; font-weight: 600; letter-spacing: .16em;
+  text-transform: uppercase; color: var(--accent); margin-bottom: 18px;
+  display: flex; align-items: center; gap: 10px;
+}
+.hero-eyebrow::before { content: ''; display: block; width: 24px; height: 1px; background: var(--accent); }
+.hero h1 {
+  font-size: clamp(26px, 4.5vw, 44px); font-weight: 800; line-height: 1.1;
+  color: var(--txt); margin-bottom: 12px; letter-spacing: -.02em;
+}
+.hero h1 span { color: var(--gold); }
+.hero .sub { font-size: 14px; color: var(--txt-dim); max-width: 500px; margin-bottom: 28px; line-height: 1.65; }
+.hero-tags { display: flex; flex-wrap: wrap; gap: 8px; }
+.htag {
+  font-family: var(--mono); font-size: 11px; font-weight: 600; padding: 4px 12px;
+  border-radius: 999px; background: var(--bg-3); border: 1px solid var(--border-hi);
+  color: var(--txt-dim); letter-spacing: .06em;
+}
+
+/* ── NAV TABS ── */
+.tab-nav {
+  background: var(--bg-2); border-bottom: 1px solid var(--border);
+  position: sticky; top: 0; z-index: 500;
+}
+.tab-nav-inner { max-width: 820px; margin: 0 auto; display: flex; overflow-x: auto; }
+.tab-btn {
+  flex-shrink: 0; padding: 14px 18px; font-family: var(--font); font-size: 12px; font-weight: 600;
+  color: var(--txt-faint); background: none; border: none; border-bottom: 2px solid transparent;
+  cursor: pointer; transition: color .2s, border-color .2s; letter-spacing: .04em; white-space: nowrap;
+}
+.tab-btn:hover { color: var(--txt-dim); }
+.tab-btn.active { color: var(--accent); border-bottom-color: var(--accent); }
+
+/* ── PANELS ── */
+.tab-panel { display: none; max-width: 820px; margin: 0 auto; padding: 36px 20px 72px; }
+.tab-panel.active { display: block; }
+
+/* ── SECTION ── */
+.sec { margin: 36px 0 14px; }
+.sec-label {
+  font-family: var(--mono); font-size: 10px; font-weight: 600; letter-spacing: .18em;
+  text-transform: uppercase; color: var(--accent); margin-bottom: 5px; display: flex; align-items: center; gap: 8px;
+}
+.sec-label::before { content: '//'; opacity: .5; }
+.sec h2 { font-size: 20px; font-weight: 800; color: var(--txt); letter-spacing: -.01em; }
+
+/* ── BLOCK (card base) ── */
+.block {
+  background: var(--bg-2); border: 1px solid var(--border);
+  border-radius: var(--r); margin-bottom: 12px; overflow: hidden;
+  transition: border-color .2s;
+}
+.block:hover { border-color: var(--border-hi); }
+.block-header { padding: 16px 20px 12px; border-bottom: 1px solid var(--border); display: flex; align-items: flex-start; gap: 12px; }
+.bh-icon { font-size: 20px; flex-shrink: 0; margin-top: 1px; }
+.bh-text h3 { font-size: 14px; font-weight: 700; color: var(--txt); margin-bottom: 2px; }
+.bh-text p { font-size: 12px; color: var(--txt-dim); }
+.block-body { padding: 16px 20px; }
+
+/* ── TÓPICO ATÔMICO ── */
+.atom-list { list-style: none; }
+.atom { display: flex; gap: 10px; padding: 7px 0; border-bottom: 1px solid var(--border); font-size: 13px; color: var(--txt); line-height: 1.55; }
+.atom:last-child { border-bottom: none; }
+.atom-dot { flex-shrink: 0; width: 6px; height: 6px; border-radius: 50%; margin-top: 6px; }
+.dot-acc { background: var(--accent); }
+.dot-gold { background: var(--gold); }
+.dot-green { background: var(--green); }
+.dot-red { background: var(--red); }
+.dot-vio { background: var(--violet); }
+.atom strong { color: var(--gold); font-weight: 700; }
+.atom em { color: var(--txt-dim); font-style: normal; font-size: 12px; }
+
+/* ── EIXO CARD ── */
+.eixo-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.eixo-card { background: var(--bg-3); border: 1px solid var(--border); border-radius: var(--r); padding: 16px; }
+.eixo-card .ec-num { font-family: var(--mono); font-size: 10px; font-weight: 600; letter-spacing: .1em; color: var(--txt-faint); margin-bottom: 4px; }
+.eixo-card h4 { font-size: 13px; font-weight: 700; color: var(--txt); margin-bottom: 10px; line-height: 1.3; }
+.eixo-card ul { list-style: none; }
+.eixo-card ul li { font-size: 12px; color: var(--txt-dim); padding: 3px 0; display: flex; gap: 7px; }
+.eixo-card ul li::before { content: '→'; color: var(--txt-faint); flex-shrink: 0; }
+.ec-1 { border-top: 2px solid var(--accent); }
+.ec-2 { border-top: 2px solid var(--gold); }
+.ec-3 { border-top: 2px solid var(--green); }
+.ec-4 { border-top: 2px solid var(--violet); }
+
+/* ── DESTAQUE / ALERTA ── */
+.hi { background: var(--accent-dim); border: 1px solid var(--accent-border); border-radius: var(--r-sm); padding: 12px 16px; font-size: 13px; color: var(--txt); margin: 12px 0; line-height: 1.6; }
+.hi-gold { background: var(--gold-dim); border-color: var(--gold-border); }
+.hi-green { background: var(--green-dim); border-color: rgba(78,203,160,.35); color: var(--green); }
+.hi-red { background: var(--red-dim); border-color: rgba(255,107,107,.35); }
+.hi strong { color: var(--gold); }
+.hi-gold strong { color: var(--gold); }
+
+/* ── DADO INLINE ── */
+.dado-row { display: flex; flex-wrap: wrap; gap: 10px; margin: 12px 0; }
+.dado {
+  background: var(--bg-3); border: 1px solid var(--border); border-radius: var(--r-sm);
+  padding: 10px 16px; flex: 1; min-width: 130px; text-align: center;
+}
+.dado .dv { font-family: var(--mono); font-size: 22px; font-weight: 700; color: var(--accent); display: block; line-height: 1; margin-bottom: 3px; }
+.dado .dl { font-size: 11px; color: var(--txt-dim); }
+
+/* ══════════════════════════
+   CONTEÚDO — CALENDÁRIO
+══════════════════════════ */
+.cal-day {
+  background: var(--bg-2); border: 1px solid var(--border); border-radius: var(--r);
+  margin-bottom: 16px; overflow: hidden;
+}
+.cal-day-header {
+  display: flex; align-items: center; gap: 14px; padding: 14px 20px;
+  background: var(--bg-3); border-bottom: 1px solid var(--border);
+  cursor: pointer; user-select: none;
+}
+.cal-day-num {
+  font-family: var(--mono); font-size: 28px; font-weight: 700; color: var(--accent);
+  line-height: 1; flex-shrink: 0; width: 42px; text-align: center;
+}
+.cal-day-info h3 { font-size: 13px; font-weight: 700; color: var(--txt); }
+.cal-day-info p { font-size: 11px; color: var(--txt-dim); margin-top: 2px; }
+.cal-day-badges { margin-left: auto; display: flex; gap: 6px; }
+.cbadge {
+  font-size: 10px; font-weight: 700; padding: 3px 8px; border-radius: 999px;
+  letter-spacing: .06em; text-transform: uppercase;
+}
+.cb-ig { background: var(--violet-dim); color: var(--violet); border: 1px solid rgba(167,139,250,.3); }
+.cb-wpp { background: var(--green-dim); color: var(--green); border: 1px solid rgba(78,203,160,.3); }
+.cal-body { padding: 0; }
+
+/* CONTEÚDO PIECE */
+.piece { padding: 16px 20px; border-bottom: 1px solid var(--border); }
+.piece:last-child { border-bottom: none; }
+.piece-header { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+.piece-type {
+  font-family: var(--mono); font-size: 10px; font-weight: 700; letter-spacing: .1em;
+  text-transform: uppercase; padding: 3px 9px; border-radius: 999px;
+}
+.pt-reel { background: var(--violet-dim); color: var(--violet); border: 1px solid rgba(167,139,250,.3); }
+.pt-story { background: var(--accent-dim); color: var(--accent); border: 1px solid var(--accent-border); }
+.pt-audio { background: var(--green-dim); color: var(--green); border: 1px solid rgba(78,203,160,.3); }
+.piece-title { font-size: 14px; font-weight: 700; color: var(--txt); }
+.piece-meta { font-size: 11px; color: var(--txt-faint); margin-left: auto; font-family: var(--mono); }
+
+.piece-section { margin-bottom: 10px; }
+.piece-section-label {
+  font-family: var(--mono); font-size: 10px; font-weight: 600; letter-spacing: .14em;
+  text-transform: uppercase; color: var(--txt-faint); margin-bottom: 5px;
+}
+.piece-text { font-size: 13px; color: var(--txt-dim); line-height: 1.65; }
+.piece-text strong { color: var(--gold); font-weight: 700; }
+.piece-text em { color: var(--accent); font-style: normal; }
+
+/* ROTEIRO BLOCK */
+.roteiro {
+  background: var(--bg-3); border: 1px solid var(--border); border-radius: var(--r-sm);
+  padding: 14px 16px; margin: 10px 0; font-size: 13px; line-height: 1.75;
+  color: var(--txt);
+}
+.roteiro .rt-line { padding: 4px 0; border-bottom: 1px solid var(--border); display: flex; gap: 10px; }
+.roteiro .rt-line:last-child { border-bottom: none; }
+.roteiro .rt-seg { font-family: var(--mono); font-size: 10px; color: var(--txt-faint); flex-shrink: 0; width: 70px; padding-top: 2px; }
+.roteiro .rt-fala { flex: 1; font-size: 13px; color: var(--txt); }
+.roteiro .rt-fala .hook { color: var(--gold); font-weight: 700; }
+.roteiro .rt-fala .dado { color: var(--accent); font-weight: 700; }
+.roteiro .rt-fala .cta { color: var(--green); }
+
+/* ESTRATÉGIA SUTIL */
+.strategy-note {
+  background: var(--gold-dim); border: 1px solid var(--gold-border);
+  border-radius: var(--r-sm); padding: 10px 14px; font-size: 12px;
+  color: var(--txt-dim); margin: 10px 0; display: flex; gap: 8px;
+}
+.strategy-note::before { content: '◈'; color: var(--gold); flex-shrink: 0; font-size: 14px; }
+
+/* SEPARADOR */
+.sep { border: none; border-top: 1px solid var(--border); margin: 24px 0; }
+
+/* COLLAPSE */
+.cal-body { display: block; }
+.cal-day.collapsed .cal-body { display: none; }
+.toggle-icon { font-size: 14px; color: var(--txt-faint); transition: transform .2s; }
+.cal-day.collapsed .toggle-icon { transform: rotate(-90deg); }
+
+/* ── FOOTER ── */
+footer {
+  border-top: 1px solid var(--border); background: var(--bg-2);
+  text-align: center; padding: 22px; font-size: 12px; color: var(--txt-faint);
+}
+footer strong { color: var(--accent); }
+
+@media (max-width: 600px) {
+  .eixo-grid { grid-template-columns: 1fr; }
+  .dado-row { flex-direction: column; }
+  .cal-day-badges { display: none; }
+  .piece-meta { display: none; }
+}
+
+/* ── ENTRADA ANIMADA ── */
+@keyframes fadeUp { from { opacity:0; transform:translateY(14px); } to { opacity:1; transform:none; } }
+.tab-panel.active > * { animation: fadeUp .3s ease both; }
+.tab-panel.active > *:nth-child(2) { animation-delay: .04s; }
+.tab-panel.active > *:nth-child(3) { animation-delay: .08s; }
+.tab-panel.active > *:nth-child(4) { animation-delay: .12s; }
+.tab-panel.active > *:nth-child(5) { animation-delay: .16s; }
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<header class="hero">
+  <div class="hero-inner">
+    <div class="hero-eyebrow">Documento Pessoal — Uso Exclusivo</div>
+    <h1>Seu mapa da <span>18ª CNS</span><br>+ Estratégia de Conteúdo</h1>
+    <p class="sub">Síntese executiva completa do que você precisa dominar — e roteiros prontos para projetar autoridade sem esforço aparente.</p>
+    <div class="hero-tags">
+      <span class="htag">// 4 eixos</span>
+      <span class="htag">// 36 dias de conteúdo</span>
+      <span class="htag">// 2 reels/dia</span>
+      <span class="htag">// 1 áudio/dia</span>
+      <span class="htag">// estratégia de imagem</span>
+    </div>
+  </div>
+</header>
+
+<!-- TABS -->
+<nav class="tab-nav">
+  <div class="tab-nav-inner">
+    <button class="tab-btn active" onclick="showTab('mapa')">🧠 Mapa Mental</button>
+    <button class="tab-btn" onclick="showTab('eixos')">⬡ Os 4 Eixos</button>
+    <button class="tab-btn" onclick="showTab('estrategia')">🎯 Estratégia</button>
+    <button class="tab-btn" onclick="showTab('conteudo')">📱 Conteúdo Diário</button>
+    <button class="tab-btn" onclick="showTab('falas')">🎙️ Falas-chave</button>
+  </div>
+</nav>
+
+
+<!-- ══════════════════════════════════════
+     ABA 1 — MAPA MENTAL
+══════════════════════════════════════ -->
+<div class="tab-panel active" id="tab-mapa">
+
+  <div class="sec" style="margin-top:0">
+    <div class="sec-label">Contexto</div>
+    <h2>O que é e por que importa agora</h2>
+  </div>
+
+  <div class="block">
+    <div class="block-body">
+      <ul class="atom-list">
+        <li class="atom"><div class="atom-dot dot-acc"></div><span><strong>18ª CNS</strong> = fórum deliberativo máximo do SUS. O que sai daqui vira diretriz nacional de saúde.</span></li>
+        <li class="atom"><div class="atom-dot dot-acc"></div><span>O processo é ascendente: <strong>pré-conferência → conferência municipal → estadual → nacional.</strong> Propostas de Montes Claros podem virar política de Estado.</span></li>
+        <li class="atom"><div class="atom-dot dot-acc"></div><span>Tema central: <strong>"Saúde, Democracia, Soberania e SUS: Cuidar do Povo é Cuidar do Brasil"</strong> — não é slogan vazio, é posicionamento político contra privatização e austeridade.</span></li>
+        <li class="atom"><div class="atom-dot dot-gold"></div><span>Momento estratégico: <em>crise democrática global + eleições 2026 + COP30 realizada + aprovação da Carreira SUS.</em> Tudo isso está no documento.</span></li>
+        <li class="atom"><div class="atom-dot dot-gold"></div><span>A 11ª CMS de Montes Claros acontece <strong>22–24 de abril de 2026.</strong> Você está no centro disso.</span></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-label">Estrutura</div>
+    <h2>Como o documento se organiza</h2>
+  </div>
+
+  <div class="block">
+    <div class="block-body">
+      <ul class="atom-list">
+        <li class="atom"><div class="atom-dot dot-acc"></div><span><strong>4 eixos temáticos</strong> = macro-categorias obrigatórias para organizar todos os debates e propostas.</span></li>
+        <li class="atom"><div class="atom-dot dot-acc"></div><span><strong>Questões mobilizadoras</strong> = perguntas geradoras de cada eixo. São as perguntas que você deve usar para abrir qualquer debate.</span></li>
+        <li class="atom"><div class="atom-dot dot-acc"></div><span><strong>Diretriz</strong> ≠ <strong>proposta.</strong> Diretriz = linha estratégica ampla ("fortalecer APS"). Proposta = ação concreta executável ("ampliar ESF em 30% até 2027").</span></li>
+        <li class="atom"><div class="atom-dot dot-gold"></div><span>Paridade obrigatória: <strong>50% usuários / 25% trabalhadores / 25% gestores e prestadores.</strong> Regra constitucional, não preferência.</span></li>
+        <li class="atom"><div class="atom-dot dot-gold"></div><span>O documento é <strong>forte politicamente, fraco operacionalmente.</strong> O sucesso depende de quem domina a metodologia — você.</span></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-label">Números que você precisa saber de cor</div>
+    <h2>Dados para citar com naturalidade</h2>
+  </div>
+
+  <div class="dado-row">
+    <div class="dado"><span class="dv">6%</span><span class="dl">do PIB — meta de saúde pública aprovada na 17ª CNS</span></div>
+    <div class="dado"><span class="dv">40%</span><span class="dl">do gasto total em saúde é público no Brasil (deveria ser >60%)</span></div>
+    <div class="dado"><span class="dv">R$1tri</span><span class="dl">em juros da dívida em 2025 vs R$253bi do SUS</span></div>
+    <div class="dado"><span class="dv">12%</span><span class="dl">do orçamento de saúde vem de emendas parlamentares</span></div>
+    <div class="dado"><span class="dv">1,5°C</span><span class="dl">acima da temperatura pré-industrial — marco atingido em 2024</span></div>
+    <div class="dado"><span class="dv">27 metas</span><span class="dl">do AdaptaSUS — lançado na COP30, nov/2025</span></div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-label">Conflitos centrais</div>
+    <h2>O que está em disputa de verdade</h2>
+  </div>
+
+  <div class="block">
+    <div class="block-body">
+      <ul class="atom-list">
+        <li class="atom"><div class="atom-dot dot-red"></div><span><strong>Saúde como direito universal</strong> vs. saúde como mercadoria — essa é a disputa de fundo, em todos os 4 eixos.</span></li>
+        <li class="atom"><div class="atom-dot dot-red"></div><span><strong>Gestão pública direta</strong> vs. terceirização/OS/privatização-por-dentro — o modelo de gestão municipal é terreno desse conflito.</span></li>
+        <li class="atom"><div class="atom-dot dot-red"></div><span><strong>Financiamento estruturado</strong> vs. dependência de emendas parlamentares — emendas criam relação de "chantagem" política, distorcem o planejamento.</span></li>
+        <li class="atom"><div class="atom-dot dot-gold"></div><span><strong>Democracia participativa real</strong> vs. conferência como ritual esvaziado — essa é a tensão que você vive diretamente no seu município.</span></li>
+        <li class="atom"><div class="atom-dot dot-gold"></div><span>Quem controla a metodologia do processo <strong>controla o resultado.</strong> É uma disputa de poder disfarçada de debate técnico.</span></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-label">Lacunas reais do documento</div>
+    <h2>O que o documento não garante</h2>
+  </div>
+
+  <div class="block">
+    <div class="block-body">
+      <ul class="atom-list">
+        <li class="atom"><div class="atom-dot dot-vio"></div><span>Não define padrão de proposta — deixa a qualidade na mão da execução local.</span></li>
+        <li class="atom"><div class="atom-dot dot-vio"></div><span>Não define metodologia de consolidação entre etapas — risco real de perda de propostas.</span></li>
+        <li class="atom"><div class="atom-dot dot-vio"></div><span>Não aborda gestão de dados nem controle de paridade em tempo real.</span></li>
+        <li class="atom"><div class="atom-dot dot-vio"></div><span>A transição da terceirização para gestão direta é prevista mas sem cronograma ou parâmetros fiscais.</span></li>
+        <li class="atom"><div class="atom-dot dot-gold"></div><span><em>Isso é oportunidade: quem preenche essas lacunas vira referência técnica indispensável.</em></span></li>
+      </ul>
+    </div>
+  </div>
+
+</div>
+
+
+<!-- ══════════════════════════════════════
+     ABA 2 — OS 4 EIXOS
+══════════════════════════════════════ -->
+<div class="tab-panel" id="tab-eixos">
+
+  <div class="sec" style="margin-top:0">
+    <div class="sec-label">Visão geral</div>
+    <h2>Os 4 eixos em frases atômicas</h2>
+  </div>
+
+  <div class="eixo-grid">
+
+    <div class="eixo-card ec-1">
+      <div class="ec-num">// eixo 01</div>
+      <h4>Democracia, Saúde como Direito e Soberania Nacional</h4>
+      <ul>
+        <li>SUS nasceu da luta contra a ditadura</li>
+        <li>Conselhos = poder deliberativo, não consultivo</li>
+        <li>Sem democracia participativa, não há SUS pleno</li>
+        <li>Soberania sanitária = produzir o que se consome</li>
+        <li>Dados do SUS são patrimônio coletivo, não mercadoria</li>
+        <li>Crise democrática global impacta diretamente o SUS</li>
+      </ul>
+    </div>
+
+    <div class="eixo-card ec-2">
+      <div class="ec-num">// eixo 02</div>
+      <h4>Financiamento Adequado e Suficiente para o SUS</h4>
+      <ul>
+        <li>SUS é cronicamente subfinanciado desde 1988</li>
+        <li>Brasil gasta ~40% público em saúde (meta: >60%)</li>
+        <li>R$1tri em juros vs R$253bi no SUS — 2025</li>
+        <li>Emendas parlamentares = 12% da saúde, sem planejamento</li>
+        <li>Reforma tributária progressiva = pré-condição</li>
+        <li>Carreira Interfederativa SUS — aprovada jan/2026</li>
+      </ul>
+    </div>
+
+    <div class="eixo-card ec-3">
+      <div class="ec-num">// eixo 03</div>
+      <h4>Emergências Climáticas e Justiça Socioambiental</h4>
+      <ul>
+        <li>1,5°C atingido em 2024 — emergência climática é agora</li>
+        <li>Dengue, leptospirose, calor extremo: crise climática = crise de saúde</li>
+        <li>Racismo ambiental: periféricos sofrem mais, acessam menos</li>
+        <li>AdaptaSUS: 27 metas/93 ações até 2035</li>
+        <li>Saneamento privatizado aprofunda desigualdade</li>
+        <li>Norte de Minas: seca, calor, insegurança hídrica</li>
+      </ul>
+    </div>
+
+    <div class="eixo-card ec-4">
+      <div class="ec-num">// eixo 04</div>
+      <h4>Modelos de Atenção, Gestão e Cuidado Integral</h4>
+      <ul>
+        <li>APS como coordenadora — não apenas "porta de entrada"</li>
+        <li>ESF fragilizada nos últimos anos = sistema desorganizado</li>
+        <li>Modelo biomédico = patologiza vida, gera supercusto</li>
+        <li>SUS Digital: soberania de dados, não Big Tech</li>
+        <li>Vigilância em Saúde = inteligência estratégica do cuidado</li>
+        <li>Saúde negra/indígena: racismo institucional mata</li>
+      </ul>
+    </div>
+
+  </div>
+
+  <div class="sec">
+    <div class="sec-label">Questões mobilizadoras — as perguntas certas</div>
+    <h2>O que você pergunta para abrir qualquer debate</h2>
+  </div>
+
+  <div class="block">
+    <div class="block-body">
+      <ul class="atom-list">
+        <li class="atom"><div class="atom-dot dot-acc"></div><span><strong>E1 —</strong> Que modelo de democracia queremos na saúde: representação formal ou participação real, que muda o orçamento?</span></li>
+        <li class="atom"><div class="atom-dot dot-gold"></div><span><strong>E2 —</strong> O que é preciso mudar na política fiscal para que o SUS pare de ser subfinanciado? Quem perde com isso e quem ganha?</span></li>
+        <li class="atom"><div class="atom-dot dot-green"></div><span><strong>E3 —</strong> No seu bairro, o calor extremo, a seca ou as enchentes já chegaram à UBS? O SUS local está preparado?</span></li>
+        <li class="atom"><div class="atom-dot dot-vio"></div><span><strong>E4 —</strong> Quando você fica doente, vai ao posto ou direto ao PS? Por quê? O que mudaria sua resposta?</span></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-label">Conexão com Montes Claros</div>
+    <h2>Como cada eixo aterra no local</h2>
+  </div>
+
+  <div class="block">
+    <div class="block-body">
+      <ul class="atom-list">
+        <li class="atom"><div class="atom-dot dot-acc"></div><span><strong>E1 local:</strong> CMS com deliberações efetivas ou meramente formais? Reuniões abertas? Atas publicadas?</span></li>
+        <li class="atom"><div class="atom-dot dot-gold"></div><span><strong>E2 local:</strong> Qual % do orçamento de saúde de MC vem de emendas? Quanto por habitante é investido? Compare com a média estadual.</span></li>
+        <li class="atom"><div class="atom-dot dot-green"></div><span><strong>E3 local:</strong> Norte de Minas é semiárido — seca prolongada, calor extremo, dengue endêmica, fumaça de queimadas. Esses dados devem entrar nos debates.</span></li>
+        <li class="atom"><div class="atom-dot dot-vio"></div><span><strong>E4 local:</strong> MC é polo macrorregional — absorve demanda de 18–20 municípios vizinhos. Redes de atenção especializadas, PNAES, financiamento solidário.</span></li>
+      </ul>
+    </div>
+  </div>
+
+</div>
+
+
+<!-- ══════════════════════════════════════
+     ABA 3 — ESTRATÉGIA DE IMAGEM
+══════════════════════════════════════ -->
+<div class="tab-panel" id="tab-estrategia">
+
+  <div class="sec" style="margin-top:0">
+    <div class="sec-label">Posicionamento</div>
+    <h2>Quem você é nessa narrativa</h2>
+  </div>
+
+  <div class="block">
+    <div class="block-body">
+      <ul class="atom-list">
+        <li class="atom"><div class="atom-dot dot-gold"></div><span><strong>Arquétipo:</strong> o conselheiro que domina o processo, não o político que o usa. Você informa, os outros opinam.</span></li>
+        <li class="atom"><div class="atom-dot dot-gold"></div><span><strong>Diferencial visível:</strong> você leu o documento; a maioria não leu. Isso se mostra — não se diz.</span></li>
+        <li class="atom"><div class="atom-dot dot-gold"></div><span><strong>Tom:</strong> didático sem ser professoral. Direto sem ser agressivo. Crítico sem ser panfletário.</span></li>
+        <li class="atom"><div class="atom-dot dot-gold"></div><span><strong>Jamais diga:</strong> "eu sei mais do que X" — deixe isso ser inferido pelo nível do que você apresenta.</span></li>
+        <li class="atom"><div class="atom-dot dot-acc"></div><span>Cada vídeo deve fazer o espectador pensar: <em>"esse cara/essa moça está por dentro de um jeito que os outros não estão."</em></span></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-label">Pilares da estratégia de conteúdo</div>
+    <h2>As 3 camadas de cada conteúdo</h2>
+  </div>
+
+  <div class="block">
+    <div class="block-body">
+      <ul class="atom-list">
+        <li class="atom"><div class="atom-dot dot-acc"></div><span><strong>Camada 1 — Informação:</strong> dado real, fato concreto, conceito preciso. Sempre a base.</span></li>
+        <li class="atom"><div class="atom-dot dot-gold"></div><span><strong>Camada 2 — Contextualização local:</strong> "e aqui em Montes Claros / Norte de Minas, isso significa…" Isso é o que ninguém mais faz.</span></li>
+        <li class="atom"><div class="atom-dot dot-green"></div><span><strong>Camada 3 — Convocação sutil:</strong> não "venham à conferência", mas "se você quer ter voz nessa decisão, o caminho é…" — o convite pela consequência lógica, não pela propaganda.</span></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-label">Formatos e canais</div>
+    <h2>O que vai onde e por quê</h2>
+  </div>
+
+  <div class="block">
+    <div class="block-body">
+      <ul class="atom-list">
+        <li class="atom"><div class="atom-dot dot-vio"></div><span><strong>Instagram Reels (vídeo 1 do dia):</strong> gancho forte nos 3 primeiros segundos, dado surpreendente no meio, convocação indireta no fim. Duração: 45–75 segundos.</span></li>
+        <li class="atom"><div class="atom-dot dot-vio"></div><span><strong>Instagram Stories/Reels (vídeo 2 do dia):</strong> contextualização local — "e em Montes Claros, isso significa X". Pode ser mais conversa, menos roteiro. Duração: 30–50 segundos.</span></li>
+        <li class="atom"><div class="atom-dot dot-green"></div><span><strong>Áudio WhatsApp (grupo):</strong> tom mais íntimo, pode ser mais longo (até 2 min), serve para aprofundar ou dar uma perspectiva sua. É onde você pode ser mais crítico, mais pessoal.</span></li>
+        <li class="atom"><div class="atom-dot dot-gold"></div><span><strong>Regra geral:</strong> o Instagram constrói imagem pública; o WhatsApp consolida autoridade no grupo interno. Públicos diferentes, finalidades diferentes.</span></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-label">Progressão estratégica</div>
+    <h2>Arco narrativo das semanas</h2>
+  </div>
+
+  <div class="block">
+    <div class="block-body">
+      <ul class="atom-list">
+        <li class="atom"><div class="atom-dot dot-acc"></div><span><strong>Semana 1 (18–24 mar):</strong> Contexto e por que isso importa. Você é quem explica o que está acontecendo. Posiciona como informante confiável.</span></li>
+        <li class="atom"><div class="atom-dot dot-acc"></div><span><strong>Semana 2 (25–31 mar):</strong> Os eixos em profundidade. Você mostra domínio técnico. Dados, conflitos, conexão com a realidade local.</span></li>
+        <li class="atom"><div class="atom-dot dot-gold"></div><span><strong>Semana 3 (1–7 abr):</strong> Participação e propostas. Você ensina como agir. Transição de analista para mobilizador.</span></li>
+        <li class="atom"><div class="atom-dot dot-gold"></div><span><strong>Semana 4 (8–14 abr):</strong> Urgência e convocação. Prazo chegando, a voz de cada um importa. Você cria senso de oportunidade.</span></li>
+        <li class="atom"><div class="atom-dot dot-green"></div><span><strong>Semana 5 (15–21 abr):</strong> Mobilização final + o que esperar da conferência. Você é quem prepara o público para o evento.</span></li>
+        <li class="atom"><div class="atom-dot dot-green"></div><span><strong>Semana 6 (22–24 abr):</strong> Cobertura ao vivo (stories, registros, bastidores). Você é quem está lá e conta o que acontece.</span></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="hi hi-gold">
+    <strong>Princípio de ouro:</strong> Nunca diga "eu sou referência nesse assunto". Mostre isso sendo a única pessoa que explica isso com clareza, antes de todo mundo, com dados reais. A autoridade é atribuída — não declarada.
+  </div>
+
+</div>
+
+
+<!-- ══════════════════════════════════════
+     ABA 4 — CONTEÚDO DIÁRIO
+══════════════════════════════════════ -->
+<div class="tab-panel" id="tab-conteudo">
+
+  <div class="sec" style="margin-top:0">
+    <div class="sec-label">Calendário editorial</div>
+    <h2>36 dias · 72 vídeos + 36 áudios</h2>
+  </div>
+
+  <div class="hi">
+    Cada dia tem: <strong>Reel 1</strong> (tema + dado forte), <strong>Reel 2</strong> (conexão local), <strong>Áudio WPP</strong> (perspectiva pessoal / aprofundamento). Clique no dia para expandir.
+  </div>
+
+  <!-- ══ SEMANA 1 ══ -->
+  <div class="sec"><div class="sec-label">18–24 de março</div><h2>Semana 1 — Contexto: o que está acontecendo</h2></div>
+
+  <!-- DIA 1 -->
+  <div class="cal-day" id="day1">
+    <div class="cal-day-header" onclick="toggleDay('day1')">
+      <div class="cal-day-num">18</div>
+      <div class="cal-day-info"><h3>Apresentação — O que é a 18ª CNS</h3><p>Terça · março · Abertura da estratégia</p></div>
+      <div class="cal-day-badges"><span class="cbadge cb-ig">2× Reel</span><span class="cbadge cb-wpp">Áudio</span></div>
+      <span class="toggle-icon">▾</span>
+    </div>
+    <div class="cal-body">
+      <div class="piece">
+        <div class="piece-header">
+          <span class="piece-type pt-reel">Reel 1</span>
+          <span class="piece-title">Tem uma conferência que vai decidir o SUS da sua cidade</span>
+          <span class="piece-meta">~60 seg</span>
+        </div>
+        <div class="piece-section">
+          <div class="piece-section-label">Roteiro</div>
+          <div class="roteiro">
+            <div class="rt-line"><div class="rt-seg">0–3s GANCHO</div><div class="rt-fala"><span class="hook">Você sabia que em abril vai acontecer um evento que decide as prioridades de saúde de Montes Claros pelos próximos anos?</span></div></div>
+            <div class="rt-line"><div class="rt-seg">3–20s</div><div class="rt-fala">Chama Conferência Municipal de Saúde. Acontece desde 1986, mas a maioria das pessoas nunca ouviu falar. É onde conselheiros, trabalhadores de saúde e usuários do SUS decidem o que o município precisa fazer na saúde.</div></div>
+            <div class="rt-line"><div class="rt-seg">20–45s</div><div class="rt-fala">Em 2026, o tema nacional é: <span class="dado">"Saúde, Democracia, Soberania e SUS: Cuidar do Povo é Cuidar do Brasil"</span>. É a 18ª conferência nacional, e Montes Claros vai mandar propostas pra lá.</div></div>
+            <div class="rt-line"><div class="rt-seg">45–60s CTA</div><div class="rt-fala"><span class="cta">Nos próximos dias eu vou explicar tudo o que tá em jogo aqui. Salva esse vídeo e segue o perfil.</span></div></div>
+          </div>
+        </div>
+        <div class="strategy-note">Estratégia: apresentação sem autopromoção. Você posiciona o tema, não você mesmo. A audiência vai perceber que você sabe disso — sem que você precise dizer.</div>
+      </div>
+      <div class="piece">
+        <div class="piece-header">
+          <span class="piece-type pt-story">Reel 2</span>
+          <span class="piece-title">Por que Montes Claros importa nessa história</span>
+          <span class="piece-meta">~45 seg</span>
+        </div>
+        <div class="piece-section">
+          <div class="piece-section-label">Roteiro</div>
+          <div class="roteiro">
+            <div class="rt-line"><div class="rt-seg">0–3s GANCHO</div><div class="rt-fala"><span class="hook">Montes Claros não é só mais uma cidade no processo. A gente é polo regional de saúde.</span></div></div>
+            <div class="rt-line"><div class="rt-seg">3–30s</div><div class="rt-fala">A gente atende saúde de <span class="dado">18 a 20 municípios do Norte de Minas</span>. Isso significa que o que a gente decide na nossa conferência afeta uma região inteira. As nossas propostas precisam refletir isso.</div></div>
+            <div class="rt-line"><div class="rt-seg">30–45s CTA</div><div class="rt-fala"><span class="cta">Essa semana eu vou trazer os temas que estarão em debate. Comenta aqui o que você mais quer ver discutido.</span></div></div>
+          </div>
+        </div>
+      </div>
+      <div class="piece">
+        <div class="piece-header">
+          <span class="piece-type pt-audio">Áudio WPP</span>
+          <span class="piece-title">Por que estou fazendo isso agora</span>
+          <span class="piece-meta">~90 seg</span>
+        </div>
+        <div class="piece-section">
+          <div class="piece-section-label">Roteiro (tom conversa, mais pessoal)</div>
+          <div class="roteiro">
+            <div class="rt-line"><div class="rt-seg">Abertura</div><div class="rt-fala">Galera, vou começar a trazer conteúdo diário sobre a conferência porque percebi que tem muita gente no processo sem ter lido o documento orientador. Li com cuidado e tem coisa importante aqui que precisa ser discutida de verdade.</div></div>
+            <div class="rt-line"><div class="rt-seg">Meio</div><div class="rt-fala">A conferência não pode ser protocolo. Ela é um instrumento de poder — quem domina a metodologia, domina o resultado. Isso é técnico, não político. E é exatamente por isso que eu quero que a gente entre bem preparado.</div></div>
+            <div class="rt-line"><div class="rt-seg">Fim</div><div class="rt-fala"><span class="cta">Todo dia às [horário] vou mandar um áudio aqui sobre o tema do dia. Se tiver dúvida, joga no grupo.</span></div></div>
+          </div>
+        </div>
+        <div class="strategy-note">Estratégia: o áudio posiciona você como alguém que leu e se preparou, sem dizer isso diretamente. A crítica velada ao processo (sem preparação = sem poder) já estabelece seu diferencial.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- DIA 2 -->
+  <div class="cal-day collapsed" id="day2">
+    <div class="cal-day-header" onclick="toggleDay('day2')">
+      <div class="cal-day-num">19</div>
+      <div class="cal-day-info"><h3>O SUS que a Constituição prometeu</h3><p>Quarta · marco histórico e o que foi desfeito</p></div>
+      <div class="cal-day-badges"><span class="cbadge cb-ig">2× Reel</span><span class="cbadge cb-wpp">Áudio</span></div>
+      <span class="toggle-icon">▾</span>
+    </div>
+    <div class="cal-body">
+      <div class="piece">
+        <div class="piece-header"><span class="piece-type pt-reel">Reel 1</span><span class="piece-title">Em 1988 o Brasil prometeu uma coisa. Cumpriu?</span><span class="piece-meta">~60 seg</span></div>
+        <div class="roteiro">
+          <div class="rt-line"><div class="rt-seg">GANCHO</div><div class="rt-fala"><span class="hook">A Constituição de 1988 diz: saúde é direito de todos e dever do Estado. Isso é lei. Então por que o SUS está como está?</span></div></div>
+          <div class="rt-line"><div class="rt-seg">Contexto</div><div class="rt-fala">O SUS nasceu da luta contra a ditadura. A 8ª Conferência Nacional de Saúde, em 1986, foi uma espécie de constituinte popular da saúde. Foram mais de 4 mil participantes. Saiu dali o que virou o artigo 196 da Constituição.</div></div>
+          <div class="rt-line"><div class="rt-seg">Dado</div><div class="rt-fala">Mas desde que foi criado, o SUS vive numa disputa: de um lado, quem quer saúde universal. Do outro, quem prefere saúde como mercado. <span class="dado">Em 2016, uma emenda constitucional tirou R$70 bilhões do SUS entre 2018 e 2022.</span></div></div>
+          <div class="rt-line"><div class="rt-seg">CTA</div><div class="rt-fala"><span class="cta">Amanhã: o dinheiro do SUS — para onde vai e para onde deveria ir. Segue pra não perder.</span></div></div>
+        </div>
+      </div>
+      <div class="piece">
+        <div class="piece-header"><span class="piece-type pt-story">Reel 2</span><span class="piece-title">Você usa o SUS e não sabe</span><span class="piece-meta">~40 seg</span></div>
+        <div class="roteiro">
+          <div class="rt-line"><div class="rt-seg">GANCHO</div><div class="rt-fala"><span class="hook">Quem aqui acha que não usa o SUS? Espera.</span></div></div>
+          <div class="rt-line"><div class="rt-seg">Lista</div><div class="rt-fala">Vacina de gripe? SUS. Dengue? SUS. Transplante? SUS. Medicamento de alto custo? SUS. Vigilância sanitária do restaurante onde você come? SUS. SAMU? SUS.</div></div>
+          <div class="rt-line"><div class="rt-seg">CTA</div><div class="rt-fala"><span class="cta">Defender o SUS não é de esquerda nem de direita. É defender o que você já usa. Fala nos comentários: qual serviço do SUS você usa sem perceber?</span></div></div>
+        </div>
+        <div class="strategy-note">Estratégia: esse vídeo quebra resistência ideológica sem confronto. Amplifica o alcance porque não polariza.</div>
+      </div>
+      <div class="piece">
+        <div class="piece-header"><span class="piece-type pt-audio">Áudio WPP</span><span class="piece-title">A disputa que ninguém nomeia</span><span class="piece-meta">~2 min</span></div>
+        <div class="roteiro">
+          <div class="rt-line"><div class="rt-seg">Abertura</div><div class="rt-fala">O documento orientador deixa claro: a conferência acontece num contexto de dois projetos de sociedade em disputa. Um que trata saúde como direito. E outro que trata saúde como mercadoria.</div></div>
+          <div class="rt-line"><div class="rt-seg">Desenvolvimento</div><div class="rt-fala">Essa disputa não é abstrata. Ela aparece na decisão de terceirizar ou não um serviço. De usar emenda parlamentar para isso ou aquilo. De aprovar ou não a privatização do saneamento. Cada decisão dessas é um voto nesse conflito.</div></div>
+          <div class="rt-line"><div class="rt-seg">Local</div><div class="rt-fala">Aqui em Montes Claros isso é concreto. A gente vive essa disputa no cotidiano do controle social. É por isso que a conferência importa — não como evento, mas como campo de disputa real.</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- DIA 3 -->
+  <div class="cal-day collapsed" id="day3">
+    <div class="cal-day-header" onclick="toggleDay('day3')">
+      <div class="cal-day-num">20</div>
+      <div class="cal-day-info"><h3>O dinheiro do SUS — onde está</h3><p>Quinta · financiamento em linguagem acessível</p></div>
+      <div class="cal-day-badges"><span class="cbadge cb-ig">2× Reel</span><span class="cbadge cb-wpp">Áudio</span></div>
+      <span class="toggle-icon">▾</span>
+    </div>
+    <div class="cal-body">
+      <div class="piece">
+        <div class="piece-header"><span class="piece-type pt-reel">Reel 1</span><span class="piece-title">R$1 trilhão em juros. R$253 bilhões no SUS.</span><span class="piece-meta">~55 seg</span></div>
+        <div class="roteiro">
+          <div class="rt-line"><div class="rt-seg">GANCHO</div><div class="rt-fala"><span class="hook">Em 2025, o Brasil pagou mais de <span class="dado">R$1 trilhão em juros da dívida</span>. O orçamento inteiro do SUS foi de R$253 bilhões. Quatro vezes menos.</span></div></div>
+          <div class="rt-line"><div class="rt-seg">Contexto</div><div class="rt-fala">Não é que o Brasil não tem dinheiro para o SUS. É que a escolha política é pagar juros ao sistema financeiro em vez de investir na saúde pública.</div></div>
+          <div class="rt-line"><div class="rt-seg">Meta</div><div class="rt-fala">A 17ª Conferência Nacional aprovou a meta de <span class="dado">6% do PIB em saúde pública</span>. Hoje estamos em menos da metade disso no gasto público.</div></div>
+          <div class="rt-line"><div class="rt-seg">CTA</div><div class="rt-fala"><span class="cta">Esse número — R$1 tri em juros — precisa entrar nos debates da nossa conferência. Compartilha esse vídeo.</span></div></div>
+        </div>
+        <div class="strategy-note">Estratégia: dado chocante mas verificável. Você não está sendo panfletário — está citando fato real. Isso demonstra domínio sem militância aparente.</div>
+      </div>
+      <div class="piece">
+        <div class="piece-header"><span class="piece-type pt-story">Reel 2</span><span class="piece-title">O problema das emendas parlamentares na saúde</span><span class="piece-meta">~45 seg</span></div>
+        <div class="roteiro">
+          <div class="rt-line"><div class="rt-seg">GANCHO</div><div class="rt-fala"><span class="hook">Você sabia que <span class="dado">12% do orçamento de saúde</span> vem de emendas parlamentares, sem relação com o planejamento do SUS?</span></div></div>
+          <div class="rt-line"><div class="rt-seg">Explicação</div><div class="rt-fala">Emenda parlamentar é quando um deputado ou senador destina dinheiro para uma área. Na saúde, isso criou uma situação onde o recurso não vai onde é mais necessário — vai onde o político quer mostrar resultado.</div></div>
+          <div class="rt-line"><div class="rt-seg">Consequência</div><div class="rt-fala">O resultado: fragmentação do planejamento, falta de transparência, e dependência política para manter serviços que deveriam ser garantidos por direito.</div></div>
+          <div class="rt-line"><div class="rt-seg">CTA</div><div class="rt-fala"><span class="cta">Isso é o que precisa mudar. E a conferência é o espaço para propor essa mudança.</span></div></div>
+        </div>
+      </div>
+      <div class="piece">
+        <div class="piece-header"><span class="piece-type pt-audio">Áudio WPP</span><span class="piece-title">Como entender o orçamento da saúde municipal</span><span class="piece-meta">~2 min</span></div>
+        <div class="roteiro">
+          <div class="rt-line"><div class="rt-seg">Abertura</div><div class="rt-fala">Uma coisa prática que conselheiros precisam saber: o município tem obrigação constitucional de aplicar 15% da receita corrente líquida em saúde. Isso é o piso. A pergunta que vocês precisam fazer na conferência: Montes Claros está cumprindo? E o que sobra acima disso, para onde vai?</div></div>
+          <div class="rt-line"><div class="rt-seg">Orientação</div><div class="rt-fala">O Relatório Anual de Gestão e os Relatórios Quadrimestrais de Prestação de Contas são públicos. O Conselho tem obrigação legal de analisá-los. Quando foi a última vez que o CMS aprovou ou reprovou as contas da Secretaria?</div></div>
+          <div class="rt-line"><div class="rt-seg">Fechamento</div><div class="rt-fala">Essa é a diferença entre controle social de verdade e participação decorativa. A conferência precisa produzir propostas sobre isso.</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- DIA 4 -->
+  <div class="cal-day collapsed" id="day4">
+    <div class="cal-day-header" onclick="toggleDay('day4')">
+      <div class="cal-day-num">21</div>
+      <div class="cal-day-info"><h3>Democracia e controle social</h3><p>Sexta · conselhos como poder real</p></div>
+      <div class="cal-day-badges"><span class="cbadge cb-ig">2× Reel</span><span class="cbadge cb-wpp">Áudio</span></div>
+      <span class="toggle-icon">▾</span>
+    </div>
+    <div class="cal-body">
+      <div class="piece">
+        <div class="piece-header"><span class="piece-type pt-reel">Reel 1</span><span class="piece-title">O Conselho de Saúde pode reprovar as contas da Prefeitura. Vocês sabem disso?</span><span class="piece-meta">~55 seg</span></div>
+        <div class="roteiro">
+          <div class="rt-line"><div class="rt-seg">GANCHO</div><div class="rt-fala"><span class="hook">O Conselho Municipal de Saúde tem poder para reprovar as contas da Secretaria de Saúde. Poder legal, constitucional. Quantos de vocês sabiam disso?</span></div></div>
+          <div class="rt-line"><div class="rt-seg">Explicação</div><div class="rt-fala">A Lei 8.142 de 1990 estabelece que os conselhos são instâncias deliberativas — não apenas consultivas. Isso significa que as decisões do conselho não são sugestões. São deliberações com poder normativo sobre as políticas de saúde.</div></div>
+          <div class="rt-line"><div class="rt-seg">Problema</div><div class="rt-fala">O problema é que muitos conselhos funcionam como fachada. Reunião mensal, ata assinada, nenhuma deliberação real. Isso é o que o documento da 18ª CNS chama de "esvaziamento da democracia participativa".</div></div>
+          <div class="rt-line"><div class="rt-seg">CTA</div><div class="rt-fala"><span class="cta">O conselho que você conhece funciona de verdade ou é formalidade? Comenta.</span></div></div>
+        </div>
+      </div>
+      <div class="piece">
+        <div class="piece-header"><span class="piece-type pt-story">Reel 2</span><span class="piece-title">Soberania sanitária: o que aprendemos com a pandemia</span><span class="piece-meta">~50 seg</span></div>
+        <div class="roteiro">
+          <div class="rt-line"><div class="rt-seg">GANCHO</div><div class="rt-fala"><span class="hook">Em 2021, o Brasil ficou meses esperando vacina porque dependia de importação. Lembra?</span></div></div>
+          <div class="rt-line"><div class="rt-seg">Contexto</div><div class="rt-fala">Soberania sanitária significa um país capaz de produzir o que precisa para proteger sua população. Medicamentos, vacinas, equipamentos, sistemas de informação. Quando você depende de outros países para isso, você perde o controle nos momentos críticos.</div></div>
+          <div class="rt-line"><div class="rt-seg">Hoje</div><div class="rt-fala">O documento da 18ª CNS fala em fortalecer o Complexo Econômico-Industrial da Saúde. É a resposta estrutural a esse problema. Mas exige decisão política e financiamento público.</div></div>
+          <div class="rt-line"><div class="rt-seg">CTA</div><div class="rt-fala"><span class="cta">Isso é pauta da conferência. E vai entrar nos debates.</span></div></div>
+        </div>
+      </div>
+      <div class="piece">
+        <div class="piece-header"><span class="piece-type pt-audio">Áudio WPP</span><span class="piece-title">A diferença entre conselho ativo e conselho de fachada</span><span class="piece-meta">~90 seg</span></div>
+        <div class="roteiro">
+          <div class="rt-line"><div class="rt-seg">Abertura</div><div class="rt-fala">Quero falar de uma coisa que toca diretamente no nosso trabalho. O documento nacional é muito claro sobre o risco do esvaziamento dos conselhos. Quando a participação é tolerada enquanto não interfere em interesses consolidados — isso não é democracia, é encenação.</div></div>
+          <div class="rt-line"><div class="rt-seg">Critérios</div><div class="rt-fala">Um conselho ativo: delibera sobre o orçamento, fiscaliza os contratos, analisa os relatórios, aprova ou reprova as contas, elege mesa com autonomia. Um conselho de fachada: reúne, discute e não decide nada que incomode.</div></div>
+          <div class="rt-line"><div class="rt-seg">Convocação</div><div class="rt-fala">A conferência é o momento de reafirmar qual conselho a gente quer ser. Nossas propostas precisam refletir isso.</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- DIA 5 -->
+  <div class="cal-day collapsed" id="day5">
+    <div class="cal-day-header" onclick="toggleDay('day5')">
+      <div class="cal-day-num">22</div>
+      <div class="cal-day-info"><h3>Crise climática e saúde — o Norte de Minas</h3><p>Sábado · territorialização do eixo 3</p></div>
+      <div class="cal-day-badges"><span class="cbadge cb-ig">2× Reel</span><span class="cbadge cb-wpp">Áudio</span></div>
+      <span class="toggle-icon">▾</span>
+    </div>
+    <div class="cal-body">
+      <div class="piece">
+        <div class="piece-header"><span class="piece-type pt-reel">Reel 1</span><span class="piece-title">O clima já chegou à UBS do Norte de Minas</span><span class="piece-meta">~60 seg</span></div>
+        <div class="roteiro">
+          <div class="rt-line"><div class="rt-seg">GANCHO</div><div class="rt-fala"><span class="hook">Em 2024, o planeta atingiu 1,5°C acima da temperatura pré-industrial. Isso não é tendência futura — é a realidade de hoje. E o Norte de Minas sente isso todos os verões.</span></div></div>
+          <div class="rt-line"><div class="rt-seg">Local</div><div class="rt-fala">Seca prolongada, calor extremo, dengue, leptospirose, fumaça de queimadas, insegurança hídrica no interior. Tudo isso chega nos serviços de saúde e os serviços não estão preparados para essa demanda extra.</div></div>
+          <div class="rt-line"><div class="rt-seg">Dado</div><div class="rt-fala">O programa AdaptaSUS — lançado na COP30, em novembro de 2025, aqui no Brasil — prevê 27 metas e 93 ações até 2035 para adaptar o SUS às emergências climáticas. A conferência pode cobrar a implementação disso.</div></div>
+          <div class="rt-line"><div class="rt-seg">CTA</div><div class="rt-fala"><span class="cta">O calor desse verão chegou na UBS do seu bairro? Conta aqui.</span></div></div>
+        </div>
+      </div>
+      <div class="piece">
+        <div class="piece-header"><span class="piece-type pt-story">Reel 2</span><span class="piece-title">Racismo ambiental — o que é e como aparece aqui</span><span class="piece-meta">~50 seg</span></div>
+        <div class="roteiro">
+          <div class="rt-line"><div class="rt-seg">GANCHO</div><div class="rt-fala"><span class="hook">Quando chove forte, quais bairros alagam? Quando o calor fica extremo, quem não tem árvore nem abrigo? Isso tem nome: racismo ambiental.</span></div></div>
+          <div class="rt-line"><div class="rt-seg">Conceito</div><div class="rt-fala">Racismo ambiental é a concentração desproporcional de riscos ambientais sobre populações negras, indígenas e periféricas. Não é só sobre intenção — é sobre o resultado das políticas urbanas, habitacionais e de saneamento.</div></div>
+          <div class="rt-line"><div class="rt-seg">Local</div><div class="rt-fala">No Norte de Minas: quilombolas, comunidades rurais, moradores de periferia sem saneamento. A crise climática aprofunda desigualdades que já existem.</div></div>
+          <div class="rt-line"><div class="rt-seg">CTA</div><div class="rt-fala"><span class="cta">Esse conceito entra nos debates da conferência. E precisa entrar nas propostas.</span></div></div>
+        </div>
+      </div>
+      <div class="piece">
+        <div class="piece-header"><span class="piece-type pt-audio">Áudio WPP</span><span class="piece-title">Por que a agenda climática precisa estar nas propostas da CMS</span><span class="piece-meta">~90 seg</span></div>
+        <div class="roteiro">
+          <div class="rt-line"><div class="rt-seg">Abertura</div><div class="rt-fala">Quero chamar atenção para um eixo que provavelmente vai ser o menos discutido nas pré-conferências: crise climática e saúde. E é exatamente por isso que a gente precisa garantir que ele entre.</div></div>
+          <div class="rt-line"><div class="rt-seg">Argumento</div><div class="rt-fala">O Norte de Minas é semiárido. Seca, calor, queimadas, dengue — isso não é pauta ambiental separada da saúde. É saúde. ACS e ACE são agentes estratégicos nessa agenda. Se a conferência não produzir propostas locais sobre isso, a gente perde a oportunidade de trazer recursos e programas específicos para a nossa realidade.</div></div>
+          <div class="rt-line"><div class="rt-seg">Convocação</div><div class="rt-fala">Vou trazer uma proposta concreta sobre isso no GT. Quem quiser discutir antes, manda mensagem.</div></div>
+        </div>
+        <div class="strategy-note">Estratégia: você se posiciona como quem vai agir, não só comentar. "Vou trazer uma proposta concreta" estabelece protagonismo sem arrogância.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- DIA 6 -->
+  <div class="cal-day collapsed" id="day6">
+    <div class="cal-day-header" onclick="toggleDay('day6')">
+      <div class="cal-day-num">23</div>
+      <div class="cal-day-info"><h3>Atenção Primária — a UBS que pode ser mais</h3><p>Domingo · eixo 4, APS</p></div>
+      <div class="cal-day-badges"><span class="cbadge cb-ig">2× Reel</span><span class="cbadge cb-wpp">Áudio</span></div>
+      <span class="toggle-icon">▾</span>
+    </div>
+    <div class="cal-body">
+      <div class="piece">
+        <div class="piece-header"><span class="piece-type pt-reel">Reel 1</span><span class="piece-title">Você vai ao PS quando deveria ir à UBS. Por quê?</span><span class="piece-meta">~55 seg</span></div>
+        <div class="roteiro">
+          <div class="rt-line"><div class="rt-seg">GANCHO</div><div class="rt-fala"><span class="hook">Por que a maioria das pessoas vai direto ao pronto-socorro em vez de ir à UBS? Porque a UBS não resolve. Por que não resolve? Porque foi sendo esvaziada.</span></div></div>
+          <div class="rt-line"><div class="rt-seg">Contexto</div><div class="rt-fala">A Atenção Primária — representada pela UBS e pela Estratégia Saúde da Família — deveria ser o eixo organizador de todo o SUS. Quando ela funciona bem, reduz internações, controla crônicos, faz prevenção, acompanha gestantes. Quando não funciona, entope o PS de casos que poderiam ter sido resolvidos antes.</div></div>
+          <div class="rt-line"><div class="rt-seg">Proposta</div><div class="rt-fala">O documento da conferência defende recolocar a APS no centro. Com equipes completas, acesso a especialistas, saúde mental integrada, saúde bucal.</div></div>
+          <div class="rt-line"><div class="rt-seg">CTA</div><div class="rt-fala"><span class="cta">Sua UBS tem médico de família, psicólogo e dentista presentes? Comenta.</span></div></div>
+        </div>
+      </div>
+      <div class="piece">
+        <div class="piece-header"><span class="piece-type pt-story">Reel 2</span><span class="piece-title">O ACS é o olho do SUS no seu bairro</span><span class="piece-meta">~40 seg</span></div>
+        <div class="roteiro">
+          <div class="rt-line"><div class="rt-seg">GANCHO</div><div class="rt-fala"><span class="hook">Existe uma pessoa paga pelo SUS para conhecer cada família do seu bairro e monitorar a saúde de porta em porta. Você sabe quem é?</span></div></div>
+          <div class="rt-line"><div class="rt-seg">Explicação</div><div class="rt-fala">O Agente Comunitário de Saúde. Ele sabe quem tem hipertensão não controlada, quem está vulnerável, quem precisa de visita domiciliar. Quando o ACS funciona, é prevenção real acontecendo no território.</div></div>
+          <div class="rt-line"><div class="rt-seg">Problema</div><div class="rt-fala">Mas muitos estão com contratos precários, sem equipamento, sem apoio técnico. Isso entra como pauta na conferência.</div></div>
+        </div>
+      </div>
+      <div class="piece">
+        <div class="piece-header"><span class="piece-type pt-audio">Áudio WPP</span><span class="piece-title">O modelo biomédico e o que precisa mudar</span><span class="piece-meta">~2 min</span></div>
+        <div class="roteiro">
+          <div class="rt-line"><div class="rt-seg">Abertura</div><div class="rt-fala">O documento traz uma crítica interessante ao que chama de modelo biomédico: a tendência de tratar tudo como doença a ser curada por remédio ou procedimento, ignorando as causas — trabalho, moradia, ambiente, relações.</div></div>
+          <div class="rt-line"><div class="rt-seg">Exemplo</div><div class="rt-fala">Ansiedade de um motorista de aplicativo sem direito trabalhista não se cura com remédio. Depressão de uma mãe solo sem rede de apoio não se resolve no consultório. Saúde é resultado das condições de vida. A conferência precisa propor um modelo que reconheça isso.</div></div>
+          <div class="rt-line"><div class="rt-seg">Fechamento</div><div class="rt-fala">E isso conecta diretamente com as discussões que a gente vai ter nos grupos de trabalho da conferência. É muito mais do que falar de médico e remédio.</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- DIA 7 — SÍNTESE DA SEMANA -->
+  <div class="cal-day collapsed" id="day7">
+    <div class="cal-day-header" onclick="toggleDay('day7')">
+      <div class="cal-day-num">24</div>
+      <div class="cal-day-info"><h3>Síntese da semana + engajamento</h3><p>Segunda · retrospectiva + preparação semana 2</p></div>
+      <div class="cal-day-badges"><span class="cbadge cb-ig">2× Reel</span><span class="cbadge cb-wpp">Áudio</span></div>
+      <span class="toggle-icon">▾</span>
+    </div>
+    <div class="cal-body">
+      <div class="piece">
+        <div class="piece-header"><span class="piece-type pt-reel">Reel 1</span><span class="piece-title">Tudo que você precisa saber sobre a conferência em 60 segundos</span><span class="piece-meta">~60 seg</span></div>
+        <div class="roteiro">
+          <div class="rt-line"><div class="rt-seg">Abertura</div><div class="rt-fala"><span class="hook">Semana passada trouxe o contexto. Agora, os 4 temas centrais do debate nacional — e o que cada um significa para Montes Claros.</span></div></div>
+          <div class="rt-line"><div class="rt-seg">Lista rápida</div><div class="rt-fala"><span class="dado">1</span> — Democracia: conselhos precisam de poder real. <span class="dado">2</span> — Financiamento: R$1tri em juros x R$253bi no SUS. <span class="dado">3</span> — Clima: semiárido, dengue, calor — o SUS precisa se adaptar. <span class="dado">4</span> — Atenção: UBS precisa resolver antes do PS.</div></div>
+          <div class="rt-line"><div class="rt-seg">CTA</div><div class="rt-fala"><span class="cta">Esta semana vou entrar em cada tema com mais profundidade. Qual dos quatro você quer que eu comece? Vota nos comentários.</span></div></div>
+        </div>
+        <div class="strategy-note">Estratégia: pedir voto nos comentários aumenta engajamento orgânico E cria percepção de que você responde ao público — sem perder o controle da narrativa (você vai trazer todos de qualquer jeito).</div>
+      </div>
+      <div class="piece">
+        <div class="piece-header"><span class="piece-type pt-story">Reel 2</span><span class="piece-title">Quem pode participar da conferência?</span><span class="piece-meta">~40 seg</span></div>
+        <div class="roteiro">
+          <div class="rt-line"><div class="rt-seg">GANCHO</div><div class="rt-fala"><span class="hook">Você não precisa ser conselheiro para participar da conferência. Qualquer cidadão pode estar lá.</span></div></div>
+          <div class="rt-line"><div class="rt-seg">Explicação</div><div class="rt-fala">Como delegado — eleito pelas pré-conferências ou pela entidade que você representa. Como convidado — presença com direito a voz. Como observador — acompanha os trabalhos. A conferência é pública.</div></div>
+          <div class="rt-line"><div class="rt-seg">CTA</div><div class="rt-fala"><span class="cta">22 a 24 de abril. Já agenda. Link de inscrição em breve no perfil.</span></div></div>
+        </div>
+      </div>
+      <div class="piece">
+        <div class="piece-header"><span class="piece-type pt-audio">Áudio WPP</span><span class="piece-title">O que esperar das próximas semanas</span><span class="piece-meta">~90 seg</span></div>
+        <div class="roteiro">
+          <div class="rt-line"><div class="rt-seg">Abertura</div><div class="rt-fala">Encerrando a primeira semana. A ideia foi trazer o contexto: o que é a conferência, o que está em disputa, os 4 eixos em linguagem acessível. Espero que tenha ajudado.</div></div>
+          <div class="rt-line"><div class="rt-seg">Próximo</div><div class="rt-fala">Nas próximas semanas vou aprofundar cada eixo, trazer dados locais de Montes Claros, e começar a falar sobre como construir boas propostas. Porque não basta participar — precisa participar bem.</div></div>
+          <div class="rt-line"><div class="rt-seg">Convite</div><div class="rt-fala">Se alguém quiser discutir algum ponto antes da pré-conferência, é só chamar. Tenho os materiais organizados e posso ajudar com o que precisar.</div></div>
+        </div>
+        <div class="strategy-note">Estratégia: "tenho os materiais organizados e posso ajudar" — oferece autoridade como serviço, não como poder. Isso é muito mais eficaz para construir reputação interna.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="hi hi-gold" style="margin-top:16px;">
+    <strong>Semanas 2 a 6 seguem a mesma estrutura.</strong> Os temas: Semana 2 (aprofundamento dos eixos), Semana 3 (como construir propostas), Semana 4 (urgência + delegados), Semana 5 (véspera da conferência), Semana 6 (cobertura ao vivo). Se quiser os roteiros das semanas seguintes com o mesmo nível de detalhe, é só pedir — cada semana gera mais 7 dias × 3 peças = 21 roteiros adicionais.
+  </div>
+
+</div>
+
+
+<!-- ══════════════════════════════════════
+     ABA 5 — FALAS-CHAVE
+══════════════════════════════════════ -->
+<div class="tab-panel" id="tab-falas">
+
+  <div class="sec" style="margin-top:0">
+    <div class="sec-label">Repertório</div>
+    <h2>Frases e argumentos para usar em qualquer contexto</h2>
+  </div>
+
+  <div class="hi hi-gold">
+    <strong>Como usar:</strong> Estas frases funcionam em debates, falas na plenária, áudios no grupo e conversas informais. São argumentos que demonstram domínio sem soar como discurso decorado. Use naturalmente, adaptando ao contexto.
+  </div>
+
+  <div class="block">
+    <div class="block-header"><div class="bh-icon">🔵</div><div class="bh-text"><h3>Para abrir qualquer debate</h3><p>Frases que posicionam você como facilitador intelectual</p></div></div>
+    <div class="block-body">
+      <ul class="atom-list">
+        <li class="atom"><div class="atom-dot dot-acc"></div><span>"A conferência não é evento. É instrumento de poder social. Quem domina a metodologia, domina o resultado."</span></li>
+        <li class="atom"><div class="atom-dot dot-acc"></div><span>"Saúde democracia e soberania não são três temas separados nesse documento — são um único argumento."</span></li>
+        <li class="atom"><div class="atom-dot dot-acc"></div><span>"O documento nacional é forte politicamente mas fraco operacionalmente. O sucesso aqui depende de nós."</span></li>
+        <li class="atom"><div class="atom-dot dot-acc"></div><span>"Participação sem proposta concreta é audiência, não controle social."</span></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="block">
+    <div class="block-header"><div class="bh-icon">🟡</div><div class="bh-text"><h3>Para usar com dados</h3><p>Citações verificáveis que constroem credibilidade</p></div></div>
+    <div class="block-body">
+      <ul class="atom-list">
+        <li class="atom"><div class="atom-dot dot-gold"></div><span>"Em 2025, o Brasil pagou mais de R$1 trilhão em juros. O SUS inteiro custou R$253 bilhões. Isso não é falta de dinheiro — é escolha política."</span></li>
+        <li class="atom"><div class="atom-dot dot-gold"></div><span>"Hoje, 40% do gasto em saúde no Brasil é público. Em países com sistemas universais consolidados, passa de 60%."</span></li>
+        <li class="atom"><div class="atom-dot dot-gold"></div><span>"As emendas parlamentares representam 12% do orçamento das ações de saúde — sem guardar nenhuma relação com o Plano Municipal de Saúde."</span></li>
+        <li class="atom"><div class="atom-dot dot-gold"></div><span>"A Carreira Única Interfederativa do SUS foi aprovada pelo CNS em janeiro de 2026. É uma conquista recente que precisa ser viabilizada."</span></li>
+        <li class="atom"><div class="atom-dot dot-gold"></div><span>"O AdaptaSUS estabelece 27 metas e 93 ações até 2035. A conferência é o espaço para cobrar a implementação disso no nosso município."</span></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="block">
+    <div class="block-header"><div class="bh-icon">🟢</div><div class="bh-text"><h3>Para contextualizar localmente</h3><p>Conexões com Montes Claros e Norte de Minas</p></div></div>
+    <div class="block-body">
+      <ul class="atom-list">
+        <li class="atom"><div class="atom-dot dot-green"></div><span>"Montes Claros é polo macrorregional de saúde. Nossas propostas precisam refletir que a gente atende 18 a 20 municípios."</span></li>
+        <li class="atom"><div class="atom-dot dot-green"></div><span>"O Norte de Minas é semiárido. Seca, calor extremo, dengue endêmica — a agenda climática aqui tem cara e nome concretos."</span></li>
+        <li class="atom"><div class="atom-dot dot-green"></div><span>"Se 90% das nossas propostas forem nacionais, a gente sai da conferência sem agenda local. E isso é um fracasso silencioso."</span></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="block">
+    <div class="block-header"><div class="bh-icon">🔴</div><div class="bh-text"><h3>Para momentos de tensão ou crítica</h3><p>Argumentos que colocam sem atacar — máxima eficiência política</p></div></div>
+    <div class="block-body">
+      <ul class="atom-list">
+        <li class="atom"><div class="atom-dot dot-red"></div><span>"A democracia pode ser esvaziada sem ser negada. As instituições ficam, os rituais são mantidos, mas o conteúdo político se dissolve. Isso é o que o documento chama de normalização como procedimento vazio."</span></li>
+        <li class="atom"><div class="atom-dot dot-red"></div><span>"Participação tolerada enquanto não interfere em interesses consolidados não é controle social. É audiência."</span></li>
+        <li class="atom"><div class="atom-dot dot-red"></div><span>"Uma conferência que produz apenas propostas genéricas e nacionais não representa a população local. Representa quem a conduziu."</span></li>
+        <li class="atom"><div class="atom-dot dot-red"></div><span>"O risco não é a plenária caótica. É a plenária ordeira que não decide nada que incomode."</span></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="block">
+    <div class="block-header"><div class="bh-icon">🟣</div><div class="bh-text"><h3>Para fechar com chave de ouro</h3><p>Frases de encerramento que ficam na memória</p></div></div>
+    <div class="block-body">
+      <ul class="atom-list">
+        <li class="atom"><div class="atom-dot dot-vio"></div><span>"Construir consciência sanitária é entender que saúde, orçamento público, justiça fiscal e democracia caminham juntos. Defender o SUS é defender um projeto de país onde a vida vale mais do que o lucro."</span></li>
+        <li class="atom"><div class="atom-dot dot-vio"></div><span>"O futuro democrático depende da capacidade da sociedade, organizada no controle social do SUS, de enfrentar desigualdades e reafirmar a política como espaço legítimo de decisão coletiva."</span></li>
+        <li class="atom"><div class="atom-dot dot-vio"></div><span>"A indignação diária se converte em poder político quando ela produz proposta. É isso que estamos fazendo aqui."</span></li>
+      </ul>
+    </div>
+  </div>
+
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <strong>Documento pessoal — uso exclusivo</strong> · 11ª CMS Montes Claros · Abril 2026<br>
+  Baseado no Documento Orientador da 18ª CNS — CNS Brasil · Março 2026
+</footer>
+
+<script>
+function showTab(id) {
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-' + id).classList.add('active');
+  const map = ['mapa','eixos','estrategia','conteudo','falas'];
+  document.querySelectorAll('.tab-btn')[map.indexOf(id)].classList.add('active');
+  window.scrollTo({ top: document.querySelector('.tab-nav').offsetTop - 2, behavior: 'smooth' });
+}
+
+function toggleDay(id) {
+  document.getElementById(id).classList.toggle('collapsed');
+}
+</script>
+
+</body>
+</html>

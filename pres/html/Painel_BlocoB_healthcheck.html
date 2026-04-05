@@ -1,0 +1,360 @@
+<!-- ══════════════════════════════════════════════════════════════
+     BLOCO B — Aba HealthCheck para Painel.html (GAS)
+     SerTão Conselheiro v3.2
+
+     INSTRUÇÕES DE INTEGRAÇÃO:
+       1. Abra Painel.html no Google Apps Script
+       2. Localize o sistema de abas (provavelmente <div class="tabs"> ou similar)
+       3. Adicione um botão de aba:
+            <button class="tab-btn" onclick="mudarAba('healthcheck')">🩺 HealthCheck</button>
+       4. Adicione o painel abaixo como novo <div class="tab-pane" id="tab-healthcheck">
+       5. Cole o CSS e JS desta seção no <style> e <script> do Painel.html
+
+     O HealthCheck executa 12 verificações automáticas via google.script.run
+     e exibe resultados categorizados por status (OK / WARN / ERR).
+     ══════════════════════════════════════════════════════════════ -->
+
+<!-- ── CSS A INSERIR NO <style> DO PAINEL.HTML ── -->
+<style id="hc-styles-reference">
+/* HealthCheck — inserir no bloco <style> do Painel.html */
+.hc-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 10px; margin-bottom: 16px; }
+.hc-card {
+  background: white;
+  border: 1.5px solid #E5E7EB;
+  border-radius: 10px;
+  padding: 14px 16px;
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  transition: border-color .2s;
+  position: relative;
+  overflow: hidden;
+}
+.hc-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: #E5E7EB;
+}
+.hc-card.ok::before    { background: #10B981; border-color: #D1FAE5; }
+.hc-card.warn::before  { background: #F59E0B; }
+.hc-card.err::before   { background: #EF4444; }
+.hc-card.loading::before { background: linear-gradient(90deg, #3B82F6 40%, transparent 100%); animation: hc-shimmer 1.2s infinite; }
+@keyframes hc-shimmer { 0% { background-position: -200px; } 100% { background-position: 200px; } }
+.hc-icon { font-size: 22px; flex-shrink: 0; margin-top: 1px; }
+.hc-info { flex: 1; min-width: 0; }
+.hc-label { font-size: 12px; font-weight: 700; color: #111827; margin-bottom: 2px; }
+.hc-detail { font-size: 11px; color: #6B7280; line-height: 1.5; }
+.hc-status {
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  padding: 2px 7px;
+  border-radius: 20px;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+.hc-status.ok   { background: #D1FAE5; color: #065F46; }
+.hc-status.warn { background: #FEF3C7; color: #92400E; }
+.hc-status.err  { background: #FEE2E2; color: #991B1B; }
+.hc-status.loading { background: #DBEAFE; color: #1E40AF; }
+.hc-summary {
+  background: white;
+  border: 1px solid #E5E7EB;
+  border-radius: 10px;
+  padding: 16px 20px;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
+}
+.hc-sum-item { text-align: center; }
+.hc-sum-n { font-size: 28px; font-weight: 900; color: #0D2E5A; line-height: 1; }
+.hc-sum-n.ok   { color: #10B981; }
+.hc-sum-n.warn { color: #F59E0B; }
+.hc-sum-n.err  { color: #EF4444; }
+.hc-sum-l { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .5px; color: #6B7280; margin-top: 2px; }
+.hc-divider { width: 1px; height: 40px; background: #E5E7EB; }
+.hc-run-btn {
+  margin-left: auto;
+  background: #0D2E5A;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 18px;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background .15s;
+}
+.hc-run-btn:hover { background: #1B6CB5; }
+.hc-run-btn:disabled { opacity: .5; cursor: not-allowed; }
+.hc-section-title {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: #6B7280;
+  margin: 20px 0 10px;
+}
+.hc-log {
+  background: #0D1B2E;
+  color: #94A3B8;
+  border-radius: 8px;
+  padding: 14px 16px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  line-height: 1.7;
+  max-height: 200px;
+  overflow-y: auto;
+  margin-top: 16px;
+  white-space: pre-wrap;
+}
+.hc-log .log-ok   { color: #4ADE80; }
+.hc-log .log-warn { color: #FDE68A; }
+.hc-log .log-err  { color: #FCA5A5; }
+.hc-log .log-info { color: #93C5FD; }
+</style>
+
+<!-- ── PAINEL HEALTHCHECK (inserir como nova aba) ── -->
+<div class="tab-pane" id="tab-healthcheck" style="display:none">
+
+  <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:16px; flex-wrap:wrap; gap:10px;">
+    <div>
+      <div style="font-size:18px; font-weight:800; color:#0D2E5A;">🩺 HealthCheck do Sistema</div>
+      <div style="font-size:12px; color:#6B7280; margin-top:2px;">12 verificações automáticas de consistência — SerTão Conselheiro v3.2</div>
+    </div>
+    <div style="font-size:11px; color:#9CA3AF;" id="hc-last-run">Nenhuma verificação realizada ainda</div>
+  </div>
+
+  <!-- Summary bar -->
+  <div class="hc-summary">
+    <div class="hc-sum-item"><div class="hc-sum-n ok" id="hc-total-ok">—</div><div class="hc-sum-l">OK</div></div>
+    <div class="hc-divider"></div>
+    <div class="hc-sum-item"><div class="hc-sum-n warn" id="hc-total-warn">—</div><div class="hc-sum-l">Avisos</div></div>
+    <div class="hc-divider"></div>
+    <div class="hc-sum-item"><div class="hc-sum-n err" id="hc-total-err">—</div><div class="hc-sum-l">Erros</div></div>
+    <button class="hc-run-btn" id="hc-run-btn" onclick="runHealthCheck()">▶ Executar verificação</button>
+  </div>
+
+  <!-- Categoria: Estrutura -->
+  <div class="hc-section-title">📋 Estrutura da Planilha</div>
+  <div class="hc-grid">
+    <div class="hc-card loading" id="hc-abas">
+      <span class="hc-icon">📊</span>
+      <div class="hc-info">
+        <div class="hc-label">Abas obrigatórias</div>
+        <div class="hc-detail" id="hc-abas-detail">Aguardando...</div>
+      </div>
+      <span class="hc-status loading" id="hc-abas-status">—</span>
+    </div>
+    <div class="hc-card loading" id="hc-cabecalhos">
+      <span class="hc-icon">🏷️</span>
+      <div class="hc-info">
+        <div class="hc-label">Cabeçalhos das abas principais</div>
+        <div class="hc-detail" id="hc-cabecalhos-detail">Aguardando...</div>
+      </div>
+      <span class="hc-status loading" id="hc-cabecalhos-status">—</span>
+    </div>
+    <div class="hc-card loading" id="hc-presencas-ext">
+      <span class="hc-icon">✋</span>
+      <div class="hc-info">
+        <div class="hc-label">Presenças — colunas v3.2</div>
+        <div class="hc-detail" id="hc-presencas-ext-detail">Aguardando...</div>
+      </div>
+      <span class="hc-status loading" id="hc-presencas-ext-status">—</span>
+    </div>
+  </div>
+
+  <!-- Categoria: Dados -->
+  <div class="hc-section-title">👥 Dados e Conteúdo</div>
+  <div class="hc-grid">
+    <div class="hc-card loading" id="hc-conselheiros">
+      <span class="hc-icon">👤</span>
+      <div class="hc-info">
+        <div class="hc-label">Conselheiros ativos</div>
+        <div class="hc-detail" id="hc-conselheiros-detail">Aguardando...</div>
+      </div>
+      <span class="hc-status loading" id="hc-conselheiros-status">—</span>
+    </div>
+    <div class="hc-card loading" id="hc-documentos">
+      <span class="hc-icon">📄</span>
+      <div class="hc-info">
+        <div class="hc-label">Documentos ativos</div>
+        <div class="hc-detail" id="hc-documentos-detail">Aguardando...</div>
+      </div>
+      <span class="hc-status loading" id="hc-documentos-status">—</span>
+    </div>
+    <div class="hc-card loading" id="hc-comissoes">
+      <span class="hc-icon">🏛️</span>
+      <div class="hc-info">
+        <div class="hc-label">Comissões e câmaras</div>
+        <div class="hc-detail" id="hc-comissoes-detail">Aguardando...</div>
+      </div>
+      <span class="hc-status loading" id="hc-comissoes-status">—</span>
+    </div>
+    <div class="hc-card loading" id="hc-atas">
+      <span class="hc-icon">📝</span>
+      <div class="hc-info">
+        <div class="hc-label">Atas cadastradas</div>
+        <div class="hc-detail" id="hc-atas-detail">Aguardando...</div>
+      </div>
+      <span class="hc-status loading" id="hc-atas-status">—</span>
+    </div>
+  </div>
+
+  <!-- Categoria: Sistema -->
+  <div class="hc-section-title">⚙️ Sistema e Configurações</div>
+  <div class="hc-grid">
+    <div class="hc-card loading" id="hc-config">
+      <span class="hc-icon">🔧</span>
+      <div class="hc-info">
+        <div class="hc-label">Configurações do sistema (CONFIG)</div>
+        <div class="hc-detail" id="hc-config-detail">Aguardando...</div>
+      </div>
+      <span class="hc-status loading" id="hc-config-status">—</span>
+    </div>
+    <div class="hc-card loading" id="hc-categorias">
+      <span class="hc-icon">🏷️</span>
+      <div class="hc-info">
+        <div class="hc-label">Categorias de documentos</div>
+        <div class="hc-detail" id="hc-categorias-detail">Aguardando...</div>
+      </div>
+      <span class="hc-status loading" id="hc-categorias-status">—</span>
+    </div>
+    <div class="hc-card loading" id="hc-quotas">
+      <span class="hc-icon">📊</span>
+      <div class="hc-info">
+        <div class="hc-label">Uso de quotas GAS (hoje)</div>
+        <div class="hc-detail" id="hc-quotas-detail">Aguardando...</div>
+      </div>
+      <span class="hc-status loading" id="hc-quotas-status">—</span>
+    </div>
+    <div class="hc-card loading" id="hc-log">
+      <span class="hc-icon">📋</span>
+      <div class="hc-info">
+        <div class="hc-label">Log de acessos (últimas 24h)</div>
+        <div class="hc-detail" id="hc-log-detail">Aguardando...</div>
+      </div>
+      <span class="hc-status loading" id="hc-log-status">—</span>
+    </div>
+    <div class="hc-card loading" id="hc-sessoes">
+      <span class="hc-icon">🔐</span>
+      <div class="hc-info">
+        <div class="hc-label">Conselheiros sem senha definida</div>
+        <div class="hc-detail" id="hc-sessoes-detail">Aguardando...</div>
+      </div>
+      <span class="hc-status loading" id="hc-sessoes-status">—</span>
+    </div>
+  </div>
+
+  <!-- Log técnico -->
+  <div class="hc-section-title">🖥️ Log técnico</div>
+  <div class="hc-log" id="hc-log-output">Clique em "Executar verificação" para iniciar o HealthCheck.</div>
+
+</div><!-- /tab-healthcheck -->
+
+<!-- ── JS DO HEALTHCHECK (inserir no <script> do Painel.html) ── -->
+<script id="hc-script-reference">
+// ── HealthCheck — inserir no bloco <script> do Painel.html ──
+
+const HC_CHECKS = [
+  { id: 'abas',         label: 'Abas obrigatórias',          fn: 'hcVerificarAbas' },
+  { id: 'cabecalhos',   label: 'Cabeçalhos',                 fn: 'hcVerificarCabecalhos' },
+  { id: 'presencas-ext',label: 'Presenças v3.2',             fn: 'hcVerificarPresencasExt' },
+  { id: 'conselheiros', label: 'Conselheiros ativos',        fn: 'hcVerificarConselheiros' },
+  { id: 'documentos',   label: 'Documentos ativos',          fn: 'hcVerificarDocumentos' },
+  { id: 'comissoes',    label: 'Comissões',                  fn: 'hcVerificarComissoes' },
+  { id: 'atas',         label: 'Atas',                       fn: 'hcVerificarAtas' },
+  { id: 'config',       label: 'CONFIG',                     fn: 'hcVerificarConfig' },
+  { id: 'categorias',   label: 'Categorias',                 fn: 'hcVerificarCategorias' },
+  { id: 'quotas',       label: 'Quotas GAS',                 fn: 'hcVerificarQuotas' },
+  { id: 'log',          label: 'Log acessos',                fn: 'hcVerificarLog' },
+  { id: 'sessoes',      label: 'Senhas',                     fn: 'hcVerificarSenhas' },
+];
+
+let hcResults = { ok: 0, warn: 0, err: 0 };
+
+function runHealthCheck() {
+  const btn = document.getElementById('hc-run-btn');
+  btn.disabled = true;
+  btn.textContent = '⏳ Verificando...';
+
+  hcResults = { ok: 0, warn: 0, err: 0 };
+  document.getElementById('hc-total-ok').textContent   = '—';
+  document.getElementById('hc-total-warn').textContent = '—';
+  document.getElementById('hc-total-err').textContent  = '—';
+
+  const logEl = document.getElementById('hc-log-output');
+  logEl.innerHTML = '<span class="log-info">[' + new Date().toLocaleTimeString('pt-BR') + '] HealthCheck iniciado — 12 verificações</span>\n';
+
+  // Resetar todos os cards para loading
+  HC_CHECKS.forEach(c => {
+    const card = document.getElementById('hc-' + c.id);
+    if (!card) return;
+    card.className = 'hc-card loading';
+    document.getElementById('hc-' + c.id + '-status').className = 'hc-status loading';
+    document.getElementById('hc-' + c.id + '-status').textContent = '...';
+    document.getElementById('hc-' + c.id + '-detail').textContent = 'Verificando...';
+  });
+
+  // Executar verificações em série (GAS não suporta paralelo eficiente)
+  let idx = 0;
+  function runNext() {
+    if (idx >= HC_CHECKS.length) {
+      // Todos concluídos
+      document.getElementById('hc-total-ok').textContent   = hcResults.ok;
+      document.getElementById('hc-total-warn').textContent = hcResults.warn;
+      document.getElementById('hc-total-err').textContent  = hcResults.err;
+      document.getElementById('hc-last-run').textContent   = 'Última verificação: ' + new Date().toLocaleTimeString('pt-BR');
+      btn.disabled = false;
+      btn.textContent = '▶ Executar novamente';
+      appendLog('info', '[' + new Date().toLocaleTimeString('pt-BR') + '] HealthCheck concluído — OK:' + hcResults.ok + ' WARN:' + hcResults.warn + ' ERR:' + hcResults.err);
+      return;
+    }
+
+    const check = HC_CHECKS[idx++];
+    google.script.run
+      .withSuccessHandler(result => {
+        hcRenderResult(check.id, result);
+        appendLog(result.status, '[' + check.label + '] ' + result.detail);
+        runNext();
+      })
+      .withFailureHandler(err => {
+        hcRenderResult(check.id, { status: 'err', detail: 'Erro GAS: ' + err.message });
+        appendLog('err', '[' + check.label + '] FALHA: ' + err.message);
+        runNext();
+      })
+      [check.fn]();
+  }
+
+  runNext();
+}
+
+function hcRenderResult(id, result) {
+  const card   = document.getElementById('hc-' + id);
+  const status = document.getElementById('hc-' + id + '-status');
+  const detail = document.getElementById('hc-' + id + '-detail');
+  if (!card) return;
+
+  const s = result.status || 'err';
+  card.className  = 'hc-card ' + s;
+  status.className = 'hc-status ' + s;
+  status.textContent = s === 'ok' ? '✅ OK' : s === 'warn' ? '⚠️ Aviso' : '❌ Erro';
+  detail.textContent = result.detail || '—';
+
+  hcResults[s] = (hcResults[s] || 0) + 1;
+}
+
+function appendLog(type, msg) {
+  const logEl = document.getElementById('hc-log-output');
+  const span = document.createElement('span');
+  span.className = 'log-' + type;
+  span.textContent = msg + '\n';
+  logEl.appendChild(span);
+  logEl.scrollTop = logEl.scrollHeight;
+}
+</script>

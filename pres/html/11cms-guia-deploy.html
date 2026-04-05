@@ -1,0 +1,1417 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Guia de Deploy & Manual — 11ª CMS Sistema Web</title>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+
+/* ═══════════════════════════════════════════════
+   DESIGN SYSTEM — EDITORIAL TÉCNICO
+   Paleta: azul petróleo + amarelo âmbar + branco
+   Tipografia: Sora + JetBrains Mono
+   Estética: manual de engenharia, precisa e clara
+   ═══════════════════════════════════════════════ */
+
+:root {
+  --ink:        #0A1628;
+  --ink-mid:    #1E3A5F;
+  --ink-soft:   #4A6080;
+  --ink-faint:  #8299B0;
+  --paper:      #F7F9FC;
+  --paper-warm: #FFFFFF;
+  --paper-cold: #EDF2F8;
+  --azure:      #1A5EA8;
+  --azure-dark: #0D3D6B;
+  --azure-lite: #C8DFF5;
+  --amber:      #E8A020;
+  --amber-lite: #FDF3DC;
+  --amber-dark: #A06B0A;
+  --green:      #1A7A4A;
+  --green-lite: #D8F0E5;
+  --red:        #B71C2C;
+  --red-lite:   #FDECEA;
+  --border:     #D0DCE8;
+  --border-mid: #B0C4D8;
+  --mono:       'JetBrains Mono', monospace;
+  --sans:       'Sora', sans-serif;
+  --shadow-sm:  0 1px 4px rgba(10,22,40,.08), 0 0 1px rgba(10,22,40,.06);
+  --shadow-md:  0 4px 20px rgba(10,22,40,.10), 0 1px 4px rgba(10,22,40,.06);
+  --shadow-lg:  0 12px 48px rgba(10,22,40,.14), 0 2px 8px rgba(10,22,40,.08);
+  --r:          10px;
+  --r-sm:       6px;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; font-size: 16px; }
+
+body {
+  font-family: var(--sans);
+  background: var(--paper);
+  color: var(--ink);
+  line-height: 1.7;
+  overflow-x: hidden;
+}
+
+a { color: var(--azure); text-decoration: none; }
+a:hover { text-decoration: underline; }
+img { display: block; max-width: 100%; }
+
+/* ─── SIDEBAR + LAYOUT ─── */
+.layout {
+  display: grid;
+  grid-template-columns: 260px 1fr;
+  min-height: 100vh;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+/* ─── SIDEBAR ─── */
+.sidebar {
+  position: sticky; top: 0;
+  height: 100vh; overflow-y: auto;
+  background: var(--ink);
+  padding: 0;
+  display: flex; flex-direction: column;
+  border-right: 1px solid rgba(255,255,255,.06);
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255,255,255,.15) transparent;
+}
+.sidebar::-webkit-scrollbar { width: 4px; }
+.sidebar::-webkit-scrollbar-thumb { background: rgba(255,255,255,.15); border-radius: 4px; }
+
+.sidebar-brand {
+  padding: 24px 20px 20px;
+  border-bottom: 1px solid rgba(255,255,255,.08);
+}
+.sidebar-brand-tag {
+  font-family: var(--mono); font-size: 9px; font-weight: 700;
+  color: var(--amber); letter-spacing: .15em; text-transform: uppercase;
+  margin-bottom: 6px;
+}
+.sidebar-brand-title {
+  font-size: 13px; font-weight: 700; color: #fff;
+  line-height: 1.3;
+}
+.sidebar-brand-sub {
+  font-size: 10px; color: rgba(255,255,255,.35); margin-top: 3px;
+}
+
+.sidebar-nav { flex: 1; padding: 12px 0; }
+.nav-group { margin-bottom: 4px; }
+.nav-group-label {
+  font-family: var(--mono); font-size: 9px; font-weight: 700;
+  letter-spacing: .15em; text-transform: uppercase;
+  color: rgba(255,255,255,.25);
+  padding: 14px 20px 6px;
+  display: block;
+}
+.nav-item {
+  display: flex; align-items: center; gap: 10px;
+  padding: 8px 20px;
+  font-size: 12px; font-weight: 500; color: rgba(255,255,255,.55);
+  cursor: pointer; transition: all .15s;
+  border-left: 2px solid transparent;
+  text-decoration: none;
+}
+.nav-item:hover { color: rgba(255,255,255,.9); background: rgba(255,255,255,.05); text-decoration: none; }
+.nav-item.ativo { color: #fff; background: rgba(26,94,168,.3); border-left-color: var(--amber); font-weight: 600; }
+.nav-item-icon { font-size: 13px; flex-shrink: 0; }
+.nav-item-num {
+  margin-left: auto; font-family: var(--mono); font-size: 9px;
+  color: rgba(255,255,255,.2); font-weight: 400;
+}
+
+.sidebar-footer {
+  padding: 16px 20px;
+  border-top: 1px solid rgba(255,255,255,.08);
+  font-size: 10px; color: rgba(255,255,255,.25);
+  line-height: 1.6;
+}
+.sidebar-footer strong { color: rgba(255,255,255,.45); }
+
+/* ─── CONTEÚDO ─── */
+.content {
+  min-height: 100vh;
+  overflow-y: auto;
+}
+
+/* ─── COVER ─── */
+.cover {
+  background: linear-gradient(150deg, var(--azure-dark) 0%, var(--ink-mid) 45%, var(--ink) 100%);
+  padding: 72px 64px 80px;
+  position: relative; overflow: hidden;
+}
+.cover::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.025'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+}
+.cover-eyebrow {
+  font-family: var(--mono); font-size: 10px; font-weight: 700;
+  letter-spacing: .18em; text-transform: uppercase;
+  color: var(--amber); margin-bottom: 16px;
+  display: flex; align-items: center; gap: 10px;
+}
+.cover-eyebrow::before { content: ''; display: block; width: 24px; height: 1px; background: var(--amber); }
+.cover-title {
+  font-size: clamp(28px, 4vw, 48px); font-weight: 900;
+  color: #fff; line-height: 1.08; letter-spacing: -.03em;
+  margin-bottom: 18px; position: relative; z-index: 1;
+}
+.cover-title .accent { color: var(--amber); }
+.cover-desc {
+  font-size: 15px; color: rgba(255,255,255,.58);
+  max-width: 540px; line-height: 1.75; margin-bottom: 36px;
+  position: relative; z-index: 1;
+}
+.cover-chips {
+  display: flex; gap: 8px; flex-wrap: wrap;
+  position: relative; z-index: 1;
+}
+.cover-chip {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: rgba(255,255,255,.08); border: 1px solid rgba(255,255,255,.15);
+  color: rgba(255,255,255,.75); font-size: 11px; font-weight: 600;
+  padding: 5px 14px; border-radius: 999px; letter-spacing: .03em;
+}
+.cover-chip.amber { background: rgba(232,160,32,.15); border-color: rgba(232,160,32,.3); color: var(--amber); }
+
+/* ─── SEÇÕES ─── */
+.section {
+  padding: 64px 64px;
+  border-bottom: 1px solid var(--border);
+  scroll-margin-top: 24px;
+}
+.section:last-child { border-bottom: none; }
+
+.section-label {
+  font-family: var(--mono); font-size: 9px; font-weight: 700;
+  letter-spacing: .18em; text-transform: uppercase;
+  color: var(--azure); margin-bottom: 10px;
+  display: flex; align-items: center; gap: 8px;
+}
+.section-label::before { content: ''; display: block; width: 16px; height: 2px; background: var(--amber); }
+
+.section-title {
+  font-size: clamp(22px, 3vw, 32px); font-weight: 800;
+  color: var(--ink); line-height: 1.2; letter-spacing: -.025em;
+  margin-bottom: 10px;
+}
+.section-lead {
+  font-size: 15px; color: var(--ink-soft);
+  max-width: 640px; line-height: 1.75; margin-bottom: 40px;
+}
+
+/* ─── STEPS (passos numerados) ─── */
+.steps { display: flex; flex-direction: column; gap: 0; }
+.step {
+  display: grid; grid-template-columns: 48px 1fr;
+  gap: 0 24px; position: relative;
+}
+.step:not(:last-child) .step-line {
+  position: absolute; left: 23px; top: 48px; bottom: 0;
+  width: 1px; background: var(--border-mid);
+}
+.step-num {
+  width: 48px; height: 48px;
+  background: var(--azure); color: #fff;
+  border-radius: 50%; display: flex; align-items: center; justify-content: center;
+  font-weight: 900; font-size: 15px; flex-shrink: 0;
+  box-shadow: 0 0 0 4px var(--paper), 0 0 0 5px var(--azure);
+  position: relative; z-index: 1;
+}
+.step-body { padding-bottom: 40px; }
+.step-title {
+  font-size: 16px; font-weight: 800; color: var(--ink);
+  margin-bottom: 8px; padding-top: 10px; letter-spacing: -.01em;
+}
+.step-desc { font-size: 14px; color: var(--ink-soft); line-height: 1.75; margin-bottom: 14px; }
+.step-note {
+  display: flex; gap: 10px; align-items: flex-start;
+  background: var(--amber-lite); border-left: 3px solid var(--amber);
+  border-radius: 0 var(--r-sm) var(--r-sm) 0;
+  padding: 10px 14px; font-size: 12px; color: var(--amber-dark);
+  font-weight: 500; line-height: 1.6; margin-top: 10px;
+}
+.step-note-icon { flex-shrink: 0; font-size: 14px; margin-top: 1px; }
+.step-note.green { background: var(--green-lite); border-color: var(--green); color: var(--green); }
+.step-note.red { background: var(--red-lite); border-color: var(--red); color: var(--red); }
+
+/* ─── CÓDIGO ─── */
+.code-block {
+  background: var(--ink); border-radius: var(--r);
+  overflow: hidden; margin: 16px 0;
+  box-shadow: var(--shadow-md);
+}
+.code-header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 10px 16px;
+  background: rgba(255,255,255,.04); border-bottom: 1px solid rgba(255,255,255,.06);
+}
+.code-lang {
+  font-family: var(--mono); font-size: 9px; font-weight: 700;
+  letter-spacing: .12em; text-transform: uppercase; color: var(--amber);
+}
+.code-copy-btn {
+  font-family: var(--mono); font-size: 9px; font-weight: 600;
+  color: rgba(255,255,255,.3); background: none; border: 1px solid rgba(255,255,255,.1);
+  padding: 3px 10px; border-radius: 4px; cursor: pointer; transition: all .2s;
+  letter-spacing: .05em;
+}
+.code-copy-btn:hover { color: rgba(255,255,255,.8); border-color: rgba(255,255,255,.3); background: rgba(255,255,255,.05); }
+pre {
+  padding: 20px;
+  overflow-x: auto;
+  font-family: var(--mono);
+  font-size: 12.5px; line-height: 1.75;
+  color: rgba(255,255,255,.75);
+}
+.tok-comment  { color: rgba(255,255,255,.28); font-style: italic; }
+.tok-key      { color: #7DD3FC; }
+.tok-val      { color: #86EFAC; }
+.tok-str      { color: #FCA5A5; }
+.tok-url      { color: #FBBF24; text-decoration: underline; }
+.tok-hl       { background: rgba(232,160,32,.12); border-radius: 3px; padding: 1px 3px; }
+
+/* ─── URL BADGE ─── */
+.url-badge {
+  display: flex; align-items: center; gap: 10px;
+  background: var(--paper-cold); border: 1.5px solid var(--border);
+  border-radius: var(--r-sm); padding: 10px 16px;
+  margin: 12px 0; font-family: var(--mono); font-size: 12px;
+  color: var(--azure); word-break: break-all; line-height: 1.5;
+}
+.url-badge-icon { font-size: 14px; flex-shrink: 0; }
+.url-badge.green { background: var(--green-lite); border-color: var(--green); color: var(--green); }
+.url-badge.amber { background: var(--amber-lite); border-color: var(--amber); color: var(--amber-dark); }
+
+/* ─── TABELA ─── */
+.table-wrap { overflow-x: auto; margin: 20px 0; border-radius: var(--r); box-shadow: var(--shadow-sm); }
+table { width: 100%; border-collapse: collapse; font-size: 13px; }
+thead th {
+  background: var(--ink); color: #fff; padding: 12px 18px;
+  text-align: left; font-size: 10px; font-weight: 700;
+  letter-spacing: .1em; text-transform: uppercase; white-space: nowrap;
+}
+thead th:first-child { border-radius: var(--r-sm) 0 0 0; }
+thead th:last-child  { border-radius: 0 var(--r-sm) 0 0; }
+tbody tr { background: var(--paper-warm); transition: background .12s; }
+tbody tr:nth-child(even) { background: var(--paper); }
+tbody tr:hover { background: var(--azure-lite); }
+tbody td { padding: 11px 18px; color: var(--ink); border-bottom: 1px solid var(--border); vertical-align: middle; line-height: 1.5; }
+tbody tr:last-child td { border-bottom: none; }
+td code { font-family: var(--mono); font-size: 11px; background: var(--paper-cold); border: 1px solid var(--border); padding: 1px 6px; border-radius: 4px; color: var(--azure); }
+td .badge-m { font-size: 9px; font-weight: 700; padding: 2px 8px; border-radius: 999px; display: inline-block; text-transform: uppercase; letter-spacing: .06em; white-space: nowrap; }
+td .m-obrig { background: #FDECEA; color: var(--red); }
+td .m-opc   { background: var(--paper-cold); color: var(--ink-faint); }
+td .m-auto  { background: var(--green-lite); color: var(--green); }
+
+/* ─── INFO CARDS ─── */
+.info-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; margin: 24px 0; }
+.info-card {
+  background: var(--paper-warm); border-radius: var(--r);
+  border: 1.5px solid var(--border); box-shadow: var(--shadow-sm);
+  overflow: hidden; transition: box-shadow .2s, transform .2s;
+}
+.info-card:hover { box-shadow: var(--shadow-md); transform: translateY(-2px); }
+.info-card-accent { height: 4px; }
+.info-card-accent.azure  { background: linear-gradient(90deg, var(--azure-dark), var(--azure)); }
+.info-card-accent.amber  { background: linear-gradient(90deg, var(--amber-dark), var(--amber)); }
+.info-card-accent.green  { background: linear-gradient(90deg, #0D5C38, var(--green)); }
+.info-card-accent.red    { background: linear-gradient(90deg, #7B1219, var(--red)); }
+.info-card-body { padding: 20px 22px; }
+.info-card-icon { font-size: 28px; margin-bottom: 12px; display: block; }
+.info-card h3 { font-size: 14px; font-weight: 800; color: var(--ink); margin-bottom: 7px; letter-spacing: -.01em; }
+.info-card p  { font-size: 12px; color: var(--ink-soft); line-height: 1.7; }
+
+/* ─── DIVIDER COM RÓTULO ─── */
+.divider {
+  display: flex; align-items: center; gap: 14px; margin: 40px 0 32px;
+}
+.divider-line { flex: 1; height: 1px; background: var(--border); }
+.divider-label {
+  font-family: var(--mono); font-size: 10px; font-weight: 700;
+  letter-spacing: .14em; text-transform: uppercase; color: var(--ink-faint);
+  white-space: nowrap; padding: 4px 12px;
+  background: var(--paper-cold); border: 1px solid var(--border); border-radius: 999px;
+}
+
+/* ─── ALERT BOXES ─── */
+.alert {
+  display: flex; gap: 14px; align-items: flex-start;
+  border-radius: var(--r); padding: 16px 20px;
+  margin: 20px 0; font-size: 13px; line-height: 1.7;
+}
+.alert-icon { font-size: 18px; flex-shrink: 0; margin-top: 1px; }
+.alert h4 { font-size: 13px; font-weight: 800; margin-bottom: 4px; }
+.alert p  { margin: 0; }
+.alert.info  { background: var(--azure-lite); border-left: 4px solid var(--azure); color: var(--azure-dark); }
+.alert.warn  { background: var(--amber-lite); border-left: 4px solid var(--amber); color: var(--amber-dark); }
+.alert.ok    { background: var(--green-lite); border-left: 4px solid var(--green); color: var(--green); }
+.alert.danger{ background: var(--red-lite); border-left: 4px solid var(--red); color: var(--red); }
+
+/* ─── INLINE CODE ─── */
+code {
+  font-family: var(--mono); font-size: .82em;
+  background: var(--paper-cold); border: 1px solid var(--border);
+  padding: 1px 5px; border-radius: 4px; color: var(--azure-dark);
+}
+
+/* ─── CHECKLIST ─── */
+.checklist { list-style: none; display: flex; flex-direction: column; gap: 10px; margin: 16px 0; }
+.checklist li {
+  display: flex; align-items: flex-start; gap: 12px;
+  font-size: 13px; color: var(--ink-soft); line-height: 1.6;
+}
+.checklist li::before {
+  content: '✓'; display: flex; align-items: center; justify-content: center;
+  width: 20px; height: 20px; border-radius: 50%;
+  background: var(--green-lite); color: var(--green);
+  font-weight: 900; font-size: 10px; flex-shrink: 0; margin-top: 1px;
+}
+.checklist li strong { color: var(--ink); font-weight: 700; }
+
+/* ─── ENDPOINT CARD ─── */
+.endpoint {
+  background: var(--paper-warm); border-radius: var(--r);
+  border: 1.5px solid var(--border); overflow: hidden;
+  margin: 12px 0; box-shadow: var(--shadow-sm);
+  transition: box-shadow .2s;
+}
+.endpoint:hover { box-shadow: var(--shadow-md); }
+.endpoint-head {
+  display: flex; align-items: center; gap: 14px;
+  padding: 14px 18px; background: var(--paper-cold);
+  border-bottom: 1px solid var(--border);
+}
+.method-badge {
+  font-family: var(--mono); font-size: 10px; font-weight: 800;
+  padding: 3px 10px; border-radius: 4px; letter-spacing: .06em;
+  background: var(--green); color: #fff; flex-shrink: 0;
+}
+.endpoint-url {
+  font-family: var(--mono); font-size: 12px; color: var(--azure-dark);
+  font-weight: 600; flex: 1; word-break: break-all;
+}
+.endpoint-desc {
+  padding: 14px 18px; font-size: 13px; color: var(--ink-soft); line-height: 1.65;
+}
+.endpoint-tag {
+  display: inline-block; font-size: 9px; font-weight: 700;
+  letter-spacing: .1em; text-transform: uppercase;
+  padding: 2px 8px; border-radius: 999px;
+  background: var(--azure-lite); color: var(--azure-dark); margin-left: 8px;
+}
+
+/* ─── KEYBOARD SHORTCUT ─── */
+kbd {
+  display: inline-block; font-family: var(--mono); font-size: 10px; font-weight: 700;
+  background: var(--ink); color: rgba(255,255,255,.85);
+  padding: 2px 7px; border-radius: 4px; border-bottom: 2px solid rgba(0,0,0,.4);
+  letter-spacing: .03em;
+}
+
+/* ─── SCROLL TO TOP ─── */
+#scrollTop {
+  position: fixed; bottom: 28px; right: 28px;
+  width: 42px; height: 42px;
+  background: var(--azure); color: #fff;
+  border: none; border-radius: 50%; font-size: 16px;
+  cursor: pointer; box-shadow: var(--shadow-md);
+  opacity: 0; transform: translateY(10px);
+  transition: all .3s; z-index: 999;
+  display: flex; align-items: center; justify-content: center;
+}
+#scrollTop.show { opacity: 1; transform: translateY(0); }
+#scrollTop:hover { background: var(--azure-dark); }
+
+/* ─── RESPONSIVE ─── */
+@media (max-width: 900px) {
+  .layout { grid-template-columns: 1fr; }
+  .sidebar { position: static; height: auto; }
+  .section { padding: 40px 24px; }
+  .cover { padding: 40px 24px 48px; }
+}
+
+</style>
+</head>
+<body>
+
+<div class="layout">
+
+<!-- ═══════════════════ SIDEBAR ═══════════════════ -->
+<aside class="sidebar">
+  <div class="sidebar-brand">
+    <div class="sidebar-brand-tag">Documentação Técnica</div>
+    <div class="sidebar-brand-title">11ª CMS Montes Claros<br>Sistema Web</div>
+    <div class="sidebar-brand-sub">v2.0 · Arquitetura API JSON</div>
+  </div>
+
+  <nav class="sidebar-nav">
+    <div class="nav-group">
+      <span class="nav-group-label">Visão Geral</span>
+      <a class="nav-item ativo" href="#intro" onclick="setAtivo(this)">
+        <span class="nav-item-icon">🗺️</span> Introdução
+      </a>
+      <a class="nav-item" href="#arquitetura" onclick="setAtivo(this)">
+        <span class="nav-item-icon">🏗️</span> Arquitetura
+      </a>
+    </div>
+
+    <div class="nav-group">
+      <span class="nav-group-label">Deploy</span>
+      <a class="nav-item" href="#passo1" onclick="setAtivo(this)">
+        <span class="nav-item-icon">📋</span> 1 · Planilha Google
+        <span class="nav-item-num">§1</span>
+      </a>
+      <a class="nav-item" href="#passo2" onclick="setAtivo(this)">
+        <span class="nav-item-icon">⚙️</span> 2 · Apps Script
+        <span class="nav-item-num">§2</span>
+      </a>
+      <a class="nav-item" href="#passo3" onclick="setAtivo(this)">
+        <span class="nav-item-icon">🚀</span> 3 · Publicar Web App
+        <span class="nav-item-num">§3</span>
+      </a>
+      <a class="nav-item" href="#passo4" onclick="setAtivo(this)">
+        <span class="nav-item-icon">🔧</span> 4 · Setup da Planilha
+        <span class="nav-item-num">§4</span>
+      </a>
+      <a class="nav-item" href="#passo5" onclick="setAtivo(this)">
+        <span class="nav-item-icon">🌐</span> 5 · Deploy do Site
+        <span class="nav-item-num">§5</span>
+      </a>
+      <a class="nav-item" href="#passo6" onclick="setAtivo(this)">
+        <span class="nav-item-icon">✅</span> 6 · Verificação Final
+        <span class="nav-item-num">§6</span>
+      </a>
+    </div>
+
+    <div class="nav-group">
+      <span class="nav-group-label">Manual de Gestão</span>
+      <a class="nav-item" href="#config" onclick="setAtivo(this)">
+        <span class="nav-item-icon">📊</span> Aba CONFIG
+      </a>
+      <a class="nav-item" href="#presenca" onclick="setAtivo(this)">
+        <span class="nav-item-icon">📋</span> Aba PRESENÇA
+      </a>
+      <a class="nav-item" href="#delegados" onclick="setAtivo(this)">
+        <span class="nav-item-icon">🏅</span> Aba DELEGADOS
+      </a>
+      <a class="nav-item" href="#avisos" onclick="setAtivo(this)">
+        <span class="nav-item-icon">🚨</span> Aba AVISOS
+      </a>
+      <a class="nav-item" href="#fotos" onclick="setAtivo(this)">
+        <span class="nav-item-icon">📷</span> Aba FOTOS
+      </a>
+    </div>
+
+    <div class="nav-group">
+      <span class="nav-group-label">Referência</span>
+      <a class="nav-item" href="#api" onclick="setAtivo(this)">
+        <span class="nav-item-icon">🔌</span> Endpoints da API
+      </a>
+      <a class="nav-item" href="#fluxo" onclick="setAtivo(this)">
+        <span class="nav-item-icon">🔄</span> Fluxo de Trabalho
+      </a>
+      <a class="nav-item" href="#troubleshoot" onclick="setAtivo(this)">
+        <span class="nav-item-icon">🩺</span> Solução de Problemas
+      </a>
+    </div>
+  </nav>
+
+  <div class="sidebar-footer">
+    <strong>Secretaria Executiva</strong><br>
+    CMS Montes Claros · 2026<br>
+    cmsmoc.github.io/11conferencia
+  </div>
+</aside>
+
+<!-- ═══════════════════ CONTEÚDO ═══════════════════ -->
+<main class="content">
+
+  <!-- COVER -->
+  <div class="cover" id="intro">
+    <div class="cover-eyebrow">Guia Técnico Completo</div>
+    <h1 class="cover-title">
+      Deploy & Manual<br>
+      <span class="accent">Sistema 11ª CMS</span>
+    </h1>
+    <p class="cover-desc">
+      Este documento guia o deploy completo do novo sistema web baseado em API JSON — e serve como manual permanente de configuração e gestão para a equipe da Secretaria Executiva.
+    </p>
+    <div class="cover-chips">
+      <span class="cover-chip">📁 Google Sheets como DB</span>
+      <span class="cover-chip">⚙️ Apps Script REST API</span>
+      <span class="cover-chip">🌐 GitHub Pages</span>
+      <span class="cover-chip amber">⏱ ~30 min para deploy completo</span>
+    </div>
+  </div>
+
+  <!-- ── ARQUITETURA ── -->
+  <section class="section" id="arquitetura">
+    <div class="section-label">Visão Geral</div>
+    <h2 class="section-title">Como o sistema funciona</h2>
+    <p class="section-lead">Três camadas independentes que se comunicam via JSON. Cada camada pode ser atualizada sem quebrar as outras.</p>
+
+    <div class="info-grid">
+      <div class="info-card">
+        <div class="info-card-accent azure"></div>
+        <div class="info-card-body">
+          <span class="info-card-icon">📊</span>
+          <h3>Camada 1 — Dados</h3>
+          <p>Google Sheets funciona como banco de dados. 5 abas estruturadas: <strong>CONFIG, PRESENCA, DELEGADOS, AVISOS e FOTOS</strong>. Editável pela equipe sem código.</p>
+        </div>
+      </div>
+      <div class="info-card">
+        <div class="info-card-accent amber"></div>
+        <div class="info-card-body">
+          <span class="info-card-icon">⚙️</span>
+          <h3>Camada 2 — API Backend</h3>
+          <p>Google Apps Script publica uma Web App que lê a planilha e retorna <strong>JSON puro</strong>. Toda regra de negócio fica aqui — o frontend não precisa saber nada.</p>
+        </div>
+      </div>
+      <div class="info-card">
+        <div class="info-card-accent green"></div>
+        <div class="info-card-body">
+          <span class="info-card-icon">🌐</span>
+          <h3>Camada 3 — Frontend</h3>
+          <p>HTML + CSS + JS hospedado no <strong>GitHub Pages</strong>. Consome a API via <code>fetch()</code>. Só renderiza dados — não contém lógica de negócio.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="alert info">
+      <span class="alert-icon">💡</span>
+      <div>
+        <h4>Por que essa arquitetura é melhor?</h4>
+        <p>A versão antiga consumia CSV diretamente via URL pública. Isso causava latência (~2–4s), falhas silenciosas de parsing e código frágil. Com a API JSON, os dados chegam estruturados, validados e com tratamento de erro padronizado.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── PASSO 1 ── -->
+  <section class="section" id="passo1">
+    <div class="section-label">Deploy · Passo 1 de 6</div>
+    <h2 class="section-title">Acessar a Planilha Google</h2>
+    <p class="section-lead">Confirme que você tem acesso de editor à planilha central do sistema.</p>
+
+    <div class="url-badge">
+      <span class="url-badge-icon">📊</span>
+      https://docs.google.com/spreadsheets/d/1sEEW3rrUYFlHHUlhnR4u5sVNA3BOw-cN_8TY8FgoMLI
+    </div>
+
+    <div class="steps">
+      <div class="step">
+        <div class="step-line"></div>
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <div class="step-title">Abra a planilha no navegador</div>
+          <div class="step-desc">Clique no link acima. Você deve ter acesso de <strong>Editor</strong>. Se aparecer "Solicitar acesso", peça ao responsável pela conta Google da Secretaria Executiva.</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-line"></div>
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <div class="step-title">Confirme que está logado com a conta correta</div>
+          <div class="step-desc">O sistema deve ser gerenciado pela conta oficial do CMS, não uma conta pessoal. Verifique no canto superior direito do Google.</div>
+          <div class="step-note">
+            <span class="step-note-icon">⚠️</span>
+            <span>Se usar uma conta pessoal, a API ficará associada a essa conta. Use sempre a conta institucional da Secretaria Executiva.</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── PASSO 2 ── -->
+  <section class="section" id="passo2">
+    <div class="section-label">Deploy · Passo 2 de 6</div>
+    <h2 class="section-title">Instalar o código no Apps Script</h2>
+    <p class="section-lead">O backend da API vive dentro da própria planilha, como um script vinculado.</p>
+
+    <div class="steps">
+      <div class="step">
+        <div class="step-line"></div>
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <div class="step-title">Abra o editor do Apps Script</div>
+          <div class="step-desc">Na planilha, clique no menu <strong>Extensões → Apps Script</strong>. Uma nova aba abrirá com o editor de código.</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-line"></div>
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <div class="step-title">Apague o código existente</div>
+          <div class="step-desc">No editor, você verá um arquivo chamado <code>Código.gs</code> ou <code>Code.gs</code>. Selecione <strong>tudo</strong> o que está nele (<kbd>Ctrl+A</kbd>) e delete.</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-line"></div>
+        <div class="step-num">3</div>
+        <div class="step-body">
+          <div class="step-title">Cole o código do backend</div>
+          <div class="step-desc">Abra o arquivo <code>11cms-api-backend.gs</code> que foi gerado, copie todo o conteúdo e cole no editor. Salve com <kbd>Ctrl+S</kbd>.</div>
+          <div class="step-note green">
+            <span class="step-note-icon">✓</span>
+            <span>Após salvar, o editor deve mostrar o nome do projeto no topo. Se pedir para nomear o projeto, use <strong>"11CMS-API"</strong>.</span>
+          </div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">4</div>
+        <div class="step-body">
+          <div class="step-title">Verifique a função <code>doGet</code></div>
+          <div class="step-desc">Role o código até encontrar <code>function doGet(e)</code>. Se estiver lá, o roteador da API está instalado corretamente.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── PASSO 3 ── -->
+  <section class="section" id="passo3">
+    <div class="section-label">Deploy · Passo 3 de 6</div>
+    <h2 class="section-title">Publicar a Web App (API pública)</h2>
+    <p class="section-lead">Este passo transforma o Apps Script em uma URL de API acessível pelo frontend.</p>
+
+    <div class="alert warn">
+      <span class="alert-icon">⚠️</span>
+      <div>
+        <h4>Atenção: este passo já foi feito antes</h4>
+        <p>A URL <code>https://script.google.com/macros/s/AKfycbzPh29ncgWef.../exec</code> já está implantada. Se o código não foi alterado, você <strong>não precisa reimplantar</strong>. Só refaça se trocou a conta Google ou se quer atualizar o código da API.</p>
+      </div>
+    </div>
+
+    <div class="steps">
+      <div class="step">
+        <div class="step-line"></div>
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <div class="step-title">No Apps Script, clique em "Implantar"</div>
+          <div class="step-desc">Botão azul no canto superior direito. Selecione <strong>"Nova implantação"</strong> (ou "Gerenciar implantações" se quiser atualizar uma existente).</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-line"></div>
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <div class="step-title">Configure a implantação</div>
+          <div class="step-desc">Preencha as opções como na tabela abaixo:</div>
+          <div class="table-wrap" style="margin-top:14px">
+            <table>
+              <thead><tr><th>Campo</th><th>Valor obrigatório</th></tr></thead>
+              <tbody>
+                <tr><td><strong>Tipo</strong></td><td><code>Aplicativo da Web</code></td></tr>
+                <tr><td><strong>Executar como</strong></td><td><code>Eu mesmo (conta_institucional@gmail.com)</code></td></tr>
+                <tr><td><strong>Quem pode acessar</strong></td><td><code>Qualquer pessoa</code> ← obrigatório para a API ser pública</td></tr>
+                <tr><td><strong>Descrição</strong></td><td>11CMS API v2.0 (opcional, mas recomendado)</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="step-note red">
+            <span class="step-note-icon">🚫</span>
+            <span>Se "Quem pode acessar" não for <strong>Qualquer pessoa</strong>, o site dará erro 403 ao tentar carregar os dados. Este campo é crítico.</span>
+          </div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-line"></div>
+        <div class="step-num">3</div>
+        <div class="step-body">
+          <div class="step-title">Autorize as permissões</div>
+          <div class="step-desc">O Google pedirá para você autorizar o acesso. Clique em <strong>"Autorizar acesso"</strong>, escolha a conta, e em "Avançado → Ir para o projeto". Na tela seguinte, clique <strong>"Permitir"</strong>.</div>
+          <div class="step-note">
+            <span class="step-note-icon">ℹ️</span>
+            <span>O alerta "App não verificado" é normal para projetos internos/institucionais. Não é um vírus — é apenas porque a Secretaria não pagou o processo de verificação formal do Google. Pode continuar.</span>
+          </div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">4</div>
+        <div class="step-body">
+          <div class="step-title">Copie a URL da Web App</div>
+          <div class="step-desc">Após implantar, o Google exibirá a URL da API. Ela tem este formato:</div>
+          <div class="url-badge amber">
+            <span class="url-badge-icon">🔗</span>
+            https://script.google.com/macros/s/<strong>SEU_ID_AQUI</strong>/exec
+          </div>
+          <div class="step-desc">Se for diferente da URL que já está no código do frontend, você precisará atualizar a constante <code>API_URL</code> no HTML do site.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── PASSO 4 ── -->
+  <section class="section" id="passo4">
+    <div class="section-label">Deploy · Passo 4 de 6</div>
+    <h2 class="section-title">Executar o Setup da Planilha</h2>
+    <p class="section-lead">Um único acesso à URL de setup cria automaticamente todas as 5 abas com seus cabeçalhos, dropdowns de validação e dados iniciais.</p>
+
+    <div class="steps">
+      <div class="step">
+        <div class="step-line"></div>
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <div class="step-title">Acesse a URL de setup</div>
+          <div class="step-desc">Cole a URL abaixo no navegador (substituindo pela sua URL se for diferente):</div>
+          <div class="url-badge green">
+            <span class="url-badge-icon">🚀</span>
+            https://script.google.com/macros/s/AKfycbzPh29ncgWef.../exec?action=setup
+          </div>
+          <div class="step-desc">A resposta deve ser um JSON com <code>"success": true</code> e a descrição de cada aba criada.</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-line"></div>
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <div class="step-title">Verifique a planilha</div>
+          <div class="step-desc">Abra a planilha. Você deve ver 5 abas na parte inferior: <code>CONFIG</code>, <code>PRESENCA</code>, <code>DELEGADOS</code>, <code>AVISOS</code>, <code>FOTOS</code>.</div>
+          <div class="step-note green">
+            <span class="step-note-icon">✓</span>
+            <span>A aba <strong>CONFIG</strong> já virá preenchida com os 13 eventos e todos com status <strong>aguardando</strong>. Você pode começar a gerenciar imediatamente.</span>
+          </div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-body">
+          <div class="step-title">Alternativa via menu</div>
+          <div class="step-desc">Você também pode executar o setup pela própria planilha: abra o menu <strong>"🏥 11ª CMS" → "⚙️ Configurar planilha (setup)"</strong>. O menu aparece na barra de menus do Google Sheets após salvar o script.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── PASSO 5 ── -->
+  <section class="section" id="passo5">
+    <div class="section-label">Deploy · Passo 5 de 6</div>
+    <h2 class="section-title">Publicar o Frontend no GitHub Pages</h2>
+    <p class="section-lead">O site HTML fica hospedado no repositório <code>cmsmoc/11conferencia</code> do GitHub.</p>
+
+    <div class="steps">
+      <div class="step">
+        <div class="step-line"></div>
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <div class="step-title">Acesse o repositório GitHub</div>
+          <div class="url-badge">
+            <span class="url-badge-icon">🐙</span>
+            https://github.com/cmsmoc/11conferencia
+          </div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-line"></div>
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <div class="step-title">Substitua o arquivo HTML</div>
+          <div class="step-desc">Encontre o arquivo atual (provavelmente <code>index.html</code> ou <code>pre-conferencias.html</code>) e substitua pelo arquivo <code>pre-conferencias-11cms-v2.html</code> gerado.</div>
+          <div class="step-note">
+            <span class="step-note-icon">💡</span>
+            <span>Se o arquivo tiver outro nome, renomeie o novo arquivo para o nome correto antes de subir. O GitHub Pages usa o arquivo como-está.</span>
+          </div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-line"></div>
+        <div class="step-num">3</div>
+        <div class="step-body">
+          <div class="step-title">Faça o commit</div>
+          <div class="step-desc">Na interface do GitHub, clique em <strong>"Commit changes"</strong>. A mensagem sugerida: <em>"Sistema v2 — API JSON, sem CSV"</em>.</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">4</div>
+        <div class="step-body">
+          <div class="step-title">Aguarde o deploy automático</div>
+          <div class="step-desc">O GitHub Pages faz o deploy automaticamente após cada commit. Aguarde <strong>1–3 minutos</strong> e acesse o site:</div>
+          <div class="url-badge green">
+            <span class="url-badge-icon">🌐</span>
+            https://cmsmoc.github.io/11conferencia
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── PASSO 6 ── -->
+  <section class="section" id="passo6">
+    <div class="section-label">Deploy · Passo 6 de 6</div>
+    <h2 class="section-title">Verificação Final do Sistema</h2>
+    <p class="section-lead">Confirme que todos os componentes estão funcionando antes de divulgar o link.</p>
+
+    <ul class="checklist">
+      <li><span><strong>API respondendo:</strong> Acesse <code>[URL_API]?action=config</code> no navegador e veja um JSON com <code>"success": true</code> e os 13 eventos.</span></li>
+      <li><span><strong>Site carregando:</strong> Abra <code>cmsmoc.github.io/11conferencia</code> e veja o splash aparecer e desaparecer.</span></li>
+      <li><span><strong>Cards dos eventos:</strong> Após o splash, os 13 cards dos eventos devem aparecer no grid.</span></li>
+      <li><span><strong>Detalhe de evento:</strong> Clique em qualquer card — a tela de detalhe deve abrir com os botões de ação.</span></li>
+      <li><span><strong>Avisos:</strong> Se houver avisos ativos com <code>Ativo = SIM</code> na aba AVISOS, o popup deve aparecer ao carregar o site.</span></li>
+      <li><span><strong>Responsividade:</strong> Teste no celular ou use o DevTools (<kbd>F12</kbd> → ícone de celular) para verificar mobile.</span></li>
+    </ul>
+
+    <div class="alert ok">
+      <span class="alert-icon">🎉</span>
+      <div>
+        <h4>Sistema no ar!</h4>
+        <p>Se todos os itens acima estão OK, o deploy foi bem-sucedido. A partir de agora, toda a gestão é feita diretamente na planilha Google — sem precisar mexer em código.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════ MANUAL DE GESTÃO ═══════════════════ -->
+
+  <!-- ── ABA CONFIG ── -->
+  <section class="section" id="config">
+    <div class="section-label">Manual de Gestão</div>
+    <h2 class="section-title">Aba CONFIG — Gerenciar Eventos</h2>
+    <p class="section-lead">Esta é a aba principal. Cada linha é um evento. As colunas editáveis controlam o que aparece no site.</p>
+
+    <div class="alert info">
+      <span class="alert-icon">🔒</span>
+      <div>
+        <h4>Colunas travadas (A–F)</h4>
+        <p>As colunas <strong>ID, Nome, Data, Horário, Local e Endereço</strong> têm proteção leve e não devem ser editadas — elas vêm do banco de dados mestre. Se o local de um evento mudar, use a coluna <strong>Aviso</strong> para comunicar a alteração ao público.</p>
+      </div>
+    </div>
+
+    <div class="divider"><div class="divider-line"></div><div class="divider-label">Colunas Editáveis</div><div class="divider-line"></div></div>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Coluna</th>
+            <th>O que faz</th>
+            <th>Valores aceitos</th>
+            <th>Tipo</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>Status</code></td>
+            <td>Define o estado do evento. <strong>Controla todos os botões do site</strong> automaticamente.</td>
+            <td><code>aguardando</code> / <code>formulario_ativo</code> / <code>encerrada</code></td>
+            <td><span class="badge-m m-obrig">Obrigatório</span></td>
+          </tr>
+          <tr>
+            <td><code>Link Formulário</code></td>
+            <td>URL do Google Forms de inscrição. Aparece como botão quando Status = <code>formulario_ativo</code>.</td>
+            <td>URL completa do Forms</td>
+            <td><span class="badge-m m-opc">Opcional</span></td>
+          </tr>
+          <tr>
+            <td><code>CSV Presença</code></td>
+            <td>URL da planilha de presença publicada como CSV. Alimenta a lista de presença.</td>
+            <td>URL <code>…/pub?output=csv</code></td>
+            <td><span class="badge-m m-opc">Opcional</span></td>
+          </tr>
+          <tr>
+            <td><code>Flyer URL</code></td>
+            <td>URL direta da imagem do flyer (ibb.co, Drive, etc.). Exibe o painel lateral no detalhe.</td>
+            <td>URL de imagem</td>
+            <td><span class="badge-m m-opc">Opcional</span></td>
+          </tr>
+          <tr>
+            <td><code>Ata URL</code></td>
+            <td>Link para o documento de ata/propostas. Ativa o botão de ata quando Status = <code>encerrada</code>.</td>
+            <td>URL do Google Docs ou PDF</td>
+            <td><span class="badge-m m-opc">Opcional</span></td>
+          </tr>
+          <tr>
+            <td><code>Aviso</code></td>
+            <td>Texto de aviso exibido em destaque na página do evento. Use para mudanças de local, horário etc.</td>
+            <td>Texto livre</td>
+            <td><span class="badge-m m-opc">Opcional</span></td>
+          </tr>
+          <tr>
+            <td><code>Tipo Aviso</code></td>
+            <td>Define se o campo Aviso é texto, imagem ou vídeo.</td>
+            <td><code>texto</code> / <code>imagem</code> / <code>video</code></td>
+            <td><span class="badge-m m-auto">Auto</span></td>
+          </tr>
+          <tr>
+            <td><code>Obs / Notas</code></td>
+            <td>Informações adicionais exibidas na seção "Informações" da página do evento.</td>
+            <td>Texto livre</td>
+            <td><span class="badge-m m-opc">Opcional</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="divider"><div class="divider-line"></div><div class="divider-label">Fluxo de Status</div><div class="divider-line"></div></div>
+
+    <div class="steps">
+      <div class="step">
+        <div class="step-line"></div>
+        <div class="step-num" style="background:var(--ink-soft);box-shadow:0 0 0 4px var(--paper),0 0 0 5px var(--ink-soft)">⏳</div>
+        <div class="step-body">
+          <div class="step-title">aguardando → estado inicial</div>
+          <div class="step-desc">O card aparece no site com badge roxa "Aguardando". Todos os botões de ação ficam desativados. Use este estado antes da inscrição abrir.</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-line"></div>
+        <div class="step-num" style="background:var(--amber);box-shadow:0 0 0 4px var(--paper),0 0 0 5px var(--amber)">🟢</div>
+        <div class="step-body">
+          <div class="step-title">formulario_ativo → inscrições abertas</div>
+          <div class="step-desc">O botão de inscrição aparece (desde que <code>Link Formulário</code> esteja preenchido). Badge verde "Ativo". Ative no dia anterior ao evento ou quando as inscrições abrirem.</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num" style="background:var(--green);box-shadow:0 0 0 4px var(--paper),0 0 0 5px var(--green)">✅</div>
+        <div class="step-body">
+          <div class="step-title">encerrada → pós-evento</div>
+          <div class="step-desc">Badge verde "Encerrada". O botão de inscrição some. Os botões de Lista de Presença, Delegados Eleitos e Ata ficam disponíveis (conforme os dados estejam preenchidos).</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── ABA PRESENÇA ── -->
+  <section class="section" id="presenca">
+    <div class="section-label">Manual de Gestão</div>
+    <h2 class="section-title">Aba PRESENÇA — Lista de Participantes</h2>
+    <p class="section-lead">Cada linha é um participante de uma pré-conferência. O site filtra por <code>ID_Conferencia</code> para mostrar a lista correta.</p>
+
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Coluna</th><th>Descrição</th><th>Exemplo</th><th>Tipo</th></tr></thead>
+        <tbody>
+          <tr><td><code>ID_Conferencia</code></td><td>ID exato do evento (igual à coluna A da aba CONFIG)</td><td><code>saude-mulher</code></td><td><span class="badge-m m-obrig">Obrigatório</span></td></tr>
+          <tr><td><code>Nome_Conferencia</code></td><td>Nome por extenso (para legibilidade humana)</td><td>Saúde da Mulher</td><td><span class="badge-m m-opc">Opcional</span></td></tr>
+          <tr><td><code>Nome</code></td><td>Nome completo do participante</td><td>Maria da Silva</td><td><span class="badge-m m-obrig">Obrigatório</span></td></tr>
+          <tr><td><code>CPF</code></td><td>CPF formatado</td><td>123.456.789-00</td><td><span class="badge-m m-opc">Opcional</span></td></tr>
+          <tr><td><code>Segmento</code></td><td>Segmento do participante</td><td>Usuários</td><td><span class="badge-m m-opc">Opcional</span></td></tr>
+          <tr><td><code>Tipo</code></td><td>Papel no evento</td><td>Participante / Delegado / Organizador</td><td><span class="badge-m m-opc">Opcional</span></td></tr>
+          <tr><td><code>Hora</code></td><td>Hora de chegada</td><td>08:15</td><td><span class="badge-m m-opc">Opcional</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="divider"><div class="divider-line"></div><div class="divider-label">Como Popular esta Aba</div><div class="divider-line"></div></div>
+
+    <div class="info-grid">
+      <div class="info-card">
+        <div class="info-card-accent azure"></div>
+        <div class="info-card-body">
+          <span class="info-card-icon">📥</span>
+          <h3>Opção A — Importar do Forms</h3>
+          <p>Se o Google Forms de inscrição coleta nome, CPF e segmento, vincule a planilha de respostas e copie os dados para esta aba, adicionando manualmente o <code>ID_Conferencia</code> correto.</p>
+        </div>
+      </div>
+      <div class="info-card">
+        <div class="info-card-accent amber"></div>
+        <div class="info-card-body">
+          <span class="info-card-icon">✏️</span>
+          <h3>Opção B — Inserir Manualmente</h3>
+          <p>Após o evento, a equipe preenche a aba diretamente. Use "Ctrl+D" para repetir o ID da conferência nas células abaixo. Muito eficiente para listas pequenas.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="alert warn">
+      <span class="alert-icon">⚠️</span>
+      <div>
+        <h4>ID_Conferencia precisa ser exato</h4>
+        <p>O ID deve ser idêntico ao da coluna A da aba CONFIG. Diferença de maiúscula ou acento faz a filtragem falhar. IDs válidos: <code>saude-mulher</code>, <code>grande-renascenca</code>, <code>lgbtqia</code>, etc. Confira sempre antes de salvar.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── ABA DELEGADOS ── -->
+  <section class="section" id="delegados">
+    <div class="section-label">Manual de Gestão</div>
+    <h2 class="section-title">Aba DELEGADOS — Eleitos por Pré-Conferência</h2>
+    <p class="section-lead">Os delegados eleitos são publicados aqui e aparecem na seção "Delegados Eleitos" dentro de cada evento encerrado.</p>
+
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Coluna</th><th>Descrição</th><th>Valores</th><th>Tipo</th></tr></thead>
+        <tbody>
+          <tr><td><code>ID_Conferencia</code></td><td>ID do evento (igual CONFIG coluna A)</td><td>ex: <code>zona-rural</code></td><td><span class="badge-m m-obrig">Obrigatório</span></td></tr>
+          <tr><td><code>Nome_Conferencia</code></td><td>Nome por extenso</td><td>Texto</td><td><span class="badge-m m-opc">Opcional</span></td></tr>
+          <tr><td><code>Nome_Delegado</code></td><td>Nome completo do delegado eleito</td><td>Texto</td><td><span class="badge-m m-obrig">Obrigatório</span></td></tr>
+          <tr><td><code>Segmento</code></td><td>Segmento que representa</td><td>Usuários / Trabalhadores de Saúde / Gestores / Prestadores de Serviço / Outro</td><td><span class="badge-m m-obrig">Obrigatório</span></td></tr>
+          <tr><td><code>Tipo</code></td><td>Titular ou suplente</td><td><code>Titular</code> / <code>Suplente</code></td><td><span class="badge-m m-obrig">Obrigatório</span></td></tr>
+          <tr><td><code>Observações</code></td><td>Qualquer nota interna</td><td>Texto livre</td><td><span class="badge-m m-opc">Opcional</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="alert info">
+      <span class="alert-icon">💡</span>
+      <div>
+        <h4>Quando publicar?</h4>
+        <p>Os delegados só aparecem no site quando o Status do evento na aba CONFIG for <code>encerrada</code>. Isso garante que ninguém veja uma lista parcial. Preencha a aba DELEGADOS e mude o status apenas quando a lista estiver completa e validada.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── ABA AVISOS ── -->
+  <section class="section" id="avisos">
+    <div class="section-label">Manual de Gestão</div>
+    <h2 class="section-title">Aba AVISOS — Notificações e Alertas</h2>
+    <p class="section-lead">Dois tipos de aviso controlam notificações no site: urgentes (popup + barra vermelha) e normais (barra de notícias).</p>
+
+    <div class="info-grid">
+      <div class="info-card">
+        <div class="info-card-accent red"></div>
+        <div class="info-card-body">
+          <span class="info-card-icon">🚨</span>
+          <h3>Nível "urgente"</h3>
+          <p>Exibe popup ao abrir o site. Após fechar, permanece como uma <strong>barra vermelha fixa</strong> no topo. Use para mudanças críticas (local, cancelamento).</p>
+        </div>
+      </div>
+      <div class="info-card">
+        <div class="info-card-accent azure"></div>
+        <div class="info-card-body">
+          <span class="info-card-icon">📌</span>
+          <h3>Nível "normal"</h3>
+          <p>Aparece como cards de "últimas notícias" logo abaixo do hero, acima dos cards de eventos. Ideal para anúncios gerais ou atalhos para listas de presença recentes.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Coluna</th><th>Descrição</th><th>Valores aceitos</th></tr></thead>
+        <tbody>
+          <tr><td><code>Ativo</code></td><td><strong>Liga/desliga o aviso.</strong> O mais importante.</td><td><code>SIM</code> ou <code>NÃO</code></td></tr>
+          <tr><td><code>Título</code></td><td>Texto principal do aviso</td><td>Texto livre (max ~80 chars recomendado)</td></tr>
+          <tr><td><code>Tipo</code></td><td>Formato do conteúdo</td><td><code>texto</code> / <code>imagem</code> / <code>video</code></td></tr>
+          <tr><td><code>Nível</code></td><td>Define o comportamento visual</td><td><code>urgente</code> (popup+barra) ou <code>normal</code> (notícia)</td></tr>
+          <tr><td><code>Conteúdo</code></td><td>Corpo do aviso. Se tipo=texto: parágrafo. Se imagem: URL. Se vídeo: URL YouTube.</td><td>Texto ou URL</td></tr>
+          <tr><td><code>Conferência</code></td><td>ID do evento (aviso específico) ou deixe vazio (aviso global).</td><td>ID da conferência ou vazio</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="divider"><div class="divider-line"></div><div class="divider-label">Exemplos Práticos</div><div class="divider-line"></div></div>
+
+    <div class="code-block">
+      <div class="code-header">
+        <span class="code-lang">Exemplo — Aviso urgente de mudança de local</span>
+      </div>
+      <pre><span class="tok-key">Ativo:</span>        <span class="tok-val">SIM</span>
+<span class="tok-key">Título:</span>       <span class="tok-str">Mudança de local — Grande Santos Reis</span>
+<span class="tok-key">Tipo:</span>         <span class="tok-val">texto</span>
+<span class="tok-key">Nível:</span>        <span class="tok-val">urgente</span>
+<span class="tok-key">Conteúdo:</span>     <span class="tok-str">O local da pré-conferência foi alterado para o Ginásio Municipal.
+Data e horário permanecem os mesmos.</span>
+<span class="tok-key">Conferência:</span>  <span class="tok-str">grande-santos-reis</span>  <span class="tok-comment">← só aparece para este evento</span></pre>
+    </div>
+
+    <div class="code-block">
+      <div class="code-header">
+        <span class="code-lang">Exemplo — Aviso normal com link para lista de presença</span>
+      </div>
+      <pre><span class="tok-key">Ativo:</span>        <span class="tok-val">SIM</span>
+<span class="tok-key">Título:</span>       <span class="tok-str">Lista de presença da Pré-Conf. Saúde da Mulher disponível</span>
+<span class="tok-key">Tipo:</span>         <span class="tok-val">texto</span>
+<span class="tok-key">Nível:</span>        <span class="tok-val">normal</span>
+<span class="tok-key">Conteúdo:</span>     <span class="tok-str">Confira se seu nome está registrado. Abra o card do evento.</span>
+<span class="tok-key">Conferência:</span>  <span class="tok-comment">← deixe vazio para ser global</span></pre>
+    </div>
+  </section>
+
+  <!-- ── ABA FOTOS ── -->
+  <section class="section" id="fotos">
+    <div class="section-label">Manual de Gestão</div>
+    <h2 class="section-title">Aba FOTOS — Galeria do Site</h2>
+    <p class="section-lead">Controla quais fotos aparecem na aba "Galeria" do site. O campo <code>Incluir no Site</code> funciona como interruptor individual por foto.</p>
+
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Coluna</th><th>Descrição</th><th>Tipo</th></tr></thead>
+        <tbody>
+          <tr><td><code>ID_Conferencia</code></td><td>ID do evento ao qual a foto pertence. Usado para os filtros da galeria.</td><td><span class="badge-m m-opc">Opcional</span></td></tr>
+          <tr><td><code>Legenda</code></td><td>Texto que aparece ao passar o mouse sobre a foto.</td><td><span class="badge-m m-opc">Opcional</span></td></tr>
+          <tr><td><code>URL_Drive_Original</code></td><td>Link original do arquivo no Google Drive.</td><td><span class="badge-m m-opc">Opcional</span></td></tr>
+          <tr><td><code>URL_Direta</code></td><td><strong>URL que o site usa para carregar a imagem.</strong> Formato <code>drive.google.com/uc?export=view&id=…</code> ou ibb.co.</td><td><span class="badge-m m-obrig">Obrigatório</span></td></tr>
+          <tr><td><code>Incluir no Site</code></td><td><strong>Interruptor.</strong> Somente <code>SIM</code> publica a foto.</td><td><span class="badge-m m-obrig">Obrigatório</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="alert info">
+      <span class="alert-icon">📸</span>
+      <div>
+        <h4>Como obter a URL direta do Google Drive</h4>
+        <p>Clique com botão direito na imagem no Drive → "Obter link" → Certifique-se que o acesso é <strong>"Qualquer pessoa com o link"</strong>. Então pegue o <strong>ID</strong> do link (a parte após <code>/d/</code>) e monte: <code>https://drive.google.com/uc?export=view&id=SEU_ID</code>. Alternativamente, use imgbb.com para hospedar e usar a URL direta.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── API REFERENCE ── -->
+  <section class="section" id="api">
+    <div class="section-label">Referência Técnica</div>
+    <h2 class="section-title">Endpoints da API</h2>
+    <p class="section-lead">Todos os endpoints são GET. A URL base é sempre a URL do Web App do Apps Script.</p>
+
+    <div class="url-badge">
+      <span class="url-badge-icon">🔗</span>
+      BASE: https://script.google.com/macros/s/AKfycbzPh29ncgWef.../exec
+    </div>
+
+    <div class="endpoint">
+      <div class="endpoint-head">
+        <span class="method-badge">GET</span>
+        <span class="endpoint-url">?action=config</span>
+      </div>
+      <div class="endpoint-desc">
+        Retorna todos os eventos com campos booleanos já calculados no backend (<code>podeInscrever</code>, <code>podeVerPresenca</code>, etc.). <span class="endpoint-tag">Principal</span>
+        <div class="code-block" style="margin-top:10px">
+          <div class="code-header"><span class="code-lang">Resposta</span></div>
+          <pre>{ <span class="tok-key">"success"</span>: true, <span class="tok-key">"data"</span>: [ { <span class="tok-key">"id"</span>: <span class="tok-str">"saude-mulher"</span>, <span class="tok-key">"status"</span>: <span class="tok-str">"ENCERRADA"</span>, <span class="tok-key">"podeInscrever"</span>: false, <span class="tok-key">"podeVerPresenca"</span>: true, ... } ] }</pre>
+        </div>
+      </div>
+    </div>
+
+    <div class="endpoint">
+      <div class="endpoint-head">
+        <span class="method-badge">GET</span>
+        <span class="endpoint-url">?action=presenca&id=saude-mulher</span>
+      </div>
+      <div class="endpoint-desc">Retorna a lista de presença filtrada pelo ID do evento. Inclui metadados como total e contagem por segmento.</div>
+    </div>
+
+    <div class="endpoint">
+      <div class="endpoint-head">
+        <span class="method-badge">GET</span>
+        <span class="endpoint-url">?action=delegados&id=saude-mulher</span>
+      </div>
+      <div class="endpoint-desc">Retorna delegados eleitos do evento especificado, com titulares e suplentes separados nos metadados.</div>
+    </div>
+
+    <div class="endpoint">
+      <div class="endpoint-head">
+        <span class="method-badge">GET</span>
+        <span class="endpoint-url">?action=avisos</span>
+      </div>
+      <div class="endpoint-desc">Retorna todos os avisos com <code>Ativo = SIM</code>, separados por nível (urgente/normal) nos metadados.</div>
+    </div>
+
+    <div class="endpoint">
+      <div class="endpoint-head">
+        <span class="method-badge">GET</span>
+        <span class="endpoint-url">?action=fotos[&id=saude-mulher]</span>
+      </div>
+      <div class="endpoint-desc">Retorna fotos com <code>Incluir no Site = SIM</code>. O parâmetro <code>id</code> é opcional para filtrar por evento.</div>
+    </div>
+
+    <div class="endpoint">
+      <div class="endpoint-head">
+        <span class="method-badge">GET</span>
+        <span class="endpoint-url">?action=setup</span>
+      </div>
+      <div class="endpoint-desc">Cria/verifica todas as abas da planilha. <strong>Idempotente</strong> — pode ser chamado múltiplas vezes sem risco. Abas existentes com dados são preservadas. <span class="endpoint-tag" style="background:var(--amber-lite);color:var(--amber-dark)">Setup único</span></div>
+    </div>
+  </section>
+
+  <!-- ── FLUXO ── -->
+  <section class="section" id="fluxo">
+    <div class="section-label">Referência</div>
+    <h2 class="section-title">Fluxo de Trabalho — Semana a Semana</h2>
+    <p class="section-lead">Este é o roteiro operacional para a equipe da Secretaria Executiva durante o período das pré-conferências.</p>
+
+    <div class="steps">
+      <div class="step">
+        <div class="step-line"></div>
+        <div class="step-num" style="font-size:12px">D-3</div>
+        <div class="step-body">
+          <div class="step-title">3 dias antes do evento</div>
+          <div class="step-desc">
+            <strong>1.</strong> Abra a planilha → aba CONFIG → localize o evento.<br>
+            <strong>2.</strong> Cole o <code>Link Formulário</code> do Google Forms de inscrição.<br>
+            <strong>3.</strong> Mude o Status para <code>formulario_ativo</code>.<br>
+            <strong>4.</strong> Se tiver flyer, cole a URL em <code>Flyer URL</code>.<br>
+            <strong>5.</strong> Salve. O site atualiza automaticamente na próxima chamada à API.
+          </div>
+          <div class="step-note green">
+            <span class="step-note-icon">✓</span>
+            <span>Não precisa publicar de novo nem mexer em código. A mudança na planilha já reflete no site.</span>
+          </div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-line"></div>
+        <div class="step-num" style="font-size:12px">D+0</div>
+        <div class="step-body">
+          <div class="step-title">No dia do evento</div>
+          <div class="step-desc">
+            <strong>1.</strong> Se necessário, coloque um aviso na aba AVISOS (ex: mudança de sala).<br>
+            <strong>2.</strong> Acompanhe a lista de presença conforme os participantes chegam.
+          </div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-line"></div>
+        <div class="step-num" style="font-size:12px">D+1</div>
+        <div class="step-body">
+          <div class="step-title">1 dia após o evento</div>
+          <div class="step-desc">
+            <strong>1.</strong> Preencha a aba PRESENÇA com os participantes do evento.<br>
+            <strong>2.</strong> Preencha a aba DELEGADOS com os eleitos (se houver eleição).<br>
+            <strong>3.</strong> Mude o Status na aba CONFIG para <code>encerrada</code>.<br>
+            <strong>4.</strong> Os botões de presença e delegados aparecem automaticamente no site.
+          </div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num" style="font-size:12px">D+7</div>
+        <div class="step-body">
+          <div class="step-title">Após publicação da ata</div>
+          <div class="step-desc">
+            <strong>1.</strong> Coloque o link da ata em <code>Ata URL</code> na aba CONFIG.<br>
+            <strong>2.</strong> O botão de ata aparece automaticamente no site.
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── TROUBLESHOOT ── -->
+  <section class="section" id="troubleshoot">
+    <div class="section-label">Suporte Técnico</div>
+    <h2 class="section-title">Solução de Problemas</h2>
+    <p class="section-lead">Diagnóstico e solução para os problemas mais comuns.</p>
+
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Sintoma</th><th>Causa provável</th><th>Solução</th></tr></thead>
+        <tbody>
+          <tr>
+            <td>Site carrega mas não mostra os eventos</td>
+            <td>API retornando erro ou planilha sem dados</td>
+            <td>Acesse <code>[URL_API]?action=config</code> diretamente. Se erro, verifique as permissões da Web App. Se JSON mas vazio, execute <code>?action=setup</code>.</td>
+          </tr>
+          <tr>
+            <td>Botão de inscrição não aparece</td>
+            <td>Status ≠ <code>formulario_ativo</code> ou campo <code>Link Formulário</code> vazio</td>
+            <td>Verifique ambos os campos na aba CONFIG. Os dois precisam estar corretos para o botão aparecer.</td>
+          </tr>
+          <tr>
+            <td>Lista de presença vazia</td>
+            <td>ID da conferência na aba PRESENÇA diferente da aba CONFIG</td>
+            <td>Compare os IDs. A coluna <code>ID_Conferencia</code> deve ser idêntica à coluna A da aba CONFIG, incluindo hífens e minúsculas.</td>
+          </tr>
+          <tr>
+            <td>Popup de aviso não aparece</td>
+            <td>Coluna <code>Ativo</code> = NÃO ou <code>Nível</code> ≠ urgente</td>
+            <td>Verifique as duas colunas na aba AVISOS. O popup só dispara para avisos com <code>Ativo = SIM</code> e <code>Nível = urgente</code>.</td>
+          </tr>
+          <tr>
+            <td>Erro 403 na API</td>
+            <td>"Quem pode acessar" não está como "Qualquer pessoa"</td>
+            <td>No Apps Script, vá em Implantar → Gerenciar implantações → edite a versão atual e altere o acesso para "Qualquer pessoa".</td>
+          </tr>
+          <tr>
+            <td>Fotos da galeria não carregam</td>
+            <td>URL do Drive não tem permissão pública</td>
+            <td>No Drive, clique com direito na imagem → "Obter link" → mude para "Qualquer pessoa com o link pode visualizar". Use a URL no formato <code>uc?export=view&id=…</code>.</td>
+          </tr>
+          <tr>
+            <td>Mudei a planilha mas o site não atualizou</td>
+            <td>Cache do navegador ou do Apps Script</td>
+            <td>Force recarregamento com <kbd>Ctrl+Shift+R</kbd>. Se persistir, o Apps Script tem cache de ~5min. Aguarde ou crie uma nova versão da implantação.</td>
+          </tr>
+          <tr>
+            <td>"App não verificado" ao autorizar</td>
+            <td>Projeto não passou pela verificação formal do Google</td>
+            <td>Normal para projetos internos. Clique em "Avançado → Ir para o projeto" e depois "Permitir". Não é vírus.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="divider"><div class="divider-line"></div><div class="divider-label">Testar Manualmente</div><div class="divider-line"></div></div>
+
+    <p style="font-size:14px;color:var(--ink-soft);margin-bottom:16px">Cole estas URLs no navegador para testar cada endpoint individualmente:</p>
+
+    <div class="code-block">
+      <div class="code-header">
+        <span class="code-lang">URLs de Teste</span>
+        <button class="code-copy-btn" onclick="copiarCodigo(this)">Copiar</button>
+      </div>
+      <pre><span class="tok-comment"># Todos os eventos</span>
+<span class="tok-url">https://script.google.com/macros/s/AKfycbzPh29ncgWef.../exec?action=config</span>
+
+<span class="tok-comment"># Presença de um evento específico</span>
+<span class="tok-url">https://script.google.com/macros/s/AKfycbzPh29ncgWef.../exec?action=presenca&id=saude-mulher</span>
+
+<span class="tok-comment"># Avisos ativos</span>
+<span class="tok-url">https://script.google.com/macros/s/AKfycbzPh29ncgWef.../exec?action=avisos</span>
+
+<span class="tok-comment"># Setup (cria abas se não existirem)</span>
+<span class="tok-url">https://script.google.com/macros/s/AKfycbzPh29ncgWef.../exec?action=setup</span></pre>
+    </div>
+
+    <div class="alert ok" style="margin-top:32px">
+      <span class="alert-icon">✅</span>
+      <div>
+        <h4>Resposta saudável da API</h4>
+        <p>Uma resposta correta sempre começa com <code>{"success":true,"data":[…]}</code>. Se o JSON começar com <code>{"success":false,"error":"…"}</code>, leia a mensagem de erro — ela indica exatamente o que está errado.</p>
+      </div>
+    </div>
+
+    <div class="alert info" style="margin-top:16px">
+      <span class="alert-icon">📞</span>
+      <div>
+        <h4>Precisa de suporte técnico?</h4>
+        <p>Este sistema foi construído pela Secretaria Executiva do CMS Montes Claros. Para suporte técnico, acesse o repositório em <a href="https://github.com/cmsmoc">github.com/cmsmoc</a> ou entre em contato com o responsável técnico da Secretaria.</p>
+      </div>
+    </div>
+  </section>
+
+</main>
+</div>
+
+<!-- SCROLL TOP -->
+<button id="scrollTop" onclick="window.scrollTo({top:0,behavior:'smooth'})" title="Topo">↑</button>
+
+<script>
+// Highlight nav item ativo
+function setAtivo(el) {
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('ativo'));
+  el.classList.add('ativo');
+}
+
+// Copiar código
+function copiarCodigo(btn) {
+  const pre = btn.closest('.code-block').querySelector('pre');
+  navigator.clipboard.writeText(pre.innerText).then(() => {
+    btn.textContent = '✓ Copiado';
+    setTimeout(() => btn.textContent = 'Copiar', 2000);
+  });
+}
+
+// Scroll top button
+window.addEventListener('scroll', () => {
+  const btn = document.getElementById('scrollTop');
+  window.scrollY > 300 ? btn.classList.add('show') : btn.classList.remove('show');
+});
+
+// Intersection Observer para highlight nav
+const sections = document.querySelectorAll('[id]');
+const navItems = document.querySelectorAll('.nav-item[href]');
+
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      navItems.forEach(n => {
+        n.classList.toggle('ativo', n.getAttribute('href') === '#' + e.target.id);
+      });
+    }
+  });
+}, { rootMargin: '-20% 0px -60% 0px', threshold: 0 });
+
+sections.forEach(s => observer.observe(s));
+</script>
+
+</body>
+</html>

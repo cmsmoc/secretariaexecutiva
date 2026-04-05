@@ -1,0 +1,1236 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Reunião ao Vivo — SerTão Conselheiro</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800;900&family=Open+Sans:wght@300;400;600&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#0D2E5A">
+
+<style>
+:root {
+  --navy: #0D2E5A;
+  --blue: #1B6CB5;
+  --green: #1E8A4A;
+  --yellow: #F5C400;
+  --red: #DC2626;
+  --orange: #EA580C;
+  --off: #F0F2F5;
+  --ink: #111827;
+  --muted: #6B7280;
+  --border: #E5E7EB;
+  --white: #fff;
+  --radius: 12px;
+  --font-title: 'Montserrat', sans-serif;
+  --font-body: 'Open Sans', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+  --shadow: 0 4px 24px rgba(13,46,90,.10);
+  --shadow-lg: 0 12px 48px rgba(13,46,90,.18);
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: var(--font-body);
+  background: var(--off);
+  color: var(--ink);
+  font-size: 14px;
+  line-height: 1.7;
+  min-height: 100vh;
+}
+
+/* ── TOPBAR ── */
+.topbar {
+  background: var(--navy);
+  border-bottom: 3px solid var(--yellow);
+  padding: 0 20px;
+  height: 58px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  gap: 12px;
+}
+.topbar-left { display: flex; align-items: center; gap: 12px; min-width: 0; }
+.topbar-logo { height: 28px; flex-shrink: 0; }
+.topbar-title {
+  font-family: var(--font-title);
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--yellow);
+  white-space: nowrap;
+}
+.topbar-right { display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
+.btn-back {
+  font-family: var(--font-title);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: rgba(255,255,255,.6);
+  text-decoration: none;
+  padding: 6px 12px;
+  border: 1px solid rgba(255,255,255,.15);
+  border-radius: 6px;
+  transition: all .15s;
+}
+.btn-back:hover { color: white; border-color: rgba(255,255,255,.35); }
+
+/* ── LIVE BADGE ── */
+.live-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--red);
+  color: white;
+  font-family: var(--font-title);
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  padding: 4px 10px;
+  border-radius: 20px;
+  animation: pulse-badge 2s infinite;
+}
+.live-dot {
+  width: 6px; height: 6px;
+  background: white;
+  border-radius: 50%;
+  animation: blink 1s infinite;
+}
+@keyframes blink { 0%,100% { opacity: 1; } 50% { opacity: 0; } }
+@keyframes pulse-badge {
+  0%,100% { box-shadow: 0 0 0 0 rgba(220,38,38,.5); }
+  50% { box-shadow: 0 0 0 6px rgba(220,38,38,0); }
+}
+.badge-encerrada {
+  background: var(--muted);
+  animation: none;
+}
+.badge-encerrada .live-dot { animation: none; opacity: .5; }
+
+/* ── MAIN LAYOUT ── */
+.page { max-width: 780px; margin: 0 auto; padding: 28px 20px 64px; }
+
+/* ── CARD HERO DA REUNIÃO ── */
+.reuniao-hero {
+  background: var(--navy);
+  border-radius: var(--radius);
+  padding: 28px;
+  margin-bottom: 20px;
+  color: white;
+  position: relative;
+  overflow: hidden;
+}
+.reuniao-hero::before {
+  content: '';
+  position: absolute;
+  bottom: -40px; right: -40px;
+  width: 200px; height: 200px;
+  border-radius: 50%;
+  background: rgba(245,196,0,.07);
+}
+.reuniao-hero-status {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+.reuniao-hero-tipo {
+  font-family: var(--font-title);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: rgba(255,255,255,.5);
+}
+.reuniao-hero-titulo {
+  font-family: var(--font-title);
+  font-size: clamp(18px, 3.5vw, 26px);
+  font-weight: 900;
+  line-height: 1.15;
+  margin-bottom: 14px;
+  color: white;
+}
+.reuniao-hero-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+.meta-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  color: rgba(255,255,255,.7);
+}
+.meta-icon { font-size: 14px; }
+
+/* ── PROGRESS BAR DE PRESENÇA ── */
+.presence-bar-card {
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 20px 22px;
+  margin-bottom: 20px;
+  box-shadow: var(--shadow);
+}
+.presence-bar-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+.presence-bar-title {
+  font-family: var(--font-title);
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--navy);
+  letter-spacing: .5px;
+  text-transform: uppercase;
+}
+.presence-count {
+  font-family: var(--font-title);
+  font-size: 22px;
+  font-weight: 900;
+  color: var(--navy);
+}
+.presence-count span {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--muted);
+}
+.presence-track {
+  background: var(--off);
+  border-radius: 99px;
+  height: 8px;
+  overflow: hidden;
+  margin-bottom: 8px;
+}
+.presence-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--green), #2DD4BF);
+  border-radius: 99px;
+  transition: width .8s cubic-bezier(.4,0,.2,1);
+  width: 0%;
+}
+.presence-quorum {
+  font-size: 11px;
+  color: var(--muted);
+}
+.presence-quorum strong { color: var(--green); }
+
+/* ── SEÇÃO PRINCIPAL (CTAs) ── */
+.action-section { margin-bottom: 24px; }
+.action-title {
+  font-family: var(--font-title);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 12px;
+}
+
+/* ── CTA CARDS ── */
+.cta-grid { display: grid; gap: 14px; }
+.cta-grid.two { grid-template-columns: 1fr 1fr; }
+@media (max-width: 520px) { .cta-grid.two { grid-template-columns: 1fr; } }
+
+.cta-card {
+  background: var(--white);
+  border: 2px solid var(--border);
+  border-radius: var(--radius);
+  padding: 20px;
+  cursor: pointer;
+  transition: all .2s;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+  user-select: none;
+}
+.cta-card:hover { border-color: var(--blue); transform: translateY(-2px); box-shadow: var(--shadow); }
+.cta-card.green-cta { border-color: var(--green); background: #F0FDF4; }
+.cta-card.green-cta:hover { background: #DCFCE7; }
+.cta-card.blue-cta { border-color: var(--blue); background: #EFF6FF; }
+.cta-card.blue-cta:hover { background: #DBEAFE; }
+.cta-card-icon { font-size: 32px; display: block; margin-bottom: 8px; }
+.cta-card-label {
+  font-family: var(--font-title);
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--navy);
+  display: block;
+  margin-bottom: 4px;
+}
+.cta-card-desc { font-size: 11px; color: var(--muted); line-height: 1.5; }
+
+/* ── BTN GRANDE DE PRESENÇA ── */
+.btn-marcar-presenca {
+  width: 100%;
+  background: var(--green);
+  color: white;
+  border: none;
+  border-radius: var(--radius);
+  padding: 20px;
+  font-family: var(--font-title);
+  font-size: 15px;
+  font-weight: 800;
+  letter-spacing: .5px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  transition: all .2s;
+  box-shadow: 0 4px 16px rgba(30,138,74,.3);
+  margin-bottom: 14px;
+  position: relative;
+  overflow: hidden;
+}
+.btn-marcar-presenca::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(255,255,255,0);
+  transition: background .15s;
+}
+.btn-marcar-presenca:hover { background: #166534; transform: translateY(-1px); box-shadow: 0 6px 20px rgba(30,138,74,.4); }
+.btn-marcar-presenca:active { transform: translateY(0); }
+.btn-marcar-presenca:disabled { background: var(--muted); cursor: not-allowed; box-shadow: none; transform: none; }
+.btn-marcar-presenca.ja-marcou {
+  background: var(--off);
+  color: var(--green);
+  border: 2px solid var(--green);
+  box-shadow: none;
+  cursor: not-allowed;
+}
+.btn-icon { font-size: 22px; }
+
+/* ── LISTA DE PRESENÇAS ── */
+.presencas-card {
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+  box-shadow: var(--shadow);
+  margin-bottom: 20px;
+}
+.presencas-header {
+  background: var(--navy);
+  padding: 14px 18px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.presencas-header-title {
+  font-family: var(--font-title);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: white;
+}
+.presencas-header-count {
+  font-family: var(--font-title);
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--yellow);
+}
+
+.presence-list { max-height: 320px; overflow-y: auto; }
+.presence-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 18px;
+  border-bottom: 1px solid var(--border);
+  transition: background .1s;
+}
+.presence-item:last-child { border-bottom: none; }
+.presence-item:hover { background: var(--off); }
+.presence-avatar {
+  width: 36px; height: 36px;
+  background: var(--navy);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-title);
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--yellow);
+  flex-shrink: 0;
+}
+.presence-info { flex: 1; min-width: 0; }
+.presence-nome {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--navy);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.presence-entidade { font-size: 11px; color: var(--muted); }
+.presence-status {
+  font-size: 10px;
+  font-family: var(--font-title);
+  font-weight: 700;
+  letter-spacing: .5px;
+  text-transform: uppercase;
+  padding: 3px 8px;
+  border-radius: 20px;
+  flex-shrink: 0;
+}
+.presence-status.sim { background: #D1FAE5; color: #065F46; }
+.presence-status.visitante { background: #DBEAFE; color: #1E40AF; }
+.presence-status.justificativa { background: #FEF9C3; color: #854D0E; }
+
+/* ── EMPTY STATE ── */
+.empty-state {
+  text-align: center;
+  padding: 40px 20px;
+  color: var(--muted);
+}
+.empty-state-icon { font-size: 40px; margin-bottom: 12px; display: block; }
+.empty-state-text { font-size: 13px; }
+
+/* ── FORMS ── */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(13,46,90,.6);
+  backdrop-filter: blur(3px);
+  z-index: 200;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .2s;
+}
+.modal-overlay.open { opacity: 1; pointer-events: all; }
+.modal {
+  background: var(--white);
+  border-radius: 16px;
+  padding: 28px 24px;
+  width: 100%;
+  max-width: 440px;
+  box-shadow: var(--shadow-lg);
+  transform: translateY(12px);
+  transition: transform .25s cubic-bezier(.4,0,.2,1);
+}
+.modal-overlay.open .modal { transform: translateY(0); }
+.modal-title {
+  font-family: var(--font-title);
+  font-size: 16px;
+  font-weight: 800;
+  color: var(--navy);
+  margin-bottom: 6px;
+}
+.modal-subtitle { font-size: 12px; color: var(--muted); margin-bottom: 20px; }
+.form-group { margin-bottom: 14px; }
+.form-label {
+  display: block;
+  font-family: var(--font-title);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 6px;
+}
+.form-input {
+  width: 100%;
+  padding: 10px 14px;
+  border: 1.5px solid var(--border);
+  border-radius: 8px;
+  font-family: var(--font-body);
+  font-size: 14px;
+  color: var(--ink);
+  background: var(--off);
+  transition: border-color .15s, background .15s;
+  outline: none;
+}
+.form-input:focus { border-color: var(--blue); background: white; }
+.form-input.error { border-color: var(--red); }
+.form-hint { font-size: 11px; color: var(--muted); margin-top: 4px; }
+.form-actions { display: flex; gap: 10px; margin-top: 20px; }
+.btn-primary {
+  flex: 1;
+  background: var(--blue);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 12px 16px;
+  font-family: var(--font-title);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: .5px;
+  cursor: pointer;
+  transition: all .15s;
+}
+.btn-primary:hover { background: #1557A0; }
+.btn-primary:disabled { opacity: .5; cursor: not-allowed; }
+.btn-secondary {
+  padding: 12px 16px;
+  background: var(--off);
+  border: 1.5px solid var(--border);
+  border-radius: 8px;
+  font-family: var(--font-title);
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--muted);
+  cursor: pointer;
+  transition: all .15s;
+}
+.btn-secondary:hover { border-color: var(--navy); color: var(--navy); }
+
+/* ── TOAST ── */
+.toast-container {
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 300;
+  display: flex;
+  flex-direction: column-reverse;
+  gap: 8px;
+  align-items: center;
+  pointer-events: none;
+}
+.toast {
+  background: var(--navy);
+  color: white;
+  padding: 12px 20px;
+  border-radius: 10px;
+  font-size: 13px;
+  font-weight: 600;
+  white-space: nowrap;
+  box-shadow: var(--shadow-lg);
+  animation: toast-in .3s cubic-bezier(.4,0,.2,1);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  pointer-events: all;
+}
+.toast.ok { background: var(--green); }
+.toast.err { background: var(--red); }
+.toast.warn { background: var(--orange); }
+@keyframes toast-in {
+  from { opacity: 0; transform: translateY(10px) scale(.95); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+/* ── SECTION CARDS ── */
+.section-card {
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 20px 22px;
+  margin-bottom: 16px;
+  box-shadow: var(--shadow);
+}
+.section-card-title {
+  font-family: var(--font-title);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--navy);
+  margin-bottom: 14px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* ── NO MEETING STATE ── */
+.no-meeting {
+  background: var(--white);
+  border: 2px dashed var(--border);
+  border-radius: var(--radius);
+  padding: 48px 24px;
+  text-align: center;
+  margin-bottom: 20px;
+}
+.no-meeting-icon { font-size: 48px; display: block; margin-bottom: 16px; }
+.no-meeting-title {
+  font-family: var(--font-title);
+  font-size: 18px;
+  font-weight: 800;
+  color: var(--navy);
+  margin-bottom: 8px;
+}
+.no-meeting-sub { font-size: 13px; color: var(--muted); max-width: 340px; margin: 0 auto; line-height: 1.6; }
+
+/* ── LOADING ── */
+#loading-screen {
+  position: fixed;
+  inset: 0;
+  background: var(--navy);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 999;
+  transition: opacity .4s;
+}
+#loading-screen.hidden { opacity: 0; pointer-events: none; }
+.loading-logo {
+  font-family: var(--font-title);
+  font-size: 28px;
+  font-weight: 900;
+  color: white;
+  margin-bottom: 6px;
+}
+.loading-logo em { color: var(--yellow); font-style: normal; }
+.loading-sub { font-size: 12px; color: rgba(255,255,255,.4); letter-spacing: 2px; text-transform: uppercase; margin-bottom: 32px; }
+.loading-dots { display: flex; gap: 8px; }
+.loading-dot {
+  width: 8px; height: 8px;
+  background: var(--yellow);
+  border-radius: 50%;
+  animation: loading-bounce .8s infinite;
+}
+.loading-dot:nth-child(2) { animation-delay: .15s; }
+.loading-dot:nth-child(3) { animation-delay: .3s; }
+@keyframes loading-bounce {
+  0%, 80%, 100% { transform: scale(0.7); opacity: .4; }
+  40% { transform: scale(1); opacity: 1; }
+}
+
+/* ── INFO LOGADO ── */
+.user-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(255,255,255,.1);
+  border: 1px solid rgba(255,255,255,.15);
+  border-radius: 20px;
+  padding: 4px 12px 4px 8px;
+  font-size: 11px;
+  color: rgba(255,255,255,.85);
+  max-width: 200px;
+  overflow: hidden;
+}
+.user-chip-avatar {
+  width: 20px; height: 20px;
+  background: var(--yellow);
+  border-radius: 50%;
+  font-size: 9px;
+  font-weight: 800;
+  color: var(--navy);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.user-chip-name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-weight: 600; }
+
+/* ── ALERT ── */
+.alert {
+  border-radius: 10px;
+  padding: 12px 16px;
+  margin-bottom: 14px;
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  font-size: 13px;
+  line-height: 1.6;
+}
+.alert-icon { font-size: 16px; flex-shrink: 0; margin-top: 1px; }
+.alert.info { background: #DBEAFE; border: 1px solid #BFDBFE; color: #1E40AF; }
+.alert.ok { background: #D1FAE5; border: 1px solid #A7F3D0; color: #065F46; }
+.alert.warn { background: #FEF9C3; border: 1px solid #FDE68A; color: #854D0E; }
+
+/* ── RESPONSIVO ── */
+@media (max-width: 480px) {
+  .topbar-title { display: none; }
+  .page { padding: 16px 14px 64px; }
+  .reuniao-hero { padding: 20px 16px; }
+}
+</style>
+</head>
+<body>
+
+<!-- LOADING SCREEN -->
+<div id="loading-screen">
+  <div class="loading-logo">SerTão<em>Conselheiro</em></div>
+  <div class="loading-sub">Reunião ao vivo</div>
+  <div class="loading-dots">
+    <div class="loading-dot"></div>
+    <div class="loading-dot"></div>
+    <div class="loading-dot"></div>
+  </div>
+</div>
+
+<!-- TOPBAR -->
+<header class="topbar">
+  <div class="topbar-left">
+    <img class="topbar-logo" src="logo/logohwh.png" alt="CMS" onerror="this.style.display='none'">
+    <span class="topbar-title">Reunião ao Vivo</span>
+  </div>
+  <div class="topbar-right">
+    <div id="user-chip" class="user-chip" style="display:none">
+      <div class="user-chip-avatar" id="user-avatar">?</div>
+      <span class="user-chip-name" id="user-name">—</span>
+    </div>
+    <a href="index.html" class="btn-back">← Início</a>
+  </div>
+</header>
+
+<!-- PÁGINA PRINCIPAL -->
+<div class="page">
+
+  <!-- HERO DA REUNIÃO -->
+  <div id="reuniao-hero" class="reuniao-hero" style="display:none">
+    <div class="reuniao-hero-status">
+      <div id="live-badge" class="live-badge">
+        <div class="live-dot"></div>
+        <span id="live-label">Ao vivo</span>
+      </div>
+      <span id="reuniao-tipo" class="reuniao-hero-tipo">Reunião</span>
+    </div>
+    <div id="reuniao-titulo" class="reuniao-hero-titulo">Carregando...</div>
+    <div class="reuniao-hero-meta">
+      <span class="meta-item"><span class="meta-icon">📅</span><span id="reuniao-data">—</span></span>
+      <span class="meta-item"><span class="meta-icon">🕐</span><span id="reuniao-hora">—</span></span>
+      <span class="meta-item"><span class="meta-icon">📍</span><span id="reuniao-local">—</span></span>
+    </div>
+  </div>
+
+  <!-- SEM REUNIÃO ATIVA -->
+  <div id="no-meeting" class="no-meeting" style="display:none">
+    <span class="no-meeting-icon">📅</span>
+    <div class="no-meeting-title">Nenhuma reunião ativa no momento</div>
+    <p class="no-meeting-sub">Quando uma reunião for iniciada pela Secretaria Executiva, esta página exibirá as informações e o botão de presença.</p>
+  </div>
+
+  <!-- BARRA DE PRESENÇA -->
+  <div id="presence-bar-card" class="presence-bar-card" style="display:none">
+    <div class="presence-bar-header">
+      <span class="presence-bar-title">Presenças confirmadas</span>
+      <span class="presence-count"><span id="presente-count">0</span> <span>presentes</span></span>
+    </div>
+    <div class="presence-track">
+      <div class="presence-fill" id="presence-fill"></div>
+    </div>
+    <div class="presence-quorum">
+      Quórum mínimo: <strong id="quorum-label">—</strong> · <span id="quorum-status">Verificando...</span>
+    </div>
+  </div>
+
+  <!-- ─── AÇÕES DO CONSELHEIRO LOGADO ─── -->
+  <div id="section-logado" class="action-section" style="display:none">
+    <div class="action-title">⬇️ Sua participação</div>
+    <button id="btn-presenca" class="btn-marcar-presenca" onclick="marcarPresenca()">
+      <span class="btn-icon">✋</span>
+      <span id="btn-presenca-label">Confirmar minha presença</span>
+    </button>
+    <div id="alert-presenca" class="alert ok" style="display:none">
+      <span class="alert-icon">✅</span>
+      <div>Sua presença foi confirmada nesta reunião.</div>
+    </div>
+  </div>
+
+  <!-- ─── AÇÕES DO VISITANTE (não logado) ─── -->
+  <div id="section-visitante" class="action-section" style="display:none">
+    <div class="action-title">👤 Participação</div>
+    <div class="cta-grid two">
+      <div class="cta-card blue-cta" onclick="abrirLoginModal()">
+        <span class="cta-card-icon">🔐</span>
+        <span class="cta-card-label">Sou conselheiro</span>
+        <span class="cta-card-desc">Faça login para registrar presença oficial</span>
+      </div>
+      <div class="cta-card green-cta" onclick="abrirModalVisitante()">
+        <span class="cta-card-icon">📝</span>
+        <span class="cta-card-label">Sou visitante</span>
+        <span class="cta-card-desc">Registre participação sem login</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- LISTA DE PRESENÇAS -->
+  <div id="presencas-card" class="presencas-card" style="display:none">
+    <div class="presencas-header">
+      <span class="presencas-header-title">📋 Lista de Presenças</span>
+      <span class="presencas-header-count" id="total-presencas">0 registros</span>
+    </div>
+    <div id="presence-list" class="presence-list">
+      <div class="empty-state">
+        <span class="empty-state-icon">👥</span>
+        <div class="empty-state-text">Nenhuma presença registrada ainda</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ATUALIZAÇÃO AUTOMÁTICA -->
+  <div id="auto-refresh-info" class="alert info" style="display:none">
+    <span class="alert-icon">🔄</span>
+    <div>Esta página atualiza automaticamente a cada <strong>30 segundos</strong>. Última atualização: <span id="ultima-atualizacao">—</span></div>
+  </div>
+
+</div><!-- /page -->
+
+<!-- MODAL: VISITANTE -->
+<div id="modal-visitante" class="modal-overlay" onclick="fecharModalVisitante(event)">
+  <div class="modal">
+    <div class="modal-title">📝 Registrar como visitante</div>
+    <div class="modal-subtitle">Preencha seus dados para constar na lista de presenças</div>
+    <div class="form-group">
+      <label class="form-label">Nome completo *</label>
+      <input id="vis-nome" class="form-input" type="text" placeholder="Seu nome completo" autocomplete="name">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Instituição / Organização</label>
+      <input id="vis-entidade" class="form-input" type="text" placeholder="Onde você representa?" autocomplete="organization">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Motivo da visita</label>
+      <input id="vis-motivo" class="form-input" type="text" placeholder="Ex: Observador, Convidado...">
+      <div class="form-hint">Opcional — aparecerá junto ao seu nome na lista</div>
+    </div>
+    <div class="form-actions">
+      <button class="btn-secondary" onclick="fecharModalVisitante()">Cancelar</button>
+      <button class="btn-primary" id="btn-registrar-visitante" onclick="registrarVisitante()">✅ Registrar presença</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: LOGIN RÁPIDO -->
+<div id="modal-login" class="modal-overlay" onclick="fecharModalLogin(event)">
+  <div class="modal">
+    <div class="modal-title">🔐 Login do conselheiro</div>
+    <div class="modal-subtitle">Entre com suas credenciais para confirmar presença oficial</div>
+    <div class="form-group">
+      <label class="form-label">Nome *</label>
+      <input id="login-nome" class="form-input" type="text" placeholder="Seu nome completo" autocomplete="username">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Senha *</label>
+      <input id="login-senha" class="form-input" type="password" placeholder="••••••" autocomplete="current-password">
+    </div>
+    <div id="login-erro" class="alert warn" style="display:none">
+      <span class="alert-icon">⚠️</span>
+      <div id="login-erro-msg">Nome ou senha incorretos.</div>
+    </div>
+    <div class="form-actions">
+      <button class="btn-secondary" onclick="fecharModalLogin()">Cancelar</button>
+      <button class="btn-primary" id="btn-login" onclick="fazerLogin()">🔑 Entrar</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOASTS -->
+<div class="toast-container" id="toast-container"></div>
+
+<!-- SCRIPTS -->
+<script src="config/config.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/api.js"></script>
+
+<script>
+// ══════════════════════════════════════════════════════
+// ESTADO GLOBAL
+// ══════════════════════════════════════════════════════
+const State = {
+  reuniao: null,        // reunião ativa
+  presencas: [],        // lista de presenças
+  usuario: null,        // usuário logado (ou null)
+  jaMarcou: false,      // se este usuário já marcou presença
+  totalConselheiros: 64 // fallback — idealmente buscar do sistema
+};
+
+// ══════════════════════════════════════════════════════
+// INIT
+// ══════════════════════════════════════════════════════
+async function init() {
+  // Verificar sessão
+  const session = Auth.getSession();
+  if (session) {
+    State.usuario = session;
+    renderUserChip(session);
+  }
+
+  try {
+    await carregarReuniaoCurrent();
+  } catch (e) {
+    console.error('[reuniao.html] Erro no init:', e);
+    toast('Falha ao carregar dados. Tente recarregar.', 'err');
+  } finally {
+    esconderLoading();
+  }
+
+  // Auto-refresh a cada 30s
+  setInterval(async () => {
+    if (!State.reuniao) return;
+    await carregarPresencas(State.reuniao.id);
+    renderListaPresencas();
+    renderBarraPresenca();
+    document.getElementById('ultima-atualizacao').textContent = horaAgora();
+  }, 30000);
+}
+
+// ══════════════════════════════════════════════════════
+// CARREGAR REUNIÃO ATUAL
+// ══════════════════════════════════════════════════════
+async function carregarReuniaoCurrent() {
+  const res = await Api.getReuniaoCurrent();
+
+  if (!res.success || !res.reuniao) {
+    document.getElementById('no-meeting').style.display = '';
+    return;
+  }
+
+  State.reuniao = res.reuniao;
+  renderHeroReuniao(res.reuniao);
+
+  // Carregar presenças
+  await carregarPresencas(res.reuniao.id);
+  renderListaPresencas();
+  renderBarraPresenca();
+  renderSectionAcoes();
+
+  document.getElementById('auto-refresh-info').style.display = '';
+  document.getElementById('ultima-atualizacao').textContent = horaAgora();
+
+  // Se logado, verificar se já marcou presença
+  if (State.usuario) {
+    verificarSeMarcou();
+  }
+}
+
+async function carregarPresencas(idReuniao) {
+  try {
+    const res = await Api.getPresencas(idReuniao);
+    if (res.success) State.presencas = res.presencas || [];
+  } catch (e) {
+    console.error('Erro ao carregar presenças:', e);
+  }
+}
+
+// ══════════════════════════════════════════════════════
+// RENDER FUNÇÕES
+// ══════════════════════════════════════════════════════
+function renderHeroReuniao(r) {
+  const hero = document.getElementById('reuniao-hero');
+  hero.style.display = '';
+  document.getElementById('reuniao-titulo').textContent = r.titulo || 'Reunião do Conselho';
+  document.getElementById('reuniao-tipo').textContent = r.tipo || 'Reunião';
+  document.getElementById('reuniao-data').textContent = formatarData(r.data);
+  document.getElementById('reuniao-hora').textContent = r.hora || '—';
+  document.getElementById('reuniao-local').textContent = r.local || '—';
+
+  const badge = document.getElementById('live-badge');
+  const label = document.getElementById('live-label');
+  if (r.status === 'encerrada') {
+    badge.classList.add('badge-encerrada');
+    label.textContent = 'Encerrada';
+  }
+}
+
+function renderBarraPresenca() {
+  const card = document.getElementById('presence-bar-card');
+  card.style.display = '';
+
+  const presentes = State.presencas.filter(p => p.presente || p.tipo === 'visitante').length;
+  const quorum = Math.ceil(State.totalConselheiros / 2) + 1; // maioria simples padrão
+  const pct = Math.min(100, Math.round(presentes / State.totalConselheiros * 100));
+
+  document.getElementById('presente-count').textContent = presentes;
+  document.getElementById('presence-fill').style.width = pct + '%';
+  document.getElementById('quorum-label').textContent = quorum + ' conselheiros';
+
+  const status = document.getElementById('quorum-status');
+  if (presentes >= quorum) {
+    status.innerHTML = '<strong style="color:var(--green)">✅ Quórum atingido</strong>';
+  } else {
+    status.innerHTML = 'Faltam <strong>' + (quorum - presentes) + '</strong> para quórum';
+  }
+}
+
+function renderListaPresencas() {
+  const card = document.getElementById('presencas-card');
+  card.style.display = '';
+
+  const list = document.getElementById('presence-list');
+  const total = document.getElementById('total-presencas');
+
+  const all = State.presencas;
+  total.textContent = all.length + ' registro' + (all.length !== 1 ? 's' : '');
+
+  if (!all.length) {
+    list.innerHTML = `
+      <div class="empty-state">
+        <span class="empty-state-icon">👥</span>
+        <div class="empty-state-text">Nenhuma presença registrada ainda</div>
+      </div>`;
+    return;
+  }
+
+  list.innerHTML = all.map(p => {
+    const nome = p.nome || '—';
+    const iniciais = nome.split(' ').slice(0, 2).map(w => w[0]).join('').toUpperCase();
+    const tipo = p.tipo === 'visitante' ? 'visitante' : (p.presente ? 'sim' : 'justificativa');
+    const labelTipo = tipo === 'visitante' ? '👥 Visitante' : tipo === 'sim' ? '✅ Presente' : '📝 Justificou';
+    return `
+      <div class="presence-item">
+        <div class="presence-avatar">${iniciais}</div>
+        <div class="presence-info">
+          <div class="presence-nome">${esc(nome)}</div>
+          <div class="presence-entidade">${esc(p.entidade || p.segmento || 'Visitante')}</div>
+        </div>
+        <span class="presence-status ${tipo}">${labelTipo}</span>
+      </div>`;
+  }).join('');
+}
+
+function renderSectionAcoes() {
+  if (State.reuniao?.status === 'encerrada') return; // não exibir CTAs se encerrada
+
+  if (State.usuario) {
+    document.getElementById('section-logado').style.display = '';
+  } else {
+    document.getElementById('section-visitante').style.display = '';
+  }
+}
+
+function renderUserChip(user) {
+  const chip = document.getElementById('user-chip');
+  const iniciais = (user.nome || '?').split(' ').slice(0, 2).map(w => w[0]).join('').toUpperCase();
+  document.getElementById('user-avatar').textContent = iniciais;
+  document.getElementById('user-name').textContent = user.nome?.split(' ')[0] || '—';
+  chip.style.display = '';
+}
+
+function verificarSeMarcou() {
+  const u = State.usuario;
+  if (!u) return;
+  const jaMarcou = State.presencas.some(p =>
+    p.id_cons === u.id || p.nome?.toLowerCase() === u.nome?.toLowerCase()
+  );
+  if (jaMarcou) setJaMarcou();
+}
+
+function setJaMarcou() {
+  State.jaMarcou = true;
+  const btn = document.getElementById('btn-presenca');
+  const alert = document.getElementById('alert-presenca');
+  btn.classList.add('ja-marcou');
+  btn.disabled = true;
+  document.getElementById('btn-presenca-label').textContent = '✅ Presença já confirmada';
+  alert.style.display = '';
+}
+
+// ══════════════════════════════════════════════════════
+// MARCAR PRESENÇA (conselheiro logado)
+// ══════════════════════════════════════════════════════
+async function marcarPresenca() {
+  if (State.jaMarcou || !State.usuario || !State.reuniao) return;
+
+  const btn = document.getElementById('btn-presenca');
+  btn.disabled = true;
+  document.getElementById('btn-presenca-label').textContent = 'Registrando...';
+
+  try {
+    const res = await Api.marcarPresenca({
+      id_reuniao: State.reuniao.id,
+      id_cons: State.usuario.id,
+      nome: State.usuario.nome,
+      presente: 'sim'
+    });
+
+    if (res.success) {
+      setJaMarcou();
+      // Atualizar lista local
+      State.presencas.push({
+        id_cons: State.usuario.id,
+        nome: State.usuario.nome,
+        entidade: State.usuario.entidade,
+        segmento: State.usuario.segmento,
+        presente: true,
+        tipo: 'conselheiro'
+      });
+      renderListaPresencas();
+      renderBarraPresenca();
+      toast('✅ Presença confirmada com sucesso!', 'ok');
+    } else {
+      btn.disabled = false;
+      document.getElementById('btn-presenca-label').textContent = 'Confirmar minha presença';
+      toast(res.message || 'Erro ao registrar presença.', 'err');
+    }
+  } catch (e) {
+    btn.disabled = false;
+    document.getElementById('btn-presenca-label').textContent = 'Confirmar minha presença';
+    toast('Falha de conexão. Tente novamente.', 'err');
+  }
+}
+
+// ══════════════════════════════════════════════════════
+// REGISTRAR VISITANTE
+// ══════════════════════════════════════════════════════
+async function registrarVisitante() {
+  const nome = document.getElementById('vis-nome').value.trim();
+  const entidade = document.getElementById('vis-entidade').value.trim();
+  const motivo = document.getElementById('vis-motivo').value.trim();
+
+  if (!nome) {
+    document.getElementById('vis-nome').classList.add('error');
+    toast('Informe seu nome completo.', 'warn');
+    return;
+  }
+  document.getElementById('vis-nome').classList.remove('error');
+
+  const btn = document.getElementById('btn-registrar-visitante');
+  btn.disabled = true;
+  btn.textContent = 'Registrando...';
+
+  try {
+    const res = await Api.registrarVisitante({
+      id_reuniao: State.reuniao.id,
+      nome,
+      entidade,
+      motivo
+    });
+
+    if (res.success) {
+      fecharModalVisitante();
+      State.presencas.push({ nome, entidade, tipo: 'visitante', presente: true });
+      renderListaPresencas();
+      renderBarraPresenca();
+      toast('✅ Participação registrada! Bem-vindo(a).', 'ok');
+    } else {
+      toast(res.message || 'Erro ao registrar.', 'err');
+    }
+  } catch (e) {
+    toast('Falha de conexão. Tente novamente.', 'err');
+  } finally {
+    btn.disabled = false;
+    btn.textContent = '✅ Registrar presença';
+  }
+}
+
+// ══════════════════════════════════════════════════════
+// LOGIN RÁPIDO (na página)
+// ══════════════════════════════════════════════════════
+async function fazerLogin() {
+  const nome = document.getElementById('login-nome').value.trim();
+  const senha = document.getElementById('login-senha').value.trim();
+  const erroEl = document.getElementById('login-erro');
+  erroEl.style.display = 'none';
+
+  if (!nome || !senha) {
+    document.getElementById('login-erro-msg').textContent = 'Preencha nome e senha.';
+    erroEl.style.display = '';
+    return;
+  }
+
+  const btn = document.getElementById('btn-login');
+  btn.disabled = true;
+  btn.textContent = 'Entrando...';
+
+  try {
+    const res = await Api.login(nome, senha);
+    if (res.success && res.user) {
+      Auth.saveSession(res.user);
+      State.usuario = res.user;
+      renderUserChip(res.user);
+      fecharModalLogin();
+      document.getElementById('section-visitante').style.display = 'none';
+      document.getElementById('section-logado').style.display = '';
+      verificarSeMarcou();
+      toast('Bem-vindo(a), ' + res.user.nome.split(' ')[0] + '!', 'ok');
+    } else {
+      document.getElementById('login-erro-msg').textContent = res.message || 'Nome ou senha incorretos.';
+      erroEl.style.display = '';
+    }
+  } catch (e) {
+    document.getElementById('login-erro-msg').textContent = 'Falha de conexão. Tente novamente.';
+    erroEl.style.display = '';
+  } finally {
+    btn.disabled = false;
+    btn.textContent = '🔑 Entrar';
+  }
+}
+
+// ══════════════════════════════════════════════════════
+// MODAIS
+// ══════════════════════════════════════════════════════
+function abrirModalVisitante() {
+  document.getElementById('modal-visitante').classList.add('open');
+  setTimeout(() => document.getElementById('vis-nome').focus(), 250);
+}
+function fecharModalVisitante(e) {
+  if (e && e.target !== document.getElementById('modal-visitante')) return;
+  document.getElementById('modal-visitante').classList.remove('open');
+}
+function abrirLoginModal() {
+  document.getElementById('modal-login').classList.add('open');
+  setTimeout(() => document.getElementById('login-nome').focus(), 250);
+}
+function fecharModalLogin(e) {
+  if (e && e.target !== document.getElementById('modal-login')) return;
+  document.getElementById('modal-login').classList.remove('open');
+}
+
+// Fechar modal com ESC
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') { fecharModalVisitante(); fecharModalLogin(); }
+});
+// Enter para submeter nos inputs
+['vis-nome','vis-entidade','vis-motivo'].forEach(id => {
+  document.getElementById(id)?.addEventListener('keydown', e => { if (e.key === 'Enter') registrarVisitante(); });
+});
+['login-nome','login-senha'].forEach(id => {
+  document.getElementById(id)?.addEventListener('keydown', e => { if (e.key === 'Enter') fazerLogin(); });
+});
+
+// ══════════════════════════════════════════════════════
+// UTILIDADES
+// ══════════════════════════════════════════════════════
+function toast(msg, tipo = '') {
+  const container = document.getElementById('toast-container');
+  const el = document.createElement('div');
+  el.className = 'toast ' + tipo;
+  el.textContent = msg;
+  container.appendChild(el);
+  setTimeout(() => el.remove(), 4000);
+}
+
+function esconderLoading() {
+  const el = document.getElementById('loading-screen');
+  el.classList.add('hidden');
+  setTimeout(() => el.remove(), 500);
+}
+
+function formatarData(str) {
+  if (!str) return '—';
+  // ISO: yyyy-mm-dd → dd/mm/yyyy
+  const m = str.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+  if (m) return `${m[3]}/${m[2]}/${m[1]}`;
+  return str;
+}
+
+function horaAgora() {
+  return new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+}
+
+function esc(s) {
+  return String(s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+// ══════════════════════════════════════════════════════
+// BOOTSTRAP
+// ══════════════════════════════════════════════════════
+document.addEventListener('DOMContentLoaded', init);
+</script>
+</body>
+</html>

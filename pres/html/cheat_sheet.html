@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cheat Sheet — Comunicação Estratégica</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink:#0f0f0e; --ink2:#3a3a38; --ink3:#7a7a74;
+    --paper:#f5f3ee; --paper2:#eceae3;
+    --accent:#c8433a; --accent2:#1a3a5c; --gold:#b8960c;
+    --line:rgba(15,15,14,0.1);
+    --green:#2d6a4f;
+    --serif:'DM Serif Display',serif;
+    --mono:'DM Mono',monospace;
+    --sans:'DM Sans',sans-serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{background:var(--paper);color:var(--ink);font-family:var(--sans);font-size:13px;line-height:1.6;}
+  @media print {
+    body{background:#fff;font-size:11px;}
+    .no-print{display:none!important;}
+    .page{page-break-inside:avoid;}
+  }
+
+  .print-btn {
+    position:fixed;top:16px;right:16px;z-index:100;
+    padding:8px 16px;background:var(--ink);color:#fff;
+    border:none;border-radius:2px;font-family:var(--mono);
+    font-size:11px;letter-spacing:0.08em;cursor:pointer;
+    text-transform:uppercase;
+  }
+  .print-btn:hover{background:var(--accent);}
+
+  .sheet {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 48px 40px;
+  }
+
+  .sheet-header {
+    display:flex;justify-content:space-between;align-items:flex-end;
+    padding-bottom:24px;
+    border-bottom:2px solid var(--ink);
+    margin-bottom:32px;
+  }
+  .sheet-title {
+    font-family:var(--serif);
+    font-size:32px;
+    line-height:1.1;
+    letter-spacing:-0.02em;
+  }
+  .sheet-title em{font-style:italic;color:var(--accent);}
+  .sheet-meta{font-family:var(--mono);font-size:10px;color:var(--ink3);text-align:right;line-height:1.8;letter-spacing:0.06em;}
+
+  .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:20px;}
+  .grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;margin-bottom:20px;}
+
+  .block{
+    border:1px solid var(--line);
+    border-radius:3px;
+    overflow:hidden;
+  }
+  .block-head{
+    padding:8px 14px;
+    font-family:var(--mono);
+    font-size:10px;
+    letter-spacing:0.1em;
+    text-transform:uppercase;
+    font-weight:500;
+  }
+  .block-body{padding:14px;}
+
+  .do .block-head{background:rgba(45,106,79,0.08);color:var(--green);border-bottom:1px solid rgba(45,106,79,0.15);}
+  .dont .block-head{background:rgba(200,67,58,0.08);color:var(--accent);border-bottom:1px solid rgba(200,67,58,0.15);}
+  .tip .block-head{background:rgba(184,150,12,0.08);color:var(--gold);border-bottom:1px solid rgba(184,150,12,0.15);}
+  .rule .block-head{background:rgba(26,58,92,0.08);color:var(--accent2);border-bottom:1px solid rgba(26,58,92,0.15);}
+  .framework .block-head{background:var(--ink);color:#fff;}
+
+  ul.checklist{list-style:none;display:flex;flex-direction:column;gap:7px;}
+  ul.checklist li{display:flex;gap:10px;font-size:13px;color:var(--ink2);line-height:1.5;}
+  ul.checklist li::before{content:'→';font-family:var(--mono);font-size:11px;color:var(--ink3);flex-shrink:0;margin-top:1px;}
+  .do ul.checklist li::before{content:'✓';color:var(--green);}
+  .dont ul.checklist li::before{content:'✗';color:var(--accent);}
+
+  .phrase{
+    padding:10px 12px;
+    background:var(--paper2);
+    border-radius:2px;
+    font-size:13px;
+    color:var(--ink);
+    line-height:1.6;
+    margin-bottom:8px;
+    border-left:2px solid var(--line);
+  }
+  .phrase strong{font-weight:500;color:var(--accent);}
+  .phrase-label{font-family:var(--mono);font-size:9px;color:var(--ink3);letter-spacing:0.08em;text-transform:uppercase;margin-bottom:4px;}
+
+  .section-divider{
+    display:flex;align-items:center;gap:16px;
+    margin:28px 0 20px;
+  }
+  .section-divider span{
+    font-family:var(--mono);font-size:10px;
+    letter-spacing:0.12em;text-transform:uppercase;
+    color:var(--ink3);white-space:nowrap;
+  }
+  .section-divider::before,.section-divider::after{
+    content:'';flex:1;height:1px;background:var(--line);
+  }
+
+  .matrix{width:100%;border-collapse:collapse;font-size:12px;margin-bottom:20px;}
+  .matrix th{
+    padding:8px 12px;font-family:var(--mono);font-size:9px;
+    letter-spacing:0.1em;text-transform:uppercase;
+    color:var(--ink3);border-bottom:1px solid var(--line);
+    text-align:left;font-weight:400;
+  }
+  .matrix td{padding:9px 12px;border-bottom:1px solid var(--line);color:var(--ink2);vertical-align:top;line-height:1.5;}
+  .matrix tr:last-child td{border-bottom:none;}
+
+  .pvi-steps{display:flex;gap:0;}
+  .pvi-step{flex:1;padding:14px 16px;border-right:1px solid var(--line);}
+  .pvi-step:last-child{border-right:none;}
+  .pvi-num{font-family:var(--mono);font-size:9px;color:var(--accent);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:4px;}
+  .pvi-label{font-family:var(--serif);font-size:16px;color:var(--ink);margin-bottom:4px;}
+  .pvi-desc{font-size:11px;color:var(--ink3);line-height:1.5;}
+
+  .badge{
+    display:inline-block;padding:2px 7px;border-radius:20px;
+    font-family:var(--mono);font-size:9px;letter-spacing:0.06em;font-weight:500;
+  }
+  .bg{background:rgba(45,106,79,0.1);color:var(--green);}
+  .br{background:rgba(200,67,58,0.1);color:var(--accent);}
+  .bb{background:rgba(26,58,92,0.1);color:var(--accent2);}
+  .by{background:rgba(184,150,12,0.1);color:var(--gold);}
+
+  .footer-line{
+    margin-top:32px;padding-top:16px;
+    border-top:1px solid var(--line);
+    display:flex;justify-content:space-between;align-items:center;
+  }
+  .footer-line span{font-family:var(--mono);font-size:10px;color:var(--ink3);letter-spacing:0.06em;}
+</style>
+</head>
+<body>
+
+<button class="print-btn no-print" onclick="window.print()">↓ Imprimir / PDF</button>
+
+<div class="sheet">
+
+  <div class="sheet-header">
+    <div class="sheet-title">Cheat Sheet<br><em>Comunicação Estratégica</em></div>
+    <div class="sheet-meta">
+      POSICIONAMENTO PROFISSIONAL<br>
+      IA · AUTOMAÇÃO · GESTÃO PÚBLICA<br>
+      GUIA RÁPIDO DE CONSULTA
+    </div>
+  </div>
+
+  <!-- FRAMEWORK PVI -->
+  <div class="block framework" style="margin-bottom:20px;">
+    <div class="block-head">Framework central — modelo PVI (use em toda resposta)</div>
+    <div class="pvi-steps">
+      <div class="pvi-step">
+        <div class="pvi-num">Passo 1</div>
+        <div class="pvi-label">Problema</div>
+        <div class="pvi-desc">Nome a dor que existe sem você. Mostra que você entende o contexto.</div>
+      </div>
+      <div class="pvi-step">
+        <div class="pvi-num">Passo 2</div>
+        <div class="pvi-label">Valor</div>
+        <div class="pvi-desc">O que você faz — em resultado, nunca em tecnologia.</div>
+      </div>
+      <div class="pvi-step">
+        <div class="pvi-num">Passo 3</div>
+        <div class="pvi-label">Implicação</div>
+        <div class="pvi-desc">O que muda para a pessoa. Este é o gancho real.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- DO / DONT -->
+  <div class="section-divider"><span>Dos & Don'ts</span></div>
+  <div class="grid-2">
+    <div class="block do">
+      <div class="block-head">✓ Sempre fazer</div>
+      <div class="block-body">
+        <ul class="checklist">
+          <li>Começar pelo problema, não pela tecnologia</li>
+          <li>Usar resultados concretos como evidência</li>
+          <li>Afirmações diretas e sem hedges desnecessários</li>
+          <li>Fazer uma pergunta inteligente antes de apresentar solução</li>
+          <li>Calibrar o vocabulário para o público</li>
+          <li>Mencionar o Google Workspace como ancoragem de custo zero</li>
+          <li>Referenciar o case do Conselho como prova de resultado</li>
+          <li>Estabelecer valor antes de falar em preço</li>
+          <li>Usar analogias do cotidiano para não-técnicos</li>
+          <li>Manter o tom de quem resolve problemas, não de quem vende</li>
+        </ul>
+      </div>
+    </div>
+    <div class="block dont">
+      <div class="block-head">✗ Nunca fazer</div>
+      <div class="block-body">
+        <ul class="checklist">
+          <li>Listar tecnologias sem contexto de resultado</li>
+          <li>Dizer "não sou programador de verdade"</li>
+          <li>Reduzir preço sem reduzir escopo</li>
+          <li>Falar de preço antes de entender o problema</li>
+          <li>Over-prometer escopo ilimitado</li>
+          <li>Usar jargão técnico com gestores não-técnicos</li>
+          <li>Defender a tecnologia quando atacada — revirar o argumento</li>
+          <li>Começar com pitch em contexto de networking</li>
+          <li>Pedir permissão para propor algo</li>
+          <li>Entrar em comparação direta de preço sem reposicionar o produto</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- FRASES PRONTAS -->
+  <div class="section-divider"><span>Frases de alta performance — copie e adapte</span></div>
+  <div class="grid-2">
+    <div>
+      <div class="phrase-label">Resposta ao "o que você faz?"</div>
+      <div class="phrase">Transformo processos manuais em sistemas que funcionam sozinhos — dentro do Google Workspace que a organização já usa.</div>
+
+      <div class="phrase-label">Resposta ao "não é programador?"</div>
+      <div class="phrase">A barreira não é mais o código — é saber identificar o problema certo. <strong>Para isso, Filosofia ajuda mais do que qualquer bootcamp.</strong></div>
+
+      <div class="phrase-label">Sobre preço (quando perguntado cedo)</div>
+      <div class="phrase">Dar um número antes de entender o problema seria como um médico precificar a cirurgia antes do exame.</div>
+
+      <div class="phrase-label">Sobre IA como ferramenta</div>
+      <div class="phrase">A IA é a furadeira elétrica — a responsabilidade pelo resultado é minha.</div>
+    </div>
+    <div>
+      <div class="phrase-label">Para abrir diagnóstico</div>
+      <div class="phrase">Qual é o processo mais manual e mais chato do seu dia a dia?</div>
+
+      <div class="phrase-label">Para outros municípios / conselhos</div>
+      <div class="phrase">Se você tiver 30 minutos para me contar como vocês operam hoje, consigo dizer se e como se encaixaria.</div>
+
+      <div class="phrase-label">Resposta a "é caro"</div>
+      <div class="phrase">Posso reduzir o escopo — mas não o preço mantendo o escopo. Quer que eu mapeie a versão essencial?</div>
+
+      <div class="phrase-label">Sobre não ter experiência no setor</div>
+      <div class="phrase">Os problemas de processo são os mesmos em qualquer organização. O que diferencia é entender o contexto antes de tocar no código.</div>
+    </div>
+  </div>
+
+  <!-- MATRIZ DE CALIBRAÇÃO -->
+  <div class="section-divider"><span>Matriz de calibração por público</span></div>
+  <div class="block">
+    <div class="block-body" style="padding:0;">
+      <table class="matrix">
+        <thead>
+          <tr>
+            <th>Público</th>
+            <th>Palavra de abertura ideal</th>
+            <th>Argumento central</th>
+            <th>Evitar</th>
+            <th>Tom</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="badge bb">Secretário / Diretor</span></td>
+            <td>"Modernização operacional"</td>
+            <td>Eficiência, redução de custo humano, transparência</td>
+            <td>Siglas técnicas, curva de aprendizado</td>
+            <td>Institucional</td>
+          </tr>
+          <tr>
+            <td><span class="badge bb">Conselheiros</span></td>
+            <td>"Acesso à informação"</td>
+            <td>Empoderamento, controle social, clareza</td>
+            <td>Abstrações, jargão público/privado</td>
+            <td>Acessível</td>
+          </tr>
+          <tr>
+            <td><span class="badge br">Cliente PME</span></td>
+            <td>"Tempo economizado"</td>
+            <td>ROI claro, sem nova infraestrutura, entrega rápida</td>
+            <td>Contexto público, vocabulário técnico</td>
+            <td>Pragmático</td>
+          </tr>
+          <tr>
+            <td><span class="badge by">Evento / networking</span></td>
+            <td>"O que aprendi foi..."</td>
+            <td>Narrativa pessoal, resultado real, curiosidade</td>
+            <td>Pitch explícito, lista de serviços</td>
+            <td>Narrativo</td>
+          </tr>
+          <tr>
+            <td>Par técnico</td>
+            <td>"A stack é..."</td>
+            <td>Escolhas de arquitetura, limitações honestas, tradeoffs</td>
+            <td>Over-simplificação, vagueza</td>
+            <td>Preciso</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- OBJEÇÕES RÁPIDAS -->
+  <div class="section-divider"><span>Mapa de objeções — resposta rápida</span></div>
+  <div class="grid-3">
+    <div class="block tip">
+      <div class="block-head">→ "Não sou programador"</div>
+      <div class="block-body">
+        <div class="phrase" style="margin:0">Revirar: perspectiva de quem entende o problema primeiro. Citar o case do Conselho como prova.</div>
+      </div>
+    </div>
+    <div class="block tip">
+      <div class="block-head">→ "É caro"</div>
+      <div class="block-body">
+        <div class="phrase" style="margin:0">Nunca reduzir preço sem reduzir escopo. Propor versão essencial. Reancora no valor entregue.</div>
+      </div>
+    </div>
+    <div class="block tip">
+      <div class="block-head">→ "E se parar?"</div>
+      <div class="block-body">
+        <div class="phrase" style="margin:0">Google cuida da infraestrutura. Oferecer plano de manutenção. Citar meses de produção estável.</div>
+      </div>
+    </div>
+    <div class="block tip">
+      <div class="block-head">→ "IA tem risco?"</div>
+      <div class="block-body">
+        <div class="phrase" style="margin:0">Analogia da furadeira. A ferramenta mudou — a responsabilidade pelo resultado é minha.</div>
+      </div>
+    </div>
+    <div class="block tip">
+      <div class="block-head">→ "Agência cobra X"</div>
+      <div class="block-body">
+        <div class="phrase" style="margin:0">São produtos diferentes. Reposicionar: sem servidor, sem dependência, entrega em semanas.</div>
+      </div>
+    </div>
+    <div class="block tip">
+      <div class="block-head">→ "Sem experiência no setor"</div>
+      <div class="block-body">
+        <div class="phrase" style="margin:0">Ser honesto. Reposicionar: problemas de processo são universais. O diferencial é entender antes de construir.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- REGRAS DE OURO -->
+  <div class="section-divider"><span>As 8 regras de ouro</span></div>
+  <div class="grid-2">
+    <div class="block rule">
+      <div class="block-head">Regras de comunicação</div>
+      <div class="block-body">
+        <ul class="checklist">
+          <li><strong>Problema primeiro.</strong> Tecnologia é meio, nunca fim.</li>
+          <li><strong>Afirmação direta.</strong> Sem "acho que", "talvez", "se quiser".</li>
+          <li><strong>Pergunta antes de proposta.</strong> Diagnóstico precede solução.</li>
+          <li><strong>Analogia para não-técnicos.</strong> Sempre uma comparação do cotidiano.</li>
+        </ul>
+      </div>
+    </div>
+    <div class="block rule">
+      <div class="block-head">Regras de posicionamento</div>
+      <div class="block-body">
+        <ul class="checklist">
+          <li><strong>Case como escudo.</strong> O Conselho é sua prova viva — use sempre.</li>
+          <li><strong>Valor antes de preço.</strong> Sempre, sem exceção.</li>
+          <li><strong>Objeção virada em diferencial.</strong> "Não sou programador" = perspectiva única.</li>
+          <li><strong>Curiosidade como sinal.</strong> Quem pergunta "como você fez?" já está convencido.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- ELEVATOR PITCH COMPLETO -->
+  <div class="section-divider"><span>Pitches prontos por duração</span></div>
+  <div class="grid-3">
+    <div class="block do">
+      <div class="block-head">10 segundos</div>
+      <div class="block-body">
+        <div class="phrase" style="margin:0;font-size:13px;">Transformo processos manuais em sistemas automáticos — dentro do Google Workspace que as organizações já usam.</div>
+      </div>
+    </div>
+    <div class="block do">
+      <div class="block-head">30 segundos</div>
+      <div class="block-body">
+        <div class="phrase" style="margin:0;font-size:12px;">Sou Secretário Executivo do Conselho de Saúde de Montes Claros e trabalho com automação de processos para gestão pública. Com formação em Filosofia, Direito e Design — e IA como ferramenta — construo sistemas que eliminam trabalho manual. No Conselho, substituímos processos 100% manuais por fluxos automáticos que funcionam há meses sem intervenção.</div>
+      </div>
+    </div>
+    <div class="block do">
+      <div class="block-head">60 segundos</div>
+      <div class="block-body">
+        <div class="phrase" style="margin:0;font-size:12px;">Comecei com uma planilha que eu queria melhorar. Depois vieram os scripts. Depois as integrações. De repente eu estava fazendo deploy de aplicativos reais — sem formação técnica convencional. O que percebi é que a barreira para criar tecnologia útil não é o código: é saber identificar o problema certo. Tenho Filosofia e Direito para isso. A IA faz o resto. Hoje o Conselho de Saúde de Montes Claros opera com um sistema completo em produção — lista de presença ao vivo, certificados automáticos, biblioteca de documentos. O que me move é construir esse tipo de solução para outras organizações.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer-line">
+    <span>Comunicação Estratégica · Guia Rápido de Consulta</span>
+    <span>Versão 1.0 · Montes Claros, 2025</span>
+  </div>
+
+</div>
+
+</body>
+</html>

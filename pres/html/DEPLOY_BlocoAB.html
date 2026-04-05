@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Guia de Deploy — Bloco A+B — SerTão Conselheiro</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800;900&family=Open+Sans:wght@300;400;600&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{--navy:#0D2E5A;--blue:#1B6CB5;--green:#1E8A4A;--yellow:#F5C400;--red:#DC2626;--off:#F0F2F5;--ink:#111827;--muted:#6B7280;--border:#E5E7EB;--white:#fff;--font-title:'Montserrat',sans-serif;--font-body:'Open Sans',sans-serif;--font-code:'JetBrains Mono',monospace}
+*{box-sizing:border-box;margin:0;padding:0}html{scroll-behavior:smooth}
+body{font-family:var(--font-body);background:var(--off);color:var(--ink);font-size:14px;line-height:1.7;padding:0}
+.topbar{background:var(--navy);border-bottom:3px solid var(--yellow);padding:14px 32px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:10}
+.topbar-title{font-family:var(--font-title);font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--yellow)}
+.topbar-badge{font-family:var(--font-title);font-size:9px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;background:rgba(245,196,0,.15);border:1px solid rgba(245,196,0,.3);color:var(--yellow);padding:3px 10px;border-radius:20px}
+.content{max-width:820px;margin:0 auto;padding:40px 28px 80px}
+h1{font-family:var(--font-title);font-size:clamp(24px,3.5vw,36px);font-weight:900;color:var(--navy);letter-spacing:-1px;margin-bottom:8px;line-height:1.1}
+h1 em{color:var(--blue);font-style:normal}
+.subtitle{font-size:15px;color:var(--muted);margin-bottom:36px;line-height:1.7}
+h2{font-family:var(--font-title);font-size:17px;font-weight:800;color:var(--navy);margin:40px 0 14px;padding-top:8px;display:flex;align-items:center;gap:8px}
+h2::before{content:'';display:inline-block;width:4px;height:18px;background:var(--yellow);border-radius:2px}
+h3{font-family:var(--font-title);font-size:13px;font-weight:700;color:var(--navy);margin:20px 0 8px}
+p{margin-bottom:10px;color:var(--ink)}
+strong{font-weight:700;color:var(--navy)}
+pre,code{font-family:var(--font-code);font-size:12px}
+pre{background:#0D1B2E;color:#E2E8F0;border-radius:10px;padding:16px 20px;overflow-x:auto;margin:12px 0;line-height:1.7}
+code:not(pre code){background:#EEF2FF;color:#3730A3;padding:2px 6px;border-radius:4px}
+.badge{display:inline-flex;align-items:center;padding:2px 8px;border-radius:20px;font-family:var(--font-title);font-size:10px;font-weight:700;letter-spacing:.3px;text-transform:uppercase}
+.b-ok{background:#D1FAE5;color:#065F46}
+.b-warn{background:#FEF9C3;color:#854D0E}
+.b-err{background:#FEE2E2;color:#991B1B}
+.b-info{background:#DBEAFE;color:#1E40AF}
+.b-bloco{background:#0D2E5A;color:#F5C400}
+.alert{border-radius:10px;padding:13px 16px;margin:12px 0;display:flex;gap:10px;align-items:flex-start;font-size:13px;line-height:1.6}
+.alert-icon{font-size:16px;flex-shrink:0;margin-top:2px}
+.alert.info{background:#DBEAFE;border:1px solid #BFDBFE;color:#1E40AF}
+.alert.warn{background:#FEF9C3;border:1px solid #FDE68A;color:#854D0E}
+.alert.ok{background:#D1FAE5;border:1px solid #A7F3D0;color:#065F46}
+.alert.err{background:#FEE2E2;border:1px solid #FECACA;color:#991B1B}
+.step-list{list-style:none;padding:0;counter-reset:step;margin:12px 0 24px}
+.step-item{display:flex;gap:14px;padding:14px 0;border-bottom:1px solid var(--border);counter-increment:step}
+.step-item:last-child{border-bottom:none}
+.step-num{width:28px;height:28px;background:var(--navy);color:var(--yellow);border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:var(--font-title);font-size:11px;font-weight:800;flex-shrink:0;margin-top:2px}
+.step-body{flex:1}
+.step-label{font-weight:700;font-size:13px;color:var(--navy);margin-bottom:4px}
+.step-desc{font-size:12px;color:var(--muted);line-height:1.6}
+.step-desc code{background:#EEF2FF;color:#3730A3;padding:1px 5px;border-radius:3px;font-size:11px}
+.tbl-wrap{overflow-x:auto;margin:12px 0}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th{background:var(--navy);color:white;font-family:var(--font-title);font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;padding:9px 14px;text-align:left}
+td{padding:9px 14px;border-bottom:1px solid var(--border);vertical-align:top}
+tr:nth-child(even) td{background:var(--off)}
+.file-card{background:var(--white);border:1px solid var(--border);border-radius:10px;padding:16px 18px;margin-bottom:10px;display:flex;align-items:flex-start;gap:14px}
+.file-icon{font-size:24px;flex-shrink:0}
+.file-info{flex:1}
+.file-name{font-family:var(--font-code);font-size:13px;font-weight:600;color:var(--navy);margin-bottom:3px}
+.file-desc{font-size:12px;color:var(--muted);line-height:1.5}
+.file-dest{font-size:11px;font-family:var(--font-code);color:var(--blue);margin-top:4px}
+.file-badge{flex-shrink:0;margin-top:4px}
+.sandbox-box{background:var(--white);border:2px solid var(--border);border-radius:12px;padding:20px;margin:16px 0}
+.sandbox-box h3{margin-top:0}
+.checklist{list-style:none;padding:0}
+.checklist li{display:flex;align-items:flex-start;gap:10px;padding:6px 0;border-bottom:1px solid var(--border);font-size:13px}
+.checklist li:last-child{border-bottom:none}
+.checklist-check{flex-shrink:0;width:18px;height:18px;border:2px solid var(--border);border-radius:4px;margin-top:2px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:11px;transition:all .15s}
+.checklist-check:hover{border-color:var(--blue)}
+.checklist-check.checked{background:var(--green);border-color:var(--green);color:white}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <span class="topbar-title">SerTão Conselheiro — Guia de Deploy</span>
+  <span class="topbar-badge">Blocos A + B</span>
+</div>
+
+<div class="content">
+
+  <div style="margin-bottom:8px">
+    <span class="badge b-bloco">BLOCO A</span>&nbsp;
+    <span class="badge b-info">BLOCO B</span>
+  </div>
+  <h1>Presenças & Reunião ao Vivo<br><em>+ HealthCheck</em></h1>
+  <p class="subtitle">Guia completo de deployment e teste para o SerTão Conselheiro v3.2. Execute na ordem indicada — cada passo tem uma verificação de confirmação.</p>
+
+  <div class="alert warn">
+    <span class="alert-icon">⚠️</span>
+    <div><strong>Antes de começar:</strong> faça backup exportando a planilha Google Sheets (Arquivo → Fazer download → .xlsx). Em caso de problema, você pode restaurar.</div>
+  </div>
+
+  <!-- ─── ARQUIVOS ENTREGUES ─── -->
+  <h2>Arquivos entregues neste bloco</h2>
+
+  <div class="file-card">
+    <span class="file-icon">🌐</span>
+    <div class="file-info">
+      <div class="file-name">reuniao.html</div>
+      <div class="file-desc">Página pública de reunião ao vivo. Exibe informações da reunião ativa, barra de presenças, botão de confirmar presença (logado) e formulário de visitante (não logado). Auto-refresh a cada 30s.</div>
+      <div class="file-dest">→ Copiar para: raiz do repositório GitHub (cmsmoc/doc/)</div>
+    </div>
+    <span class="file-badge"><span class="badge b-bloco">BLOCO A</span></span>
+  </div>
+
+  <div class="file-card">
+    <span class="file-icon">⚙️</span>
+    <div class="file-info">
+      <div class="file-name">Code_BlocoA_presencas.gs</div>
+      <div class="file-desc">3 novos handlers GAS: <code>handleGetReuniaoCurrent</code>, <code>handleMarcarPresenca</code>, <code>handleRegistrarVisitante</code>. Também inclui setup das colunas extras da aba PRESENCAS e versão atualizada de <code>handleGetPresencas</code>.</div>
+      <div class="file-dest">→ Colar no Code.gs do Google Apps Script</div>
+    </div>
+    <span class="file-badge"><span class="badge b-bloco">BLOCO A</span></span>
+  </div>
+
+  <div class="file-card">
+    <span class="file-icon">🔌</span>
+    <div class="file-info">
+      <div class="file-name">api_BlocoA_adicoes.js</div>
+      <div class="file-desc">3 novos métodos para o objeto Api: <code>getReuniaoCurrent()</code>, <code>marcarPresenca(params)</code>, <code>registrarVisitante(params)</code>.</div>
+      <div class="file-dest">→ Inserir dentro do objeto Api em js/api.js</div>
+    </div>
+    <span class="file-badge"><span class="badge b-bloco">BLOCO A</span></span>
+  </div>
+
+  <div class="file-card">
+    <span class="file-icon">🩺</span>
+    <div class="file-info">
+      <div class="file-name">Painel_BlocoB_healthcheck.html</div>
+      <div class="file-desc">Nova aba "HealthCheck" para o Painel Admin (GAS). Contém CSS, HTML da aba e JavaScript do cliente. 12 verificações automáticas de consistência do sistema.</div>
+      <div class="file-dest">→ Integrar ao Painel.html no Google Apps Script</div>
+    </div>
+    <span class="file-badge"><span class="badge b-info">BLOCO B</span></span>
+  </div>
+
+  <div class="file-card">
+    <span class="file-icon">⚙️</span>
+    <div class="file-info">
+      <div class="file-name">Code_BlocoB_healthcheck.gs</div>
+      <div class="file-desc">12 funções de verificação chamadas via google.script.run: <code>hcVerificarAbas</code>, <code>hcVerificarConselheiros</code>, <code>hcVerificarQuotas</code>, etc.</div>
+      <div class="file-dest">→ Colar no Code.gs do Google Apps Script</div>
+    </div>
+    <span class="file-badge"><span class="badge b-info">BLOCO B</span></span>
+  </div>
+
+  <!-- ─── BLOCO A: DEPLOY ─── -->
+  <h2>BLOCO A — Deploy das Presenças</h2>
+
+  <h3>Passo 1 — Setup da Planilha</h3>
+  <div class="alert info">
+    <span class="alert-icon">ℹ️</span>
+    <div>A aba PRESENCAS precisa de 3 colunas novas: ENTIDADE, TIPO, TIMESTAMP. A função <code>_setupPresencasExt()</code> faz isso automaticamente.</div>
+  </div>
+  <ol class="step-list">
+    <li class="step-item">
+      <div class="step-num">1</div>
+      <div class="step-body">
+        <div class="step-label">Abrir o Google Apps Script</div>
+        <div class="step-desc">Acesse o GAS do projeto CMS-MOC. Menu: Extensões → Apps Script no Google Sheets da planilha.</div>
+      </div>
+    </li>
+    <li class="step-item">
+      <div class="step-num">2</div>
+      <div class="step-body">
+        <div class="step-label">Colar o Code_BlocoA_presencas.gs</div>
+        <div class="step-desc">Abra <code>Code.gs</code>. Localize o comentário <code>// ══ UTILITÁRIOS</code> e cole o conteúdo do arquivo ACIMA dessa linha (antes da função <code>_temAcesso</code>).</div>
+      </div>
+    </li>
+    <li class="step-item">
+      <div class="step-num">3</div>
+      <div class="step-body">
+        <div class="step-label">Adicionar os 3 cases no doGet()</div>
+        <div class="step-desc">No switch do doGet(), localize <code>case 'getPresencas':</code> e adicione logo após:</div>
+      </div>
+    </li>
+  </ol>
+  <pre>case 'getReuniaoCurrent':    result = handleGetReuniaoCurrent(params);   break;
+case 'marcarPresenca':       result = handleMarcarPresenca(params);       break;
+case 'registrarVisitante':   result = handleRegistrarVisitante(params);  break;</pre>
+
+  <ol class="step-list" start="4">
+    <li class="step-item">
+      <div class="step-num">4</div>
+      <div class="step-body">
+        <div class="step-label">Adicionar wrappers na seção WRAPPERS</div>
+        <div class="step-desc">Localize a seção com os wrappers e adicione:</div>
+      </div>
+    </li>
+  </ol>
+  <pre>function getReuniaoCurrent(p)    { return handleGetReuniaoCurrent(p || {}); }
+function marcarPresenca(p)       { return handleMarcarPresenca(p || {}); }
+function registrarVisitante(p)   { return handleRegistrarVisitante(p || {}); }</pre>
+
+  <ol class="step-list" start="5">
+    <li class="step-item">
+      <div class="step-num">5</div>
+      <div class="step-body">
+        <div class="step-label">Executar _setupPresencasExt()</div>
+        <div class="step-desc">No GAS, selecione a função <code>_setupPresencasExt</code> no dropdown e clique em ▶ Executar. Confirme a autorização se solicitado. Verifique que na aba PRESENCAS aparecem as colunas ENTIDADE, TIPO, TIMESTAMP.</div>
+      </div>
+    </li>
+    <li class="step-item">
+      <div class="step-num">6</div>
+      <div class="step-body">
+        <div class="step-label">Implantar nova versão</div>
+        <div class="step-desc">Implantar → Gerenciar implantações → ✏️ lápis → <strong>Nova versão</strong> → Implantar. <strong>NÃO</strong> clique em "Nova implantação".</div>
+      </div>
+    </li>
+    <li class="step-item">
+      <div class="step-num">7</div>
+      <div class="step-body">
+        <div class="step-label">Adicionar métodos em js/api.js</div>
+        <div class="step-desc">Abra <code>js/api.js</code> no repositório GitHub. Dentro do objeto Api, após <code>getPresencas</code>, cole os 3 métodos do arquivo <code>api_BlocoA_adicoes.js</code>.</div>
+      </div>
+    </li>
+    <li class="step-item">
+      <div class="step-num">8</div>
+      <div class="step-body">
+        <div class="step-label">Fazer upload do reuniao.html</div>
+        <div class="step-desc">Copie <code>reuniao.html</code> para a raiz do repositório <code>cmsmoc/doc</code>. Faça git push. Aguarde o GitHub Pages atualizar (~30s).</div>
+      </div>
+    </li>
+    <li class="step-item">
+      <div class="step-num">9</div>
+      <div class="step-body">
+        <div class="step-label">Ativar a reunião no CONFIG</div>
+        <div class="step-desc">Na planilha → aba CONFIG → encontre ou crie a chave <code>reuniao_ativa_id</code>. Preencha com o ID da reunião desejada (da aba REUNIOES). Ou simplesmente certifique-se que a reunião tem STATUS=ativo.</div>
+      </div>
+    </li>
+  </ol>
+
+  <!-- ─── BLOCO B: DEPLOY ─── -->
+  <h2>BLOCO B — Deploy do HealthCheck</h2>
+
+  <ol class="step-list">
+    <li class="step-item">
+      <div class="step-num">1</div>
+      <div class="step-body">
+        <div class="step-label">Colar o Code_BlocoB_healthcheck.gs no Code.gs</div>
+        <div class="step-desc">Logo abaixo do conteúdo do Bloco A, antes da seção de utilitários.</div>
+      </div>
+    </li>
+    <li class="step-item">
+      <div class="step-num">2</div>
+      <div class="step-body">
+        <div class="step-label">Integrar o CSS ao Painel.html</div>
+        <div class="step-desc">Abra <code>Painel.html</code> no GAS. Localize o bloco <code>&lt;style&gt;</code>. Copie apenas o conteúdo dentro das tags <code>&lt;style id="hc-styles-reference"&gt;</code> do arquivo <code>Painel_BlocoB_healthcheck.html</code> e cole ao final do bloco style existente.</div>
+      </div>
+    </li>
+    <li class="step-item">
+      <div class="step-num">3</div>
+      <div class="step-body">
+        <div class="step-label">Adicionar o botão de aba</div>
+        <div class="step-desc">Localize a barra de abas do Painel e adicione:</div>
+      </div>
+    </li>
+  </ol>
+  <pre>&lt;button class="tab-btn" onclick="mudarAba('healthcheck')"&gt;🩺 HealthCheck&lt;/button&gt;</pre>
+
+  <ol class="step-list" start="4">
+    <li class="step-item">
+      <div class="step-num">4</div>
+      <div class="step-body">
+        <div class="step-label">Adicionar o painel HTML</div>
+        <div class="step-desc">Copie o <code>&lt;div class="tab-pane" id="tab-healthcheck"&gt;</code> do arquivo <code>Painel_BlocoB_healthcheck.html</code> e cole junto com os outros painéis.</div>
+      </div>
+    </li>
+    <li class="step-item">
+      <div class="step-num">5</div>
+      <div class="step-body">
+        <div class="step-label">Adicionar o JavaScript</div>
+        <div class="step-desc">Copie o conteúdo dentro das tags <code>&lt;script id="hc-script-reference"&gt;</code> e cole no bloco <code>&lt;script&gt;</code> do Painel.html.</div>
+      </div>
+    </li>
+    <li class="step-item">
+      <div class="step-num">6</div>
+      <div class="step-body">
+        <div class="step-label">Salvar e implantar nova versão</div>
+        <div class="step-desc">Salvar (Ctrl+S) → Implantar → Gerenciar implantações → ✏️ → Nova versão → Implantar.</div>
+      </div>
+    </li>
+  </ol>
+
+  <!-- ─── SANDBOX ─── -->
+  <h2>Sandbox — Ambiente de Testes</h2>
+
+  <div class="sandbox-box">
+    <h3>🧪 Estrutura do Sandbox</h3>
+    <p>O sandbox é um ambiente paralelo que usa uma <strong>planilha clone</strong> e um <strong>script GAS separado</strong>. O frontend fica em <code>cmsmoc/doc/dev/</code> ou como branch <code>dev</code> do repositório.</p>
+
+    <div class="alert info">
+      <span class="alert-icon">💡</span>
+      <div><strong>Custo zero.</strong> O sandbox usa exatamente a mesma infraestrutura do prod (GitHub Pages + GAS gratuito). Basta duplicar a planilha e criar um novo deploy GAS apontando para ela.</div>
+    </div>
+
+    <h3>Passo a passo para criar o Sandbox</h3>
+    <ol class="step-list">
+      <li class="step-item">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <div class="step-label">Duplicar a planilha</div>
+          <div class="step-desc">Planilha → Arquivo → Fazer uma cópia. Nome sugerido: "CMS-MOC DEV". Anote o ID da nova planilha (na URL).</div>
+        </div>
+      </li>
+      <li class="step-item">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <div class="step-label">Criar script GAS para o DEV</div>
+          <div class="step-desc">Na planilha dev → Extensões → Apps Script. Cole o Code.gs atual. Em Script Properties, defina <code>SHEET_ID</code> como o ID da planilha dev. Implante como Web App e anote a URL dev.</div>
+        </div>
+      </li>
+      <li class="step-item">
+        <div class="step-num">3</div>
+        <div class="step-body">
+          <div class="step-label">Criar config de DEV no frontend</div>
+          <div class="step-desc">No repositório, crie o arquivo <code>dev/config/config.js</code> com a URL GAS do DEV. O <code>config.js</code> produção aponta para a URL prod.</div>
+        </div>
+      </li>
+    </ol>
+
+    <pre><span style="color:#64748B">// dev/config/config.js</span>
+<span style="color:#F5C400">const</span> CONFIG = {
+  GAS_URL: <span style="color:#86EFAC">'https://script.google.com/macros/s/SEU_ID_DEV/exec'</span>,
+  SESSION_KEY: <span style="color:#86EFAC">'cms_session_dev'</span>,  <span style="color:#64748B">// chave diferente para não confundir sessões</span>
+  ENV: <span style="color:#86EFAC">'dev'</span>
+};</pre>
+
+    <div class="alert warn">
+      <span class="alert-icon">⚠️</span>
+      <div>O sandbox compartilha o mesmo domínio GitHub Pages que o prod. Para distinguir, adicione um banner visual na dev: <code>if (CONFIG.ENV === 'dev') { document.body.style.outline = '4px solid red'; }</code></div>
+    </div>
+  </div>
+
+  <!-- ─── TESTES ─── -->
+  <h2>Checklist de Testes pós-Deploy</h2>
+
+  <div class="alert ok">
+    <span class="alert-icon">✅</span>
+    <div>Execute esses testes <strong>em sequência</strong>, de preferência em uma reunião de teste (STATUS=ativo na planilha com uma reunião fictícia).</div>
+  </div>
+
+  <h3>Bloco A — Presenças</h3>
+  <ul class="checklist" id="checklist-a">
+    <li><div class="checklist-check" onclick="toggleCheck(this)"></div><div><strong>reuniao.html carrega</strong> — Acesse <code>cmsmoc.github.io/doc/reuniao.html</code>. Deve exibir loading screen e depois a página.</div></li>
+    <li><div class="checklist-check" onclick="toggleCheck(this)"></div><div><strong>Sem reunião ativa</strong> — Com todas reuniões STATUS≠ativo, deve exibir "Nenhuma reunião ativa no momento".</div></li>
+    <li><div class="checklist-check" onclick="toggleCheck(this)"></div><div><strong>Reunião ativa aparece</strong> — Coloque STATUS=ativo em uma reunião. Recarregue. Hero card deve exibir título, data, hora, local.</div></li>
+    <li><div class="checklist-check" onclick="toggleCheck(this)"></div><div><strong>Visitante consegue registrar presença</strong> — Clique em "Sou visitante", preencha nome + entidade, clique em registrar. Verifique na planilha aba PRESENCAS se a linha apareceu com TIPO=visitante.</div></li>
+    <li><div class="checklist-check" onclick="toggleCheck(this)"></div><div><strong>Anti-duplicata visitante</strong> — Tente registrar o mesmo nome novamente. Deve retornar "Você já está registrado".</div></li>
+    <li><div class="checklist-check" onclick="toggleCheck(this)"></div><div><strong>Login inline funciona</strong> — Clique em "Sou conselheiro", faça login com credenciais válidas. Botão de presença deve aparecer.</div></li>
+    <li><div class="checklist-check" onclick="toggleCheck(this)"></div><div><strong>Marcar presença de conselheiro</strong> — Logado, clique em "Confirmar minha presença". Toast de sucesso deve aparecer. Botão vira "Presença já confirmada".</div></li>
+    <li><div class="checklist-check" onclick="toggleCheck(this)"></div><div><strong>Idempotência</strong> — Tente marcar presença novamente (via URL direta ou atualizando a página). Não deve duplicar na planilha.</div></li>
+    <li><div class="checklist-check" onclick="toggleCheck(this)"></div><div><strong>Barra de presença</strong> — Contador e porcentagem devem atualizar conforme presenças são adicionadas.</div></li>
+    <li><div class="checklist-check" onclick="toggleCheck(this)"></div><div><strong>Lista de presenças</strong> — Lista deve exibir todos os registrados com avatar de iniciais.</div></li>
+    <li><div class="checklist-check" onclick="toggleCheck(this)"></div><div><strong>Auto-refresh</strong> — Aguarde 30 segundos. "Última atualização" deve atualizar o horário.</div></li>
+    <li><div class="checklist-check" onclick="toggleCheck(this)"></div><div><strong>Mobile</strong> — Abrir no celular. Interface deve ser usável (botão de presença de fácil toque).</div></li>
+  </ul>
+
+  <h3>Bloco B — HealthCheck</h3>
+  <ul class="checklist" id="checklist-b">
+    <li><div class="checklist-check" onclick="toggleCheck(this)"></div><div><strong>Aba HealthCheck aparece no Painel Admin</strong> — Abra o Painel Admin (sidebar da planilha). Botão "🩺 HealthCheck" deve estar visível.</div></li>
+    <li><div class="checklist-check" onclick="toggleCheck(this)"></div><div><strong>Verificação executa</strong> — Clique em "▶ Executar verificação". Todos os 12 cards devem sair de "loading" para ok/warn/err.</div></li>
+    <li><div class="checklist-check" onclick="toggleCheck(this)"></div><div><strong>Abas obrigatórias — OK</strong> — Card "Abas obrigatórias" deve mostrar ✅ OK se Setup já foi executado.</div></li>
+    <li><div class="checklist-check" onclick="toggleCheck(this)"></div><div><strong>Presenças v3.2 — OK</strong> — Card "Presenças v3.2" deve mostrar ✅ após executar _setupPresencasExt.</div></li>
+    <li><div class="checklist-check" onclick="toggleCheck(this)"></div><div><strong>Quotas — percentual visível</strong> — Card de quotas deve exibir número de requisições do dia e percentual.</div></li>
+    <li><div class="checklist-check" onclick="toggleCheck(this)"></div><div><strong>Log técnico popula</strong> — Área de log técnico deve exibir linhas coloridas com o resultado de cada verificação.</div></li>
+    <li><div class="checklist-check" onclick="toggleCheck(this)"></div><div><strong>Executar novamente</strong> — Botão muda para "▶ Executar novamente" e permite re-executar.</div></li>
+  </ul>
+
+  <!-- ─── TROUBLESHOOTING ─── -->
+  <h2>Troubleshooting</h2>
+
+  <div class="tbl-wrap">
+    <table>
+      <thead><tr><th>Sintoma</th><th>Causa provável</th><th>Solução</th></tr></thead>
+      <tbody>
+        <tr>
+          <td><code>reuniao.html</code> fica em loading infinito</td>
+          <td>GAS não foi implantado ou URL incorreta no config.js</td>
+          <td>Verificar CONFIG.GAS_URL no console do navegador (F12). Confirmar que nova versão foi implantada.</td>
+        </tr>
+        <tr>
+          <td>"Ação inválida: getReuniaoCurrent"</td>
+          <td>Cases não foram adicionados ao switch do doGet()</td>
+          <td>Adicionar os 3 cases ao switch e reimplantar nova versão.</td>
+        </tr>
+        <tr>
+          <td>Presenças não aparecem na lista</td>
+          <td>getPresencas ainda retorna formato antigo</td>
+          <td>Substituir handleGetPresencas pela versão handleGetPresencas_v32 no Code.gs e renomear para handleGetPresencas.</td>
+        </tr>
+        <tr>
+          <td>Erro "Aba PRESENCAS — coluna fora do índice"</td>
+          <td>Colunas ENTIDADE/TIPO/TIMESTAMP não foram criadas</td>
+          <td>Executar _setupPresencasExt() no GAS.</td>
+        </tr>
+        <tr>
+          <td>HealthCheck — cards ficam em "Verificando..." para sempre</td>
+          <td>google.script.run não conseguiu chamar a função</td>
+          <td>Verificar no console do Painel (F12) se há erros. As funções hcVerificar* devem estar no Code.gs salvo e implantado.</td>
+        </tr>
+        <tr>
+          <td>Login inline não funciona na reuniao.html</td>
+          <td>Api.login não está disponível ou retorna erro</td>
+          <td>Verificar se js/auth.js e js/api.js estão sendo carregados (Network tab no F12). Api.login deve existir.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="alert ok" style="margin-top:32px">
+    <span class="alert-icon">🎉</span>
+    <div><strong>Deploy concluído com sucesso!</strong> O SerTão Conselheiro v3.2 está operacional. Próximo passo: Bloco C — Dashboard Modular do conselheiro.</div>
+  </div>
+
+</div><!-- /content -->
+
+<script>
+function toggleCheck(el) {
+  el.classList.toggle('checked');
+  if (el.classList.contains('checked')) el.textContent = '✓';
+  else el.textContent = '';
+  // Salvar estado no localStorage para persistência
+  const all = document.querySelectorAll('.checklist-check');
+  const state = Array.from(all).map(c => c.classList.contains('checked'));
+  try { localStorage.setItem('deploy_checklist', JSON.stringify(state)); } catch(e) {}
+}
+// Restaurar estado
+try {
+  const state = JSON.parse(localStorage.getItem('deploy_checklist') || '[]');
+  const all = document.querySelectorAll('.checklist-check');
+  state.forEach((v, i) => { if (v && all[i]) { all[i].classList.add('checked'); all[i].textContent = '✓'; } });
+} catch(e) {}
+</script>
+</body>
+</html>

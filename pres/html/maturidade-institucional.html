@@ -1,0 +1,1144 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Da Desorganização à Maturidade Institucional</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,400;0,600;0,700;0,800;0,900;1,400&family=Open+Sans:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+/* ══════════════════════════════════════════════════════════════
+   DA DESORGANIZAÇÃO À MATURIDADE INSTITUCIONAL
+   CMS-MOC · Secretaria Executiva · 2026
+   Paleta: Navy #0D2E5A · Blue #1B6CB5 · Green #1E8A4A · Yellow #F5C400
+   Tom: Sereno, técnico, crescente. Do vermelho ao verde.
+   ══════════════════════════════════════════════════════════════ */
+:root {
+  --n:#0D2E5A; --b:#1B6CB5; --g:#1E8A4A; --y:#F5C400;
+  --r:#C0392B; --or:#D97706;
+  --w:#fff; --off:#F0F2F5; --ink:#0F1923;
+  --muted:#5A6475; --border:#DDE3ED;
+  --g1:#050D1A; /* fundo muito escuro */
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{width:100%;height:100%;background:#000;overflow:hidden;
+  font-family:'Montserrat',sans-serif}
+
+/* ─── Deck ─── */
+#deck{width:100vw;height:100vh;position:relative}
+
+/* ─── Slide base ─── */
+.slide{
+  position:absolute;inset:0;
+  display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  padding:52px 80px;
+  opacity:0;pointer-events:none;
+  transition:opacity .4s ease;
+  overflow:hidden;
+}
+.slide.active{opacity:1;pointer-events:all}
+
+/* ── Fundos ── */
+.bg-void  {background:var(--g1)}
+.bg-navy  {background:var(--n)}
+.bg-deep  {background:linear-gradient(148deg,#04090F 0%,#0D2E5A 100%)}
+.bg-red   {background:linear-gradient(148deg,#1A0404 0%,#3D0A0A 100%)}
+.bg-amber {background:linear-gradient(148deg,#1A1004 0%,#3D2A04 100%)}
+.bg-green {background:linear-gradient(148deg,#041A09 0%,#0D3D1A 100%)}
+.bg-light {background:var(--off)}
+.bg-white {background:var(--w)}
+
+/* ── Acento superior ── */
+.accent-r::before{content:'';position:absolute;top:0;left:0;right:0;height:4px;background:var(--r)}
+.accent-y::before{content:'';position:absolute;top:0;left:0;right:0;height:4px;background:var(--y)}
+.accent-g::before{content:'';position:absolute;top:0;left:0;right:0;height:4px;background:var(--g)}
+.accent-b::before{content:'';position:absolute;top:0;left:0;right:0;height:4px;background:var(--b)}
+.accent-full::before{content:'';position:absolute;top:0;left:0;right:0;height:4px;
+  background:linear-gradient(90deg,var(--r) 0%,var(--y) 40%,var(--g) 100%)}
+
+/* ── Rótulo de capítulo ── */
+.chapter-badge{
+  position:absolute;top:0;left:80px;
+  font-size:9px;font-weight:800;letter-spacing:2.5px;text-transform:uppercase;
+  padding:5px 16px 4px;border-radius:0 0 8px 8px;
+}
+.cb-r{background:var(--r);color:white}
+.cb-y{background:var(--y);color:var(--n)}
+.cb-b{background:var(--b);color:white}
+.cb-g{background:var(--g);color:white}
+.cb-n{background:var(--n);color:var(--y)}
+
+/* ─── Tipografia ─── */
+.eyebrow{font-size:10px;font-weight:700;letter-spacing:4px;text-transform:uppercase;margin-bottom:14px}
+.ey-y{color:var(--y)} .ey-r{color:#F87171} .ey-b{color:#93C5FD}
+.ey-g{color:#86EFAC} .ey-m{color:rgba(255,255,255,.38)} .ey-dk{color:var(--muted)}
+
+.h1{font-size:clamp(40px,6.5vw,84px);font-weight:900;line-height:.93;
+  letter-spacing:-2.5px;color:var(--w)}
+.h1 em{font-style:normal;color:var(--y)}
+.h1.red em{color:#F87171} .h1.grn em{color:#86EFAC}
+.h1.dk{color:var(--n)} .h1.dk em{color:var(--b)}
+
+.h2{font-size:clamp(26px,4vw,54px);font-weight:800;line-height:1.02;letter-spacing:-1.5px;color:var(--w)}
+.h2 em{font-style:normal;color:var(--y)}
+.h2.dk{color:var(--n)} .h2.dk em{color:var(--b)}
+
+.h3{font-size:clamp(18px,2.2vw,30px);font-weight:700;line-height:1.2;color:var(--w)}
+.h3.dk{color:var(--n)}
+
+.body{font-family:'Open Sans',sans-serif;font-size:clamp(14px,1.55vw,19px);
+  font-weight:300;line-height:1.78;color:rgba(255,255,255,.72);max-width:700px}
+.body.dk{color:var(--muted)} .body strong{font-weight:600;color:var(--w)}
+.body.dk strong{color:var(--n)}
+.body.lg{font-size:clamp(16px,1.9vw,22px)}
+
+.quote{font-family:'Open Sans',sans-serif;font-style:italic;
+  font-size:clamp(17px,2vw,25px);line-height:1.6;
+  color:rgba(255,255,255,.85);max-width:740px;text-align:center;
+  border-left:4px solid var(--y);padding-left:24px;text-align:left}
+
+/* ─── Layout ─── */
+.cc{display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:16px;width:100%;text-align:center}
+.lc{display:flex;flex-direction:column;align-items:flex-start;justify-content:center;
+  gap:14px;width:100%;max-width:940px}
+.row{display:flex;align-items:flex-start;gap:20px;width:100%;max-width:980px;flex-wrap:wrap}
+
+/* ─── Cards ─── */
+.card{border-radius:14px;padding:20px 24px;
+  display:flex;flex-direction:column;gap:10px}
+.card-dark{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1)}
+.card-light{background:var(--w);border:1px solid var(--border);
+  box-shadow:0 2px 12px rgba(13,46,90,.07)}
+.card-red{background:rgba(192,57,43,.12);border:1px solid rgba(192,57,43,.22);
+  border-left:4px solid var(--r)}
+.card-yellow{background:rgba(245,196,0,.1);border:1px solid rgba(245,196,0,.2);
+  border-left:4px solid var(--y)}
+.card-green{background:rgba(30,138,74,.12);border:1px solid rgba(30,138,74,.22);
+  border-left:4px solid var(--g)}
+.card-blue{background:rgba(27,108,181,.12);border:1px solid rgba(27,108,181,.22);
+  border-left:4px solid var(--b)}
+
+.card-title{font-size:13px;font-weight:700;display:flex;align-items:center;gap:8px}
+.card-title.w{color:var(--w)} .card-title.dk{color:var(--n)}
+.card-body{font-family:'Open Sans',sans-serif;font-size:13px;line-height:1.65}
+.card-body.w{color:rgba(255,255,255,.68)} .card-body.dk{color:var(--muted)}
+
+/* ─── Linha do tempo vertical ─── */
+.timeline{display:flex;flex-direction:column;gap:0;width:100%;max-width:860px}
+.tl-item{display:flex;gap:20px;align-items:flex-start;position:relative}
+.tl-item::before{content:'';position:absolute;left:19px;top:44px;
+  width:2px;bottom:-12px;background:rgba(255,255,255,.1)}
+.tl-item:last-child::before{display:none}
+.tl-left{display:flex;flex-direction:column;align-items:center;gap:0;flex-shrink:0;width:40px}
+.tl-dot{width:40px;height:40px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;font-size:17px;
+  flex-shrink:0;border:3px solid rgba(255,255,255,.1)}
+.tl-content{padding-bottom:24px;flex:1}
+.tl-title{font-size:14px;font-weight:700;margin-bottom:5px}
+.tl-desc{font-family:'Open Sans',sans-serif;font-size:13px;color:rgba(255,255,255,.6);line-height:1.6}
+
+/* ─── Pilares (3 colunas) ─── */
+.pilares{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;
+  width:100%;max-width:900px}
+.pilar{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);
+  border-radius:14px;padding:22px 20px;display:flex;flex-direction:column;
+  align-items:center;gap:10px;text-align:center;position:relative;overflow:hidden}
+.pilar::after{content:'';position:absolute;bottom:0;left:0;right:0;height:3px}
+.pilar-1::after{background:var(--b)} .pilar-2::after{background:var(--y)}
+.pilar-3::after{background:var(--g)}
+.pilar-icon{font-size:32px;line-height:1}
+.pilar-num{font-size:11px;font-weight:800;letter-spacing:3px;
+  text-transform:uppercase;color:rgba(255,255,255,.3);margin-bottom:-4px}
+.pilar-name{font-size:15px;font-weight:800;color:var(--w);line-height:1.2}
+.pilar-desc{font-family:'Open Sans',sans-serif;font-size:12px;
+  color:rgba(255,255,255,.55);line-height:1.55}
+
+/* ─── Termômetro de maturidade ─── */
+.maturidade-bar{
+  width:100%;max-width:820px;height:56px;border-radius:28px;
+  position:relative;overflow:hidden;
+  background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);
+}
+.maturidade-fill{
+  height:100%;border-radius:28px;
+  background:linear-gradient(90deg,var(--r) 0%,var(--or) 30%,var(--y) 60%,var(--g) 100%);
+  transition:width 1.2s cubic-bezier(.4,0,.2,1);
+  display:flex;align-items:center;justify-content:flex-end;padding-right:16px;
+}
+.maturidade-label{font-size:12px;font-weight:800;letter-spacing:1px;
+  text-transform:uppercase;color:var(--n)}
+.maturidade-markers{
+  display:flex;width:100%;max-width:820px;justify-content:space-between;
+  margin-top:8px;
+}
+.maturidade-m{font-size:10px;font-weight:600;text-align:center;flex:1}
+.mm-past{color:rgba(255,255,255,.3)} .mm-now{color:var(--y);font-weight:800}
+.mm-future{color:rgba(255,255,255,.15)}
+
+/* ─── Estágio / Stage cards ─── */
+.stage-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:0;
+  width:100%;max-width:900px;border-radius:16px;overflow:hidden;
+  border:1px solid rgba(255,255,255,.1)}
+.stage{padding:22px 20px;display:flex;flex-direction:column;gap:8px;
+  border-right:1px solid rgba(255,255,255,.07)}
+.stage:last-child{border-right:none}
+.stage-0{background:rgba(192,57,43,.15)}
+.stage-1{background:rgba(245,196,0,.08)}
+.stage-2{background:rgba(27,108,181,.1)}
+.stage-tag{font-size:9px;font-weight:800;letter-spacing:2.5px;
+  text-transform:uppercase;margin-bottom:4px}
+.s0 .stage-tag{color:#F87171} .s1 .stage-tag{color:var(--y)}
+.s2 .stage-tag{color:#93C5FD}
+.stage-title{font-size:15px;font-weight:800;color:var(--w)}
+.stage-items{display:flex;flex-direction:column;gap:6px;margin-top:4px}
+.stage-item{font-family:'Open Sans',sans-serif;font-size:12px;
+  color:rgba(255,255,255,.65);display:flex;gap:8px;align-items:flex-start;line-height:1.5}
+.stage-active{outline:2px solid var(--y);outline-offset:-1px}
+
+/* ─── App mockup SVG ─── */
+.phone-wrap{position:relative;flex-shrink:0}
+
+/* ─── Resultado / Ganhos ─── */
+.ganhos{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;
+  width:100%;max-width:860px}
+
+/* ─── App feature list ─── */
+.feat-list{display:flex;flex-direction:column;gap:8px;width:100%;max-width:680px}
+.feat-item{display:flex;align-items:flex-start;gap:14px;
+  background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);
+  border-radius:10px;padding:12px 16px}
+.feat-icon{font-size:20px;flex-shrink:0;margin-top:2px}
+.feat-info{}
+.feat-title{font-size:13px;font-weight:700;color:var(--w);margin-bottom:3px}
+.feat-desc{font-family:'Open Sans',sans-serif;font-size:12px;
+  color:rgba(255,255,255,.55);line-height:1.5}
+.feat-badge{display:inline-flex;align-items:center;padding:2px 8px;border-radius:20px;
+  font-size:9px;font-weight:800;letter-spacing:1px;text-transform:uppercase;
+  margin-top:4px}
+.fb-y{background:rgba(245,196,0,.2);color:var(--y)}
+.fb-g{background:rgba(30,138,74,.2);color:#86EFAC}
+.fb-b{background:rgba(27,108,181,.2);color:#93C5FD}
+
+/* ─── Comparativo Antes x Depois x App ─── */
+.comp-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:0;
+  width:100%;max-width:960px;border-radius:16px;overflow:hidden}
+.comp-col{padding:20px 22px;display:flex;flex-direction:column;gap:8px}
+.comp-header{padding:10px 22px;font-size:10px;font-weight:800;
+  letter-spacing:2px;text-transform:uppercase;text-align:center}
+.comp-items{display:flex;flex-direction:column;gap:8px}
+.comp-item{font-family:'Open Sans',sans-serif;font-size:12.5px;
+  display:flex;gap:8px;align-items:flex-start;line-height:1.5;
+  padding:6px 0;border-bottom:1px solid rgba(255,255,255,.06)}
+.comp-item:last-child{border-bottom:none}
+.comp-col-r .comp-header{background:rgba(192,57,43,.3);color:#FCA5A5}
+.comp-col-r .comp-col{background:rgba(192,57,43,.08)}
+.comp-col-r .comp-item{color:rgba(255,255,255,.6)}
+.comp-col-y .comp-header{background:rgba(217,119,6,.3);color:var(--y)}
+.comp-col-y .comp-col{background:rgba(217,119,6,.06)}
+.comp-col-y .comp-item{color:rgba(255,255,255,.7)}
+.comp-col-g .comp-header{background:rgba(30,138,74,.35);color:#86EFAC}
+.comp-col-g .comp-col{background:rgba(30,138,74,.1)}
+.comp-col-g .comp-item{color:rgba(255,255,255,.8)}
+
+/* ─── Animações ─── */
+@keyframes up {from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:translateY(0)}}
+@keyframes fi {from{opacity:0}to{opacity:1}}
+@keyframes sc {from{opacity:0;transform:scale(.93)}to{opacity:1;transform:scale(1)}}
+@keyframes rl {from{opacity:0;transform:translateX(-20px)}to{opacity:1;transform:translateX(0)}}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.6}}
+@keyframes glow{0%,100%{box-shadow:0 0 0 0 rgba(245,196,0,0)}50%{box-shadow:0 0 32px 8px rgba(245,196,0,.2)}}
+
+.slide.active .au{animation:up .55s ease both}
+.slide.active .af{animation:fi .55s ease both}
+.slide.active .as{animation:sc .48s ease both}
+.slide.active .ar{animation:rl .5s ease both}
+.slide.active .ap{animation:pulse 3s ease-in-out infinite}
+
+.d1{animation-delay:.08s!important} .d2{animation-delay:.2s!important}
+.d3{animation-delay:.34s!important} .d4{animation-delay:.5s!important}
+.d5{animation-delay:.66s!important} .d6{animation-delay:.84s!important}
+.d7{animation-delay:1.02s!important}.d8{animation-delay:1.2s!important}
+.d9{animation-delay:1.4s!important}
+
+/* ─── Build progressivo ─── */
+[data-step]{opacity:0;pointer-events:none;
+  transition:opacity .45s ease, transform .45s ease;transform:translateY(14px)}
+[data-step].visible{opacity:1;pointer-events:all;transform:translateY(0)}
+[data-step].visible-r{opacity:1;pointer-events:all;transform:translateX(0)}
+[data-step][data-anim="scale"]{transform:scale(.93)}
+[data-step][data-anim="scale"].visible{transform:scale(1)}
+
+/* ─── HUD ─── */
+.progress{position:fixed;bottom:0;left:0;height:3px;
+  background:linear-gradient(90deg,var(--r),var(--y),var(--g));
+  transition:width .4s ease;z-index:1000}
+.counter{position:fixed;bottom:14px;right:22px;font-size:10px;font-weight:700;
+  letter-spacing:2px;color:rgba(255,255,255,.2);z-index:1000}
+.chapter-hud{position:fixed;bottom:14px;left:24px;font-size:10px;font-weight:700;
+  letter-spacing:1.5px;text-transform:uppercase;color:rgba(255,255,255,.2);z-index:1000}
+
+/* ─── Glow para app final ─── */
+.app-glow{animation:glow 2.5s ease-in-out infinite}
+</style>
+</head>
+<body>
+<div id="deck">
+
+<!-- ══════════════════════════════════════════════════
+  CAPÍTULO 0 — CAPA
+══════════════════════════════════════════════════ -->
+
+<!-- S1: Capa -->
+<section class="slide bg-void accent-full" data-ch="Apresentação" data-steps="0">
+  <div style="position:absolute;inset:0;
+    background:radial-gradient(ellipse at 70% 60%,rgba(13,46,90,.6) 0%,transparent 60%)"></div>
+  <div class="lc" style="max-width:760px;gap:20px;position:relative;z-index:1">
+    <div class="af d1" style="display:flex;align-items:center;gap:14px">
+      <svg width="44" height="44" viewBox="0 0 44 44">
+        <circle cx="22" cy="22" r="22" fill="#F5C400"/>
+        <text x="22" y="28" text-anchor="middle" font-family="Montserrat"
+          font-weight="900" font-size="14" fill="#0D2E5A">CMS</text>
+      </svg>
+      <div style="font-size:10px;font-weight:700;letter-spacing:3px;
+        text-transform:uppercase;color:rgba(255,255,255,.4)">
+        Conselho Municipal de Saúde · Montes Claros
+      </div>
+    </div>
+    <h1 class="h1 au d2" style="font-size:clamp(36px,5.5vw,72px)">
+      Da Desorganização<br>à <em>Maturidade</em><br>Institucional
+    </h1>
+    <p class="body au d3">
+      Uma jornada de construção técnica, organizacional e digital
+      na Secretaria Executiva do CMS-MOC.
+    </p>
+    <div class="au d4" style="display:flex;gap:10px;flex-wrap:wrap">
+      <span style="background:rgba(192,57,43,.2);border:1px solid rgba(192,57,43,.3);
+        color:#F87171;padding:4px 14px;border-radius:20px;font-size:11px;font-weight:700">
+        Estágio 0 · Caos
+      </span>
+      <span style="color:rgba(255,255,255,.2);font-size:16px;align-self:center">→</span>
+      <span style="background:rgba(217,119,6,.15);border:1px solid rgba(217,119,6,.3);
+        color:var(--y);padding:4px 14px;border-radius:20px;font-size:11px;font-weight:700">
+        Estágio 1 · Estrutura
+      </span>
+      <span style="color:rgba(255,255,255,.2);font-size:16px;align-self:center">→</span>
+      <span style="background:rgba(30,138,74,.18);border:1px solid rgba(30,138,74,.35);
+        color:#86EFAC;padding:4px 14px;border-radius:20px;font-size:11px;font-weight:700">
+        Estágio 2 · Maturidade
+      </span>
+      <span style="color:rgba(255,255,255,.2);font-size:16px;align-self:center">→</span>
+      <span style="background:rgba(27,108,181,.2);border:1px solid rgba(27,108,181,.35);
+        color:#93C5FD;padding:4px 14px;border-radius:20px;font-size:11px;font-weight:700">
+        Estágio 3 · Excelência Digital
+      </span>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════
+  CAPÍTULO 1 — O PROBLEMA
+══════════════════════════════════════════════════ -->
+
+<!-- S2: Abertura — o diagnóstico -->
+<section class="slide bg-red accent-r" data-ch="O Problema" data-steps="0">
+  <div class="chapter-badge cb-r">Capítulo 1 · O Problema</div>
+  <div class="cc" style="gap:18px">
+    <p class="eyebrow ey-r au d1">O ponto de partida</p>
+    <h1 class="h1 red au d2" style="max-width:740px">
+      Não havia<br><em>estrutura.</em>
+    </h1>
+    <div class="au d3" style="max-width:680px">
+      <blockquote class="quote" style="border-color:#F87171;color:rgba(255,255,255,.8)">
+        "O que se apresentou foi um contexto de baixa estruturação organizacional,
+        com ausência de padronização, descontinuidade de registros e inexistência
+        de fluxos definidos."
+      </blockquote>
+    </div>
+    <p class="body au d4" style="text-align:center">
+      Isso não é opinião — é <strong>diagnóstico técnico</strong>.
+    </p>
+  </div>
+</section>
+
+<!-- S3: O caos concreto — build progressivo -->
+<section class="slide bg-red" data-ch="O Problema" data-steps="5">
+  <div class="chapter-badge cb-r">Capítulo 1 · O Problema</div>
+  <div class="cc" style="gap:14px">
+    <p class="eyebrow ey-r au d1">Na prática, isso significava</p>
+    <h2 class="h2 au d2" style="max-width:700px">Cinco sintomas<br><em>críticos</em></h2>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;
+      width:100%;max-width:860px;margin-top:4px">
+      <div data-step="1" class="card card-red">
+        <div class="card-title w">🔍 Documentos perdidos</div>
+        <div class="card-body w">Atas, listas de presença e resoluções impossíveis de localizar quando necessário.</div>
+      </div>
+      <div data-step="2" class="card card-red">
+        <div class="card-title w">📭 Histórico ausente</div>
+        <div class="card-body w">Sem registro confiável de deliberações anteriores. Cada reunião recomeçava do zero.</div>
+      </div>
+      <div data-step="3" class="card card-red">
+        <div class="card-title w">📋 Sem controles</div>
+        <div class="card-body w">Inexistência de planilhas ou instrumentos de acompanhamento. Nenhum fluxo formalizado.</div>
+      </div>
+      <div data-step="4" class="card card-red">
+        <div class="card-title w">🧠 Dependência de memória</div>
+        <div class="card-body w">O funcionamento dependia do conhecimento individual de pessoas específicas. Zero institucionalidade.</div>
+      </div>
+      <div data-step="5" class="card card-red" style="grid-column:1/-1;background:rgba(192,57,43,.25)">
+        <div class="card-title w" style="font-size:14px">⚖️ Risco institucional e jurídico</div>
+        <div class="card-body w">Não era apenas ineficiência — era exposição do Conselho a questionamentos sobre a validade de seus próprios atos.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- S4: O que essa realidade custava -->
+<section class="slide bg-red accent-r" data-ch="O Problema" data-steps="0">
+  <div class="chapter-badge cb-r">Capítulo 1 · O Problema</div>
+  <div class="cc" style="gap:18px">
+    <p class="eyebrow ey-r au d1">O custo real</p>
+    <h2 class="h2 au d2">Três dimensões<br><em>de impacto</em></h2>
+    <div class="row au d3" style="justify-content:center;gap:14px;margin-top:4px">
+      <div class="card card-dark" style="flex:1;min-width:220px;max-width:280px">
+        <div style="font-size:28px;text-align:center">⏱️</div>
+        <div class="card-title w" style="justify-content:center">Eficiência</div>
+        <div class="card-body w" style="text-align:center">Tempo desperdiçado em buscas, retrabalho e improvisos repetitivos</div>
+      </div>
+      <div class="card card-dark" style="flex:1;min-width:220px;max-width:280px">
+        <div style="font-size:28px;text-align:center">🔒</div>
+        <div class="card-title w" style="justify-content:center">Segurança</div>
+        <div class="card-body w" style="text-align:center">Risco de questionamento da legalidade dos atos e das deliberações</div>
+      </div>
+      <div class="card card-dark" style="flex:1;min-width:220px;max-width:280px">
+        <div style="font-size:28px;text-align:center">🏛️</div>
+        <div class="card-title w" style="justify-content:center">Credibilidade</div>
+        <div class="card-body w" style="text-align:center">Fragilidade institucional perante a gestão, o Ministério Público e a sociedade</div>
+      </div>
+    </div>
+    <p class="body au d5" style="text-align:center;margin-top:4px">
+      Um Conselho que <strong>fiscaliza o Estado</strong> não pode ser
+      menos organizado do que aqueles que fiscaliza.
+    </p>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════
+  CAPÍTULO 2 — O MÉTODO
+══════════════════════════════════════════════════ -->
+
+<!-- S5: Ponto de virada -->
+<section class="slide bg-amber accent-y" data-ch="O Método" data-steps="0">
+  <div class="chapter-badge cb-y">Capítulo 2 · O Método</div>
+  <div class="cc" style="gap:18px">
+    <p class="eyebrow ey-y au d1">O ponto de virada</p>
+    <h1 class="h1 au d2" style="max-width:720px">
+      Não bastava<br>"organizar pontualmente".<br>
+      Era preciso <em>método.</em>
+    </h1>
+    <p class="body au d3" style="text-align:center">
+      A opção foi sair de um modelo <strong>reativo</strong> e construir
+      um modelo <strong>estruturado, previsível e sustentável.</strong>
+    </p>
+  </div>
+</section>
+
+<!-- S6: Os três pilares — build -->
+<section class="slide bg-amber" data-ch="O Método" data-steps="3">
+  <div class="chapter-badge cb-y">Capítulo 2 · O Método</div>
+  <div class="cc" style="gap:16px">
+    <p class="eyebrow ey-y au d1">A abordagem escolhida</p>
+    <h2 class="h2 au d2">Três <em>pilares</em> estruturantes</h2>
+    <div class="pilares" style="margin-top:8px">
+      <div data-step="1" class="pilar pilar-1">
+        <div class="pilar-icon">🧠</div>
+        <div class="pilar-num">Pilar 01</div>
+        <div class="pilar-name">Gestão da Informação e do Conhecimento</div>
+        <div class="pilar-desc">Capturar, organizar, preservar e tornar acessível o conhecimento institucional acumulado.</div>
+      </div>
+      <div data-step="2" class="pilar pilar-2">
+        <div class="pilar-icon">🔄</div>
+        <div class="pilar-num">Pilar 02</div>
+        <div class="pilar-name">Modelagem de Processos (BPM)</div>
+        <div class="pilar-desc">Mapear, documentar e padronizar os fluxos operacionais — tornando-os independentes de pessoas.</div>
+      </div>
+      <div data-step="3" class="pilar pilar-3">
+        <div class="pilar-icon">📈</div>
+        <div class="pilar-num">Pilar 03</div>
+        <div class="pilar-name">Melhoria Contínua (PDCA)</div>
+        <div class="pilar-desc">Estruturação progressiva com ciclos de ajuste baseados na prática real e no feedback do uso.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- S7: O método na prática — timeline -->
+<section class="slide bg-navy accent-b" data-ch="O Método" data-steps="0">
+  <div class="chapter-badge cb-n">Capítulo 2 · O Método</div>
+  <div class="row" style="align-items:flex-start;gap:60px;max-width:920px">
+    <div style="flex:1">
+      <p class="eyebrow ey-b au d1">A execução</p>
+      <h2 class="h2 au d2" style="margin-bottom:20px">Como foi<br><em>conduzido</em></h2>
+    </div>
+    <div class="timeline au d3" style="flex:2">
+      <div class="tl-item">
+        <div class="tl-left">
+          <div class="tl-dot" style="background:rgba(27,108,181,.3);border-color:var(--b)">📍</div>
+        </div>
+        <div class="tl-content">
+          <div class="tl-title" style="color:var(--b)">Diagnóstico e mapeamento</div>
+          <div class="tl-desc">Entender o que existia — mesmo que de forma informal. Identificar lacunas, riscos e oportunidades antes de qualquer intervenção.</div>
+        </div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-left">
+          <div class="tl-dot" style="background:rgba(245,196,0,.2);border-color:var(--y)">🗺️</div>
+        </div>
+        <div class="tl-content">
+          <div class="tl-title" style="color:var(--y)">Construção do modelo ideal</div>
+          <div class="tl-desc">Definir como deveria funcionar — documentos, rotinas, fluxos, comunicação. O "estado desejado" como referência de evolução.</div>
+        </div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-left">
+          <div class="tl-dot" style="background:rgba(30,138,74,.2);border-color:var(--g)">⚙️</div>
+        </div>
+        <div class="tl-content">
+          <div class="tl-title" style="color:#86EFAC">Implementação progressiva</div>
+          <div class="tl-desc">Artefatos organizacionais: modelos padronizados, planilhas de controle, arquivos organizados, rotinas definidas, comunicação institucional estruturada.</div>
+        </div>
+      </div>
+      <div class="tl-item" style="margin-bottom:0">
+        <div class="tl-left">
+          <div class="tl-dot" style="background:rgba(27,108,181,.3);border-color:var(--b)">🔁</div>
+        </div>
+        <div class="tl-content" style="padding-bottom:0">
+          <div class="tl-title" style="color:#93C5FD">Ajuste contínuo</div>
+          <div class="tl-desc">Revisão permanente com base no uso real. A estrutura se aprimora com a prática — não de uma vez, mas progressivamente.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- S8: O fator humano e o tempo -->
+<section class="slide bg-navy" data-ch="O Método" data-steps="0">
+  <div class="chapter-badge cb-n">Capítulo 2 · O Método</div>
+  <div class="cc" style="gap:20px">
+    <p class="eyebrow ey-b au d1">Um ponto essencial</p>
+    <h2 class="h2 au d2" style="max-width:680px">
+      Estrutura depende<br>de <em>pessoas.</em><br>E pessoas levam <em>tempo.</em>
+    </h2>
+    <div class="au d3" style="max-width:680px">
+      <blockquote class="quote">
+        "Não é possível acelerar certos processos institucionais
+        — eles precisam amadurecer."
+      </blockquote>
+    </div>
+    <p class="body au d4" style="text-align:center;max-width:600px">
+      A evolução foi pensada de forma <strong>gradual</strong>,
+      respeitando o tempo necessário para que os fluxos deixassem de ser
+      novidade e passassem a ser <strong>prática comum.</strong>
+    </p>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════
+  CAPÍTULO 3 — OS ESTÁGIOS
+══════════════════════════════════════════════════ -->
+
+<!-- S9: Os 3 estágios — panorama -->
+<section class="slide bg-deep accent-b" data-ch="A Evolução" data-steps="0">
+  <div class="chapter-badge cb-n">Capítulo 3 · A Evolução</div>
+  <div class="cc" style="gap:16px">
+    <p class="eyebrow ey-b au d1">A jornada em três estágios</p>
+    <h2 class="h2 au d2">Do improviso à <em>excelência</em></h2>
+    <div class="stage-grid au d3">
+      <div class="stage stage-0 s0">
+        <div class="stage-tag">Estágio 0</div>
+        <div class="stage-title">Caos</div>
+        <div class="stage-items">
+          <div class="stage-item"><span>🔴</span>Sem documentação</div>
+          <div class="stage-item"><span>🔴</span>Dependência individual</div>
+          <div class="stage-item"><span>🔴</span>Sem fluxos definidos</div>
+          <div class="stage-item"><span>🔴</span>Risco jurídico latente</div>
+        </div>
+      </div>
+      <div class="stage stage-1 s1">
+        <div class="stage-tag">Estágio 1–2</div>
+        <div class="stage-title">Estrutura</div>
+        <div class="stage-items">
+          <div class="stage-item"><span>🟡</span>Documentos padronizados</div>
+          <div class="stage-item"><span>🟡</span>Rotinas estabelecidas</div>
+          <div class="stage-item"><span>🟡</span>Planilhas de controle</div>
+          <div class="stage-item"><span>🟡</span>Memória institucional</div>
+        </div>
+      </div>
+      <div class="stage stage-2 s2">
+        <div class="stage-tag">Estágio 3 — Atual</div>
+        <div class="stage-title">Excelência Digital</div>
+        <div class="stage-items">
+          <div class="stage-item"><span>🔵</span>Plataforma digital própria</div>
+          <div class="stage-item"><span>🔵</span>Processos automatizados</div>
+          <div class="stage-item"><span>🔵</span>Transparência ativa</div>
+          <div class="stage-item"><span>🔵</span>Referência para o SUS</div>
+        </div>
+      </div>
+    </div>
+    <p class="body au d5" style="text-align:center;font-size:13px">
+      Cada estágio foi construído sobre o anterior. <strong>Nenhum atalho — mas nenhum retrocesso.</strong>
+    </p>
+  </div>
+</section>
+
+<!-- S10: Termômetro de maturidade -->
+<section class="slide bg-deep" data-ch="A Evolução" data-steps="4">
+  <div class="chapter-badge cb-n">Capítulo 3 · A Evolução</div>
+  <div class="cc" style="gap:16px">
+    <p class="eyebrow ey-b au d1">Onde chegamos</p>
+    <h2 class="h2 au d2">Nível de <em>maturidade institucional</em></h2>
+    <div style="width:100%;max-width:820px" class="au d3">
+      <div class="maturidade-bar">
+        <div class="maturidade-fill" id="mat-bar" style="width:0">
+          <span class="maturidade-label" id="mat-label"></span>
+        </div>
+      </div>
+      <div class="maturidade-markers">
+        <div data-step="1" class="maturidade-m mm-past" style="opacity:0">Inexistente</div>
+        <div data-step="2" class="maturidade-m mm-past" style="opacity:0">Inicial</div>
+        <div data-step="3" class="maturidade-m mm-past" style="opacity:0">Estruturado</div>
+        <div data-step="4" class="maturidade-m mm-now" style="opacity:0">Gerenciado</div>
+        <div class="maturidade-m mm-future">Otimizado</div>
+      </div>
+    </div>
+    <div data-step="4" class="row" style="gap:10px;justify-content:center;flex-wrap:wrap">
+      <div class="card card-dark" style="max-width:240px;text-align:center;padding:14px">
+        <div style="font-size:28px;font-weight:900;color:var(--y);font-family:Montserrat">✓</div>
+        <div style="font-size:12px;font-weight:700;color:var(--w);margin-bottom:4px">Registros organizados</div>
+        <div style="font-family:'Open Sans',sans-serif;font-size:11px;color:rgba(255,255,255,.5)">Rastreáveis e persistentes</div>
+      </div>
+      <div class="card card-dark" style="max-width:240px;text-align:center;padding:14px">
+        <div style="font-size:28px;font-weight:900;color:var(--y);font-family:Montserrat">✓</div>
+        <div style="font-size:12px;font-weight:700;color:var(--w);margin-bottom:4px">Rotinas estabelecidas</div>
+        <div style="font-family:'Open Sans',sans-serif;font-size:11px;color:rgba(255,255,255,.5)">Independentes de memória individual</div>
+      </div>
+      <div class="card card-dark" style="max-width:240px;text-align:center;padding:14px">
+        <div style="font-size:28px;font-weight:900;color:var(--y);font-family:Montserrat">✓</div>
+        <div style="font-size:12px;font-weight:700;color:var(--w);margin-bottom:4px">Plataforma digital ativa</div>
+        <div style="font-family:'Open Sans',sans-serif;font-size:11px;color:rgba(255,255,255,.5)">Custo zero. Acesso a qualquer hora.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- S11: O que foi entregue -->
+<section class="slide bg-deep accent-g" data-ch="A Evolução" data-steps="0">
+  <div class="chapter-badge cb-g">Capítulo 3 · A Evolução</div>
+  <div class="cc" style="gap:14px">
+    <p class="eyebrow ey-g au d1">Avanços concretos</p>
+    <h2 class="h2 au d2">O que <em>existe hoje</em><br>que não existia antes</h2>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;
+      width:100%;max-width:880px;margin-top:4px">
+      <div class="card card-green au d3">
+        <div class="card-title w">📁 Documentação</div>
+        <div class="card-body w">Modelos padronizados de atas, ofícios, deliberações e comunicados. Arquivo digital organizado por tipo e período.</div>
+      </div>
+      <div class="card card-green au d4">
+        <div class="card-title w">📋 Controle</div>
+        <div class="card-body w">Planilhas de acompanhamento de presenças, mandatos, comissões e deliberações. Rastreabilidade total.</div>
+      </div>
+      <div class="card card-green au d5">
+        <div class="card-title w">🔄 Fluxos</div>
+        <div class="card-body w">Rotinas operacionais definidas: convocação, pauta, condução, ata, aprovação, publicação. Cada passo documentado.</div>
+      </div>
+      <div class="card card-green au d6">
+        <div class="card-title w">📣 Comunicação</div>
+        <div class="card-body w">Comunicação institucional estruturada, com canais definidos, identidade visual e linguagem padronizada.</div>
+      </div>
+      <div class="card card-green au d7">
+        <div class="card-title w">🏛️ Memória</div>
+        <div class="card-body w">Histórico de deliberações, composições, mandatos e decisões — acessível, pesquisável, permanente.</div>
+      </div>
+      <div class="card card-green au d8">
+        <div class="card-title w">📈 Previsibilidade</div>
+        <div class="card-body w">A Secretaria Executiva passa a funcionar com base em processos, não em urgências. Do reativo ao proativo.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════
+  CAPÍTULO 4 — O ÁPICE: SERTÃO CONSELHEIRO
+══════════════════════════════════════════════════ -->
+
+<!-- S12: Transição para o app -->
+<section class="slide bg-void" data-ch="Estágio Final" data-steps="0">
+  <div style="position:absolute;inset:0;
+    background:radial-gradient(ellipse at center,rgba(27,108,181,.15) 0%,transparent 65%)"></div>
+  <div class="cc" style="gap:20px;position:relative;z-index:1">
+    <p class="eyebrow ey-m au d1">O que vem a seguir</p>
+    <h1 class="h1 au d2" style="font-size:clamp(36px,5.5vw,72px)">
+      Tudo isso criou<br>a base para<br><em>algo maior.</em>
+    </h1>
+    <p class="body au d3" style="text-align:center;max-width:560px">
+      A estrutura organizacional construída ao longo desses estágios
+      não foi um fim em si mesma. Foi o <strong>fundamento</strong> para
+      o próximo nível.
+    </p>
+    <div class="au d4" style="width:80px;height:2px;background:var(--y);border-radius:2px"></div>
+  </div>
+</section>
+
+<!-- S13: Apresentando o SerTão Conselheiro -->
+<section class="slide bg-navy accent-full" data-ch="SerTão App" data-steps="0">
+  <div class="chapter-badge cb-n">Estágio 3 · Excelência Digital</div>
+  <div style="position:absolute;inset:0;
+    background:radial-gradient(ellipse at 80% 50%,rgba(245,196,0,.07) 0%,transparent 55%)"></div>
+  <div class="row" style="gap:48px;align-items:center;position:relative;z-index:1">
+    <div style="flex:1;min-width:280px">
+      <p class="eyebrow ey-y au d1">O estágio atual</p>
+      <h1 class="h1 au d2" style="font-size:clamp(32px,4.5vw,60px)">
+        SerTão<br><em>Conselheiro</em>
+      </h1>
+      <p class="body au d3" style="margin-top:12px">
+        A plataforma digital institucional do CMS-MOC.
+        O resultado de toda a jornada anterior —
+        <strong>materializada em tecnologia.</strong>
+      </p>
+      <div class="au d4" style="display:flex;gap:8px;flex-wrap:wrap;margin-top:16px">
+        <span style="background:rgba(245,196,0,.15);border:1px solid rgba(245,196,0,.3);
+          color:var(--y);padding:4px 12px;border-radius:20px;font-size:11px;font-weight:700">
+          💰 Custo R$ 0
+        </span>
+        <span style="background:rgba(30,138,74,.15);border:1px solid rgba(30,138,74,.3);
+          color:#86EFAC;padding:4px 12px;border-radius:20px;font-size:11px;font-weight:700">
+          📱 Instala no celular
+        </span>
+        <span style="background:rgba(27,108,181,.2);border:1px solid rgba(27,108,181,.3);
+          color:#93C5FD;padding:4px 12px;border-radius:20px;font-size:11px;font-weight:700">
+          🔒 Google Cloud
+        </span>
+      </div>
+    </div>
+    <!-- Mockup de telefone SVG -->
+    <div class="phone-wrap au d3 app-glow" style="flex-shrink:0">
+      <svg width="180" height="320" viewBox="0 0 180 320" fill="none"
+        xmlns="http://www.w3.org/2000/svg">
+        <!-- Frame do celular -->
+        <rect x="4" y="4" width="172" height="312" rx="22" fill="#1A2840" stroke="#2D4A6E" stroke-width="2"/>
+        <rect x="10" y="10" width="160" height="300" rx="18" fill="#0D2E5A"/>
+        <!-- Notch -->
+        <rect x="60" y="10" width="60" height="14" rx="7" fill="#1A2840"/>
+        <!-- Tela: header -->
+        <rect x="10" y="24" width="160" height="44" fill="#0D2E5A"/>
+        <text x="24" y="50" font-family="Montserrat" font-size="10" font-weight="800"
+          fill="white">SerTão</text>
+        <text x="68" y="50" font-family="Montserrat" font-size="10" font-weight="800"
+          fill="#F5C400">Conselheiro</text>
+        <!-- Hero section na tela -->
+        <rect x="10" y="68" width="160" height="52" fill="#0A2245"/>
+        <text x="24" y="87" font-family="Montserrat" font-size="7" fill="rgba(255,255,255,.5)">BOA TARDE,</text>
+        <text x="24" y="99" font-family="Montserrat" font-size="9" font-weight="800" fill="white">CONSELHEIRO</text>
+        <circle cx="154" cy="88" r="12" fill="#1B6CB5"/>
+        <text x="154" y="92" text-anchor="middle" font-family="Montserrat" font-size="7"
+          font-weight="800" fill="white">CN</text>
+        <!-- Cards na tela -->
+        <rect x="16" y="128" width="68" height="54" rx="8" fill="#1B4070" stroke="#2D5A8E" stroke-width="1"/>
+        <text x="50" y="148" text-anchor="middle" font-size="16">🗓️</text>
+        <text x="50" y="160" text-anchor="middle" font-family="Montserrat" font-size="6"
+          font-weight="700" fill="white">Próx. Reunião</text>
+        <text x="50" y="170" text-anchor="middle" font-family="Open Sans" font-size="6"
+          fill="rgba(255,255,255,.6)">Qua 1/4 · 14h</text>
+        <rect x="96" y="128" width="68" height="54" rx="8" fill="#1B4070" stroke="#2D5A8E" stroke-width="1"/>
+        <text x="130" y="148" text-anchor="middle" font-size="16">📋</text>
+        <text x="130" y="160" text-anchor="middle" font-family="Montserrat" font-size="6"
+          font-weight="700" fill="white">Ata Pendente</text>
+        <text x="130" y="170" text-anchor="middle" font-family="Open Sans" font-size="6"
+          fill="#F5C400">Aprovar →</text>
+        <!-- Lista de docs -->
+        <text x="16" y="196" font-family="Montserrat" font-size="7" font-weight="700"
+          fill="rgba(255,255,255,.5)">DOCUMENTOS RECENTES</text>
+        <rect x="16" y="202" width="148" height="22" rx="5" fill="#132038"/>
+        <text x="24" y="216" font-family="Open Sans" font-size="6.5" fill="white">Deliberação 12/2026</text>
+        <text x="154" y="216" text-anchor="end" font-family="Montserrat" font-size="6"
+          font-weight="700" fill="#93C5FD">PDF</text>
+        <rect x="16" y="228" width="148" height="22" rx="5" fill="#132038"/>
+        <text x="24" y="242" font-family="Open Sans" font-size="6.5" fill="white">Portaria 03/2026</text>
+        <text x="154" y="242" text-anchor="end" font-family="Montserrat" font-size="6"
+          font-weight="700" fill="#93C5FD">PDF</text>
+        <rect x="16" y="254" width="148" height="22" rx="5" fill="#132038"/>
+        <text x="24" y="268" font-family="Open Sans" font-size="6.5" fill="white">Ata 461ª RO · Aprovada</text>
+        <text x="154" y="268" text-anchor="end" font-family="Montserrat" font-size="6"
+          font-weight="700" fill="#86EFAC">✓</text>
+        <!-- Nav bar -->
+        <rect x="10" y="288" width="160" height="22" fill="#0A1E36" rx="0"/>
+        <text x="36" y="302" text-anchor="middle" font-size="10">📄</text>
+        <text x="72" y="302" text-anchor="middle" font-size="10">🏛️</text>
+        <text x="108" y="302" text-anchor="middle" font-size="10">📋</text>
+        <text x="144" y="302" text-anchor="middle" font-size="10">👤</text>
+        <!-- Home indicator -->
+        <rect x="60" y="308" width="60" height="3" rx="1.5" fill="rgba(255,255,255,.3)"/>
+      </svg>
+    </div>
+  </div>
+</section>
+
+<!-- S14: O que o app entrega — features -->
+<section class="slide bg-navy" data-ch="SerTão App" data-steps="0">
+  <div class="chapter-badge cb-n">Estágio 3 · SerTão Conselheiro</div>
+  <div class="row" style="gap:40px;align-items:flex-start">
+    <div style="flex:1">
+      <p class="eyebrow ey-b au d1">O que o sistema faz</p>
+      <h2 class="h2 au d2" style="margin-bottom:20px">Cada problema<br><em>tem uma solução</em></h2>
+      <div class="feat-list au d3">
+        <div class="feat-item">
+          <div class="feat-icon">📄</div>
+          <div class="feat-info">
+            <div class="feat-title">Biblioteca documental completa</div>
+            <div class="feat-desc">Todos os documentos organizados, filtráveis, com preview e download direto no celular.</div>
+            <div class="feat-badge fb-b">Substitui o pen drive</div>
+          </div>
+        </div>
+        <div class="feat-item">
+          <div class="feat-icon">✅</div>
+          <div class="feat-info">
+            <div class="feat-title">Presença digital com 1 clique</div>
+            <div class="feat-desc">Link pré-configurado por conselheiro. Nome preenchido. Declaração gerada automaticamente.</div>
+            <div class="feat-badge fb-g">Substitui o papel</div>
+          </div>
+        </div>
+        <div class="feat-item">
+          <div class="feat-icon">📋</div>
+          <div class="feat-info">
+            <div class="feat-title">Atas com aprovação digital</div>
+            <div class="feat-desc">Aprovação formal com nome, data e hora. Rastreável. Cumpre o Art. 23 do Regimento.</div>
+            <div class="feat-badge fb-y">Audit trail completo</div>
+          </div>
+        </div>
+        <div class="feat-item">
+          <div class="feat-icon">🔔</div>
+          <div class="feat-info">
+            <div class="feat-title">Notificações push oficiais</div>
+            <div class="feat-desc">Comunicados institucionais direto no celular. Sem grupo de WhatsApp.</div>
+            <div class="feat-badge fb-b">Canal oficial</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div style="flex:1">
+      <p class="eyebrow ey-b au d1" style="visibility:hidden">.</p>
+      <h2 class="h2 au d2" style="visibility:hidden;margin-bottom:20px">.</h2>
+      <div class="feat-list au d3">
+        <div class="feat-item">
+          <div class="feat-icon">🏛️</div>
+          <div class="feat-info">
+            <div class="feat-title">Câmaras e comissões</div>
+            <div class="feat-desc">9 câmaras técnicas e comissões intersetoriais cadastradas com composição completa.</div>
+            <div class="feat-badge fb-g">Estrutura visível</div>
+          </div>
+        </div>
+        <div class="feat-item">
+          <div class="feat-icon">📨</div>
+          <div class="feat-info">
+            <div class="feat-title">Solicitações formais</div>
+            <div class="feat-desc">Protocolo automático. Acompanhamento. Resposta registrada. Formalidade garantida.</div>
+            <div class="feat-badge fb-y">Sem informalidade</div>
+          </div>
+        </div>
+        <div class="feat-item">
+          <div class="feat-icon">🌐</div>
+          <div class="feat-info">
+            <div class="feat-title">Transparência pública</div>
+            <div class="feat-desc">Documentos públicos acessíveis sem login. Qualquer cidadão. Qualquer hora.</div>
+            <div class="feat-badge fb-g">LAI cumprida</div>
+          </div>
+        </div>
+        <div class="feat-item">
+          <div class="feat-icon">📊</div>
+          <div class="feat-info">
+            <div class="feat-title">Painel administrativo</div>
+            <div class="feat-desc">Dashboard, log de acessos, gestão de módulos, monitor de sistema. Tudo em um lugar.</div>
+            <div class="feat-badge fb-b">Controle total</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- S15: Comparativo completo — antes / estrutura / app -->
+<section class="slide bg-deep" data-ch="SerTão App" data-steps="0">
+  <div class="chapter-badge cb-n">Comparativo</div>
+  <div class="cc" style="gap:14px">
+    <p class="eyebrow ey-b au d1">A jornada em perspectiva</p>
+    <h2 class="h2 au d2">De onde viemos.<br><em>Onde chegamos.</em></h2>
+    <div class="comp-grid au d3">
+      <div>
+        <div class="comp-header comp-col-r" style="border-radius:16px 0 0 0">❌ Estágio 0 — Antes</div>
+        <div class="comp-col comp-col-r" style="border-radius:0 0 0 16px">
+          <div class="comp-item"><span>🔴</span>WhatsApp como canal oficial</div>
+          <div class="comp-item"><span>🔴</span>Pen drive como arquivo</div>
+          <div class="comp-item"><span>🔴</span>Papel assinado à mão</div>
+          <div class="comp-item"><span>🔴</span>Sem histórico rastreável</div>
+          <div class="comp-item"><span>🔴</span>Dependência de memória</div>
+          <div class="comp-item"><span>🔴</span>Risco jurídico constante</div>
+        </div>
+      </div>
+      <div>
+        <div class="comp-header comp-col-y">🟡 Estágio 1–2 — Estrutura</div>
+        <div class="comp-col comp-col-y">
+          <div class="comp-item"><span>🟡</span>Documentos padronizados</div>
+          <div class="comp-item"><span>🟡</span>Arquivo digital organizado</div>
+          <div class="comp-item"><span>🟡</span>Rotinas definidas e documentadas</div>
+          <div class="comp-item"><span>🟡</span>Planilhas de controle</div>
+          <div class="comp-item"><span>🟡</span>Comunicação estruturada</div>
+          <div class="comp-item"><span>🟡</span>Memória institucional iniciada</div>
+        </div>
+      </div>
+      <div>
+        <div class="comp-header comp-col-g" style="border-radius:0 16px 0 0">🔵 Estágio 3 — SerTão App</div>
+        <div class="comp-col comp-col-g" style="border-radius:0 0 16px 0">
+          <div class="comp-item"><span>✅</span>Plataforma digital própria</div>
+          <div class="comp-item"><span>✅</span>Biblioteca indexada no celular</div>
+          <div class="comp-item"><span>✅</span>Presença com 1 clique</div>
+          <div class="comp-item"><span>✅</span>Aprovação digital com audit trail</div>
+          <div class="comp-item"><span>✅</span>Notificações push oficiais</div>
+          <div class="comp-item"><span>✅</span>Transparência ativa (LAI)</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- S16: Valor — o quanto vale -->
+<section class="slide bg-void accent-y" data-ch="Valor" data-steps="3">
+  <div class="chapter-badge cb-y">O Valor</div>
+  <div class="cc" style="gap:16px">
+    <p class="eyebrow ey-y au d1">Em perspectiva financeira</p>
+    <h2 class="h2 au d2">O que isso valeria<br><em>no mercado?</em></h2>
+    <div style="width:100%;max-width:700px">
+      <div data-step="1" style="display:flex;justify-content:space-between;align-items:center;
+        padding:12px 20px;background:rgba(192,57,43,.1);border-radius:10px;margin-bottom:8px">
+        <span style="font-family:'Open Sans',sans-serif;font-size:14px;color:rgba(255,255,255,.75)">Empresa desenvolvedora · implantação</span>
+        <span style="font-weight:800;font-size:16px;color:#F87171">R$ 50–140 mil</span>
+      </div>
+      <div data-step="2" style="display:flex;justify-content:space-between;align-items:center;
+        padding:12px 20px;background:rgba(217,119,6,.1);border-radius:10px;margin-bottom:8px">
+        <span style="font-family:'Open Sans',sans-serif;font-size:14px;color:rgba(255,255,255,.75)">Manutenção e hospedagem anual</span>
+        <span style="font-weight:800;font-size:16px;color:var(--y)">R$ 10–15 mil/ano</span>
+      </div>
+      <div data-step="3" style="display:flex;justify-content:space-between;align-items:center;
+        padding:16px 20px;background:rgba(30,138,74,.15);border:1px solid rgba(30,138,74,.3);
+        border-radius:10px;margin-top:4px">
+        <span style="font-weight:800;font-size:16px;color:#86EFAC">Custo real do SerTão Conselheiro</span>
+        <span style="font-weight:900;font-size:24px;color:#86EFAC">R$ 0,00</span>
+      </div>
+    </div>
+    <p data-step="3" class="body" style="text-align:center;color:#86EFAC;font-weight:600;margin-top:4px">
+      O retorno não é financeiro. É institucional, jurídico e social.
+    </p>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════
+  CAPÍTULO 5 — HORIZONTE E ENCERRAMENTO
+══════════════════════════════════════════════════ -->
+
+<!-- S17: Para onde vamos -->
+<section class="slide bg-green accent-g" data-ch="O Horizonte" data-steps="0">
+  <div class="chapter-badge cb-g">Capítulo 5 · O Horizonte</div>
+  <div class="cc" style="gap:18px">
+    <p class="eyebrow ey-g au d1">O próximo nível</p>
+    <h1 class="h1 grn au d2" style="max-width:720px">
+      Isso é o começo<br>de <em>algo maior.</em>
+    </h1>
+    <div class="row au d3" style="justify-content:center;gap:14px">
+      <div class="card card-dark" style="flex:1;min-width:200px;max-width:260px">
+        <div class="card-title w">🗳️ Votações digitais</div>
+        <div class="card-body w">Votação em plenária com QR code e contagem automática em tempo real.</div>
+      </div>
+      <div class="card card-dark" style="flex:1;min-width:200px;max-width:260px">
+        <div class="card-title w">🌐 Portal público</div>
+        <div class="card-body w">Deliberações, atas aprovadas e prestações de contas acessíveis a qualquer cidadão.</div>
+      </div>
+      <div class="card card-dark" style="flex:1;min-width:200px;max-width:260px">
+        <div class="card-title w">🤝 Compartilhamento</div>
+        <div class="card-body w">Documentado para ser replicado em outros Conselhos Municipais de Saúde do Brasil.</div>
+      </div>
+    </div>
+    <p class="body au d5" style="text-align:center;max-width:620px">
+      Faz parte do plano <strong>CMS Inteligente</strong> — transformar este Conselho
+      em referência de gestão para o controle social no Brasil.
+    </p>
+  </div>
+</section>
+
+<!-- S18: A síntese final -->
+<section class="slide bg-navy accent-full" data-ch="Encerramento" data-steps="0">
+  <div class="chapter-badge cb-n">Encerramento</div>
+  <div class="cc" style="gap:20px">
+    <p class="eyebrow ey-y au d1">Em síntese</p>
+    <h2 class="h2 au d2" style="max-width:740px">
+      Não foi apenas<br>"organizar a secretaria".
+    </h2>
+    <div class="au d3" style="max-width:700px">
+      <blockquote class="quote" style="border-color:var(--y)">
+        "Foi iniciar um processo de construção de maturidade institucional.
+        Um movimento que transforma o Conselho de um modelo reativo e informal
+        para um modelo estruturado, técnico e sustentável."
+      </blockquote>
+    </div>
+    <div class="au d4" style="display:grid;grid-template-columns:repeat(3,1fr);
+      gap:12px;width:100%;max-width:780px;margin-top:8px">
+      <div style="text-align:center;padding:14px">
+        <div style="font-size:28px;margin-bottom:6px">⚙️</div>
+        <div style="font-size:13px;font-weight:700;color:var(--w)">Eficiência</div>
+        <div style="font-family:'Open Sans',sans-serif;font-size:12px;color:rgba(255,255,255,.5)">administrativa</div>
+      </div>
+      <div style="text-align:center;padding:14px">
+        <div style="font-size:28px;margin-bottom:6px">⚖️</div>
+        <div style="font-size:13px;font-weight:700;color:var(--w)">Legitimidade</div>
+        <div style="font-family:'Open Sans',sans-serif;font-size:12px;color:rgba(255,255,255,.5)">institucional</div>
+      </div>
+      <div style="text-align:center;padding:14px">
+        <div style="font-size:28px;margin-bottom:6px">🏥</div>
+        <div style="font-size:13px;font-weight:700;color:var(--w)">Força</div>
+        <div style="font-family:'Open Sans',sans-serif;font-size:12px;color:rgba(255,255,255,.5)">do controle social</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- S19: Slide final -->
+<section class="slide bg-void accent-full" data-ch="Fim" data-steps="0">
+  <div style="position:absolute;inset:0;
+    background:radial-gradient(ellipse at center,rgba(245,196,0,.06) 0%,transparent 60%)"></div>
+  <div class="cc" style="gap:18px;position:relative;z-index:1">
+    <div class="au d1" style="width:64px;height:64px;background:var(--y);border-radius:50%;
+      display:flex;align-items:center;justify-content:center">
+      <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+        <path d="M16 4L28 10v12L16 28L4 22V10L16 4z"
+          stroke="#0D2E5A" stroke-width="2.5" stroke-linejoin="round"/>
+        <circle cx="16" cy="16" r="3.5" fill="#0D2E5A"/>
+      </svg>
+    </div>
+    <h1 class="h1 au d2" style="font-size:clamp(36px,5.5vw,72px)">
+      SerTão<br><em>Conselheiro</em>
+    </h1>
+    <p class="body au d3" style="text-align:center;font-size:16px">
+      Plataforma Digital do CMS Montes Claros<br>
+      <strong>Controle social que funciona de verdade.</strong>
+    </p>
+    <div class="au d4" style="background:rgba(255,255,255,.05);
+      border:1px solid rgba(255,255,255,.1);border-radius:12px;
+      padding:12px 24px;margin-top:8px">
+      <p style="font-family:'Open Sans',sans-serif;font-size:15px;
+        font-weight:600;color:var(--y);text-align:center;letter-spacing:.5px">
+        cmsmoc.github.io/doc
+      </p>
+    </div>
+    <div class="au d5" style="display:flex;gap:16px;flex-wrap:wrap;
+      justify-content:center;margin-top:4px">
+      <span style="font-size:12px;color:rgba(255,255,255,.35)">Democracia</span>
+      <span style="color:var(--y)">·</span>
+      <span style="font-size:12px;color:rgba(255,255,255,.35)">Transparência</span>
+      <span style="color:var(--y)">·</span>
+      <span style="font-size:12px;color:rgba(255,255,255,.35)">Participação Social</span>
+      <span style="color:var(--y)">·</span>
+      <span style="font-size:12px;color:rgba(255,255,255,.35)">SUS</span>
+    </div>
+    <p class="au d6" style="font-size:10px;font-weight:600;letter-spacing:2px;
+      text-transform:uppercase;color:rgba(255,255,255,.2);margin-top:8px">
+      Secretaria Executiva · CMS-MOC · Montes Claros · 2026
+    </p>
+  </div>
+</section>
+
+</div><!-- /#deck -->
+
+<div class="progress" id="prg"></div>
+<div class="counter" id="ctr">1 / 19</div>
+<div class="chapter-hud" id="ch-hud">Apresentação</div>
+
+<script>
+// ════════════════════════════════════════════════
+// MOTOR — Build progressivo + navegação
+// ════════════════════════════════════════════════
+const slides = Array.from(document.querySelectorAll('.slide'));
+const TOTAL  = slides.length;
+let cur = 0, step = 0, maxStep = 0;
+
+const getMax = sl => parseInt(sl.dataset.steps) || 0;
+
+function updateHUD(){
+  const pct = ((cur+1)/TOTAL*100).toFixed(1);
+  document.getElementById('prg').style.width = pct+'%';
+  document.getElementById('ctr').textContent = (cur+1)+' / '+TOTAL;
+  document.getElementById('ch-hud').textContent = slides[cur].dataset.ch || '';
+}
+
+function showStep(s, sl){
+  sl.querySelectorAll('[data-step]').forEach(el => {
+    const n = parseInt(el.dataset.step);
+    if(n <= s){ el.classList.add('visible'); }
+    else       { el.classList.remove('visible'); }
+  });
+  // Anima a barra de maturidade no slide 10
+  const bar = sl.querySelector('#mat-bar');
+  if(bar && s >= 1){
+    const widths = ['0','25%','45%','68%','82%'];
+    const labels = ['','Inicial','Estruturado','Gerenciado','Gerenciado'];
+    bar.style.width = widths[Math.min(s, widths.length-1)];
+    document.getElementById('mat-label').textContent = labels[Math.min(s, labels.length-1)];
+  }
+}
+
+function goTo(n, dir=1){
+  if(n < 0 || n >= TOTAL) return;
+  slides[cur].classList.remove('active');
+  if(dir > 0) showStep(0, slides[cur]);
+  cur = n;
+  step = dir < 0 ? getMax(slides[cur]) : 0;
+  maxStep = getMax(slides[cur]);
+  slides[cur].classList.add('active');
+  showStep(step, slides[cur]);
+  updateHUD();
+  // Reset barra de maturidade ao entrar no slide
+  const bar = slides[cur].querySelector('#mat-bar');
+  if(bar && step === 0){ bar.style.width = '0'; document.getElementById('mat-label').textContent = ''; }
+}
+
+function advance(){
+  if(step < maxStep){ step++; showStep(step, slides[cur]); }
+  else goTo(cur+1, 1);
+}
+function retreat(){
+  if(step > 0){ step--; showStep(step, slides[cur]); }
+  else goTo(cur-1, -1);
+}
+
+document.addEventListener('keydown', e => {
+  if(e.key==='ArrowRight'||e.key===' '){e.preventDefault();advance()}
+  else if(e.key==='ArrowLeft'||e.key==='Backspace'){e.preventDefault();retreat()}
+  else if(e.key==='Home') goTo(0);
+  else if(e.key==='End')  goTo(TOTAL-1);
+  else if(e.key==='f'||e.key==='F') document.documentElement.requestFullscreen?.();
+});
+document.addEventListener('click', e => {
+  if(e.target.closest('a,button')) return;
+  e.clientX > window.innerWidth*.5 ? advance() : retreat();
+});
+let tx=0;
+document.addEventListener('touchstart',e=>{tx=e.touches[0].clientX},{passive:true});
+document.addEventListener('touchend',e=>{
+  const dx=e.changedTouches[0].clientX-tx;
+  if(Math.abs(dx)>50) dx<0?advance():retreat();
+},{passive:true});
+
+maxStep = getMax(slides[0]);
+updateHUD();
+</script>
+</body>
+</html>

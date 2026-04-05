@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Guia de Design · Módulo Atas · CMSMOC</title>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;900&family=Open+Sans:wght@300;400;600&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--navy:#0D2E5A;--blue:#1B6CB5;--green:#1E8A4A;--yellow:#F5C400;--white:#fff;--off:#F4F6F9;--ink:#111827;--muted:#6B7280;--border:#E5E7EB;}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Open Sans',sans-serif;background:var(--off);color:var(--ink);font-size:15px;line-height:1.7;}
+
+.page{max-width:960px;margin:0 auto;padding:48px 32px 80px;}
+
+/* HEADER */
+.doc-header{background:var(--navy);border-radius:16px;padding:40px 48px;margin-bottom:48px;position:relative;overflow:hidden;}
+.doc-header::after{content:'';position:absolute;bottom:0;left:0;right:0;height:4px;background:linear-gradient(to right,var(--yellow) 33.3%,var(--green) 33.3% 66.6%,var(--blue) 66.6%);}
+.doc-header::before{content:'';position:absolute;top:-60px;right:-60px;width:240px;height:240px;background:rgba(255,255,255,.03);border-radius:50%;}
+.doc-eyebrow{font-family:'Montserrat',sans-serif;font-size:10px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--yellow);margin-bottom:8px;}
+.doc-title{font-family:'Montserrat',sans-serif;font-size:32px;font-weight:900;color:#fff;letter-spacing:-1px;line-height:1.05;margin-bottom:8px;}
+.doc-sub{font-size:13px;color:rgba(255,255,255,.5);}
+
+/* SECTIONS */
+.section{margin-bottom:48px;}
+.section-title{font-family:'Montserrat',sans-serif;font-size:13px;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;color:var(--navy);border-bottom:3px solid var(--yellow);padding-bottom:10px;margin-bottom:24px;}
+
+/* CALLOUT */
+.callout{border-left:4px solid var(--blue);background:#fff;border-radius:0 10px 10px 0;padding:16px 20px;margin-bottom:16px;box-shadow:0 2px 8px rgba(0,0,0,.05);}
+.callout.warn{border-color:var(--yellow);}
+.callout.good{border-color:var(--green);}
+.callout-label{font-family:'Montserrat',sans-serif;font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--blue);margin-bottom:6px;}
+.callout.warn .callout-label{color:#92400E;}
+.callout.good .callout-label{color:var(--green);}
+.callout p{font-size:14px;line-height:1.7;}
+
+/* COLOR PALETTE */
+.palette{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:20px;}
+.swatch{border-radius:10px;overflow:hidden;width:130px;box-shadow:0 2px 8px rgba(0,0,0,.1);}
+.swatch-color{height:64px;}
+.swatch-info{background:#fff;padding:10px 12px;}
+.swatch-name{font-family:'Montserrat',sans-serif;font-size:11px;font-weight:700;}
+.swatch-hex{font-family:'Fira Code',monospace;font-size:12px;color:var(--muted);}
+.swatch-role{font-size:10px;color:var(--muted);margin-top:2px;}
+
+/* TYPOGRAPHY */
+.type-sample{background:#fff;border-radius:10px;padding:20px 24px;margin-bottom:12px;border:1px solid var(--border);}
+.type-meta{font-size:10px;color:var(--muted);font-family:'Fira Code',monospace;margin-bottom:8px;}
+
+/* THUMB PREVIEW */
+.thumb-preview{display:flex;gap:16px;flex-wrap:wrap;margin-bottom:20px;}
+.mini-thumb{width:200px;border-radius:10px;overflow:hidden;box-shadow:0 4px 16px rgba(0,0,0,.12);}
+.mini-thumb-inner{aspect-ratio:16/9;position:relative;overflow:hidden;padding:14px 16px;display:flex;flex-direction:column;justify-content:flex-end;}
+.mini-thumb-num{font-family:'Montserrat',sans-serif;font-size:32px;font-weight:900;color:#fff;letter-spacing:-2px;line-height:.9;position:relative;z-index:2;}
+.mini-thumb-label{font-family:'Montserrat',sans-serif;font-size:9px;font-weight:600;color:rgba(255,255,255,.8);position:relative;z-index:2;margin-top:3px;}
+.mini-thumb-rec{position:absolute;top:10px;right:12px;font-size:12px;color:rgba(255,255,255,.5);z-index:2;}
+.mini-thumb-icon{position:absolute;bottom:-15%;right:-6%;width:62%;opacity:.9;z-index:1;}
+.mini-thumb-label2{font-size:10px;color:var(--muted);text-align:center;padding:6px;background:#fff;}
+
+/* STRUCTURE DIAGRAM */
+.struct{background:#fff;border-radius:12px;border:1px solid var(--border);overflow:hidden;margin-bottom:20px;}
+.struct-row{display:flex;align-items:stretch;border-bottom:1px solid var(--border);}
+.struct-row:last-child{border-bottom:none;}
+.struct-tag{background:var(--navy);color:#fff;font-family:'Montserrat',sans-serif;font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;padding:12px 16px;min-width:140px;display:flex;align-items:center;}
+.struct-tag.re{background:var(--blue);}
+.struct-tag.vr{background:var(--green);}
+.struct-tag.si{background:var(--navy);}
+.struct-tag.at{background:var(--off);color:var(--navy);border-right:2px solid var(--border);}
+.struct-desc{padding:12px 16px;font-size:13px;color:var(--ink);flex:1;}
+.struct-desc code{font-family:'Fira Code',monospace;background:var(--off);padding:1px 6px;border-radius:4px;font-size:12px;}
+
+/* CODE BLOCK */
+.code-block{background:#111827;border-radius:10px;padding:20px 24px;overflow-x:auto;margin-bottom:16px;}
+.code-block pre{font-family:'Fira Code',monospace;font-size:12.5px;color:#E5E7EB;line-height:1.7;}
+.code-block .k{color:#F5C400;}
+.code-block .s{color:#6EE7B7;}
+.code-block .c{color:#6B7280;}
+.code-block .n{color:#93C5FD;}
+
+/* TABLE */
+.table{width:100%;border-collapse:collapse;background:#fff;border-radius:10px;overflow:hidden;border:1px solid var(--border);margin-bottom:16px;}
+.table th{background:var(--navy);color:#fff;font-family:'Montserrat',sans-serif;font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;padding:12px 16px;text-align:left;}
+.table td{padding:11px 16px;font-size:13px;border-bottom:1px solid var(--border);}
+.table tr:last-child td{border-bottom:none;}
+.table tr:nth-child(even) td{background:var(--off);}
+
+/* STAT CARD PREVIEW */
+.stat-preview{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:20px;}
+.stat-card{border-radius:10px;padding:14px 14px;text-align:center;width:140px;border-top:3px solid;}
+.stat-icon{font-size:22px;margin-bottom:4px;}
+.stat-val{font-family:'Montserrat',sans-serif;font-size:15px;font-weight:900;line-height:1.1;margin-bottom:3px;}
+.stat-lbl{font-size:10px;color:#6B7280;line-height:1.3;}
+
+/* PROMPT BOX */
+.prompt-box{background:#0D1117;border-radius:12px;padding:24px 28px;margin-bottom:20px;border-left:4px solid var(--yellow);}
+.prompt-box pre{font-family:'Fira Code',monospace;font-size:12px;color:#E5E7EB;line-height:1.8;white-space:pre-wrap;}
+.prompt-label{font-family:'Montserrat',sans-serif;font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--yellow);margin-bottom:12px;}
+
+/* CHECKLIST */
+.checklist{display:flex;flex-direction:column;gap:8px;margin-bottom:20px;}
+.check-item{display:flex;gap:12px;align-items:flex-start;background:#fff;border-radius:8px;padding:12px 16px;border:1px solid var(--border);}
+.check-icon{font-size:16px;flex-shrink:0;margin-top:1px;}
+.check-text{font-size:13px;line-height:1.6;}
+.check-text strong{color:var(--navy);}
+</style>
+</head>
+<body>
+<div class="page">
+
+  <!-- HEADER -->
+  <div class="doc-header">
+    <div class="doc-eyebrow">CMSMOC · Secretaria Executiva · Documentação Interna</div>
+    <div class="doc-title">Guia de Design<br>Módulo Atas</div>
+    <div class="doc-sub">Sistema de identidade visual, estrutura de componentes e prompt de integração · v1.0 · 2026</div>
+  </div>
+
+  <!-- 1. IDENTIDADE VISUAL -->
+  <div class="section">
+    <div class="section-title">1 — Paleta de Cores</div>
+    <p style="font-size:14px;color:var(--muted);margin-bottom:20px;">O sistema usa 4 cores primárias. Cada ata recebe <strong>uma cor dominante</strong> aplicada ao thumbnail, stripe do card, header do modal e resumo executivo. As cores alternam entre as atas para criar ritmo visual na galeria.</p>
+    <div class="palette">
+      <div class="swatch"><div class="swatch-color" style="background:#0D2E5A;"></div><div class="swatch-info"><div class="swatch-name">Navy</div><div class="swatch-hex">#0D2E5A</div><div class="swatch-role">Institucional · Header · Encaminhamentos</div></div></div>
+      <div class="swatch"><div class="swatch-color" style="background:#1B6CB5;"></div><div class="swatch-info"><div class="swatch-name">Blue</div><div class="swatch-hex">#1B6CB5</div><div class="swatch-role">Interativo · Seções · CTAs</div></div></div>
+      <div class="swatch"><div class="swatch-color" style="background:#1E8A4A;"></div><div class="swatch-info"><div class="swatch-name">Green</div><div class="swatch-hex">#1E8A4A</div><div class="swatch-role">Aprovações · Destaque positivo</div></div></div>
+      <div class="swatch"><div class="swatch-color" style="background:#F5C400;"></div><div class="swatch-info"><div class="swatch-name">Yellow</div><div class="swatch-hex">#F5C400</div><div class="swatch-role">Acento · Eyebrows · Alerta</div></div></div>
+    </div>
+    <div class="callout">
+      <div class="callout-label">Regra de Alternância</div>
+      <p>Use a sequência: Navy → Green → Blue → Navy → Green → Blue... para atas consecutivas. Nunca use a mesma cor em duas atas consecutivas. A cor da 462ª é Navy mesmo que duas outras sejam Navy — o que importa é a sequência visual na galeria.</p>
+    </div>
+    <div class="callout warn">
+      <div class="callout-label">Atenção</div>
+      <p>O Yellow (#F5C400) nunca é usado como cor dominante de ata — apenas como acento. Com texto branco sobre amarelo a legibilidade é comprometida.</p>
+    </div>
+  </div>
+
+  <!-- 2. TIPOGRAFIA -->
+  <div class="section">
+    <div class="section-title">2 — Tipografia</div>
+    <div class="type-sample">
+      <div class="type-meta">font-family: 'Montserrat', sans-serif · font-weight: 900 · DISPLAY / TÍTULOS</div>
+      <div style="font-family:'Montserrat',sans-serif;font-size:28px;font-weight:900;letter-spacing:-1px;color:var(--navy);">462ª Reunião Ordinária — CMSMOC</div>
+    </div>
+    <div class="type-sample">
+      <div class="type-meta">font-family: 'Montserrat', sans-serif · font-weight: 700 · EYEBROWS / LABELS</div>
+      <div style="font-family:'Montserrat',sans-serif;font-size:10px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--yellow);">Conselho Municipal de Saúde · Montes Claros / MG</div>
+    </div>
+    <div class="type-sample">
+      <div class="type-meta">font-family: 'Open Sans', sans-serif · font-weight: 400 · CORPO DE TEXTO</div>
+      <div style="font-family:'Open Sans',sans-serif;font-size:14px;line-height:1.75;color:var(--ink);">O Conselho Municipal de Saúde de Montes Claros reuniu-se em sessão ordinária para deliberar sobre as pautas constantes da convocação, assegurando o controle social e a participação popular na gestão do SUS.</div>
+    </div>
+  </div>
+
+  <!-- 3. THUMBNAILS -->
+  <div class="section">
+    <div class="section-title">3 — Thumbnails dos Cards</div>
+    <p style="font-size:14px;color:var(--muted);margin-bottom:20px;">Os thumbnails são renderizados em HTML puro — sem imagens externas além do ícone CMSMOC. Estrutura fixa: número grande à esquerda / baixo, ícone grande saindo pelo canto inferior direito, ponto pulsante no canto superior direito.</p>
+    <div class="thumb-preview">
+      <div class="mini-thumb">
+        <div class="mini-thumb-inner" style="background:#0D2E5A;">
+          <div class="mini-thumb-rec">●</div>
+          <img src="https://i.ibb.co/qM8MN3zx/Logotipo-CMSMOC-2025-ICONE-A.png" class="mini-thumb-icon" alt="">
+          <div style="position:relative;z-index:2;"><div style="font-family:'Montserrat',sans-serif;font-size:9px;font-weight:700;letter-spacing:1px;color:rgba(255,255,255,.65);text-transform:uppercase;">04/02/2026</div>
+          <div class="mini-thumb-num">462<sup style="font-size:.4em;">ª</sup></div>
+          <div class="mini-thumb-label">Reunião Ordinária</div></div>
+        </div>
+        <div class="mini-thumb-label2">Navy · #0D2E5A</div>
+      </div>
+      <div class="mini-thumb">
+        <div class="mini-thumb-inner" style="background:#1E8A4A;">
+          <div class="mini-thumb-rec">●</div>
+          <img src="https://i.ibb.co/qM8MN3zx/Logotipo-CMSMOC-2025-ICONE-A.png" class="mini-thumb-icon" alt="">
+          <div style="position:relative;z-index:2;"><div style="font-family:'Montserrat',sans-serif;font-size:9px;font-weight:700;letter-spacing:1px;color:rgba(255,255,255,.65);text-transform:uppercase;">04/03/2026</div>
+          <div class="mini-thumb-num">463<sup style="font-size:.4em;">ª</sup></div>
+          <div class="mini-thumb-label">Reunião Ordinária</div></div>
+        </div>
+        <div class="mini-thumb-label2">Green · #1E8A4A</div>
+      </div>
+      <div class="mini-thumb">
+        <div class="mini-thumb-inner" style="background:#1B6CB5;">
+          <div class="mini-thumb-rec">●</div>
+          <img src="https://i.ibb.co/qM8MN3zx/Logotipo-CMSMOC-2025-ICONE-A.png" class="mini-thumb-icon" alt="">
+          <div style="position:relative;z-index:2;"><div style="font-family:'Montserrat',sans-serif;font-size:9px;font-weight:700;letter-spacing:1px;color:rgba(255,255,255,.65);text-transform:uppercase;">21/01/2026</div>
+          <div class="mini-thumb-num">461<sup style="font-size:.4em;">ª</sup></div>
+          <div class="mini-thumb-label">Reunião Ordinária</div></div>
+        </div>
+        <div class="mini-thumb-label2">Blue · #1B6CB5</div>
+      </div>
+    </div>
+    <div class="callout good">
+      <div class="callout-label">Ícone CMSMOC</div>
+      <p>URL: <code style="font-family:'Fira Code',monospace;font-size:12px;">https://i.ibb.co/qM8MN3zx/Logotipo-CMSMOC-2025-ICONE-A.png</code><br>
+      Posição: <code style="font-family:'Fira Code',monospace;font-size:12px;">bottom: -18%; right: -8%; width: 68%</code> — o ícone transborda o frame propositalmente. Não aplicar nenhum filtro de cor — o ícone funciona sobre todas as cores do sistema.</p>
+    </div>
+  </div>
+
+  <!-- 4. ESTRUTURA DO MODAL -->
+  <div class="section">
+    <div class="section-title">4 — Estrutura do Modal (Ata Completa)</div>
+    <div class="struct">
+      <div class="struct-row"><div class="struct-tag re">Modal Header</div><div class="struct-desc">Fundo na cor dominante da ata. Contém: eyebrow "CMSMOC", título "Nº Reunião Ordinária — CMSMOC", subtítulo com data · hora · local. Botão ✕ fixo no canto superior direito.</div></div>
+      <div class="struct-row"><div class="struct-tag vr">Resumo Executivo</div><div class="struct-desc">Bloco visual na cor dominante. Contém: eyebrow com data, 3 chips de metadata (hora / local / presidente), 4 contadores, 4 cards de estatísticas, bloco de destaque, lista de temas tratados.</div></div>
+      <div class="struct-row"><div class="struct-tag si">Síntese Label</div><div class="struct-desc">Separador tipográfico: fundo off-white, borda superior em branco, borda inferior em navy 3px. Texto: <code>📄 Síntese</code> em Montserrat 700 uppercase.</div></div>
+      <div class="struct-row"><div class="struct-tag at">1. Expediente</div><div class="struct-desc">Lista de ausências com <code>.ausencia-item</code> (nome + motivo). Separados por borda inferior.</div></div>
+      <div class="struct-row"><div class="struct-tag at">2. Informes</div><div class="struct-desc">Blocos <code>.ata-pauta</code> com borda esquerda azul. Cada pauta tem título e descrição.</div></div>
+      <div class="struct-row"><div class="struct-tag at">3. Ordem do Dia</div><div class="struct-desc">Título com classe <code>.green</code>. Cada item usa <code>.ata-pauta</code>. Votações usam <code>.vote-box</code> com variantes: <code>.vote-aprovado</code>, <code>.vote-aprovado-unanime</code>, <code>.vote-abstenção</code>.</div></div>
+      <div class="struct-row"><div class="struct-tag at">4. Encaminhamentos</div><div class="struct-desc">Lista com <code>.ata-enc</code>: número em badge navy + texto. Título com classe <code>.yellow</code>.</div></div>
+      <div class="struct-row"><div class="struct-tag at">5. Encerramento</div><div class="struct-desc">Texto corrido com horário de encerramento e responsável pelo fechamento da sessão.</div></div>
+    </div>
+  </div>
+
+  <!-- 5. CARDS DE ESTATÍSTICAS -->
+  <div class="section">
+    <div class="section-title">5 — Cards de Estatísticas (Resumo Executivo)</div>
+    <p style="font-size:14px;color:var(--muted);margin-bottom:20px;">Cada ata tem exatamente <strong>4 cards</strong> de estatísticas. Cada card tem: ícone emoji, valor destacado, rótulo descritivo, borda superior colorida e fundo pastel correspondente.</p>
+    <div class="stat-preview">
+      <div class="stat-card" style="background:#D1FAE5;border-color:#1E8A4A;">
+        <div class="stat-icon">🗳️</div>
+        <div class="stat-val" style="color:#1E8A4A;">Unânime</div>
+        <div class="stat-lbl">Aprovação em votação</div>
+      </div>
+      <div class="stat-card" style="background:#FEE2E2;border-color:#DC2626;">
+        <div class="stat-icon">🏥</div>
+        <div class="stat-val" style="color:#DC2626;">54 cargos</div>
+        <div class="stat-lbl">Contratos encerrados</div>
+      </div>
+      <div class="stat-card" style="background:#DBEAFE;border-color:#1B6CB5;">
+        <div class="stat-icon">💰</div>
+        <div class="stat-val" style="color:#1B6CB5;">R$ 12,5M</div>
+        <div class="stat-lbl">Transposição aprovada</div>
+      </div>
+      <div class="stat-card" style="background:#FEF3C7;border-color:#92400E;">
+        <div class="stat-icon">📌</div>
+        <div class="stat-val" style="color:#92400E;">2 adiadas</div>
+        <div class="stat-lbl">Pautas para reunião ext.</div>
+      </div>
+    </div>
+    <table class="table">
+      <thead><tr><th>Cor</th><th>Hex</th><th>Fundo pastel</th><th>Uso</th></tr></thead>
+      <tbody>
+        <tr><td>🟢 Verde</td><td>#1E8A4A</td><td>#D1FAE5</td><td>Aprovações, conquistas, dados positivos</td></tr>
+        <tr><td>🔴 Vermelho</td><td>#DC2626</td><td>#FEE2E2</td><td>Problemas, alertas, dados críticos</td></tr>
+        <tr><td>🔵 Azul</td><td>#1B6CB5</td><td>#DBEAFE</td><td>Dados neutros, informações, processos</td></tr>
+        <tr><td>🟤 Âmbar</td><td>#92400E</td><td>#FEF3C7</td><td>Pendências, adiamentos, cautela</td></tr>
+        <tr><td>⬛ Navy</td><td>#0D2E5A</td><td>#E8EFF8</td><td>Dados institucionais, totais, prazos</td></tr>
+        <tr><td>⬜ Cinza</td><td>#6B7280</td><td>#F3F4F6</td><td>Homenagens, informações neutras</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- 6. PROMPT DE INTEGRAÇÃO -->
+  <div class="section">
+    <div class="section-title">6 — Prompt de Integração de Nova Ata</div>
+    <p style="font-size:14px;color:var(--muted);margin-bottom:20px;">Envie este prompt junto com a transcrição processada e a convocação de cada nova reunião. O resultado deve ser integrado no arquivo HTML principal conforme o checklist abaixo.</p>
+    <div class="prompt-box">
+      <div class="prompt-label">Prompt Completo — Copie e use</div>
+      <pre>
+Você é o assistente da Secretaria Executiva do CMSMOC (Conselho Municipal de Saúde de Montes Claros/MG).
+
+Gere o bloco de dados para integração de uma nova ata no Módulo Atas do sistema digital do Conselho, seguindo EXATAMENTE a estrutura e padrão abaixo.
+
+───────────────────────────────────────────────
+DADOS DA REUNIÃO (preencha antes de enviar):
+- Número: [ex: 464]
+- Tipo: [Ordinária / Extraordinária]  
+- Data: [ex: 07 de abril de 2026]
+- Data curta: [ex: 07/04/2026]
+- Hora: [ex: 13h30 – 17h00]
+- Local: [ex: Plenário da Câmara Municipal]
+- Presidente: [ex: Farley Sindeaux Ribeiro]
+- Cor dominante: [Navy #0D2E5A / Blue #1B6CB5 / Green #1E8A4A]
+  (alterne em relação à ata anterior: Navy → Green → Blue → repete)
+───────────────────────────────────────────────
+CONTEÚDO (cole abaixo):
+[TRANSCRIÇÃO PROCESSADA ou RESUMO DA REUNIÃO]
+[CONVOCAÇÃO se disponível]
+───────────────────────────────────────────────
+
+RETORNE exatamente neste formato JSON (sem markdown, sem comentários):
+
+{
+  "num": "464",
+  "cor": "#0D2E5A",
+  "txt": "#FFFFFF",
+  "tipo": "Ordinária",
+  "data": "07 de abril de 2026",
+  "data_s": "07/04/2026",
+  "hora": "13h30 – 17h00",
+  "local": "Plenário da Câmara Municipal",
+  "presidente": "Farley Sindeaux Ribeiro",
+  "pautas": 4,
+  "encaminhamentos": 6,
+  "presentes": 15,
+  "votacoes": 2,
+  "stats": [
+    {"i": "🗳️", "v": "Valor", "l": "Rótulo curto (máx 30 chars)", "c": "#1E8A4A", "bg": "#D1FAE5"},
+    {"i": "📋", "v": "Valor", "l": "Rótulo curto", "c": "#1B6CB5", "bg": "#DBEAFE"},
+    {"i": "💰", "v": "Valor", "l": "Rótulo curto", "c": "#DC2626", "bg": "#FEE2E2"},
+    {"i": "⏳", "v": "Valor", "l": "Rótulo curto", "c": "#0D2E5A", "bg": "#E8EFF8"}
+  ],
+  "temas": ["Tema 1 completo", "Tema 2 completo", "Tema 3 completo"],
+  "temas_c": ["Tema card 1", "Tema card 2", "Tema card 3", "Tema card 4"],
+  "dest": "1-2 frases descrevendo o principal resultado ou decisão da reunião.",
+  "body_html": "[COLE AQUI O HTML COMPLETO DA SÍNTESE conforme estrutura ata-section]"
+}
+
+REGRAS para body_html:
+- Use APENAS as classes CSS existentes: ata-section, ata-section-title, ata-pauta, ata-pauta-titulo, ata-pauta-desc, ata-enc, ata-enc-n, ata-enc-text, ausencia-item, ausencia-nome, ausencia-motivo, vote-box, vote-aprovado, vote-aprovado-unanime, vote-abstenção, ata-body-text
+- Seções obrigatórias: 1.Expediente · 2.Comunicação e Informes · 3.Ordem do Dia · 4.Encaminhamentos
+- Seção 3 usa classe "green" no título; Seção 4 usa classe "yellow"
+- Votações usam .vote-box dentro do .ata-pauta-desc
+- NÃO inclua o bloco de Resumo Executivo — ele é gerado automaticamente pelo JSON
+      </pre>
+    </div>
+  </div>
+
+  <!-- 7. CHECKLIST -->
+  <div class="section">
+    <div class="section-title">7 — Checklist de Integração</div>
+    <div class="checklist">
+      <div class="check-item"><div class="check-icon">1️⃣</div><div class="check-text"><strong>Obtenha os dados da reunião</strong> — use o prompt acima com a transcrição processada + convocação. O retorno será um JSON completo.</div></div>
+      <div class="check-item"><div class="check-icon">2️⃣</div><div class="check-text"><strong>Defina a cor dominante</strong> — alterne Navy → Green → Blue em relação à ata imediatamente anterior na galeria (ordem cronológica).</div></div>
+      <div class="check-item"><div class="check-icon">3️⃣</div><div class="check-text"><strong>Adicione ao array ATAS</strong> no script Python gerador (ou diretamente no HTML, seguindo o padrão dos blocos existentes). Mantenha a ordem cronológica crescente.</div></div>
+      <div class="check-item"><div class="check-icon">4️⃣</div><div class="check-text"><strong>Atualize o contador</strong> no header (<code>header-badge-num</code>) para o novo total de atas disponíveis.</div></div>
+      <div class="check-item"><div class="check-icon">5️⃣</div><div class="check-text"><strong>Verifique visualmente</strong> — abra o HTML e confirme: thumbnail com ícone no canto, Resumo Executivo com 4 cards de stats, label "Síntese" antes do corpo textual.</div></div>
+      <div class="check-item"><div class="check-icon">6️⃣</div><div class="check-text"><strong>Publique</strong> — substitua o arquivo no servidor/GitHub Pages. Nenhum outro arquivo precisa ser alterado.</div></div>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>

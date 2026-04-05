@@ -1,0 +1,870 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CMSMOC — Conselho Municipal de Saúde de Montes Claros</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --blue: #1a3a6b;
+            --blue-mid: #2255a4;
+            --blue-light: #3b7dd8;
+            --green: #1e8a4c;
+            --green-light: #25a85d;
+            --accent: #f0c040;
+            --bg: #f4f6fb;
+            --card: #ffffff;
+            --text: #1a1f2e;
+            --muted: #64748b;
+            --border: #e2e8f0;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            overflow-x: hidden;
+        }
+
+        h1, h2, h3, h4 { font-family: 'Syne', sans-serif; }
+
+        /* ── ANNOUNCEMENT BAR ── */
+        .ann-bar {
+            background: var(--green);
+            color: #fff;
+            padding: 9px 20px;
+            text-align: center;
+            font-size: 13px;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        .ann-bar span.dot { display: inline-block; width:7px; height:7px; border-radius:50%; background:#fff; animation: pulse 1.4s infinite; }
+        @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.3} }
+
+        /* ── HEADER ── */
+        header {
+            position: sticky; top: 0; z-index: 100;
+            background: rgba(255,255,255,0.97);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border);
+            transition: box-shadow .3s;
+        }
+        header.scrolled { box-shadow: 0 4px 24px rgba(26,58,107,.10); }
+
+        .header-inner {
+            max-width: 1200px; margin: 0 auto;
+            padding: 0 24px;
+            display: flex; align-items: center; justify-content: space-between;
+            height: 72px;
+        }
+
+        .logo { height: 48px; cursor: pointer; transition: opacity .2s; }
+        .logo:hover { opacity: .85; }
+
+        nav { display: flex; align-items: center; gap: 4px; }
+        .nav-btn {
+            background: none; border: none; cursor: pointer;
+            font-family: 'DM Sans', sans-serif;
+            font-size: 14px; font-weight: 500;
+            color: var(--muted);
+            padding: 8px 14px; border-radius: 8px;
+            transition: all .2s;
+            position: relative;
+        }
+        .nav-btn:hover { color: var(--blue-mid); background: #f0f4ff; }
+        .nav-btn.active { color: var(--blue); font-weight: 600; }
+        .nav-btn.active::after {
+            content: ''; position: absolute; bottom: 2px; left: 50%; transform: translateX(-50%);
+            width: 20px; height: 3px; border-radius: 2px;
+            background: var(--blue-light);
+        }
+        .nav-cta {
+            background: var(--blue); color: #fff;
+            border: none; cursor: pointer;
+            font-family: 'DM Sans', sans-serif;
+            font-size: 13px; font-weight: 600;
+            padding: 9px 20px; border-radius: 30px;
+            margin-left: 8px;
+            transition: background .2s, transform .15s;
+        }
+        .nav-cta:hover { background: var(--blue-mid); transform: translateY(-1px); }
+
+        /* hamburger */
+        .burger { display: none; background: none; border: none; cursor: pointer; padding: 6px; }
+        .burger span { display: block; width: 24px; height: 2px; background: var(--blue); margin: 5px 0; border-radius: 2px; transition: all .3s; }
+
+        /* mobile menu */
+        #mobile-overlay {
+            display: none; position: fixed; inset: 0; z-index: 99;
+            background: #fff; padding: 80px 32px 32px;
+            flex-direction: column; gap: 0;
+        }
+        #mobile-overlay.open { display: flex; }
+        .mob-nav-btn {
+            background: none; border: none; cursor: pointer;
+            font-family: 'Syne', sans-serif; font-size: 22px; font-weight: 700;
+            color: var(--text); padding: 16px 0;
+            border-bottom: 1px solid var(--border);
+            text-align: left;
+            transition: color .2s;
+        }
+        .mob-nav-btn:hover { color: var(--blue); }
+
+        /* ── TABS ── */
+        .tab { display: none; }
+        .tab.active { display: block; animation: fadeUp .4s ease; }
+        @keyframes fadeUp { from{opacity:0;transform:translateY(14px)} to{opacity:1;transform:translateY(0)} }
+
+        /* ── HERO ── */
+        .hero {
+            position: relative; height: 620px;
+            display: flex; align-items: center;
+            overflow: hidden;
+        }
+        .hero-bg {
+            position: absolute; inset: 0;
+        }
+        .hero-bg img { width:100%; height:100%; object-fit:cover; }
+        .hero-bg::after {
+            content: '';
+            position: absolute; inset: 0;
+            background: linear-gradient(100deg, rgba(10,28,70,.92) 0%, rgba(10,28,70,.70) 50%, rgba(10,28,70,.15) 100%);
+        }
+        .hero-content {
+            position: relative; z-index: 2;
+            max-width: 1200px; margin: 0 auto; padding: 0 24px;
+        }
+        .hero-badge {
+            display: inline-flex; align-items: center; gap: 8px;
+            background: rgba(255,255,255,.12); backdrop-filter: blur(8px);
+            border: 1px solid rgba(255,255,255,.2);
+            color: #fff; font-size: 11px; font-weight: 600;
+            letter-spacing: .08em; text-transform: uppercase;
+            padding: 6px 14px; border-radius: 30px; margin-bottom: 24px;
+        }
+        .hero-badge .dot { width:6px; height:6px; border-radius:50%; background: var(--green-light); }
+        .hero h1 {
+            font-size: clamp(2.4rem, 5vw, 3.8rem);
+            color: #fff; line-height: 1.1; margin-bottom: 20px;
+            max-width: 640px;
+        }
+        .hero p { color: rgba(255,255,255,.75); font-size: 17px; max-width: 500px; line-height: 1.7; margin-bottom: 36px; }
+        .hero-btns { display: flex; gap: 14px; flex-wrap: wrap; }
+        .btn-primary {
+            background: var(--green); color: #fff; border: none; cursor: pointer;
+            font-family: 'DM Sans',sans-serif; font-size: 14px; font-weight: 600;
+            padding: 14px 28px; border-radius: 12px;
+            display: flex; align-items: center; gap: 8px;
+            transition: background .2s, transform .15s;
+        }
+        .btn-primary:hover { background: var(--green-light); transform: translateY(-2px); }
+        .btn-ghost {
+            background: rgba(255,255,255,.1); backdrop-filter: blur(8px);
+            color: #fff; border: 1px solid rgba(255,255,255,.25); cursor: pointer;
+            font-family: 'DM Sans',sans-serif; font-size: 14px; font-weight: 500;
+            padding: 14px 28px; border-radius: 12px;
+            transition: background .2s;
+        }
+        .btn-ghost:hover { background: rgba(255,255,255,.18); }
+
+        /* ── STATS BAR ── */
+        .stats-bar {
+            position: relative; z-index: 10; margin-top: -56px;
+            max-width: 1200px; margin-left: auto; margin-right: auto;
+            padding: 0 24px; margin-top: -56px;
+        }
+        .stats-grid {
+            background: #fff;
+            border-radius: 20px;
+            box-shadow: 0 8px 40px rgba(26,58,107,.12);
+            display: grid; grid-template-columns: repeat(4, 1fr);
+            overflow: hidden;
+        }
+        .stat-item {
+            padding: 28px 24px;
+            border-right: 1px solid var(--border);
+            text-align: center;
+        }
+        .stat-item:last-child { border-right: none; }
+        .stat-num { font-family: 'Syne',sans-serif; font-size: 2rem; font-weight: 800; color: var(--blue); }
+        .stat-label { font-size: 12px; font-weight: 500; color: var(--muted); margin-top: 4px; text-transform: uppercase; letter-spacing: .05em; }
+
+        /* ── CARDS SECTION ── */
+        .section { max-width: 1200px; margin: 0 auto; padding: 64px 24px; }
+        .section-title { font-size: 1.8rem; font-weight: 800; color: var(--blue); margin-bottom: 8px; }
+        .section-sub { color: var(--muted); margin-bottom: 40px; font-size: 15px; }
+
+        .cards-3 { display: grid; grid-template-columns: repeat(3,1fr); gap: 20px; }
+        .card {
+            background: var(--card); border-radius: 18px;
+            border: 1px solid var(--border);
+            padding: 28px;
+            transition: box-shadow .25s, transform .25s;
+        }
+        .card:hover { box-shadow: 0 8px 32px rgba(26,58,107,.10); transform: translateY(-3px); }
+        .card-icon {
+            width: 44px; height: 44px; border-radius: 12px;
+            display: flex; align-items: center; justify-content: center;
+            margin-bottom: 16px; font-size: 20px;
+        }
+        .card-icon.blue { background: #e8f0fd; color: var(--blue); }
+        .card-icon.green { background: #e3f5ec; color: var(--green); }
+        .card-icon.yellow { background: #fdf6e3; color: #c49a00; }
+        .card h3 { font-size: 1rem; font-weight: 700; margin-bottom: 8px; }
+        .card p { font-size: 13.5px; color: var(--muted); line-height: 1.65; }
+        .card-link { display: inline-flex; align-items: center; gap: 6px; margin-top: 16px; font-size: 13px; font-weight: 600; color: var(--blue-light); text-decoration: none; cursor: pointer; transition: gap .2s; }
+        .card-link:hover { gap: 10px; }
+
+        /* Highlight card */
+        .card-highlight {
+            background: var(--blue);
+            color: #fff; border-color: transparent;
+        }
+        .card-highlight p { color: rgba(255,255,255,.75); }
+        .card-highlight h3 { color: #fff; }
+        .card-highlight .card-link { color: var(--accent); }
+
+        /* ── NEXT MEETING ── */
+        .meeting-card {
+            background: var(--card);
+            border: 2px solid var(--blue);
+            border-radius: 22px;
+            padding: 32px;
+            display: flex; gap: 28px; align-items: center;
+            box-shadow: 0 4px 24px rgba(26,58,107,.08);
+        }
+        .meeting-date {
+            background: var(--blue);
+            color: #fff; border-radius: 16px;
+            min-width: 90px; padding: 20px 16px;
+            text-align: center;
+            flex-shrink: 0;
+        }
+        .meeting-date .day { font-family: 'Syne',sans-serif; font-size: 2.5rem; font-weight: 800; line-height: 1; }
+        .meeting-date .month { font-size: 11px; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; opacity: .8; margin-top: 4px; }
+        .meeting-info h3 { font-size: 1.3rem; font-weight: 800; color: var(--blue); margin-bottom: 8px; }
+        .meeting-info p { color: var(--muted); font-size: 14px; display: flex; align-items: center; gap: 6px; margin-bottom: 16px; }
+        .meeting-btns { display: flex; gap: 10px; flex-wrap: wrap; }
+        .btn-sm {
+            font-family: 'DM Sans',sans-serif; font-size: 12px; font-weight: 600;
+            padding: 8px 18px; border-radius: 8px; border: none; cursor: pointer;
+            transition: opacity .2s;
+        }
+        .btn-sm:hover { opacity: .85; }
+        .btn-sm.filled { background: var(--blue); color: #fff; }
+        .btn-sm.dark { background: var(--text); color: #fff; }
+        .btn-sm.outline { background: none; border: 1.5px solid var(--border); color: var(--text); }
+        .badge-live { display: inline-flex; align-items: center; gap: 5px; background: #fee2e2; color: #b91c1c; font-size: 10px; font-weight: 700; padding: 3px 10px; border-radius: 20px; text-transform: uppercase; margin-left: 10px; }
+        .badge-live .dot { width:5px; height:5px; border-radius:50%; background:#b91c1c; animation: pulse 1.2s infinite; }
+
+        /* ── WHO WE ARE ── */
+        .about-grid {
+            display: grid; grid-template-columns: 1fr 1fr; gap: 64px; align-items: center;
+        }
+        .about-img { position: relative; }
+        .about-img img { width:100%; height:420px; object-fit:cover; border-radius:24px; }
+        .about-badge {
+            position: absolute; bottom: -20px; right: -16px;
+            background: #fff; border-radius: 16px; padding: 20px 24px;
+            box-shadow: 0 8px 32px rgba(0,0,0,.12);
+            text-align: center;
+        }
+        .about-badge .num { font-family:'Syne',sans-serif; font-size:2rem; font-weight:800; color:var(--blue); }
+        .about-badge .lbl { font-size:11px; font-weight:600; color:var(--muted); text-transform:uppercase; letter-spacing:.05em; }
+        .about-text h2 { font-size:2rem; font-weight:800; color:var(--blue); margin-bottom:16px; }
+        .about-text p { color:var(--muted); line-height:1.8; margin-bottom:16px; font-size:15px; }
+        .about-pills { display:flex; flex-wrap:wrap; gap:10px; margin-top:24px; }
+        .pill {
+            display:flex; align-items:center; gap:8px;
+            background:#f0f4ff; border-radius:30px;
+            padding:8px 16px; font-size:13px; font-weight:500; color:var(--blue);
+        }
+
+        /* ── COMMISSIONS ── */
+        .comm-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:16px; }
+        .comm-card {
+            background:#fff; border-radius:16px; border:1px solid var(--border);
+            padding:24px; position:relative; overflow:hidden;
+        }
+        .comm-card::before {
+            content:''; position:absolute; top:0; left:0; right:0; height:4px;
+            background: var(--blue);
+        }
+        .comm-card.green::before { background: var(--green); }
+        .comm-card.yellow::before { background: var(--accent); }
+        .comm-card h4 { font-size:15px; font-weight:700; margin-bottom:8px; }
+        .comm-card p { font-size:13px; color:var(--muted); line-height:1.6; }
+        .comm-tag {
+            display:inline-block; margin-top:12px;
+            font-size:11px; font-weight:600; color:var(--blue);
+            background:#e8f0fd; padding:3px 10px; border-radius:20px;
+        }
+
+        /* ── DOCS ── */
+        .doc-item {
+            background:#fff; border:1px solid var(--border); border-radius:14px;
+            padding:18px 20px; display:flex; align-items:center; justify-content:space-between;
+            transition:box-shadow .2s, border-color .2s; cursor:pointer;
+        }
+        .doc-item:hover { box-shadow:0 4px 20px rgba(26,58,107,.08); border-color:var(--blue-light); }
+        .doc-left { display:flex; align-items:center; gap:14px; }
+        .doc-icon { width:40px; height:40px; border-radius:10px; background:#e8f0fd; display:flex; align-items:center; justify-content:center; color:var(--blue); font-size:18px; }
+        .doc-name { font-size:14px; font-weight:600; }
+        .doc-meta { font-size:12px; color:var(--muted); }
+        .doc-dl { color:var(--muted); font-size:18px; }
+
+        /* ── INSTITUTIONAL ── */
+        .inst-card {
+            background:#fff; border-radius:18px; border:1px solid var(--border);
+            padding:32px; margin-bottom:20px;
+        }
+        .inst-card h3 { font-size:1.1rem; font-weight:700; color:var(--blue); margin-bottom:12px; display:flex; align-items:center; gap:10px; }
+        .inst-card p { color:var(--muted); line-height:1.8; font-size:15px; }
+
+        /* ── FOOTER ── */
+        footer {
+            background: var(--blue);
+            color: rgba(255,255,255,.85);
+            padding: 60px 24px 32px;
+            margin-top: 80px;
+        }
+        .footer-inner { max-width:1200px; margin:0 auto; display:grid; grid-template-columns:2fr 1fr 1fr 1fr; gap:48px; }
+        footer h4 { font-family:'Syne',sans-serif; font-size:13px; font-weight:700; color:#fff; text-transform:uppercase; letter-spacing:.08em; margin-bottom:16px; }
+        footer p, footer a { font-size:13.5px; line-height:1.8; color:rgba(255,255,255,.65); text-decoration:none; display:block; }
+        footer a:hover { color:#fff; }
+        .footer-logo { height:44px; opacity:.9; margin-bottom:16px; }
+        .footer-divider { border:none; border-top:1px solid rgba(255,255,255,.1); margin:40px 0 24px; }
+        .footer-bottom { max-width:1200px; margin:0 auto; display:flex; justify-content:space-between; align-items:center; font-size:12px; color:rgba(255,255,255,.4); }
+        .footer-contact-item { display:flex; align-items:center; gap:8px; margin-bottom:10px; font-size:13.5px; color:rgba(255,255,255,.65); }
+
+        /* ── LOADING SKELETON ── */
+        .skeleton {
+            background: linear-gradient(90deg, #e2e8f0 25%, #f0f4ff 50%, #e2e8f0 75%);
+            background-size: 400% 100%;
+            animation: shimmer 1.5s infinite;
+            border-radius: 8px;
+            min-height: 20px;
+        }
+        @keyframes shimmer { 0%{background-position:100% 0} 100%{background-position:-100% 0} }
+
+        /* ── LOADING BANNER ── */
+        .loading-banner {
+            background: #fff3cd; border: 1px solid #ffc107;
+            border-radius: 10px; padding: 12px 20px; margin-bottom: 20px;
+            font-size: 13px; color: #856404; display: flex; align-items: center; gap: 8px;
+        }
+
+        /* ── RESPONSIVE ── */
+        @media (max-width: 1024px) {
+            .stats-grid { grid-template-columns: repeat(2,1fr); }
+            .cards-3 { grid-template-columns: 1fr 1fr; }
+            .footer-inner { grid-template-columns: 1fr 1fr; gap: 32px; }
+        }
+        @media (max-width: 768px) {
+            nav, .nav-cta { display: none; }
+            .burger { display: block; }
+            .hero { height: 560px; }
+            .stats-grid { grid-template-columns: repeat(2,1fr); }
+            .cards-3 { grid-template-columns: 1fr; }
+            .about-grid { grid-template-columns: 1fr; }
+            .about-badge { display: none; }
+            .comm-grid { grid-template-columns: 1fr; }
+            .footer-inner { grid-template-columns: 1fr; gap: 28px; }
+            .meeting-card { flex-direction: column; text-align: center; }
+            .meeting-btns { justify-content: center; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- Announcement Bar -->
+<div class="ann-bar" id="ann-bar">
+    <span class="dot"></span>
+    <span id="ann-text">Preparativos para a 11ª Conferência Municipal de Saúde — Participe!</span>
+</div>
+
+<!-- Header -->
+<header id="header">
+    <div class="header-inner">
+        <img src="https://i.ibb.co/TxHFTCjv/Logotipo-CMSMOC-2025-A4.png" alt="CMSMOC" class="logo" onclick="showTab('inicio')">
+        <nav>
+            <button class="nav-btn active" data-tab="inicio" onclick="showTab('inicio')">Início</button>
+            <button class="nav-btn" data-tab="institucional" onclick="showTab('institucional')">Institucional</button>
+            <button class="nav-btn" data-tab="comissoes" onclick="showTab('comissoes')">Comissões</button>
+            <button class="nav-btn" data-tab="reunioes" onclick="showTab('reunioes')">Reuniões</button>
+            <button class="nav-btn" data-tab="documentos" onclick="showTab('documentos')">Documentos</button>
+            <button class="nav-cta">📞 Ouvidoria SUS</button>
+        </nav>
+        <button class="burger" id="burger" onclick="toggleMobile()">
+            <span></span><span></span><span></span>
+        </button>
+    </div>
+</header>
+
+<!-- Mobile Overlay -->
+<div id="mobile-overlay">
+    <button class="mob-nav-btn" onclick="showTab('inicio');toggleMobile()">🏠 Início</button>
+    <button class="mob-nav-btn" onclick="showTab('institucional');toggleMobile()">📋 Institucional</button>
+    <button class="mob-nav-btn" onclick="showTab('comissoes');toggleMobile()">👥 Comissões</button>
+    <button class="mob-nav-btn" onclick="showTab('reunioes');toggleMobile()">📅 Reuniões</button>
+    <button class="mob-nav-btn" onclick="showTab('documentos');toggleMobile()">📄 Documentos</button>
+    <div style="margin-top:24px">
+        <button class="nav-cta" style="width:100%;padding:14px;border-radius:12px;font-size:15px;">📞 Ouvidoria SUS</button>
+    </div>
+</div>
+
+<!-- ════════════════════════════════════════════ -->
+<!--  TAB: INÍCIO -->
+<!-- ════════════════════════════════════════════ -->
+<div id="tab-inicio" class="tab active">
+
+    <!-- Hero -->
+    <div class="hero">
+        <div class="hero-bg">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/f/fe/MOCcity_%28cropped%29.jpg" alt="Montes Claros">
+        </div>
+        <div class="hero-content">
+            <div class="hero-badge"><span class="dot"></span> Controle Social em Foco</div>
+            <h1>Transparência e Participação na Saúde Pública</h1>
+            <p id="hero-desc">Fiscalize, participe e contribua com as políticas públicas de saúde de Montes Claros.</p>
+            <div class="hero-btns">
+                <button class="btn-primary" onclick="showTab('reunioes')">
+                    📅 Próximas Reuniões →
+                </button>
+                <button class="btn-ghost" onclick="showTab('institucional')">
+                    Conheça o Conselho
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Stats Bar -->
+    <div class="stats-bar">
+        <div class="stats-grid" id="stats-grid">
+            <div class="stat-item"><div class="stat-num" id="stat-conselheiros">48</div><div class="stat-label">Conselheiros Ativos</div></div>
+            <div class="stat-item"><div class="stat-num" id="stat-reunioes">12</div><div class="stat-label">Reuniões em 2024</div></div>
+            <div class="stat-item"><div class="stat-num" id="stat-resolucoes">27</div><div class="stat-label">Resoluções</div></div>
+            <div class="stat-item"><div class="stat-num" id="stat-comissoes">8</div><div class="stat-label">Comissões Ativas</div></div>
+        </div>
+    </div>
+
+    <!-- Mural de Avisos -->
+    <div class="section" style="padding-top:96px;">
+        <div class="section-title">Avisos e Destaques</div>
+        <div class="section-sub">Fique por dentro das últimas novidades do conselho.</div>
+        <div class="cards-3" id="avisos-grid">
+            <!-- Preenchido via JS -->
+            <div class="card"><div class="skeleton" style="height:140px"></div></div>
+            <div class="card"><div class="skeleton" style="height:140px"></div></div>
+            <div class="card card-highlight"><div class="skeleton" style="height:140px;background:rgba(255,255,255,.15)"></div></div>
+        </div>
+    </div>
+
+    <!-- Quem Somos -->
+    <div class="section" style="background:#fff; max-width:100%; padding:64px 0">
+        <div style="max-width:1200px; margin:0 auto; padding:0 24px;">
+            <div class="about-grid">
+                <div class="about-img">
+                    <img src="https://i.ibb.co/pvvMcfGx/20250224-160101.jpg" alt="Plenária">
+                    <div class="about-badge">
+                        <div class="num">48</div>
+                        <div class="lbl">Conselheiros</div>
+                    </div>
+                </div>
+                <div class="about-text">
+                    <div class="section-title">Quem somos?</div>
+                    <p>O <strong>Conselho Municipal de Saúde de Montes Claros (CMSMOC)</strong> é uma instância colegiada de caráter permanente, deliberativo, fiscalizador e consultivo do SUS.</p>
+                    <p>Somos compostos por representantes do governo, prestadores de serviço, profissionais de saúde e usuários da comunidade — com paridade garantida.</p>
+                    <p>Nossa missão é garantir que o direito constitucional à saúde seja respeitado e que os recursos públicos sejam aplicados com eficiência.</p>
+                    <div class="about-pills">
+                        <div class="pill">⚖️ Paritário</div>
+                        <div class="pill">📋 Deliberativo</div>
+                        <div class="pill">🔍 Fiscalizador</div>
+                        <div class="pill">💬 Consultivo</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<!-- ════════════════════════════════════════════ -->
+<!--  TAB: INSTITUCIONAL -->
+<!-- ════════════════════════════════════════════ -->
+<div id="tab-institucional" class="tab">
+    <div class="section">
+        <div class="section-title">Institucional</div>
+        <div class="section-sub">Base legal, regimento e estrutura do conselho.</div>
+
+        <div class="inst-card">
+            <h3>📋 Sobre o CMSMOC</h3>
+            <p id="inst-sobre">O CMSMOC é uma instância colegiada de caráter permanente, deliberativo, fiscalizador e consultivo do SUS, criado com o objetivo de atuar na formulação de estratégias e no controle da execução da política de saúde do município de Montes Claros.</p>
+        </div>
+        <div class="inst-card">
+            <h3>⚖️ Base Legal</h3>
+            <p>Lei Federal n° 8.142/1990 · Lei Municipal de Criação · Resolução CNS nº 453/2012</p>
+        </div>
+        <div class="inst-card">
+            <h3>📂 Documentos Institucionais</h3>
+            <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-top:12px" id="inst-docs">
+                <div class="doc-item">
+                    <div class="doc-left"><div class="doc-icon">📄</div><div><div class="doc-name">Regimento Interno 2024</div><div class="doc-meta">PDF · Atualizado</div></div></div>
+                    <span class="doc-dl">⬇</span>
+                </div>
+                <div class="doc-item">
+                    <div class="doc-left"><div class="doc-icon">📄</div><div><div class="doc-name">Lei de Criação</div><div class="doc-meta">PDF</div></div></div>
+                    <span class="doc-dl">⬇</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ════════════════════════════════════════════ -->
+<!--  TAB: COMISSÕES -->
+<!-- ════════════════════════════════════════════ -->
+<div id="tab-comissoes" class="tab">
+    <div class="section">
+        <div class="section-title">Câmaras e Comissões</div>
+        <div class="section-sub">Onde o trabalho técnico acontece diariamente.</div>
+
+        <div style="background:#fff; border-radius:24px; border:1px solid var(--border); padding:24px; margin-bottom:40px; overflow:hidden;">
+            <img src="https://i.ibb.co/QF4FcLYL/test.png" alt="Fluxo de Comissões" style="width:100%;height:auto;border-radius:12px;">
+        </div>
+
+        <div class="comm-grid" id="comissoes-grid">
+            <div class="comm-card">
+                <h4>Comissão de Orçamento e Finanças</h4>
+                <p>Fiscalização financeira dos fundos de saúde e prestação de contas.</p>
+                <span class="comm-tag">Permanente</span>
+            </div>
+            <div class="comm-card green">
+                <h4>Comissão de Atenção Primária</h4>
+                <p>Monitoramento de UBS, ESF e serviços da atenção básica.</p>
+                <span class="comm-tag" style="background:#e3f5ec;color:var(--green)">Permanente</span>
+            </div>
+            <div class="comm-card yellow">
+                <h4>Comissão de Ética</h4>
+                <p>Processos administrativos e disciplinares dos conselheiros.</p>
+                <span class="comm-tag" style="background:#fdf6e3;color:#c49a00">Permanente</span>
+            </div>
+            <div class="comm-card">
+                <h4>Vigilância em Saúde</h4>
+                <p>Acompanhamento das ações de vigilância epidemiológica e sanitária.</p>
+                <span class="comm-tag">Permanente</span>
+            </div>
+            <div class="comm-card green">
+                <h4>Saúde Mental</h4>
+                <p>Políticas de saúde mental, álcool e outras drogas.</p>
+                <span class="comm-tag" style="background:#e3f5ec;color:var(--green)">Temática</span>
+            </div>
+            <div class="comm-card yellow">
+                <h4>11ª Conferência</h4>
+                <p>Organização e preparação da conferência municipal de saúde 2025.</p>
+                <span class="comm-tag" style="background:#fdf6e3;color:#c49a00">Temporária</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ════════════════════════════════════════════ -->
+<!--  TAB: REUNIÕES -->
+<!-- ════════════════════════════════════════════ -->
+<div id="tab-reunioes" class="tab">
+    <div class="section">
+        <div class="section-title">Reuniões</div>
+        <div class="section-sub">Calendário de plenárias e comissões. Sessões abertas à participação popular.</div>
+
+        <!-- Próxima reunião (dinâmica) -->
+        <div id="proxima-reuniao" style="margin-bottom:40px;">
+            <div style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--blue-light);margin-bottom:16px;">📍 Próxima Reunião</div>
+            <div class="meeting-card">
+                <div class="meeting-date">
+                    <div class="day" id="meet-day">—</div>
+                    <div class="month" id="meet-month">—</div>
+                </div>
+                <div class="meeting-info">
+                    <h3 id="meet-title"><span class="skeleton" style="width:300px"></span></h3>
+                    <p id="meet-info"><span class="skeleton" style="width:200px;display:inline-block"></span></p>
+                    <div class="meeting-btns">
+                        <button class="btn-sm filled" id="meet-btn-pauta">Pauta Completa</button>
+                        <button class="btn-sm dark" id="meet-btn-trans">🔴 Transmissão ao Vivo</button>
+                        <button class="btn-sm outline" id="meet-btn-local">📍 Ver Local</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Lista de reuniões passadas -->
+        <div>
+            <div style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:16px;">Reuniões Anteriores</div>
+            <div style="display:flex;flex-direction:column;gap:12px;" id="reunioes-lista">
+                <div class="skeleton" style="height:64px;border-radius:14px;"></div>
+                <div class="skeleton" style="height:64px;border-radius:14px;"></div>
+                <div class="skeleton" style="height:64px;border-radius:14px;"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ════════════════════════════════════════════ -->
+<!--  TAB: DOCUMENTOS -->
+<!-- ════════════════════════════════════════════ -->
+<div id="tab-documentos" class="tab">
+    <div class="section">
+        <div class="section-title">Repositório de Documentos</div>
+        <div class="section-sub">Atas, resoluções, relatórios e mais.</div>
+
+        <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:28px;" id="doc-filters">
+            <button class="btn-sm filled" onclick="filterDocs('todos')">Todos</button>
+            <button class="btn-sm outline" onclick="filterDocs('ata')">Atas</button>
+            <button class="btn-sm outline" onclick="filterDocs('resolucao')">Resoluções</button>
+            <button class="btn-sm outline" onclick="filterDocs('relatorio')">Relatórios</button>
+        </div>
+
+        <div style="display:flex;flex-direction:column;gap:10px;" id="docs-lista">
+            <div class="skeleton" style="height:68px;border-radius:14px;"></div>
+            <div class="skeleton" style="height:68px;border-radius:14px;"></div>
+            <div class="skeleton" style="height:68px;border-radius:14px;"></div>
+            <div class="skeleton" style="height:68px;border-radius:14px;"></div>
+        </div>
+    </div>
+</div>
+
+<!-- Footer -->
+<footer>
+    <div class="footer-inner">
+        <div>
+            <img src="https://i.ibb.co/DfV43Y8V/Logotipo-CMSMOC-2025-A6.png" alt="CMSMOC" class="footer-logo">
+            <p>Controle social para uma saúde pública de qualidade em Montes Claros — MG.</p>
+            <p style="margin-top:12px">Mandato: 2023–2025</p>
+        </div>
+        <div>
+            <h4>Navegação</h4>
+            <a onclick="showTab('inicio')">Início</a>
+            <a onclick="showTab('reunioes')">Reuniões</a>
+            <a onclick="showTab('documentos')">Documentos</a>
+            <a onclick="showTab('comissoes')">Comissões</a>
+        </div>
+        <div>
+            <h4>Contato</h4>
+            <div class="footer-contact-item">📍 Av. Cula Mangabeira, 555</div>
+            <div class="footer-contact-item">📞 (38) 3229-3300</div>
+            <div class="footer-contact-item">✉️ cmsmoc@montesclaros.mg.gov.br</div>
+        </div>
+        <div>
+            <h4>Links Úteis</h4>
+            <a href="#">Portal da Transparência</a>
+            <a href="#">Ouvidoria SUS</a>
+            <a href="#">SMS Montes Claros</a>
+            <a href="#">CNS Nacional</a>
+            <img src="https://i.ibb.co/1YvvDPyM/11p.png" alt="Logos" style="height:36px;filter:brightness(0) invert(1);opacity:.35;margin-top:16px;">
+        </div>
+    </div>
+    <hr class="footer-divider">
+    <div class="footer-bottom">
+        <span>© 2025 Conselho Municipal de Saúde de Montes Claros</span>
+        <span>Desenvolvido com controle social 💙</span>
+    </div>
+</footer>
+
+<script>
+// ══════════════════════════════════════════════
+// CONFIGURAÇÃO — edite apenas esta URL
+// ══════════════════════════════════════════════
+const GAS_URL = 'YOUR_GAS_WEBAPP_URL_HERE';
+// Substitua pela URL do seu Google Apps Script Web App
+// Exemplo: https://script.google.com/macros/s/XXXX/exec
+
+// ══════════════════════════════════════════════
+// DADOS FALLBACK (quando GAS não disponível)
+// ══════════════════════════════════════════════
+const FALLBACK_DATA = {
+    config: {
+        anuncio: "Preparativos para a 11ª Conferência Municipal de Saúde — Participe!",
+        stats: { conselheiros: 48, reunioes: 12, resolucoes: 27, comissoes: 8 }
+    },
+    proxima_reuniao: {
+        dia: "12", mes: "MAR", titulo: "Plenária Ordinária nº 003/2025",
+        horario: "14h00", local: "Auditório da SMS",
+        link_pauta: "#", link_transmissao: "#", link_local: "#"
+    },
+    avisos: [
+        { tipo: "normal", icone: "📅", titulo: "Última Plenária", texto: "Ata da 12ª Reunião Ordinária de 2024 disponível para consulta pública.", link: "#", link_texto: "Ver Ata e Gravação" },
+        { tipo: "normal", icone: "🔔", titulo: "Mural de Avisos", texto: "Inscrições abertas para as Comissões Intersetoriais.", link: "#", link_texto: "Saiba como participar" },
+        { tipo: "destaque", icone: "🏥", titulo: "11ª Conferência Municipal", texto: "Confira o cronograma e os eixos temáticos da conferência 2025.", link: "#", link_texto: "Página do Evento" }
+    ],
+    reunioes: [
+        { data: "24/02/2025", titulo: "Plenária Ordinária nº 002/2025", tipo: "Ordinária", link_ata: "#" },
+        { data: "22/01/2025", titulo: "Plenária Ordinária nº 001/2025", tipo: "Ordinária", link_ata: "#" },
+        { data: "18/12/2024", titulo: "Plenária Extraordinária nº 013/2024", tipo: "Extraordinária", link_ata: "#" },
+        { data: "20/11/2024", titulo: "Plenária Ordinária nº 012/2024", tipo: "Ordinária", link_ata: "#" }
+    ],
+    documentos: [
+        { nome: "Ata Plenária 002/2025", tipo: "ata", data: "Mar 2025", link: "#" },
+        { nome: "Ata Plenária 001/2025", tipo: "ata", data: "Jan 2025", link: "#" },
+        { nome: "Resolução CMSMOC nº 027/2024", tipo: "resolucao", data: "Dez 2024", link: "#" },
+        { nome: "Relatório Anual de Atividades 2024", tipo: "relatorio", data: "Jan 2025", link: "#" },
+        { nome: "Ata Plenária 012/2024", tipo: "ata", data: "Nov 2024", link: "#" },
+        { nome: "Resolução CMSMOC nº 026/2024", tipo: "resolucao", data: "Out 2024", link: "#" }
+    ]
+};
+
+let allData = null;
+let allDocs = [];
+
+// ══════════════════════════════════════════════
+// CARREGAMENTO DE DADOS
+// ══════════════════════════════════════════════
+async function loadData() {
+    try {
+        if (GAS_URL === 'YOUR_GAS_WEBAPP_URL_HERE') throw new Error('URL not configured');
+        const res = await fetch(GAS_URL + '?action=getData', { cache: 'no-cache' });
+        if (!res.ok) throw new Error('HTTP ' + res.status);
+        allData = await res.json();
+        console.log('✅ Dados carregados do Google Sheets');
+    } catch (e) {
+        console.warn('⚠️ GAS indisponível, usando dados fallback:', e.message);
+        allData = FALLBACK_DATA;
+    }
+    renderAll();
+}
+
+function renderAll() {
+    renderConfig();
+    renderAvisos();
+    renderProximaReuniao();
+    renderReunioes();
+    renderDocumentos();
+}
+
+function renderConfig() {
+    const c = allData.config;
+    if (!c) return;
+    document.getElementById('ann-text').textContent = c.anuncio || '';
+    if (c.stats) {
+        document.getElementById('stat-conselheiros').textContent = c.stats.conselheiros || '—';
+        document.getElementById('stat-reunioes').textContent = c.stats.reunioes || '—';
+        document.getElementById('stat-resolucoes').textContent = c.stats.resolucoes || '—';
+        document.getElementById('stat-comissoes').textContent = c.stats.comissoes || '—';
+    }
+}
+
+function renderAvisos() {
+    const grid = document.getElementById('avisos-grid');
+    if (!allData.avisos || !allData.avisos.length) return;
+    grid.innerHTML = allData.avisos.map((a, i) => {
+        if (a.tipo === 'destaque') {
+            return `<div class="card card-highlight">
+                <div style="font-size:2rem;margin-bottom:12px">${a.icone}</div>
+                <h3>${a.titulo}</h3>
+                <p>${a.texto}</p>
+                <a class="card-link" href="${a.link}">${a.link_texto} →</a>
+            </div>`;
+        }
+        const colors = ['blue', 'green'];
+        return `<div class="card">
+            <div class="card-icon ${colors[i % 2]}">${a.icone}</div>
+            <h3>${a.titulo}</h3>
+            <p>${a.texto}</p>
+            <a class="card-link" href="${a.link}">${a.link_texto} →</a>
+        </div>`;
+    }).join('');
+}
+
+function renderProximaReuniao() {
+    const r = allData.proxima_reuniao;
+    if (!r) return;
+    document.getElementById('meet-day').textContent = r.dia;
+    document.getElementById('meet-month').textContent = r.mes;
+    document.getElementById('meet-title').textContent = r.titulo;
+    document.getElementById('meet-info').innerHTML = `⏰ ${r.horario} — 📍 ${r.local}`;
+    document.getElementById('meet-btn-pauta').onclick = () => window.open(r.link_pauta, '_blank');
+    document.getElementById('meet-btn-trans').onclick = () => window.open(r.link_transmissao, '_blank');
+    document.getElementById('meet-btn-local').onclick = () => window.open(r.link_local, '_blank');
+}
+
+function renderReunioes() {
+    const lista = document.getElementById('reunioes-lista');
+    if (!allData.reunioes || !allData.reunioes.length) { lista.innerHTML = '<p style="color:var(--muted)">Nenhuma reunião cadastrada.</p>'; return; }
+    lista.innerHTML = allData.reunioes.map(r => `
+        <div class="doc-item">
+            <div class="doc-left">
+                <div class="doc-icon">📋</div>
+                <div>
+                    <div class="doc-name">${r.titulo}</div>
+                    <div class="doc-meta">${r.data} · <span style="color:${r.tipo === 'Ordinária' ? 'var(--blue)' : 'var(--green)'};">${r.tipo}</span></div>
+                </div>
+            </div>
+            <a href="${r.link_ata}" target="_blank" class="btn-sm outline" style="white-space:nowrap">Ver Ata ⬇</a>
+        </div>
+    `).join('');
+}
+
+function renderDocumentos() {
+    allDocs = allData.documentos || [];
+    filterDocs('todos');
+}
+
+function filterDocs(tipo) {
+    const lista = document.getElementById('docs-lista');
+    const btns = document.querySelectorAll('#doc-filters .btn-sm');
+    btns.forEach(b => { b.classList.remove('filled'); b.classList.add('outline'); });
+    const ativo = Array.from(btns).find(b => b.onclick.toString().includes(`'${tipo}'`));
+    if (ativo) { ativo.classList.add('filled'); ativo.classList.remove('outline'); }
+
+    const filtered = tipo === 'todos' ? allDocs : allDocs.filter(d => d.tipo === tipo);
+    if (!filtered.length) { lista.innerHTML = '<p style="color:var(--muted);padding:20px 0">Nenhum documento nesta categoria.</p>'; return; }
+
+    const icones = { ata: '📋', resolucao: '⚖️', relatorio: '📊' };
+    lista.innerHTML = filtered.map(d => `
+        <div class="doc-item" onclick="window.open('${d.link}','_blank')">
+            <div class="doc-left">
+                <div class="doc-icon">${icones[d.tipo] || '📄'}</div>
+                <div>
+                    <div class="doc-name">${d.nome}</div>
+                    <div class="doc-meta">${d.data} · ${d.tipo.charAt(0).toUpperCase() + d.tipo.slice(1)}</div>
+                </div>
+            </div>
+            <span class="doc-dl">⬇</span>
+        </div>
+    `).join('');
+}
+
+// ══════════════════════════════════════════════
+// NAVEGAÇÃO
+// ══════════════════════════════════════════════
+function showTab(id) {
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    document.getElementById('tab-' + id).classList.add('active');
+    document.querySelectorAll('.nav-btn').forEach(b => {
+        b.classList.toggle('active', b.dataset.tab === id);
+    });
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function toggleMobile() {
+    const overlay = document.getElementById('mobile-overlay');
+    overlay.classList.toggle('open');
+}
+
+// Header scroll effect
+window.addEventListener('scroll', () => {
+    document.getElementById('header').classList.toggle('scrolled', window.scrollY > 40);
+});
+
+// ══════════════════════════════════════════════
+// INIT
+// ══════════════════════════════════════════════
+loadData();
+</script>
+</body>
+</html>

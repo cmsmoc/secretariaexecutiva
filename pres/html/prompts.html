@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Prompts de Imagens + Guia de Produção — Do Mercado Pra Mesa</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Lato:wght@300;400;600;700&display=swap" rel="stylesheet"/>
+<style>
+  :root{--sage:#5a8a6a;--sage-pale:#e8f2ec;--bege:#f7f3ec;--bege-mid:#ede7db;--yellow:#e8c547;--ink:#1e1e1e;--ink-mid:#3d3d3d;--ink-soft:#6b6b6b;--white:#fff;--r:12px}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Lato',sans-serif;background:var(--bege);color:var(--ink);line-height:1.7}
+  .wrap{max-width:860px;margin:0 auto;padding:0 24px}
+  h1,h2,h3{font-family:'Playfair Display',serif;line-height:1.2}
+  .page-header{background:var(--sage);color:#fff;padding:56px 24px;text-align:center}
+  .page-header h1{font-size:clamp(1.8rem,4vw,2.6rem);margin-bottom:10px}
+  .page-header p{color:rgba(255,255,255,.75);font-size:1rem;font-weight:300}
+  .section{padding:56px 0;border-bottom:1px solid var(--bege-mid)}
+  .section:last-child{border:none}
+  .eyebrow{display:inline-block;font-size:.7rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--sage);margin-bottom:10px}
+  h2{font-size:clamp(1.5rem,3.5vw,2rem);margin-bottom:8px}
+  h3{font-size:1.1rem;margin-bottom:6px;color:var(--ink)}
+
+  /* PROMPT CARDS */
+  .prompts-grid{display:grid;gap:20px;margin-top:28px}
+  .prompt-card{background:var(--white);border-radius:var(--r);padding:24px;box-shadow:0 2px 12px rgba(0,0,0,.07);border-left:4px solid var(--sage)}
+  .prompt-card__label{font-size:.72rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--sage);margin-bottom:8px}
+  .prompt-card__img{font-size:.88rem;font-weight:700;color:var(--ink-mid);margin-bottom:12px}
+  .prompt-card__prompt{background:var(--bege);border-radius:8px;padding:14px 16px;font-size:.88rem;color:var(--ink-mid);line-height:1.6;font-style:italic}
+  .prompt-card__note{margin-top:10px;font-size:.8rem;color:var(--ink-soft)}
+  .copy-btn{display:inline-block;margin-top:10px;background:var(--sage);color:#fff;border:none;padding:6px 14px;border-radius:50px;font-size:.75rem;font-weight:700;cursor:pointer;letter-spacing:.04em;transition:.2s}
+  .copy-btn:hover{background:#3d6b52}
+
+  /* PRODUCTION GUIDE */
+  .guide-section{background:var(--white);border-radius:var(--r);padding:28px;margin-top:20px;box-shadow:0 2px 12px rgba(0,0,0,.07)}
+  .guide-section h3{border-bottom:2px solid var(--sage-pale);padding-bottom:8px;margin-bottom:16px;font-size:1.05rem}
+  .guide-list{list-style:none;display:flex;flex-direction:column;gap:10px}
+  .guide-list li{display:flex;gap:10px;font-size:.93rem;color:var(--ink-mid)}
+  .guide-list li::before{content:'→';color:var(--sage);font-weight:700;flex-shrink:0}
+  .guide-table{width:100%;border-collapse:collapse;margin-top:16px;font-size:.88rem}
+  .guide-table th{background:var(--sage-pale);color:var(--sage);padding:10px 14px;text-align:left;font-weight:700;font-size:.78rem;text-transform:uppercase;letter-spacing:.08em}
+  .guide-table td{padding:10px 14px;border-bottom:1px solid var(--bege-mid);color:var(--ink-mid);vertical-align:top}
+  .guide-table tr:last-child td{border:none}
+  .badge{display:inline-block;background:var(--sage-pale);color:var(--sage);font-size:.72rem;font-weight:700;padding:2px 10px;border-radius:50px}
+  .badge--yellow{background:#fdf6d8;color:#a07d00}
+  .tip{background:#fdf6d8;border:1px solid var(--yellow);border-radius:8px;padding:14px 16px;font-size:.88rem;color:var(--ink-mid);margin-top:14px}
+  .tip strong{color:var(--ink)}
+  @media(min-width:600px){.prompts-grid{grid-template-columns:1fr 1fr}}
+</style>
+</head>
+<body>
+
+<div class="page-header">
+  <div class="wrap">
+    <h1>Prompts de Imagens + Guia de Produção</h1>
+    <p>Do Mercado Pra Mesa — Entregáveis 2 e 3</p>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════
+     ENTREGA 2 — PROMPTS DAS IMAGENS
+════════════════════════════════════════ -->
+<section class="section">
+  <div class="wrap">
+    <span class="eyebrow">Entrega 2</span>
+    <h2>Prompts para Geração de Imagens</h2>
+    <p style="color:var(--ink-soft);font-weight:300;margin-top:6px">
+      Use no Midjourney, DALL-E 3 ou Adobe Firefly. Mantenha consistência:
+      luz natural suave, tons bege e verde, estilo fotografia editorial simples.
+    </p>
+
+    <div class="prompts-grid">
+
+      <!-- 01 -->
+      <div class="prompt-card">
+        <div class="prompt-card__label">01.jpg — Hero</div>
+        <div class="prompt-card__img">Compras organizadas sobre a mesa</div>
+        <div class="prompt-card__prompt">
+          "Flat lay of organized grocery bags on a warm wooden table, fresh vegetables,
+          eggs, grains, simple ingredients, soft natural light from side window,
+          warm beige and sage green tones, clean background, editorial food photography,
+          no people, calm and cozy atmosphere, shot from above, shallow depth of field"
+        </div>
+        <div class="prompt-card__note">🎨 Estilo: editorial limpo · Paleta: bege + verde</div>
+        <button class="copy-btn" onclick="copyPrompt(this)">Copiar prompt</button>
+      </div>
+
+      <!-- 02 -->
+      <div class="prompt-card">
+        <div class="prompt-card__label">02.jpg — Problema</div>
+        <div class="prompt-card__img">Geladeira quase vazia</div>
+        <div class="prompt-card__prompt">
+          "Open refrigerator with very few items inside, almost empty shelves,
+          soft cool light from fridge, minimal food visible — maybe one bottle,
+          a leftover container, empty vegetable drawer, slightly melancholic mood,
+          realistic style, no people, shot from front, desaturated tones"
+        </div>
+        <div class="prompt-card__note">🎨 Estilo: realista · Mood: frustração leve</div>
+        <button class="copy-btn" onclick="copyPrompt(this)">Copiar prompt</button>
+      </div>
+
+      <!-- 03 -->
+      <div class="prompt-card">
+        <div class="prompt-card__label">03.jpg — Solução</div>
+        <div class="prompt-card__img">Organização semanal</div>
+        <div class="prompt-card__prompt">
+          "Top view of weekly meal prep organization on kitchen counter: labeled
+          containers, chopped vegetables, grains in jars, handwritten grocery list
+          on paper, warm natural light, sage green and cream tones, cozy home kitchen
+          feel, editorial photography style, clean composition, no people"
+        </div>
+        <div class="prompt-card__note">🎨 Estilo: editorial · Mood: organização e calma</div>
+        <button class="copy-btn" onclick="copyPrompt(this)">Copiar prompt</button>
+      </div>
+
+      <!-- 04 -->
+      <div class="prompt-card">
+        <div class="prompt-card__label">04.jpg — Prova</div>
+        <div class="prompt-card__img">Marmitas prontas</div>
+        <div class="prompt-card__prompt">
+          "Seven glass meal prep containers with different home-cooked meals arranged
+          on wooden table, rice, beans, vegetables, chicken — varied and colorful,
+          warm natural side light, green herbs visible, clean and appetizing,
+          editorial food photography, top-down shot, no people, cozy home kitchen background"
+        </div>
+        <div class="prompt-card__note">🎨 Estilo: food photography · Mood: abundância simples</div>
+        <button class="copy-btn" onclick="copyPrompt(this)">Copiar prompt</button>
+      </div>
+
+      <!-- 05 -->
+      <div class="prompt-card">
+        <div class="prompt-card__label">05.jpg — Prova</div>
+        <div class="prompt-card__img">Compras com nota fiscal</div>
+        <div class="prompt-card__prompt">
+          "Grocery bags and fresh ingredients on table beside a paper receipt showing
+          total around R$120, Brazilian supermarket receipt, warm light, flat lay,
+          vegetables, legumes, eggs visible, calm and organized feel, editorial style,
+          bege and green tones, no people, shot from above"
+        </div>
+        <div class="prompt-card__note">🎨 Estilo: flat lay documental · Mood: prova real</div>
+        <button class="copy-btn" onclick="copyPrompt(this)">Copiar prompt</button>
+      </div>
+
+      <!-- 06 -->
+      <div class="prompt-card">
+        <div class="prompt-card__label">06.jpg — Produto</div>
+        <div class="prompt-card__img">Mockup do e-book</div>
+        <div class="prompt-card__prompt">
+          "Digital product mockup: tablet and phone showing a clean PDF guide titled
+          '7 Dias de Comida com R$120', sage green cover with minimal typography,
+          placed on warm wooden surface with fresh herbs and a linen napkin nearby,
+          soft natural light, lifestyle product photography, cozy and trustworthy feel"
+        </div>
+        <div class="prompt-card__note">🎨 Estilo: product mockup lifestyle · Cores: verde + bege</div>
+        <button class="copy-btn" onclick="copyPrompt(this)">Copiar prompt</button>
+      </div>
+
+    </div>
+
+    <div class="tip" style="margin-top:28px">
+      <strong>💡 Dica de consistência:</strong> Em todos os prompts, adicione no final:
+      <em>"consistent color grading: warm beige background, sage green accents, soft natural window light,
+      editorial food photography style, Canon 5D feel"</em> — isso mantém a identidade visual unificada.
+    </div>
+  </div>
+</section>
+
+
+<!-- ════════════════════════════════════════
+     ENTREGA 3 — GUIA DE PRODUÇÃO
+════════════════════════════════════════ -->
+<section class="section">
+  <div class="wrap">
+    <span class="eyebrow">Entrega 3</span>
+    <h2>Guia de Produção do Infoproduto</h2>
+    <p style="color:var(--ink-soft);font-weight:300;margin-top:6px">
+      Tudo que seu sócio precisa para produzir o PDF + vídeos em 1 a 2 dias.
+    </p>
+
+    <!-- Estrutura do PDF -->
+    <div class="guide-section">
+      <h3>📄 Estrutura do PDF — 28 a 35 páginas</h3>
+      <p style="font-size:.88rem;color:var(--ink-soft);margin-bottom:16px">
+        Ideal: A4 digital, fontes grandes (14–16px corpo), muito espaço em branco,
+        ícones simples. Faça no Canva (gratuito) ou Google Slides exportado como PDF.
+      </p>
+      <table class="guide-table">
+        <tr><th>Seção</th><th>Páginas</th><th>Conteúdo</th></tr>
+        <tr>
+          <td><strong>Capa</strong></td>
+          <td><span class="badge">1 pg</span></td>
+          <td>Título, subtítulo, logo. Verde + bege. Simples.</td>
+        </tr>
+        <tr>
+          <td><strong>Bem-vindo</strong></td>
+          <td><span class="badge">1 pg</span></td>
+          <td>Quem sou eu, por que criei isso, como usar o guia.</td>
+        </tr>
+        <tr>
+          <td><strong>Como funciona</strong></td>
+          <td><span class="badge">2 pgs</span></td>
+          <td>Os 3 passos do método. Visual simples com numeração.</td>
+        </tr>
+        <tr>
+          <td><strong>Lista de compras</strong></td>
+          <td><span class="badge">3 pgs</span></td>
+          <td>Itens por categoria (hortifruti, proteína, grãos, laticínios).
+          Total ≤ R$120. Incluir dica de onde comprar mais barato.</td>
+        </tr>
+        <tr>
+          <td><strong>Cardápio dos 7 dias</strong></td>
+          <td><span class="badge">7 pgs</span></td>
+          <td>1 página por dia. Café da manhã, almoço, jantar, lanche.
+          Com ícones ou quadradinhos coloridos por refeição.</td>
+        </tr>
+        <tr>
+          <td><strong>Receitas</strong></td>
+          <td><span class="badge">10–14 pgs</span></td>
+          <td>8–10 receitas principais. Ingredientes + modo de preparo simples.
+          Cada receita em meia página ou página inteira.</td>
+        </tr>
+        <tr>
+          <td><strong>Dicas de economia</strong></td>
+          <td><span class="badge">2 pgs</span></td>
+          <td>O que congelar, como usar sobras, quando ir à feira, marcas baratas.</td>
+        </tr>
+        <tr>
+          <td><strong>Contracapa + bônus</strong></td>
+          <td><span class="badge">1–2 pgs</span></td>
+          <td>Mensagem final, link do grupo/suporte, acesso ao vídeo bônus.</td>
+        </tr>
+      </table>
+    </div>
+
+    <!-- Como produzir rápido -->
+    <div class="guide-section">
+      <h3>⚡ Como produzir em 1–2 dias (sem perfeccionismo)</h3>
+      <ul class="guide-list">
+        <li><strong>Dia 1 manhã:</strong> Escreva toda a lista de compras e o cardápio num documento Word/Google Docs. Não preocupe com design agora.</li>
+        <li><strong>Dia 1 tarde:</strong> Escreva as receitas (8 receitas simples que você já faz). 5–8 linhas cada.</li>
+        <li><strong>Dia 1 noite:</strong> Abra o Canva, escolha um template de e-book e monte as páginas colando o texto. Use a paleta de cores do projeto.</li>
+        <li><strong>Dia 2 manhã:</strong> Revise rapidamente. Exporte como PDF. Teste no celular para ver se está legível.</li>
+        <li><strong>Dia 2 tarde:</strong> Grave os vídeos bônus (veja seção abaixo).</li>
+      </ul>
+      <div class="tip">
+        <strong>Regra de ouro:</strong> Feito é melhor que perfeito. Um PDF de 30 páginas simples
+        e útil converte muito mais do que um guia elaborado que nunca sai.
+        Você melhora nas versões seguintes.
+      </div>
+    </div>
+
+    <!-- Receitas recomendadas -->
+    <div class="guide-section">
+      <h3>🍳 Exemplos de Receitas para Incluir</h3>
+      <table class="guide-table">
+        <tr><th>Receita</th><th>Tempo</th><th>Custo aprox.</th></tr>
+        <tr><td>Arroz com feijão temperado</td><td>25 min</td><td>R$3–5 por porção</td></tr>
+        <tr><td>Ovo mexido com tomate e cebolinha</td><td>10 min</td><td>R$1–2</td></tr>
+        <tr><td>Macarrão ao alho e óleo com frango</td><td>20 min</td><td>R$4–6</td></tr>
+        <tr><td>Sopa de legumes simples</td><td>30 min</td><td>R$2–4</td></tr>
+        <tr><td>Omelete de queijo e presunto</td><td>10 min</td><td>R$2–3</td></tr>
+        <tr><td>Frango refogado com cebola</td><td>20 min</td><td>R$5–8</td></tr>
+        <tr><td>Vitamina de banana com aveia</td><td>5 min</td><td>R$1–2</td></tr>
+        <tr><td>Farofa simples</td><td>10 min</td><td>R$1–2</td></tr>
+      </table>
+    </div>
+
+    <!-- Vídeos -->
+    <div class="guide-section">
+      <h3>🎥 Como gravar os vídeos bônus (sem perfeccionismo)</h3>
+      <ul class="guide-list">
+        <li><strong>Equipamento:</strong> Celular + tripé barato (R$40 no Shopee) ou apoio improvisado.</li>
+        <li><strong>Luz:</strong> Janela aberta durante o dia. Sem necessidade de iluminação profissional.</li>
+        <li><strong>Formato:</strong> Vertical (9:16) para Reels/TikTok ou horizontal (16:9) para YouTube.</li>
+        <li><strong>Duração:</strong> 3–8 minutos por vídeo. Não precisa ser mais longo.</li>
+        <li><strong>Roteiro:</strong> Escreva 5 bullet points com o que vai falar. Não leia — só consulte.</li>
+        <li><strong>Edição:</strong> CapCut (grátis) — corte os erros, adicione legenda automática.</li>
+      </ul>
+
+      <table class="guide-table" style="margin-top:16px">
+        <tr><th>Vídeo</th><th>Duração</th><th>Conteúdo</th></tr>
+        <tr>
+          <td><strong>Vídeo 1</strong></td><td>5 min</td>
+          <td>Como usar o guia do início ao fim. Tour pelo PDF.</td>
+        </tr>
+        <tr>
+          <td><strong>Vídeo 2</strong></td>
+          <td>8 min</td>
+          <td>Filmagem real do mercado: onde comprar, o que pegar, como comparar preços.</td>
+        </tr>
+        <tr>
+          <td><strong>Vídeo 3</strong></td>
+          <td>6 min</td>
+          <td>Preparando 3 refeições da semana em 30 minutos. Filmado na cozinha.</td>
+        </tr>
+      </table>
+
+      <div class="tip">
+        <strong>💡 Dica de autenticidade:</strong> Grave na sua própria cozinha, com sua louça, seu mercado.
+        Imperfeições tornam o conteúdo mais confiável para o público universitário.
+        Não invista em produção — invista em utilidade.
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<script>
+  function copyPrompt(btn) {
+    const card = btn.closest('.prompt-card');
+    const text = card.querySelector('.prompt-card__prompt').innerText;
+    navigator.clipboard.writeText(text).then(() => {
+      btn.textContent = '✓ Copiado!';
+      setTimeout(() => btn.textContent = 'Copiar prompt', 2000);
+    });
+  }
+</script>
+</body>
+</html>

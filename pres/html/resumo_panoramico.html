@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Resumo Panorâmico — 18ª CNS | 11ª CMS Montes Claros</title>
+<link href="https://fonts.googleapis.com/css2?family=Georama:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+<style>
+:root {
+  --azul-sus: #1A5EA8;
+  --azul-medio: #2E8BC0;
+  --azul-claro: #7EC8E3;
+  --azul-wave: #0D3D6B;
+  --verde-sus: #3AAA35;
+  --verde-wave: #5BBF6A;
+  --amarelo-brasil: #F5C800;
+  --branco-puro: #FFFFFF;
+  --cinza-off: #F4F7FB;
+  --cinza-texto: #2C3E50;
+  --cinza-medio: #6B7F96;
+  --cinza-borda: #D6E4F0;
+  --gradient-wave: linear-gradient(135deg, #1A5EA8 0%, #2E8BC0 40%, #5BBF6A 75%, #F5C800 100%);
+  --font: 'Georama', sans-serif;
+  --radius: 14px;
+  --radius-sm: 8px;
+  --sombra-card: 0 4px 24px rgba(26,94,168,.10), 0 1px 4px rgba(26,94,168,.06);
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body { font-family: var(--font); background: var(--cinza-off); color: var(--cinza-texto); line-height: 1.65; font-size: 15px; }
+
+/* HERO */
+.hero {
+  background: linear-gradient(160deg, #0D3D6B 0%, #1A5EA8 50%, #2E8BC0 100%);
+  padding: 64px 24px 80px;
+  position: relative; overflow: hidden;
+  text-align: center;
+}
+.hero::after {
+  content: '';
+  position: absolute; bottom: -1px; left: 0; right: 0; height: 60px;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 60'%3E%3Cpath fill='%23F4F7FB' d='M0,60 C360,10 1080,50 1440,0 L1440,60 Z'/%3E%3C/svg%3E") no-repeat bottom;
+  background-size: cover;
+}
+.hero-tag {
+  display: inline-block;
+  background: rgba(255,255,255,.15); border: 1px solid rgba(255,255,255,.3);
+  color: #fff; font-size: 11px; font-weight: 700; letter-spacing: .14em;
+  text-transform: uppercase; padding: 5px 16px; border-radius: 999px; margin-bottom: 20px;
+}
+.hero h1 { font-size: clamp(26px, 5vw, 44px); font-weight: 800; color: #fff; line-height: 1.1; margin-bottom: 12px; }
+.hero h1 span { color: var(--amarelo-brasil); }
+.hero p { color: rgba(255,255,255,.78); font-size: 15px; max-width: 580px; margin: 0 auto 28px; }
+.hero-meta {
+  display: flex; flex-wrap: wrap; justify-content: center; gap: 12px;
+}
+.hero-pill {
+  background: rgba(255,255,255,.15); border: 1px solid rgba(255,255,255,.25);
+  color: #fff; font-size: 12px; font-weight: 600; padding: 6px 14px; border-radius: 999px;
+}
+
+/* TEMA STRIPE */
+.tema-stripe {
+  background: var(--gradient-wave); padding: 18px 24px; text-align: center;
+}
+.tema-stripe p {
+  font-size: 14px; font-weight: 700; color: #fff; letter-spacing: .04em; text-transform: uppercase;
+}
+
+/* CONTAINER */
+.container { max-width: 900px; margin: 0 auto; padding: 0 20px; }
+
+/* INTRO */
+.intro { background: #fff; border-radius: var(--radius); box-shadow: var(--sombra-card); padding: 32px; margin: 40px auto; max-width: 900px; margin-left: auto; margin-right: auto; }
+.intro p { font-size: 15px; color: var(--cinza-texto); margin-bottom: 12px; }
+.intro p:last-child { margin-bottom: 0; }
+
+/* SECTION HEADER */
+.section-header { text-align: center; padding: 40px 24px 16px; }
+.section-header .label {
+  display: inline-block; font-size: 11px; font-weight: 800; letter-spacing: .14em;
+  text-transform: uppercase; color: var(--azul-sus); margin-bottom: 8px;
+}
+.section-header h2 { font-size: clamp(20px, 3.5vw, 30px); font-weight: 800; color: var(--azul-wave); }
+
+/* EIXOS GRID */
+.eixos-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 20px; padding: 0 24px 48px; max-width: 900px; margin: 0 auto;
+}
+.eixo-card {
+  background: #fff; border-radius: var(--radius); box-shadow: var(--sombra-card);
+  overflow: hidden; transition: transform .2s, box-shadow .2s;
+}
+.eixo-card:hover { transform: translateY(-4px); box-shadow: 0 12px 40px rgba(26,94,168,.18); }
+.eixo-header {
+  padding: 20px 22px 16px; position: relative;
+}
+.eixo-num {
+  font-size: 48px; font-weight: 900; line-height: 1;
+  position: absolute; right: 16px; top: 12px; opacity: .08;
+}
+.eixo-tag {
+  font-size: 10px; font-weight: 800; letter-spacing: .12em; text-transform: uppercase;
+  margin-bottom: 6px;
+}
+.eixo-card h3 { font-size: 15px; font-weight: 800; line-height: 1.3; }
+.eixo-body { padding: 0 22px 22px; }
+.eixo-body p { font-size: 13px; color: var(--cinza-medio); line-height: 1.6; margin-bottom: 12px; }
+.eixo-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+.tag-pill {
+  font-size: 11px; font-weight: 600; padding: 3px 10px; border-radius: 999px;
+  background: var(--cinza-off); color: var(--cinza-medio); border: 1px solid var(--cinza-borda);
+}
+
+/* EIXO COLORS */
+.eixo-1 .eixo-header { background: linear-gradient(135deg, #1A5EA8, #2E8BC0); }
+.eixo-1 .eixo-tag { color: rgba(255,255,255,.7); }
+.eixo-1 h3 { color: #fff; }
+.eixo-1 .eixo-num { color: #fff; }
+
+.eixo-2 .eixo-header { background: linear-gradient(135deg, #0D3D6B, #1A5EA8); }
+.eixo-2 .eixo-tag { color: rgba(255,255,255,.7); }
+.eixo-2 h3 { color: #fff; }
+.eixo-2 .eixo-num { color: #fff; }
+
+.eixo-3 .eixo-header { background: linear-gradient(135deg, #3AAA35, #5BBF6A); }
+.eixo-3 .eixo-tag { color: rgba(255,255,255,.7); }
+.eixo-3 h3 { color: #fff; }
+.eixo-3 .eixo-num { color: #fff; }
+
+.eixo-4 .eixo-header { background: linear-gradient(135deg, #2E8BC0, #5BBF6A); }
+.eixo-4 .eixo-tag { color: rgba(255,255,255,.7); }
+.eixo-4 h3 { color: #fff; }
+.eixo-4 .eixo-num { color: #fff; }
+
+/* FRASE DESTAQUE */
+.frase-box {
+  background: var(--gradient-wave); border-radius: var(--radius); padding: 28px 32px;
+  margin: 8px 24px 40px; max-width: 900px; margin-left: auto; margin-right: auto;
+  text-align: center;
+}
+.frase-box p { font-size: 17px; font-weight: 700; color: #fff; line-height: 1.5; }
+.frase-box span { font-size: 13px; color: rgba(255,255,255,.7); display: block; margin-top: 8px; font-weight: 400; }
+
+/* PILARES */
+.pilares-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px; padding: 0 24px 48px; max-width: 900px; margin: 0 auto;
+}
+.pilar-card {
+  background: #fff; border-radius: var(--radius); box-shadow: var(--sombra-card);
+  padding: 22px 18px; text-align: center;
+}
+.pilar-icon { font-size: 32px; margin-bottom: 10px; }
+.pilar-card h4 { font-size: 13px; font-weight: 800; color: var(--azul-sus); margin-bottom: 6px; text-transform: uppercase; letter-spacing: .06em; }
+.pilar-card p { font-size: 12px; color: var(--cinza-medio); line-height: 1.55; }
+
+/* QUESTÕES */
+.questoes-section { background: #fff; }
+.questoes-inner { max-width: 900px; margin: 0 auto; padding: 40px 24px 48px; }
+.questoes-inner h2 { font-size: 22px; font-weight: 800; color: var(--azul-wave); margin-bottom: 6px; }
+.questoes-inner .sub { font-size: 14px; color: var(--cinza-medio); margin-bottom: 24px; }
+.q-list { list-style: none; }
+.q-list li {
+  display: flex; align-items: flex-start; gap: 12px;
+  padding: 14px 0; border-bottom: 1px solid var(--cinza-borda);
+  font-size: 14px; color: var(--cinza-texto); line-height: 1.55;
+}
+.q-list li:last-child { border-bottom: none; }
+.q-icon { font-size: 18px; flex-shrink: 0; margin-top: 1px; }
+
+/* CONEXÃO MONTES CLAROS */
+.conexao { background: linear-gradient(160deg, #0D3D6B 0%, #1A5EA8 100%); padding: 40px 24px; }
+.conexao-inner { max-width: 900px; margin: 0 auto; }
+.conexao h2 { font-size: 20px; font-weight: 800; color: #fff; margin-bottom: 8px; }
+.conexao p { font-size: 14px; color: rgba(255,255,255,.78); margin-bottom: 20px; }
+.conexao-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; }
+.conexao-card {
+  background: rgba(255,255,255,.1); border: 1px solid rgba(255,255,255,.2);
+  border-radius: var(--radius-sm); padding: 16px;
+}
+.conexao-card h4 { font-size: 13px; font-weight: 700; color: var(--amarelo-brasil); margin-bottom: 4px; }
+.conexao-card p { font-size: 12px; color: rgba(255,255,255,.7); margin-bottom: 0; }
+
+/* FOOTER */
+footer {
+  background: var(--azul-wave); color: rgba(255,255,255,.6);
+  text-align: center; padding: 24px; font-size: 12px;
+}
+footer strong { color: var(--amarelo-brasil); }
+
+@media (max-width: 600px) {
+  .eixos-grid, .pilares-grid, .conexao-grid { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-tag">📋 Resumo Panorâmico</div>
+  <h1>18ª Conferência Nacional de Saúde<br><span>Diretrizes & Eixos Temáticos</span></h1>
+  <p>Síntese orientadora para conselheiros e participantes da 11ª Conferência Municipal de Saúde de Montes Claros</p>
+  <div class="hero-meta">
+    <span class="hero-pill">🏥 Conselho Nacional de Saúde · Março 2026</span>
+    <span class="hero-pill">📍 11ª CMS · Montes Claros · Abril 2026</span>
+    <span class="hero-pill">4 Eixos Temáticos</span>
+  </div>
+</section>
+
+<!-- TEMA -->
+<div class="tema-stripe">
+  <p>🌟 Tema Central: "Saúde, Democracia, Soberania e SUS: Cuidar do Povo é Cuidar do Brasil"</p>
+</div>
+
+<!-- INTRO -->
+<div class="intro container" style="margin-top:40px;">
+  <p>O <strong>Documento Orientador da 18ª Conferência Nacional de Saúde (18ª CNS)</strong>, elaborado pelo Conselho Nacional de Saúde em março de 2026, estabelece as diretrizes que nortearão os debates desde as conferências municipais até a etapa nacional. Ele organiza a discussão em <strong>4 eixos temáticos</strong> interdependentes, todos articulados ao tema central que coloca a defesa do SUS, a democracia participativa e a soberania nacional como pilares indissociáveis do direito à saúde.</p>
+  <p>Este resumo apresenta de forma panorâmica os principais pontos de cada eixo, as questões mobilizadoras e a conexão com os debates locais de Montes Claros.</p>
+</div>
+
+<!-- EIXOS -->
+<div class="section-header">
+  <span class="label">Estrutura do debate</span>
+  <h2>Os 4 Eixos Temáticos</h2>
+</div>
+
+<div class="eixos-grid">
+
+  <!-- EIXO 1 -->
+  <div class="eixo-card eixo-1">
+    <div class="eixo-header">
+      <div class="eixo-num">1</div>
+      <div class="eixo-tag">Eixo 1</div>
+      <h3>Democracia, Saúde como Direito e Soberania Nacional</h3>
+    </div>
+    <div class="eixo-body">
+      <p>O SUS é fruto da luta democrática e da Reforma Sanitária. Defende que saúde não é mercadoria, mas direito universal garantido pela Constituição de 1988. Em momento de crise democrática global, reafirmar o SUS é reafirmar a soberania e a democracia participativa.</p>
+      <div class="eixo-tags">
+        <span class="tag-pill">Controle social</span>
+        <span class="tag-pill">Participação popular</span>
+        <span class="tag-pill">Soberania sanitária</span>
+        <span class="tag-pill">Democracia participativa</span>
+        <span class="tag-pill">Produção nacional</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- EIXO 2 -->
+  <div class="eixo-card eixo-2">
+    <div class="eixo-header">
+      <div class="eixo-num">2</div>
+      <div class="eixo-tag">Eixo 2</div>
+      <h3>Financiamento Adequado e Suficiente para o SUS</h3>
+    </div>
+    <div class="eixo-body">
+      <p>O SUS é cronicamente subfinanciado. O debate exige reforma tributária progressiva, revisão da política de juros, fim das emendas parlamentares sem planejamento, valorização dos trabalhadores e criação da Carreira Interfederativa do SUS.</p>
+      <div class="eixo-tags">
+        <span class="tag-pill">Reforma tributária</span>
+        <span class="tag-pill">Piso federal 15%</span>
+        <span class="tag-pill">Emendas parlamentares</span>
+        <span class="tag-pill">Carreira SUS</span>
+        <span class="tag-pill">Privatização</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- EIXO 3 -->
+  <div class="eixo-card eixo-3">
+    <div class="eixo-header">
+      <div class="eixo-num">3</div>
+      <div class="eixo-tag">Eixo 3</div>
+      <h3>Emergências Climáticas e Justiça Socioambiental</h3>
+    </div>
+    <div class="eixo-body">
+      <p>A crise climática já afeta a saúde da população — enchentes, calor extremo, doenças emergentes, insegurança alimentar. O racismo ambiental agrava desigualdades. O SUS precisa integrar saúde ambiental, vigilância territorial e resiliência climática.</p>
+      <div class="eixo-tags">
+        <span class="tag-pill">Crise climática</span>
+        <span class="tag-pill">Racismo ambiental</span>
+        <span class="tag-pill">AdaptaSUS</span>
+        <span class="tag-pill">Saúde Única</span>
+        <span class="tag-pill">Comunidades vulneráveis</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- EIXO 4 -->
+  <div class="eixo-card eixo-4">
+    <div class="eixo-header">
+      <div class="eixo-num">4</div>
+      <div class="eixo-tag">Eixo 4</div>
+      <h3>Modelos de Atenção e Gestão, Territórios Integrados e Cuidado Integral</h3>
+    </div>
+    <div class="eixo-body">
+      <p>A APS como coordenadora do cuidado, Redes de Atenção integradas, superação do modelo biomédico fragmentado, valorização do trabalho em saúde, SUS Digital com soberania de dados e fortalecimento da vigilância como inteligência estratégica.</p>
+      <div class="eixo-tags">
+        <span class="tag-pill">Atenção Primária</span>
+        <span class="tag-pill">ESF</span>
+        <span class="tag-pill">Vigilância em Saúde</span>
+        <span class="tag-pill">Saúde indígena</span>
+        <span class="tag-pill">Equidade racial</span>
+        <span class="tag-pill">SUS Digital</span>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- FRASE DESTAQUE -->
+<div class="frase-box container">
+  <p>"Reafirmar a saúde como direito significa defender financiamento público adequado, valorização do trabalho em saúde, fortalecimento da APS, redes de cuidado integradas e territorializadas, além de um modelo de gestão público, transparente e orientado pelas necessidades reais da população."</p>
+  <span>— Documento Orientador da 18ª CNS, 2026</span>
+</div>
+
+<!-- PILARES TRANSVERSAIS -->
+<div class="section-header">
+  <span class="label">Fundamentos</span>
+  <h2>Pilares Transversais</h2>
+</div>
+
+<div class="pilares-grid">
+  <div class="pilar-card">
+    <div class="pilar-icon">🗳️</div>
+    <h4>Democracia Participativa</h4>
+    <p>Conselhos e conferências como instâncias deliberativas máximas do SUS. Sem participação popular, não há SUS pleno.</p>
+  </div>
+  <div class="pilar-card">
+    <div class="pilar-icon">⚖️</div>
+    <h4>Equidade</h4>
+    <p>Combate às desigualdades de classe, raça, gênero, território e geração que se expressam nos indicadores de saúde.</p>
+  </div>
+  <div class="pilar-card">
+    <div class="pilar-icon">🛡️</div>
+    <h4>Soberania Nacional</h4>
+    <p>Produção nacional de medicamentos, vacinas e insumos. Dados de saúde como patrimônio público, não mercadoria.</p>
+  </div>
+  <div class="pilar-card">
+    <div class="pilar-icon">💰</div>
+    <h4>Financiamento Justo</h4>
+    <p>Meta aprovada na 17ª CNS: 6% do PIB em saúde pública. Reforma tributária progressiva como condição estrutural.</p>
+  </div>
+  <div class="pilar-card">
+    <div class="pilar-icon">🌿</div>
+    <h4>Justiça Socioambiental</h4>
+    <p>Defesa da vida diante da crise climática. Saúde como resultado das condições de vida, trabalho e ambiente.</p>
+  </div>
+  <div class="pilar-card">
+    <div class="pilar-icon">🏘️</div>
+    <h4>Territorialização</h4>
+    <p>Cuidado organizado no território, próximo às pessoas, com atenção às especificidades locais e comunitárias.</p>
+  </div>
+</div>
+
+<!-- QUESTÕES MOBILIZADORAS -->
+<section class="questoes-section">
+  <div class="questoes-inner">
+    <h2>Questões Mobilizadoras</h2>
+    <p class="sub">Perguntas centrais que devem orientar os debates nas pré-conferências e na conferência</p>
+    <ul class="q-list">
+      <li>
+        <span class="q-icon">🔵</span>
+        <span><strong>Eixo 1 —</strong> Que modelo de democracia queremos no campo da saúde: formal ou participativa, capaz de influenciar o financiamento, a gestão e o modelo de atenção do SUS?</span>
+      </li>
+      <li>
+        <span class="q-icon">🟣</span>
+        <span><strong>Eixo 1 —</strong> De que maneira a soberania nacional, especialmente na produção de medicamentos e proteção de dados, impacta na capacidade do Estado de garantir saúde como direito universal?</span>
+      </li>
+      <li>
+        <span class="q-icon">🟡</span>
+        <span><strong>Eixo 2 —</strong> Que medidas devem ser adotadas pelos governos para avançar na reforma tributária, ampliar o financiamento do SUS e regular o uso de emendas parlamentares destinadas à saúde?</span>
+      </li>
+      <li>
+        <span class="q-icon">🟡</span>
+        <span><strong>Eixo 2 —</strong> Como valorizar os trabalhadores do SUS mediante recursos adicionais obtidos com a redução do subfinanciamento histórico?</span>
+      </li>
+      <li>
+        <span class="q-icon">🟢</span>
+        <span><strong>Eixo 3 —</strong> O que o SUS precisa fazer para proteger a população diante da emergência climática — calor extremo, enchentes, seca, fumaça, contaminação — que afeta a saúde no seu território?</span>
+      </li>
+      <li>
+        <span class="q-icon">🔵</span>
+        <span><strong>Eixo 4 —</strong> Como garantir o cumprimento dos princípios constitucionais do SUS — universalidade, integralidade, equidade e gestão pública — diante da expansão de modelos privatizantes e da precarização do trabalho em saúde?</span>
+      </li>
+    </ul>
+  </div>
+</section>
+
+<!-- CONEXÃO MONTES CLAROS -->
+<section class="conexao">
+  <div class="conexao-inner">
+    <h2>🏙️ Conexão com Montes Claros</h2>
+    <p>Os eixos nacionais se conectam diretamente com os desafios de saúde do Norte de Minas. Nossa conferência municipal é a oportunidade de construir propostas que subam da realidade local até as diretrizes nacionais.</p>
+    <div class="conexao-grid">
+      <div class="conexao-card">
+        <h4>Atenção Primária</h4>
+        <p>Fortalecimento da ESF, cobertura no interior, fixação de profissionais em áreas vulneráveis do Norte de Minas.</p>
+      </div>
+      <div class="conexao-card">
+        <h4>Financiamento</h4>
+        <p>Uso adequado dos recursos municipais, transparência nas emendas e controle social do orçamento da saúde local.</p>
+      </div>
+      <div class="conexao-card">
+        <h4>Clima e Ambiente</h4>
+        <p>Seca, calor extremo e insegurança hídrica do semiárido como determinantes de saúde na região Norte de Minas.</p>
+      </div>
+      <div class="conexao-card">
+        <h4>Equidade</h4>
+        <p>Saúde da população negra, quilombola, rural e periférica de Montes Claros e região como pauta prioritária.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <strong>11ª Conferência Municipal de Saúde — Montes Claros</strong> · 22, 23 e 24 de abril de 2026<br>
+  Baseado no Documento Orientador da 18ª CNS — Conselho Nacional de Saúde · Março de 2026
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,2709 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mini Formação do Conselheiro – CMS Montes Claros</title>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;900&family=Open+Sans:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+/* ── RESET & VARS ── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --blue:   #1B6CB5;
+  --navy:   #0D2E5A;
+  --green:  #1E8A4A;
+  --yellow: #F5C400;
+  --white:  #FFFFFF;
+  --off:    #F7F8FA;
+  --ink:    #111827;
+  --muted:  #6B7280;
+  --border: #E5E7EB;
+  --red:    #DC2626;
+  --orange: #D97706;
+  --radius: 12px;
+  --shadow: 0 4px 20px rgba(0,0,0,0.08);
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'Open Sans', sans-serif;
+  background: var(--off);
+  color: var(--ink);
+  line-height: 1.7;
+  font-size: 15px;
+}
+
+/* ── TOPBAR ── */
+.topbar {
+  background: var(--navy);
+  position: sticky; top: 0; z-index: 300;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 32px; height: 56px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.25);
+}
+.topbar-brand {
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 900; font-size: 12px; letter-spacing: 2px;
+  text-transform: uppercase; color: white;
+}
+.topbar-brand span { color: var(--yellow); }
+.topbar-right { display: flex; align-items: center; gap: 20px; }
+.progress-pill {
+  background: rgba(255,255,255,0.1);
+  border-radius: 20px; padding: 4px 14px;
+  font-size: 11px; font-weight: 700; color: rgba(255,255,255,0.8);
+  font-family: 'Montserrat', sans-serif; letter-spacing: 1px;
+}
+.progress-pill span { color: var(--yellow); }
+#hamburger {
+  display: none; flex-direction: column; gap: 5px; cursor: pointer; padding: 4px;
+}
+#hamburger span {
+  width: 22px; height: 2px; background: white; border-radius: 2px;
+  transition: all .3s;
+}
+
+/* ── SIDEBAR ── */
+.layout { display: flex; min-height: calc(100vh - 56px); }
+
+.sidebar {
+  width: 280px; min-width: 280px;
+  background: var(--navy);
+  padding: 24px 0;
+  position: sticky; top: 56px;
+  height: calc(100vh - 56px);
+  overflow-y: auto;
+  transition: transform .3s;
+}
+.sidebar::-webkit-scrollbar { width: 4px; }
+.sidebar::-webkit-scrollbar-thumb { background: rgba(255,255,255,.15); border-radius: 2px; }
+
+.sidebar-section-label {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 9px; font-weight: 700; letter-spacing: 2.5px;
+  text-transform: uppercase; color: rgba(255,255,255,.35);
+  padding: 16px 24px 6px;
+}
+
+.nav-item {
+  display: flex; align-items: center; gap: 12px;
+  padding: 10px 24px; cursor: pointer;
+  transition: background .15s; border: none; background: none;
+  width: 100%; text-align: left;
+  text-decoration: none;
+}
+.nav-item:hover { background: rgba(255,255,255,.06); }
+.nav-item.active { background: rgba(27,108,181,.35); border-left: 3px solid var(--yellow); }
+.nav-item.active .nav-num { background: var(--yellow); color: var(--navy); }
+.nav-item.completed .nav-num { background: var(--green); color: white; }
+.nav-item.completed .nav-num::after { content: '✓'; }
+
+.nav-num {
+  width: 26px; height: 26px; border-radius: 50%;
+  background: rgba(255,255,255,.1); color: rgba(255,255,255,.6);
+  font-family: 'Montserrat', sans-serif; font-size: 11px; font-weight: 700;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0; transition: all .2s;
+}
+.nav-text {
+  font-size: 12px; font-weight: 600; color: rgba(255,255,255,.65);
+  line-height: 1.3;
+}
+.nav-item.active .nav-text { color: white; }
+.nav-item.completed .nav-text { color: rgba(255,255,255,.8); }
+
+/* ── MAIN CONTENT ── */
+.main { flex: 1; overflow: hidden; }
+
+.module { display: none; animation: fadeIn .35s ease; }
+.module.active { display: block; }
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ── HERO ── */
+.module-hero {
+  background: var(--navy);
+  padding: 56px 48px 48px;
+  position: relative; overflow: hidden;
+}
+.module-hero::before {
+  content: '';
+  position: absolute; bottom: -80px; right: -80px;
+  width: 400px; height: 400px; border-radius: 50%;
+  background: radial-gradient(circle, rgba(245,196,0,.12) 0%, transparent 65%);
+}
+.module-eyebrow {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 10px; font-weight: 700; letter-spacing: 3px;
+  text-transform: uppercase; color: var(--yellow);
+  margin-bottom: 12px;
+}
+.module-hero h1 {
+  font-family: 'Montserrat', sans-serif;
+  font-size: clamp(28px, 4vw, 48px); font-weight: 900;
+  line-height: 1.05; letter-spacing: -1px; color: white;
+  max-width: 680px; margin-bottom: 16px;
+}
+.module-hero h1 em { color: var(--yellow); font-style: normal; }
+.module-hero p { font-size: 15px; color: rgba(255,255,255,.65); max-width: 560px; }
+
+/* ── CONTENT AREA ── */
+.content-area { padding: 40px 48px 60px; max-width: 860px; }
+
+/* ── CARDS ── */
+.card {
+  background: white; border-radius: var(--radius);
+  border: 1px solid var(--border); box-shadow: var(--shadow);
+  padding: 28px; margin-bottom: 24px;
+}
+.card-title {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 16px; font-weight: 700; color: var(--navy);
+  margin-bottom: 14px; display: flex; align-items: center; gap: 10px;
+}
+.card-title .icon {
+  width: 32px; height: 32px; border-radius: 8px;
+  background: var(--blue); color: white;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 16px; flex-shrink: 0;
+}
+.card-title .icon.yellow { background: var(--yellow); color: var(--navy); }
+.card-title .icon.green  { background: var(--green); }
+.card-title .icon.red    { background: var(--red); }
+.card-title .icon.orange { background: var(--orange); }
+
+/* ── CALLOUTS ── */
+.callout {
+  border-radius: 10px; padding: 18px 20px; margin: 20px 0;
+  border-left: 4px solid;
+}
+.callout-info    { background: #EFF6FF; border-color: var(--blue); }
+.callout-warn    { background: #FFFBEB; border-color: var(--yellow); }
+.callout-danger  { background: #FEF2F2; border-color: var(--red); }
+.callout-success { background: #F0FDF4; border-color: var(--green); }
+.callout-label {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 10px; font-weight: 700; letter-spacing: 2px;
+  text-transform: uppercase; margin-bottom: 8px;
+}
+.callout-info .callout-label    { color: var(--blue); }
+.callout-warn .callout-label    { color: var(--orange); }
+.callout-danger .callout-label  { color: var(--red); }
+.callout-success .callout-label { color: var(--green); }
+.callout p, .callout ul { font-size: 14px; }
+.callout ul { padding-left: 18px; margin-top: 6px; }
+.callout li { margin-bottom: 4px; }
+
+/* ── ARTIGO TAG ── */
+.art-tag {
+  display: inline-block; padding: 2px 10px;
+  background: var(--navy); color: white;
+  border-radius: 4px; font-size: 10px; font-weight: 700;
+  font-family: 'Montserrat', sans-serif; letter-spacing: 1px;
+  text-transform: uppercase; margin-right: 6px; vertical-align: middle;
+}
+
+/* ── GRID ── */
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+.grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; }
+
+/* ── STAT CARD ── */
+.stat-card {
+  background: var(--navy); color: white;
+  border-radius: var(--radius); padding: 24px;
+  text-align: center;
+}
+.stat-num {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 40px; font-weight: 900; color: var(--yellow);
+  line-height: 1;
+}
+.stat-label { font-size: 12px; color: rgba(255,255,255,.65); margin-top: 6px; }
+
+/* ── TABLE ── */
+.cms-table { width: 100%; border-collapse: collapse; border-radius: var(--radius); overflow: hidden; font-size: 14px; }
+.cms-table thead tr { background: var(--navy); color: white; }
+.cms-table th { padding: 12px 16px; text-align: left; font-weight: 700; font-family: 'Montserrat', sans-serif; font-size: 11px; letter-spacing: .5px; }
+.cms-table td { padding: 11px 16px; border-top: 1px solid var(--border); }
+.cms-table tbody tr:nth-child(even) td { background: var(--off); }
+
+/* ── SCENARIO ── */
+.scenario {
+  background: white; border-radius: var(--radius);
+  border: 1px solid var(--border); overflow: hidden; margin-bottom: 24px;
+}
+.scenario-header {
+  background: var(--navy); padding: 16px 24px;
+  display: flex; align-items: center; gap: 12px;
+}
+.scenario-badge {
+  background: var(--yellow); color: var(--navy);
+  border-radius: 6px; padding: 4px 12px;
+  font-family: 'Montserrat', sans-serif; font-size: 10px; font-weight: 700;
+  letter-spacing: 1px; text-transform: uppercase;
+}
+.scenario-title { color: white; font-weight: 700; font-size: 15px; }
+.scenario-body { padding: 24px; }
+.scenario-desc { font-size: 14px; color: var(--muted); margin-bottom: 16px; font-style: italic; }
+
+/* ── ACCORDION ── */
+.accordion { margin-bottom: 12px; border-radius: 10px; overflow: hidden; border: 1px solid var(--border); }
+.accordion-header {
+  background: white; padding: 16px 20px;
+  display: flex; justify-content: space-between; align-items: center;
+  cursor: pointer; font-weight: 600; font-size: 14px; color: var(--navy);
+  border: none; width: 100%; text-align: left; transition: background .15s;
+}
+.accordion-header:hover { background: var(--off); }
+.accordion-arrow { transition: transform .25s; font-size: 12px; color: var(--muted); }
+.accordion-header.open .accordion-arrow { transform: rotate(180deg); }
+.accordion-body { display: none; padding: 16px 20px; background: var(--off); font-size: 14px; border-top: 1px solid var(--border); }
+.accordion-body.open { display: block; }
+
+/* ── QUIZ ── */
+.quiz-section {
+  background: var(--navy); border-radius: var(--radius);
+  padding: 32px; margin-top: 32px;
+}
+.quiz-title {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 11px; font-weight: 700; letter-spacing: 3px;
+  text-transform: uppercase; color: var(--yellow); margin-bottom: 8px;
+}
+.quiz-counter { color: rgba(255,255,255,.5); font-size: 12px; margin-bottom: 24px; }
+.quiz-question {
+  font-size: 17px; font-weight: 700; color: white;
+  font-family: 'Montserrat', sans-serif; margin-bottom: 24px; line-height: 1.45;
+}
+.quiz-options { display: flex; flex-direction: column; gap: 10px; }
+.quiz-option {
+  background: rgba(255,255,255,.07); border: 2px solid rgba(255,255,255,.12);
+  border-radius: 10px; padding: 14px 18px;
+  cursor: pointer; color: rgba(255,255,255,.85); font-size: 14px;
+  transition: all .2s; text-align: left; width: 100%;
+}
+.quiz-option:hover:not(:disabled) { background: rgba(255,255,255,.12); border-color: rgba(255,255,255,.3); }
+.quiz-option.correct { background: rgba(30,138,74,.25); border-color: var(--green); color: white; }
+.quiz-option.wrong   { background: rgba(220,38,38,.2); border-color: var(--red); color: white; }
+.quiz-option.reveal  { background: rgba(30,138,74,.15); border-color: rgba(30,138,74,.4); }
+
+.quiz-feedback {
+  margin-top: 20px; padding: 18px 20px; border-radius: 10px;
+  display: none; font-size: 14px;
+}
+.quiz-feedback.correct { background: rgba(30,138,74,.2); border: 1px solid rgba(30,138,74,.4); color: #86EFAC; }
+.quiz-feedback.wrong   { background: rgba(220,38,38,.15); border: 1px solid rgba(220,38,38,.3); color: #FCA5A5; }
+.quiz-feedback.show    { display: block; }
+.feedback-label {
+  font-family: 'Montserrat', sans-serif; font-size: 10px; font-weight: 700;
+  letter-spacing: 2px; text-transform: uppercase; margin-bottom: 8px;
+}
+.quiz-feedback.correct .feedback-label { color: var(--green); }
+.quiz-feedback.wrong   .feedback-label { color: var(--red); }
+
+.quiz-nav { display: flex; align-items: center; justify-content: space-between; margin-top: 24px; }
+.quiz-progress-bar { height: 4px; background: rgba(255,255,255,.1); border-radius: 2px; margin-bottom: 20px; }
+.quiz-progress-fill { height: 100%; background: var(--yellow); border-radius: 2px; transition: width .4s ease; }
+.quiz-score { color: var(--yellow); font-weight: 700; font-size: 13px; font-family: 'Montserrat', sans-serif; }
+
+/* ── BUTTONS ── */
+.btn {
+  display: inline-flex; align-items: center; gap: 8px;
+  font-family: 'Montserrat', sans-serif; font-size: 12px; font-weight: 700;
+  letter-spacing: 1.5px; text-transform: uppercase; padding: 12px 24px;
+  border-radius: 8px; border: none; cursor: pointer; text-decoration: none;
+  transition: all .2s;
+}
+.btn-primary   { background: var(--yellow); color: var(--navy); }
+.btn-primary:hover { opacity: .88; transform: translateY(-1px); }
+.btn-secondary { background: var(--blue); color: white; }
+.btn-secondary:hover { opacity: .88; }
+.btn-outline   { background: transparent; border: 2px solid rgba(255,255,255,.3); color: rgba(255,255,255,.8); }
+.btn-outline:hover { border-color: white; color: white; }
+.btn-sm { padding: 8px 18px; font-size: 11px; }
+.btn:disabled { opacity: .4; cursor: not-allowed; transform: none !important; }
+
+/* ── MODULE NAV ── */
+.module-nav {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 32px 48px; border-top: 1px solid var(--border);
+  background: white;
+}
+
+/* ── CHECKLIST ── */
+.checklist { list-style: none; }
+.checklist li {
+  display: flex; align-items: flex-start; gap: 12px;
+  padding: 10px 0; border-bottom: 1px solid var(--border); font-size: 14px;
+}
+.checklist li:last-child { border-bottom: none; }
+.check-icon {
+  width: 22px; height: 22px; border-radius: 50%;
+  background: var(--green); color: white;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 11px; flex-shrink: 0; margin-top: 1px;
+}
+
+/* ── BADGE ── */
+.badge {
+  display: inline-block; padding: 3px 10px; border-radius: 4px;
+  font-family: 'Montserrat', sans-serif; font-size: 10px; font-weight: 700;
+  letter-spacing: 1.5px; text-transform: uppercase;
+}
+.badge-blue   { background: var(--blue);   color: white; }
+.badge-yellow { background: var(--yellow); color: var(--navy); }
+.badge-green  { background: var(--green);  color: white; }
+.badge-red    { background: var(--red);    color: white; }
+.badge-navy   { background: var(--navy);   color: white; }
+
+/* ── WELCOME SCREEN ── */
+#welcome-screen {
+  min-height: 100vh; background: var(--navy);
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  padding: 48px 24px; text-align: center;
+}
+.welcome-logo {
+  font-family: 'Montserrat', sans-serif; font-size: 11px; font-weight: 700;
+  letter-spacing: 3px; text-transform: uppercase; color: var(--yellow);
+  margin-bottom: 32px;
+}
+.welcome-title {
+  font-family: 'Montserrat', sans-serif;
+  font-size: clamp(32px, 6vw, 64px); font-weight: 900;
+  color: white; line-height: 1; letter-spacing: -2px;
+  max-width: 700px; margin-bottom: 24px;
+}
+.welcome-title em { color: var(--yellow); font-style: normal; }
+.welcome-sub { font-size: 16px; color: rgba(255,255,255,.6); max-width: 480px; margin-bottom: 40px; }
+.welcome-meta {
+  display: flex; gap: 32px; margin-bottom: 48px; flex-wrap: wrap; justify-content: center;
+}
+.meta-item { text-align: center; }
+.meta-num {
+  font-family: 'Montserrat', sans-serif; font-size: 28px; font-weight: 900;
+  color: var(--yellow); line-height: 1;
+}
+.meta-label { font-size: 12px; color: rgba(255,255,255,.5); margin-top: 4px; }
+.stripe { width: 120px; height: 4px; margin: 0 auto 40px; border-radius: 2px;
+  background: linear-gradient(to right, var(--yellow) 33%, var(--green) 33% 66%, var(--blue) 66%); }
+
+/* ── FINAL SCREEN ── */
+.final-screen {
+  background: var(--navy); border-radius: var(--radius);
+  padding: 40px; text-align: center; margin-bottom: 24px;
+}
+.trophy { font-size: 64px; margin-bottom: 16px; }
+.final-score-display {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 72px; font-weight: 900; color: var(--yellow); line-height: 1;
+}
+.final-screen h2 { color: white; font-family: 'Montserrat', sans-serif; font-size: 24px; font-weight: 700; margin: 12px 0 8px; }
+.final-screen p { color: rgba(255,255,255,.65); font-size: 14px; }
+
+/* ── TABS ── */
+.tab-bar { display: flex; border-bottom: 2px solid var(--border); margin-bottom: 24px; gap: 0; }
+.tab-btn {
+  padding: 10px 20px; font-family: 'Montserrat', sans-serif;
+  font-size: 11px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase;
+  border: none; background: none; cursor: pointer;
+  color: var(--muted); border-bottom: 2px solid transparent; margin-bottom: -2px;
+  transition: all .2s;
+}
+.tab-btn.active { color: var(--blue); border-bottom-color: var(--blue); }
+.tab-panel { display: none; }
+.tab-panel.active { display: block; }
+
+/* ── HIGHLIGHT BOX ── */
+.highlight-box {
+  background: linear-gradient(135deg, var(--navy) 0%, #1a4a7a 100%);
+  border-radius: var(--radius); padding: 28px;
+  color: white; margin-bottom: 24px;
+}
+.highlight-box h3 {
+  font-family: 'Montserrat', sans-serif; font-weight: 700;
+  font-size: 18px; color: var(--yellow); margin-bottom: 12px;
+}
+.highlight-box p { color: rgba(255,255,255,.8); font-size: 14px; }
+.highlight-box ul { color: rgba(255,255,255,.8); font-size: 14px; padding-left: 18px; margin-top: 8px; }
+.highlight-box li { margin-bottom: 5px; }
+
+/* ── RESPONSIVE ── */
+@media (max-width: 768px) {
+  .sidebar { position: fixed; top: 56px; left: 0; z-index: 200; transform: translateX(-100%); height: calc(100vh - 56px); }
+  .sidebar.open { transform: translateX(0); }
+  .main { width: 100%; }
+  #hamburger { display: flex; }
+  .content-area { padding: 24px 20px 48px; }
+  .module-hero { padding: 36px 20px; }
+  .module-nav { padding: 20px; flex-direction: column; gap: 12px; }
+  .grid-2 { grid-template-columns: 1fr; }
+  .grid-3 { grid-template-columns: 1fr; }
+}
+@media (max-width: 480px) {
+  .quiz-section { padding: 20px; }
+  .welcome-meta { gap: 20px; }
+}
+
+/* ── SECTION HEADING ── */
+.section-h2 {
+  font-family: 'Montserrat', sans-serif; font-size: 22px; font-weight: 900;
+  color: var(--navy); margin: 32px 0 16px; letter-spacing: -.5px;
+}
+.section-h3 {
+  font-family: 'Montserrat', sans-serif; font-size: 16px; font-weight: 700;
+  color: var(--navy); margin: 24px 0 12px;
+}
+p { margin-bottom: 12px; }
+strong { color: var(--navy); }
+.highlight-box strong { color: #93C5FD; }
+
+/* ── VERSE QUOTE ── */
+.quote-block {
+  border-left: 4px solid var(--blue); padding: 14px 20px;
+  background: var(--off); border-radius: 0 8px 8px 0; margin: 20px 0; font-size: 14px;
+}
+.quote-source { font-size: 11px; color: var(--muted); margin-top: 6px; font-family: 'Montserrat', sans-serif; font-weight: 700; }
+
+/* ── FLOW STEPS ── */
+.flow-steps { display: flex; flex-direction: column; gap: 0; }
+.flow-step { display: flex; gap: 16px; position: relative; }
+.flow-step:not(:last-child)::after {
+  content: ''; position: absolute; left: 15px; top: 36px;
+  width: 2px; height: calc(100% + 0px); background: var(--border);
+}
+.step-dot {
+  width: 32px; height: 32px; border-radius: 50%; flex-shrink: 0;
+  background: var(--blue); color: white;
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Montserrat', sans-serif; font-size: 12px; font-weight: 700;
+  position: relative; z-index: 1;
+}
+.step-content { padding-bottom: 24px; }
+.step-content h4 { font-weight: 700; font-size: 14px; color: var(--navy); margin-bottom: 4px; }
+.step-content p { font-size: 13px; color: var(--muted); margin: 0; }
+</style>
+</head>
+<body>
+
+<!-- ══════════════════════ WELCOME SCREEN ══════════════════════ -->
+<div id="welcome-screen">
+  <div class="welcome-logo">Conselho Municipal de Saúde · <span style="color:white">Montes Claros – MG</span></div>
+  <div class="stripe"></div>
+  <h1 class="welcome-title">Mini <em>Formação</em><br>do Conselheiro</h1>
+  <p class="welcome-sub">Aprenda como o CMS funciona de verdade — com linguagem clara, exemplos práticos e quizzes interativos.</p>
+  <div class="welcome-meta">
+    <div class="meta-item">
+      <div class="meta-num">9</div>
+      <div class="meta-label">Módulos</div>
+    </div>
+    <div class="meta-item">
+      <div class="meta-num">36</div>
+      <div class="meta-label">Questões</div>
+    </div>
+    <div class="meta-item">
+      <div class="meta-num">~90</div>
+      <div class="meta-label">Minutos</div>
+    </div>
+  </div>
+  <button class="btn btn-primary" onclick="startCourse()" style="font-size:14px; padding:16px 40px;">
+    ▶ Começar Agora
+  </button>
+  <p style="margin-top:20px; color:rgba(255,255,255,.35); font-size:12px;">Seu progresso é salvo automaticamente no navegador</p>
+</div>
+
+<!-- ══════════════════════ COURSE LAYOUT ══════════════════════ -->
+<div id="course-layout" style="display:none;">
+  <!-- TOPBAR -->
+  <div class="topbar">
+    <div class="topbar-brand">CMS <span>Montes Claros</span> · Mini Formação</div>
+    <div class="topbar-right">
+      <div class="progress-pill">Progresso: <span id="progress-text">0%</span></div>
+      <div id="hamburger" onclick="toggleSidebar()">
+        <span></span><span></span><span></span>
+      </div>
+    </div>
+  </div>
+
+  <!-- LAYOUT -->
+  <div class="layout">
+    <!-- SIDEBAR -->
+    <nav class="sidebar" id="sidebar">
+      <div class="sidebar-section-label">Módulos</div>
+
+      <button class="nav-item" data-module="0" onclick="goModule(0)">
+        <div class="nav-num">0</div>
+        <div class="nav-text">Introdução</div>
+      </button>
+      <button class="nav-item" data-module="1" onclick="goModule(1)">
+        <div class="nav-num">1</div>
+        <div class="nav-text">O Poder do Conselho</div>
+      </button>
+      <button class="nav-item" data-module="2" onclick="goModule(2)">
+        <div class="nav-num">2</div>
+        <div class="nav-text">Como Funciona na Prática</div>
+      </button>
+      <button class="nav-item" data-module="3" onclick="goModule(3)">
+        <div class="nav-num">3</div>
+        <div class="nav-text">Papel do Conselheiro</div>
+      </button>
+      <button class="nav-item" data-module="4" onclick="goModule(4)">
+        <div class="nav-num">4</div>
+        <div class="nav-text">Estrutura Interna</div>
+      </button>
+      <button class="nav-item" data-module="5" onclick="goModule(5)">
+        <div class="nav-num">5</div>
+        <div class="nav-text">Conselhos Locais</div>
+      </button>
+      <button class="nav-item" data-module="6" onclick="goModule(6)">
+        <div class="nav-num">6</div>
+        <div class="nav-text">Situações Reais</div>
+      </button>
+      <button class="nav-item" data-module="7" onclick="goModule(7)">
+        <div class="nav-num">7</div>
+        <div class="nav-text">Limites do Regimento</div>
+      </button>
+      <button class="nav-item" data-module="8" onclick="goModule(8)">
+        <div class="nav-num">8</div>
+        <div class="nav-text">Encerramento</div>
+      </button>
+
+      <div class="sidebar-section-label" style="margin-top:16px;">Avaliação</div>
+      <button class="nav-item" data-module="9" onclick="goModule(9)">
+        <div class="nav-num" style="background:var(--yellow);color:var(--navy);">★</div>
+        <div class="nav-text" style="color:rgba(255,255,255,.85);">Quiz Completo</div>
+      </button>
+    </nav>
+
+    <!-- MAIN -->
+    <main class="main" id="main-content">
+
+<!-- ═══════════════════ MÓDULO 0 — INTRODUÇÃO ═══════════════════ -->
+<article class="module active" id="module-0">
+  <div class="module-hero">
+    <div class="module-eyebrow">Módulo 0 · Introdução</div>
+    <h1>O que é o <em>Conselho</em> de Saúde e por que ele existe?</h1>
+    <p>Antes de qualquer regra, entenda o propósito. Isso muda tudo.</p>
+  </div>
+  <div class="content-area">
+
+    <div class="callout callout-info">
+      <div class="callout-label">⚡ O ponto de partida</div>
+      <p>Muitos conselheiros chegam às reuniões sem entender <strong>o que o conselho realmente é</strong>. Resultado: ficam passivos, não votam com convicção, ou — o extremo oposto — tentam fazer coisas que não são competência do conselho. Este módulo corrige isso.</p>
+    </div>
+
+    <h2 class="section-h2">O que diz o Regimento?</h2>
+
+    <div class="quote-block">
+      "O Conselho Municipal de Saúde (CMS) de Montes Claros é a <strong>instância máxima de deliberação</strong> no que diz respeito à avaliação, aprovação e controle da política de saúde no âmbito do município. É um órgão colegiado, deliberativo, normativo, fiscalizador e de natureza permanente."
+      <div class="quote-source">Art. 1º do Regimento Interno</div>
+    </div>
+
+    <h2 class="section-h2">Traduzindo para o mundo real</h2>
+    <p>Cinco palavras-chave que definem o CMS:</p>
+
+    <div class="grid-2" style="margin-bottom:24px;">
+      <div class="card" style="margin-bottom:0;">
+        <div class="card-title"><div class="icon yellow">🏛️</div> Deliberativo</div>
+        <p>O conselho <strong>decide</strong>. Não só opina, não só sugere — <strong>delibera</strong>. Uma deliberação aprovada tem força institucional e precisa ser levada à sério pelo gestor.</p>
+        <div class="callout callout-warn" style="margin-top:12px; margin-bottom:0;">
+          <div class="callout-label">⚠️ Atenção na prática</div>
+          <p>Na prática, muitas deliberações ficam "engavetadas". Isso <em>não</em> é normal — é uma falha de controle social que cabe ao conselho cobrar.</p>
+        </div>
+      </div>
+      <div class="card" style="margin-bottom:0;">
+        <div class="card-title"><div class="icon">📋</div> Normativo</div>
+        <p>O conselho pode <strong>estabelecer normas</strong> no âmbito de suas competências. Isso inclui definir diretrizes, critérios e parâmetros para a política de saúde.</p>
+      </div>
+      <div class="card" style="margin-bottom:0;">
+        <div class="card-title"><div class="icon green">🔍</div> Fiscalizador</div>
+        <p>O conselho tem o dever de <strong>verificar se o dinheiro público está sendo bem usado</strong>, se as políticas estão sendo executadas e se a população está sendo atendida.</p>
+      </div>
+      <div class="card" style="margin-bottom:0;">
+        <div class="card-title"><div class="icon red">♾️</div> Permanente</div>
+        <p>Não acaba com a mudança de governo. O CMS <strong>continua funcionando</strong> independentemente de quem está na prefeitura. Isso é controle social contínuo.</p>
+      </div>
+    </div>
+
+    <h2 class="section-h2">Por que o Regimento Interno existe?</h2>
+    <p>O regimento é o <strong>"manual de operações"</strong> do conselho. Ele define:</p>
+    <div class="card">
+      <ul style="list-style:none; display:flex; flex-direction:column; gap:10px;">
+        <li style="display:flex; gap:12px; align-items:flex-start;"><span style="color:var(--yellow); font-weight:900; font-size:18px; line-height:1;">→</span><div><strong>Quem faz o quê</strong> — papéis e responsabilidades de cada membro</div></li>
+        <li style="display:flex; gap:12px; align-items:flex-start;"><span style="color:var(--yellow); font-weight:900; font-size:18px; line-height:1;">→</span><div><strong>Como as decisões são tomadas</strong> — quórum, votação, prazos</div></li>
+        <li style="display:flex; gap:12px; align-items:flex-start;"><span style="color:var(--yellow); font-weight:900; font-size:18px; line-height:1;">→</span><div><strong>O que pode e o que não pode</strong> — limites e poderes</div></li>
+        <li style="display:flex; gap:12px; align-items:flex-start;"><span style="color:var(--yellow); font-weight:900; font-size:18px; line-height:1;">→</span><div><strong>Como resolver conflitos</strong> — quando há discordâncias internas</div></li>
+      </ul>
+    </div>
+
+    <div class="callout callout-danger">
+      <div class="callout-label">🚫 Erro Clássico #1</div>
+      <p><strong>"O regimento é burocracia inútil."</strong><br>Errado. Sem o regimento, o conselho fica vulnerável: o gestor pode manipular reuniões, conselheiros podem ser arbitrariamente afastados, decisões podem ser contestadas. O regimento é a <em>proteção jurídica</em> do conselho.</p>
+    </div>
+
+    <h2 class="section-h2">A base legal: de onde vem a força do conselho?</h2>
+    <div class="highlight-box">
+      <h3>🏛️ Fundamentos Jurídicos do CMS</h3>
+      <ul>
+        <li><strong>Lei nº 8.142/1990</strong> — criou os Conselhos de Saúde em todo o Brasil como condição para repasse de recursos federais</li>
+        <li><strong>Lei nº 8.080/1990</strong> — define o SUS, seus princípios e as competências do controle social</li>
+        <li><strong>Art. 188 da Lei Orgânica de Montes Claros</strong> — âncora municipal do conselho</li>
+        <li><strong>Resolução nº 453/2012 do CNS</strong> — define composição paritária, mandatos e impedimentos</li>
+      </ul>
+      <p style="margin-top:12px; font-size:13px;">O conselho <em>não é criação da prefeitura</em>. É obrigação constitucional do SUS. Isso importa.</p>
+    </div>
+
+    <h2 class="section-h2">🔍 Análise Crítica: Controle Social de Verdade</h2>
+    <div class="accordion">
+      <button class="accordion-header" onclick="toggleAccordion(this)">
+        O que é "controle social" na prática? <span class="accordion-arrow">▼</span>
+      </button>
+      <div class="accordion-body">
+        <p>Controle social não é "controlar o social" — é a <strong>sociedade controlando o Estado</strong>. No SUS, significa que a população, por meio de representantes, tem poder real de fiscalizar e influenciar as políticas de saúde.</p>
+        <p>Na prática, isso só funciona quando os conselheiros: (1) entendem o que estão votando, (2) consultam as bases que representam, e (3) têm acesso real às informações da gestão.</p>
+      </div>
+    </div>
+    <div class="accordion">
+      <button class="accordion-header" onclick="toggleAccordion(this)">
+        Por que tantos conselhos são "de fachada"? <span class="accordion-arrow">▼</span>
+      </button>
+      <div class="accordion-body">
+        <p>Estudos sobre participação social no SUS mostram padrões recorrentes: reuniões dominadas pela gestão, pauta definida unilateralmente, conselheiros sem acesso a documentos técnicos, ausência de infraestrutura adequada.</p>
+        <p>O regimento do CMS de Montes Claros previne vários desses problemas ao exigir: convocação com 48h de antecedência + documentos, pauta elaborada com a diretoria, direito de qualquer conselheiro incluir pautas, publicação de deliberações em até 30 dias.</p>
+      </div>
+    </div>
+    <div class="accordion">
+      <button class="accordion-header" onclick="toggleAccordion(this)">
+        Quem elaborou e pode alterar o Regimento? <span class="accordion-arrow">▼</span>
+      </button>
+      <div class="accordion-body">
+        <p>O próprio CMS elaborou e aprova seu regimento. <span class="art-tag">Art. 3º, inciso 21</span> O regimento atual foi aprovado na 197ª Reunião Extraordinária do CMS, em 13 de novembro de 2019.</p>
+        <p>Para alterar o regimento, é preciso: reunião extraordinária convocada com pelo menos 5 dias úteis de antecedência + aprovação de 2/3 do plenário. <span class="art-tag">Art. 64</span></p>
+      </div>
+    </div>
+
+    <!-- QUIZ MÓDULO 0 -->
+    <div class="quiz-section" id="quiz-0">
+      <div class="quiz-title">🎯 Quiz · Módulo 0</div>
+      <div class="quiz-progress-bar"><div class="quiz-progress-fill" id="q0-prog" style="width:0%"></div></div>
+      <div class="quiz-counter" id="q0-counter">Questão 1 de 4</div>
+      <div class="quiz-question" id="q0-question"></div>
+      <div class="quiz-options" id="q0-options"></div>
+      <div class="quiz-feedback" id="q0-feedback">
+        <div class="feedback-label" id="q0-flabel"></div>
+        <div id="q0-ftext"></div>
+      </div>
+      <div class="quiz-nav">
+        <span class="quiz-score" id="q0-score">Pontos: 0</span>
+        <div style="display:flex;gap:8px;align-items:center;">
+          <button class="btn btn-outline btn-sm" style="opacity:.55;" onclick="resetQuiz(0)">↺ Resetar</button>
+          <button class="btn btn-outline btn-sm" id="q0-next" onclick="nextQuestion(0)" style="display:none;">Próxima →</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+  <div class="module-nav">
+    <span style="color:var(--muted); font-size:13px;">← Início</span>
+    <button class="btn btn-primary" onclick="goModule(1)">Próximo Módulo →</button>
+  </div>
+</article>
+
+<!-- ═══════════════════ MÓDULO 1 — O PODER DO CONSELHO ═══════════════════ -->
+<article class="module" id="module-1">
+  <div class="module-hero">
+    <div class="module-eyebrow">Módulo 1 · Competências</div>
+    <h1>O que o Conselho <em>pode</em> de verdade?</h1>
+    <p>Entenda os poderes reais, os limites e a diferença entre deliberar, recomendar e opinar.</p>
+  </div>
+  <div class="content-area">
+
+    <div class="callout callout-info">
+      <div class="callout-label">💡 Por que isso importa?</div>
+      <p>Conselheiro que não conhece seus poderes fica na mão do gestor. Conselheiro que exagera seus poderes perde credibilidade. O equilíbrio está no conhecimento preciso das competências.</p>
+    </div>
+
+    <h2 class="section-h2">As 23 Competências do CMS</h2>
+    <p>O Art. 3º do regimento lista as competências. Vamos agrupá-las em categorias para facilitar o entendimento:</p>
+
+    <div class="tab-bar">
+      <button class="tab-btn active" onclick="switchTab('competencias', 'financeiro', this)">💰 Financeiro</button>
+      <button class="tab-btn" onclick="switchTab('competencias', 'politica', this)">📋 Políticas</button>
+      <button class="tab-btn" onclick="switchTab('competencias', 'fiscalizacao', this)">🔍 Fiscalização</button>
+      <button class="tab-btn" onclick="switchTab('competencias', 'institucional', this)">🏛️ Institucional</button>
+    </div>
+
+    <div id="competencias-financeiro" class="tab-panel active">
+      <div class="card">
+        <div class="card-title"><div class="icon yellow">💰</div> Poder sobre as Finanças</div>
+        <div class="flow-steps">
+          <div class="flow-step">
+            <div class="step-dot">1</div>
+            <div class="step-content">
+              <h4>Exigir prestação de contas quadrimestral</h4>
+              <p>O Fundo Municipal de Saúde deve prestar contas a cada 4 meses. O CMS aprova ou não. <span class="art-tag">Art. 3º, I</span></p>
+            </div>
+          </div>
+          <div class="flow-step">
+            <div class="step-dot">2</div>
+            <div class="step-content">
+              <h4>Aprovar o orçamento da saúde</h4>
+              <p>O CMS aprova a proposta orçamentária setorial da saúde antes de ir para a Câmara de Vereadores. <span class="art-tag">Art. 3º, VI</span></p>
+            </div>
+          </div>
+          <div class="flow-step">
+            <div class="step-dot">3</div>
+            <div class="step-content">
+              <h4>Fiscalizar movimentação financeira</h4>
+              <p>Pode definir diretrizes e fiscalizar como os recursos do SUS são aplicados no município. <span class="art-tag">Art. 3º, X</span></p>
+            </div>
+          </div>
+          <div class="flow-step">
+            <div class="step-dot">4</div>
+            <div class="step-content">
+              <h4>Aprovar critérios de repasse</h4>
+              <p>Define os critérios para repasse de incentivos financeiros às unidades de saúde. <span class="art-tag">Art. 3º, XII</span></p>
+            </div>
+          </div>
+        </div>
+        <div class="callout callout-warn" style="margin-bottom:0; margin-top:16px;">
+          <div class="callout-label">🚨 Pegadinha Clássica</div>
+          <p>O conselho <strong>aprova ou não</strong> a prestação de contas — ele <em>não gerencie</em> o dinheiro, não assina cheques, não abre licitações. Quando um conselheiro tenta "administrar" recursos, está extrapolando seu papel.</p>
+        </div>
+      </div>
+    </div>
+
+    <div id="competencias-politica" class="tab-panel">
+      <div class="card">
+        <div class="card-title"><div class="icon">📋</div> Poder sobre as Políticas de Saúde</div>
+        <ul style="list-style:none; display:flex; flex-direction:column; gap:14px;">
+          <li>
+            <strong>Deliberar sobre modelos de atenção à saúde</strong> <span class="art-tag">Art. 3º, II</span>
+            <p style="font-size:13px; color:var(--muted); margin:4px 0 0;">Ex: decidir se o município deve ampliar UBS ou criar centros especializados</p>
+          </li>
+          <li>
+            <strong>Estabelecer diretrizes para o Plano Municipal de Saúde</strong> <span class="art-tag">Art. 3º, III</span>
+            <p style="font-size:13px; color:var(--muted); margin:4px 0 0;">O plano de saúde deve seguir as diretrizes aprovadas pelo conselho</p>
+          </li>
+          <li>
+            <strong>Propor prioridades para formação profissional</strong> <span class="art-tag">Art. 3º, V</span>
+            <p style="font-size:13px; color:var(--muted); margin:4px 0 0;">Pode indicar quais áreas precisam de mais capacitação nos trabalhadores do SUS</p>
+          </li>
+          <li>
+            <strong>Aprovar normas básicas municipais do SUS</strong> <span class="art-tag">Art. 3º, VIII</span>
+            <p style="font-size:13px; color:var(--muted); margin:4px 0 0;">Pode normatizar regras operacionais do sistema municipal</p>
+          </li>
+          <li>
+            <strong>Convocar Conferências Municipais de Saúde</strong> <span class="art-tag">Art. 3º, XI</span>
+            <p style="font-size:13px; color:var(--muted); margin:4px 0 0;">Aprova a organização e pode convocar conferências extraordinárias quando necessário</p>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <div id="competencias-fiscalizacao" class="tab-panel">
+      <div class="card">
+        <div class="card-title"><div class="icon green">🔍</div> Poder de Fiscalização</div>
+        <ul style="list-style:none; display:flex; flex-direction:column; gap:14px;">
+          <li>
+            <strong>Solicitar qualquer informação técnica, financeira e operacional</strong> <span class="art-tag">Art. 3º, XX</span>
+            <p style="font-size:13px; color:var(--muted); margin:4px 0 0;">Convênios, contratos, termos aditivos, dados de trabalhadores — tudo pode ser solicitado</p>
+          </li>
+          <li>
+            <strong>Participar da regulação do setor privado de saúde</strong> <span class="art-tag">Art. 3º, IV</span>
+            <p style="font-size:13px; color:var(--muted); margin:4px 0 0;">Hospitais, clínicas e laboratórios conveniados com o SUS estão no radar do conselho</p>
+          </li>
+          <li>
+            <strong>Avaliar remuneração e cobertura dos serviços</strong> <span class="art-tag">Art. 3º, XIII</span>
+            <p style="font-size:13px; color:var(--muted); margin:4px 0 0;">Pode questionar valores pagos a prestadores e se a cobertura está adequada</p>
+          </li>
+          <li>
+            <strong>Divulgar suas ações</strong> <span class="art-tag">Art. 3º, XXII</span>
+            <p style="font-size:13px; color:var(--muted); margin:4px 0 0;">Tem o dever de comunicar à sociedade o que faz — transparência é obrigatória</p>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <div id="competencias-institucional" class="tab-panel">
+      <div class="card">
+        <div class="card-title"><div class="icon red">🏛️</div> Poder Institucional</div>
+        <ul style="list-style:none; display:flex; flex-direction:column; gap:14px;">
+          <li>
+            <strong>Elaborar, aprovar e alterar seu próprio Regimento</strong> <span class="art-tag">Art. 3º, XXI</span>
+            <p style="font-size:13px; color:var(--muted); margin:4px 0 0;">Autonomia total sobre suas regras internas — ninguém de fora pode mudar o regimento</p>
+          </li>
+          <li>
+            <strong>Criar comissões intersetoriais e grupos de trabalho</strong> <span class="art-tag">Art. 3º, VII</span>
+            <p style="font-size:13px; color:var(--muted); margin:4px 0 0;">Pode criar estruturas específicas para investigar temas complexos</p>
+          </li>
+          <li>
+            <strong>Representar ao Ministério Público</strong> <span class="art-tag">Art. 21, §3º</span>
+            <p style="font-size:13px; color:var(--muted); margin:4px 0 0;">Se o gestor não homologar deliberações, o CMS pode acionar o MP com maioria absoluta</p>
+          </li>
+          <li>
+            <strong>Se pronunciar sobre todos os assuntos de competência no SUS municipal</strong> <span class="art-tag">Art. 3º, XXIII</span>
+            <p style="font-size:13px; color:var(--muted); margin:4px 0 0;">Cláusula ampla — qualquer assunto relevante ao SUS local pode ser levado ao conselho</p>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <h2 class="section-h2" style="margin-top:32px;">Deliberar vs. Recomendar vs. Opinar</h2>
+    <p>Esta é uma das distinções mais importantes para um conselheiro. <span class="art-tag">Art. 21</span></p>
+
+    <div class="grid-3" style="margin-bottom:24px;">
+      <div class="card" style="margin-bottom:0; border-top:4px solid var(--blue);">
+        <div style="font-family:'Montserrat',sans-serif; font-size:13px; font-weight:900; color:var(--blue); margin-bottom:8px;">DELIBERAÇÃO</div>
+        <p style="font-size:13px;">Decisão com força de lei interna. O gestor é obrigado a homologar (ou justificar a não-homologação). É o instrumento mais poderoso do conselho.</p>
+        <p style="font-size:12px; color:var(--muted); margin-top:8px;"><strong>Quando usar:</strong> aprovação de contas, orçamento, planos</p>
+      </div>
+      <div class="card" style="margin-bottom:0; border-top:4px solid var(--yellow);">
+        <div style="font-family:'Montserrat',sans-serif; font-size:13px; font-weight:900; color:var(--orange); margin-bottom:8px;">RECOMENDAÇÃO</div>
+        <p style="font-size:13px;">Orientação formal sobre algo que não é responsabilidade direta do conselho. Tem peso moral e institucional, mas não obriga da mesma forma.</p>
+        <p style="font-size:12px; color:var(--muted); margin-top:8px;"><strong>Quando usar:</strong> sugestões para outras secretarias, hospitais</p>
+      </div>
+      <div class="card" style="margin-bottom:0; border-top:4px solid var(--green);">
+        <div style="font-family:'Montserrat',sans-serif; font-size:13px; font-weight:900; color:var(--green); margin-bottom:8px;">MOÇÃO</div>
+        <p style="font-size:13px;">Expressão de posicionamento: apoio, crítica, reconhecimento ou oposição. Não cria obrigações, mas registra publicamente a posição do conselho.</p>
+        <p style="font-size:12px; color:var(--muted); margin-top:8px;"><strong>Quando usar:</strong> crítica pública, reconhecimento de boas práticas</p>
+      </div>
+    </div>
+
+    <div class="callout callout-danger">
+      <div class="callout-label">🚫 O que o CMS NÃO pode fazer</div>
+      <ul>
+        <li>Gerir diretamente recursos financeiros ou assinar contratos</li>
+        <li>Contratar ou demitir servidores de saúde</li>
+        <li>Determinar tratamentos médicos individuais</li>
+        <li>Interferir em casos individuais de atendimento</li>
+        <li>Ordenar prisão ou aplicar multas (isso é do Ministério Público e Vigilância Sanitária)</li>
+      </ul>
+    </div>
+
+    <h2 class="section-h2">🔍 Zona Cinzenta: Onde há tensão real?</h2>
+    <div class="accordion">
+      <button class="accordion-header" onclick="toggleAccordion(this)">
+        O gestor pode recusar homologar uma deliberação? <span class="accordion-arrow">▼</span>
+      </button>
+      <div class="accordion-body">
+        <p>Sim, mas <em>não pode simplesmente ignorar</em>. O Art. 21, §2º exige que, se o Secretário de Saúde não homologar uma deliberação, deve devolver ao CMS com justificativa e proposta alternativa.</p>
+        <p>O CMS delibera novamente. Se o impasse persistir, por maioria absoluta, pode representar ao <strong>Ministério Público</strong>. <span class="art-tag">Art. 21, §3º</span></p>
+        <p><strong>Na prática:</strong> este caminho raramente é usado porque exige coragem institucional. Mas existe — e os conselheiros precisam saber disso.</p>
+      </div>
+    </div>
+    <div class="accordion">
+      <button class="accordion-header" onclick="toggleAccordion(this)">
+        O conselho pode investigar denúncias de corrupção? <span class="accordion-arrow">▼</span>
+      </button>
+      <div class="accordion-body">
+        <p>Sim, indiretamente. O Art. 25, inciso 7º prevê que conselheiros podem "apurar e cumprir determinações quanto às investigações locais sobre denúncias remetidas ao Conselho, apresentando relatórios da missão."</p>
+        <p>Além disso, o Art. 3º, inciso 20 permite solicitar qualquer informação técnica e financeira. Se houver irregularidade, o conselho pode representar ao Ministério Público.</p>
+      </div>
+    </div>
+
+    <!-- QUIZ MÓDULO 1 -->
+    <div class="quiz-section" id="quiz-1">
+      <div class="quiz-title">🎯 Quiz · Módulo 1</div>
+      <div class="quiz-progress-bar"><div class="quiz-progress-fill" id="q1-prog" style="width:0%"></div></div>
+      <div class="quiz-counter" id="q1-counter">Questão 1 de 4</div>
+      <div class="quiz-question" id="q1-question"></div>
+      <div class="quiz-options" id="q1-options"></div>
+      <div class="quiz-feedback" id="q1-feedback">
+        <div class="feedback-label" id="q1-flabel"></div>
+        <div id="q1-ftext"></div>
+      </div>
+      <div class="quiz-nav">
+        <span class="quiz-score" id="q1-score">Pontos: 0</span>
+        <div style="display:flex;gap:8px;align-items:center;">
+          <button class="btn btn-outline btn-sm" style="opacity:.55;" onclick="resetQuiz(1)">↺ Resetar</button>
+          <button class="btn btn-outline btn-sm" id="q1-next" onclick="nextQuestion(1)" style="display:none;">Próxima →</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+  <div class="module-nav">
+    <button class="btn btn-secondary" onclick="goModule(0)">← Anterior</button>
+    <button class="btn btn-primary" onclick="goModule(2)">Próximo Módulo →</button>
+  </div>
+</article>
+
+<!-- ═══════════════════ MÓDULO 2 — COMO FUNCIONA NA PRÁTICA ═══════════════════ -->
+<article class="module" id="module-2">
+  <div class="module-hero">
+    <div class="module-eyebrow">Módulo 2 · Funcionamento</div>
+    <h1>Como o Conselho <em>funciona</em> na prática?</h1>
+    <p>Reuniões, pauta, quórum, votação — tudo que acontece de verdade nas plenárias.</p>
+  </div>
+  <div class="content-area">
+
+    <h2 class="section-h2">Quando e como acontecem as reuniões?</h2>
+
+    <div class="grid-2" style="margin-bottom:24px;">
+      <div class="card" style="margin-bottom:0;">
+        <div class="card-title"><div class="icon yellow">📅</div> Reuniões Ordinárias</div>
+        <ul style="list-style:none; display:flex; flex-direction:column; gap:8px;">
+          <li>📌 <strong>Quando:</strong> 1ª quarta-feira de cada mês</li>
+          <li>📌 <strong>Convocação:</strong> mínimo 48 horas antes</li>
+          <li>📌 <strong>Com pauta e documentos</strong> incluídos na convocação</li>
+        </ul>
+        <div class="callout callout-warn" style="margin-top:16px; margin-bottom:0;">
+          <div class="callout-label">⚠️ Atenção</div>
+          <p>Documentos devem ser enviados junto com a convocação. Conselheiro que recebe a pauta "na hora" não tem como deliberar com qualidade.</p>
+        </div>
+      </div>
+      <div class="card" style="margin-bottom:0;">
+        <div class="card-title"><div class="icon">⚡</div> Reuniões Extraordinárias</div>
+        <ul style="list-style:none; display:flex; flex-direction:column; gap:8px;">
+          <li>📌 <strong>Quando:</strong> qualquer data urgente</li>
+          <li>📌 <strong>Convocação:</strong> mínimo 24 horas antes</li>
+          <li>📌 <strong>Quem convoca:</strong> Presidente OU 1/3 dos conselheiros</li>
+        </ul>
+        <div class="callout callout-success" style="margin-top:16px; margin-bottom:0;">
+          <div class="callout-label">✅ Poder Coletivo</div>
+          <p>Um terço dos conselheiros pode forçar uma reunião extraordinária mesmo sem a concordância do presidente.</p>
+        </div>
+      </div>
+    </div>
+
+    <h2 class="section-h2">O Quórum — Entendendo de Vez</h2>
+    <p>O CMS tem 32 membros. Veja como funciona o quórum: <span class="art-tag">Art. 14, §2º</span></p>
+
+    <div class="card">
+      <table class="cms-table">
+        <thead>
+          <tr>
+            <th>Situação</th>
+            <th>O que acontece</th>
+            <th>Número mínimo (32 membros)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>1ª Chamada</strong></td>
+            <td>Reunião inicia normalmente</td>
+            <td>17 membros (metade + 1)</td>
+          </tr>
+          <tr>
+            <td><strong>2ª Chamada</strong></td>
+            <td>Reunião inicia com qualquer número</td>
+            <td>Sem mínimo para iniciar</td>
+          </tr>
+          <tr>
+            <td><strong>Para Deliberar</strong></td>
+            <td>Só pode votar/decidir com esse quórum</td>
+            <td>11 membros (1/3 de 32)</td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="callout callout-danger" style="margin-top:16px; margin-bottom:0;">
+        <div class="callout-label">🚨 Pegadinha do Quórum</div>
+        <p>A reunião pode <em>acontecer</em> com poucos membros (2ª chamada), mas só pode <em>deliberar</em> se tiver pelo menos 1/3 dos membros. Se deliberar sem quórum, a decisão é inválida.</p>
+      </div>
+    </div>
+
+    <h2 class="section-h2">A Estrutura de uma Reunião</h2>
+    <p>Toda reunião do CMS segue esta ordem: <span class="art-tag">Art. 20</span></p>
+
+    <div class="card">
+      <div class="flow-steps">
+        <div class="flow-step">
+          <div class="step-dot" style="background:var(--yellow);color:var(--navy);">1</div>
+          <div class="step-content">
+            <h4>Abertura e chamada</h4>
+            <p>Verificação de presença, registro de quórum</p>
+          </div>
+        </div>
+        <div class="flow-step">
+          <div class="step-dot">2</div>
+          <div class="step-content">
+            <h4>Aprovação da ata anterior</h4>
+            <p>Conselheiros podem propor correções. Emendas devem ser entregues antes do início da reunião.</p>
+          </div>
+        </div>
+        <div class="flow-step">
+          <div class="step-dot">3</div>
+          <div class="step-content">
+            <h4>Informes da Mesa</h4>
+            <p>Leitura de correspondências, convites, comunicados. <strong>Não há votação nesta etapa</strong> — apenas esclarecimentos breves.</p>
+          </div>
+        </div>
+        <div class="flow-step">
+          <div class="step-dot">4</div>
+          <div class="step-content">
+            <h4>Ordem do Dia</h4>
+            <p>Os temas pautados são discutidos. Cada conselheiro titular tem <strong>3 minutos</strong> para falar. Suplentes e visitantes falam depois dos titulares.</p>
+          </div>
+        </div>
+        <div class="flow-step">
+          <div class="step-dot">5</div>
+          <div class="step-content">
+            <h4>Deliberações</h4>
+            <p>Votação aberta (a favor, contra, abstenção). <strong>Não existe voto secreto</strong> no CMS.</p>
+          </div>
+        </div>
+        <div class="flow-step">
+          <div class="step-dot">6</div>
+          <div class="step-content">
+            <h4>Assuntos Gerais</h4>
+            <p>Temas não pautados formalmente. Não cabe votação neste momento.</p>
+          </div>
+        </div>
+        <div class="flow-step" style="padding-bottom:0;">
+          <div class="step-dot" style="background:var(--green);">✓</div>
+          <div class="step-content" style="padding-bottom:0;">
+            <h4>Encerramento</h4>
+            <p>O horário de término pode ser estendido por decisão do plenário.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <h2 class="section-h2">Como incluir um assunto na pauta?</h2>
+    <div class="card">
+      <p>A pauta é elaborada pela Secretaria Executiva em acordo com a Diretoria. Mas qualquer conselheiro titular pode incluir um assunto. <span class="art-tag">Art. 22, inciso 2</span></p>
+      <p>O processo é: <strong>solicitar a inclusão → o plenário aprova ou não</strong>. Isso garante que a pauta não seja monopolizada pela gestão.</p>
+      <div class="callout callout-info" style="margin-bottom:0;">
+        <div class="callout-label">💡 Dica Prática</div>
+        <p>Quando um conselheiro solicitou a pauta, ele tem <strong>5 minutos</strong> para justificar antes da discussão começar. Use bem esse tempo — apresente dados, contexto, impacto.</p>
+      </div>
+    </div>
+
+    <h2 class="section-h2">O "Pedido de Vistas" — um direito importante</h2>
+    <div class="card">
+      <p>Se um assunto foi colocado em pauta mas você não teve tempo de analisar direito, pode pedir <strong>"vistas"</strong>. <span class="art-tag">Art. 22, inciso 3</span></p>
+      <p>O que acontece: o assunto é retirado da votação e obrigatoriamente retorna na <em>próxima reunião ordinária</em>. O conselheiro que pediu vista deve justificar o pedido.</p>
+      <div class="callout callout-warn" style="margin-bottom:0;">
+        <div class="callout-label">⚠️ Cuidado com o abuso</div>
+        <p>Pedido de vistas é um direito legítimo para análise séria — não para protelar deliberações incômodas indefinidamente. O assunto <em>retorna obrigatoriamente</em> na próxima reunião.</p>
+      </div>
+    </div>
+
+    <h2 class="section-h2">🔍 Os Bastidores Reais das Reuniões</h2>
+    <div class="accordion">
+      <button class="accordion-header" onclick="toggleAccordion(this)">
+        Por que as reuniões costumam durar horas? <span class="accordion-arrow">▼</span>
+      </button>
+      <div class="accordion-body">
+        <p>O tempo de fala de 3 minutos por conselheiro, multiplicado por 32 titulares, já dá 96 minutos só de falas — sem contar a discussão posterior. Reuniões longas são estruturais.</p>
+        <p>O que ajuda: conselheiros que estudam os documentos antes da reunião, câmaras técnicas que fazem análise prévia, e presença de presidência firme que mantém o foco na pauta.</p>
+      </div>
+    </div>
+    <div class="accordion">
+      <button class="accordion-header" onclick="toggleAccordion(this)">
+        O que fazer quando a gestão domina a pauta? <span class="accordion-arrow">▼</span>
+      </button>
+      <div class="accordion-body">
+        <p>O regimento garante que conselheiros possam incluir pautas. Use esse direito. Organize articulação prévia com outros conselheiros do segmento de usuários — que representam 50% do plenário.</p>
+        <p>Lembre: a Secretaria Municipal de Saúde provê a infraestrutura, mas <strong>não controla a pauta</strong>. A pauta é construída com a Diretoria Executiva eleita pelos conselheiros.</p>
+      </div>
+    </div>
+
+    <!-- QUIZ MÓDULO 2 -->
+    <div class="quiz-section" id="quiz-2">
+      <div class="quiz-title">🎯 Quiz · Módulo 2</div>
+      <div class="quiz-progress-bar"><div class="quiz-progress-fill" id="q2-prog" style="width:0%"></div></div>
+      <div class="quiz-counter" id="q2-counter">Questão 1 de 4</div>
+      <div class="quiz-question" id="q2-question"></div>
+      <div class="quiz-options" id="q2-options"></div>
+      <div class="quiz-feedback" id="q2-feedback">
+        <div class="feedback-label" id="q2-flabel"></div>
+        <div id="q2-ftext"></div>
+      </div>
+      <div class="quiz-nav">
+        <span class="quiz-score" id="q2-score">Pontos: 0</span>
+        <div style="display:flex;gap:8px;align-items:center;">
+          <button class="btn btn-outline btn-sm" style="opacity:.55;" onclick="resetQuiz(2)">↺ Resetar</button>
+          <button class="btn btn-outline btn-sm" id="q2-next" onclick="nextQuestion(2)" style="display:none;">Próxima →</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+  <div class="module-nav">
+    <button class="btn btn-secondary" onclick="goModule(1)">← Anterior</button>
+    <button class="btn btn-primary" onclick="goModule(3)">Próximo Módulo →</button>
+  </div>
+</article>
+
+<!-- ═══════════════════ MÓDULO 3 — PAPEL DO CONSELHEIRO ═══════════════════ -->
+<article class="module" id="module-3">
+  <div class="module-hero">
+    <div class="module-eyebrow">Módulo 3 · O Conselheiro</div>
+    <h1>Quem é o conselheiro e <em>o que se espera</em> dele?</h1>
+    <p>Direitos, deveres, erros comuns e o que realmente diferencia um bom conselheiro.</p>
+  </div>
+  <div class="content-area">
+
+    <h2 class="section-h2">Composição: quem está no CMS?</h2>
+    <p>O CMS tem <strong>32 membros</strong>, distribuídos de forma paritária: <span class="art-tag">Art. 6º</span></p>
+
+    <div class="grid-3" style="margin-bottom:24px;">
+      <div class="stat-card">
+        <div class="stat-num">50%</div>
+        <div class="stat-label">Representantes dos Usuários<br>(16 vagas)</div>
+      </div>
+      <div class="stat-card" style="background:var(--blue);">
+        <div class="stat-num" style="color:white; font-size:32px;">25%</div>
+        <div class="stat-label">Trabalhadores da Saúde<br>(8 vagas)</div>
+      </div>
+      <div class="stat-card" style="background:#1a4a7a;">
+        <div class="stat-num" style="color:rgba(255,255,255,.7); font-size:32px;">25%</div>
+        <div class="stat-label">Governo e Prestadores<br>(8 vagas)</div>
+      </div>
+    </div>
+
+    <div class="callout callout-info">
+      <div class="callout-label">💡 Por que 50% para usuários?</div>
+      <p>Para garantir que a população — que usa o SUS — tenha maioria. Isso é o princípio da paridade. Se os usuários agirem de forma unificada, têm maioria nas votações.</p>
+    </div>
+
+    <h2 class="section-h2">Mandato e Reconduções</h2>
+    <div class="card">
+      <table class="cms-table">
+        <thead><tr><th>Aspecto</th><th>Regra</th><th>Artigo</th></tr></thead>
+        <tbody>
+          <tr><td>Duração do mandato</td><td>3 anos</td><td>Art. 7, §2º</td></tr>
+          <tr><td>Reconduções permitidas</td><td>Apenas 1 vez consecutiva</td><td>Art. 7, §2º</td></tr>
+          <tr><td>Após 2 mandatos</td><td>Não pode mais ser indicado</td><td>Art. 13, p.ú.</td></tr>
+          <tr><td>Secretário(a) Municipal de Saúde</td><td>Membro nato, sem limite de reconduções</td><td>Art. 7, §3º</td></tr>
+          <tr><td>Titular e suplente</td><td>Cada entidade indica um de cada</td><td>Art. 7, §1º</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h2 class="section-h2">Quem NÃO pode ser conselheiro?</h2>
+    <div class="grid-2" style="margin-bottom:24px;">
+      <div class="card" style="margin-bottom:0; border-top:4px solid var(--red);">
+        <div class="card-title"><div class="icon red">🚫</div> Segmento de Usuários</div>
+        <p style="font-size:13px; margin-bottom:0;">Não pode ser representante de usuários quem for: <strong>servidor com cargo comissionado/direção no executivo, assessor parlamentar, profissional de saúde ou prestador de serviços de saúde</strong>. <span class="art-tag">Art. 8º</span></p>
+        <div class="callout callout-danger" style="margin-top:12px; margin-bottom:0;">
+          <div class="callout-label">Por quê?</div>
+          <p>Evita conflito de interesses: um médico do SUS não pode representar os usuários que o contratam para avaliar seus próprios serviços.</p>
+        </div>
+      </div>
+      <div class="card" style="margin-bottom:0; border-top:4px solid var(--orange);">
+        <div class="card-title"><div class="icon orange">⚠️</div> Segmento de Trabalhadores</div>
+        <p style="font-size:13px; margin-bottom:0;">Não pode ser representante dos trabalhadores quem for: <strong>servidor com cargo comissionado/direção no executivo ou assessor parlamentar</strong>. <span class="art-tag">Art. 9º</span></p>
+        <div class="callout callout-warn" style="margin-top:12px; margin-bottom:0;">
+          <div class="callout-label">Por quê?</div>
+          <p>Cargos comissionados têm lealdade ao gestor — não ao segmento dos trabalhadores. Misturar os papéis compromete a independência.</p>
+        </div>
+      </div>
+    </div>
+
+    <h2 class="section-h2">Deveres do Conselheiro</h2>
+    <p>O Art. 25 lista o que incumbe a cada conselheiro:</p>
+    <div class="card">
+      <ul class="checklist">
+        <li><div class="check-icon">✓</div><div><strong>Estudar e relatar matérias distribuídas</strong> nos prazos estabelecidos</div></li>
+        <li><div class="check-icon">✓</div><div><strong>Deliberar sobre matérias</strong> submetidas a votação</div></li>
+        <li><div class="check-icon">✓</div><div><strong>Participar de pelo menos uma câmara técnica</strong> — obrigatório!</div></li>
+        <li><div class="check-icon">✓</div><div><strong>Consultar sua entidade</strong> e repassar informações sobre posicionamentos e votações</div></li>
+        <li><div class="check-icon">✓</div><div><strong>Avisar o suplente</strong> quando não puder comparecer</div></li>
+        <li><div class="check-icon">✓</div><div><strong>Acompanhar o funcionamento dos serviços de saúde</strong> no município</div></li>
+        <li><div class="check-icon">✓</div><div><strong>Apurar denúncias</strong> remetidas ao conselho, apresentando relatórios</div></li>
+        <li><div class="check-icon">✓</div><div><strong>Zelar pelo cumprimento do regimento</strong></div></li>
+      </ul>
+    </div>
+
+    <h2 class="section-h2">Quando um conselheiro perde o mandato?</h2>
+    <div class="card">
+      <div class="callout callout-danger" style="margin-bottom:16px;">
+        <div class="callout-label">🚨 Perda Automática por Falta</div>
+        <p><strong>3 faltas consecutivas</strong> OU <strong>6 faltas intercaladas</strong> no ano civil, sem justificativa formal = perda automática do mandato. <span class="art-tag">Art. 10</span></p>
+      </div>
+      <p style="font-size:14px;"><strong>Como justificar:</strong> por escrito ou e-mail, até o <em>início da reunião</em>. O plenário delibera sobre o deferimento. <span class="art-tag">Art. 11</span></p>
+      <p style="font-size:14px;"><strong>Perda por decoro:</strong> o plenário pode declarar perda do mandato por falta de decoro, por maioria absoluta, após análise de Comissão de Ética. <span class="art-tag">Art. 10, §3º</span></p>
+    </div>
+
+    <h2 class="section-h2">O Conselheiro é Remunerado?</h2>
+    <div class="highlight-box">
+      <h3>🤝 Serviço de Relevância Pública</h3>
+      <p>A participação dos conselheiros é considerada <strong>serviço de relevância pública</strong>. É vedado qualquer tipo de remuneração. <span style="color:rgba(255,255,255,.5)">Art. 12</span></p>
+      <p style="margin-top:8px;">Isso significa que o conselheiro atua de forma voluntária. A prefeitura deve, porém, propiciar a infraestrutura para o funcionamento — sala, secretaria, material. <span style="color:rgba(255,255,255,.5)">Art. 19</span></p>
+    </div>
+
+    <h2 class="section-h2">🔍 Os Erros Mais Comuns dos Conselheiros</h2>
+    <div class="accordion">
+      <button class="accordion-header" onclick="toggleAccordion(this)">
+        Erro #1: Votar sem ler os documentos <span class="accordion-arrow">▼</span>
+      </button>
+      <div class="accordion-body">
+        <p>O conselheiro recebe os documentos junto com a convocação (48h antes). Votar sem ler é o principal fator que enfraquece o controle social. A gestão sabe disso e às vezes usa pautas técnicas complexas justamente para dificultar a análise.</p>
+        <p><strong>Solução:</strong> use as câmaras técnicas. Elas existem para fazer a análise prévia e apresentar um parecer ao plenário.</p>
+      </div>
+    </div>
+    <div class="accordion">
+      <button class="accordion-header" onclick="toggleAccordion(this)">
+        Erro #2: Não consultar a entidade que representa <span class="accordion-arrow">▼</span>
+      </button>
+      <div class="accordion-body">
+        <p>O conselheiro não vota como pessoa física — vota como <em>representante de uma entidade ou segmento</em>. Votar sem consultar a base é trair o mandato representativo.</p>
+        <p>O Art. 25, inciso 12 é claro: o conselheiro deve "discutir, repassar informações e dar ciência à entidade/segmento que representa sobre o seu posicionamento".</p>
+      </div>
+    </div>
+    <div class="accordion">
+      <button class="accordion-header" onclick="toggleAccordion(this)">
+        Erro #3: Confundir fiscalização com gestão <span class="accordion-arrow">▼</span>
+      </button>
+      <div class="accordion-body">
+        <p>O conselheiro fiscaliza — não gerencia. Quando um conselheiro começa a interferir na escala de funcionários, decidir sobre compras ou tentar resolver casos individuais, está ultrapassando sua função e geralmente entra em conflito de interesses.</p>
+        <p>Isso também cria dependência da gestão, que pode "negociar" esses favores por votos favoráveis — destruindo a independência do conselho.</p>
+      </div>
+    </div>
+
+    <!-- QUIZ MÓDULO 3 -->
+    <div class="quiz-section" id="quiz-3">
+      <div class="quiz-title">🎯 Quiz · Módulo 3</div>
+      <div class="quiz-progress-bar"><div class="quiz-progress-fill" id="q3-prog" style="width:0%"></div></div>
+      <div class="quiz-counter" id="q3-counter">Questão 1 de 4</div>
+      <div class="quiz-question" id="q3-question"></div>
+      <div class="quiz-options" id="q3-options"></div>
+      <div class="quiz-feedback" id="q3-feedback">
+        <div class="feedback-label" id="q3-flabel"></div>
+        <div id="q3-ftext"></div>
+      </div>
+      <div class="quiz-nav">
+        <span class="quiz-score" id="q3-score">Pontos: 0</span>
+        <div style="display:flex;gap:8px;align-items:center;">
+          <button class="btn btn-outline btn-sm" style="opacity:.55;" onclick="resetQuiz(3)">↺ Resetar</button>
+          <button class="btn btn-outline btn-sm" id="q3-next" onclick="nextQuestion(3)" style="display:none;">Próxima →</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+  <div class="module-nav">
+    <button class="btn btn-secondary" onclick="goModule(2)">← Anterior</button>
+    <button class="btn btn-primary" onclick="goModule(4)">Próximo Módulo →</button>
+  </div>
+</article>
+
+<!-- ═══════════════════ MÓDULO 4 — ESTRUTURA INTERNA ═══════════════════ -->
+<article class="module" id="module-4">
+  <div class="module-hero">
+    <div class="module-eyebrow">Módulo 4 · Estrutura</div>
+    <h1>Como o CMS é <em>organizado por dentro</em>?</h1>
+    <p>Plenário, Diretoria Executiva, Câmaras Técnicas e Secretaria — quem faz o quê.</p>
+  </div>
+  <div class="content-area">
+
+    <div class="card">
+      <div class="card-title"><div class="icon yellow">🏗️</div> A Estrutura do CMS</div>
+      <p>O Art. 4º define quatro instâncias: <strong>Plenário → Diretoria Executiva → Câmaras Técnicas → Secretaria Executiva</strong></p>
+      <div style="display:flex; flex-direction:column; gap:8px; margin-top:16px;">
+        <div style="background:var(--navy); color:white; padding:12px 20px; border-radius:8px; font-weight:700; text-align:center; font-family:'Montserrat',sans-serif; font-size:13px; letter-spacing:.5px;">PLENÁRIO (instância máxima)</div>
+        <div style="display:flex; align-items:center; justify-content:center; color:var(--muted); font-size:20px;">↓</div>
+        <div style="background:var(--blue); color:white; padding:12px 20px; border-radius:8px; font-weight:700; text-align:center; font-family:'Montserrat',sans-serif; font-size:13px; letter-spacing:.5px;">DIRETORIA EXECUTIVA (coordenação)</div>
+        <div style="display:flex; align-items:center; justify-content:center; color:var(--muted); font-size:20px;">↓</div>
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
+          <div style="background:var(--green); color:white; padding:12px 16px; border-radius:8px; font-weight:700; text-align:center; font-family:'Montserrat',sans-serif; font-size:12px;">CÂMARAS TÉCNICAS (análise)</div>
+          <div style="background:#4B5563; color:white; padding:12px 16px; border-radius:8px; font-weight:700; text-align:center; font-family:'Montserrat',sans-serif; font-size:12px;">SECRETARIA EXECUTIVA (apoio)</div>
+        </div>
+      </div>
+    </div>
+
+    <h2 class="section-h2">O Plenário</h2>
+    <div class="card">
+      <p>O Plenário é o <strong>fórum de deliberação plena e conclusiva</strong>. Todas as decisões finais passam por ele. <span class="art-tag">Art. 5º</span></p>
+      <p>É composto pelos 32 conselheiros titulares (e seus suplentes, quando o titular está ausente). Na presença do titular, o suplente <em>não tem direito a voto</em>.</p>
+    </div>
+
+    <h2 class="section-h2">A Diretoria Executiva</h2>
+    <p>Composta por 5 cargos, <strong>eleitos em eleição aberta entre os titulares</strong>: <span class="art-tag">Art. 4º, 15</span></p>
+    <div class="grid-2" style="margin-bottom:24px;">
+      <div class="card" style="margin-bottom:0;">
+        <div style="font-size:13px; font-family:'Montserrat',sans-serif; font-weight:700; color:var(--yellow); margin-bottom:12px;">PRESIDENTE</div>
+        <ul style="font-size:13px; list-style:none; display:flex; flex-direction:column; gap:6px;">
+          <li>→ O mais votado na eleição</li>
+          <li>→ Coordena reuniões e assina documentos</li>
+          <li>→ Voto regulamentar + voto de desempate</li>
+          <li>→ Pode decidir em urgências "ad referendum"</li>
+          <li>→ Pode vetar deliberações que comprometam competências político-administrativas</li>
+        </ul>
+        <div class="callout callout-warn" style="margin-top:12px; margin-bottom:0;">
+          <div class="callout-label">⚠️ Poder de Veto</div>
+          <p>O Art. 26, inciso 7 dá ao Presidente poder de veto. Isso é uma "zona cinzenta" — o que é "competência político-administrativa"? Pode ser discutido.</p>
+        </div>
+      </div>
+      <div class="card" style="margin-bottom:0;">
+        <div style="font-size:13px; font-family:'Montserrat',sans-serif; font-weight:700; color:var(--blue); margin-bottom:12px;">DEMAIS CARGOS</div>
+        <ul style="font-size:13px; list-style:none; display:flex; flex-direction:column; gap:8px;">
+          <li><strong>Vice-Presidente:</strong> substitui o Presidente em ausências e impedimentos</li>
+          <li><strong>1º Secretário:</strong> cuida das atas e correspondências</li>
+          <li><strong>2º Secretário:</strong> substitui o 1º Secretário</li>
+          <li><strong>Diretor de Comunicação:</strong> divulga atividades, mantém site/redes, elabora projetos de comunicação</li>
+        </ul>
+        <p style="font-size:12px; color:var(--muted); margin-top:10px;">Todos eleitos por maioria simples. Só conselheiros titulares podem ser candidatos.</p>
+      </div>
+    </div>
+
+    <h2 class="section-h2">As Câmaras Técnicas</h2>
+    <p>São instâncias de <strong>análise prévia e aprofundada</strong> das matérias complexas. <span class="art-tag">Art. 31-39</span></p>
+    <div class="card">
+      <p>O CMS de Montes Claros tem 4 câmaras técnicas: <span class="art-tag">Art. 33</span></p>
+      <div style="display:flex; flex-direction:column; gap:10px; margin-top:8px;">
+        <div class="callout callout-info" style="margin:0;">
+          <div class="callout-label">1 · Câmara Técnica de Gestão e Finanças</div>
+          <p>Analisa instrumentos de gestão, finanças, contabilidade e auditoria. <strong>Examina prestação de contas.</strong></p>
+        </div>
+        <div class="callout callout-info" style="margin:0; border-color:var(--green);">
+          <div class="callout-label" style="color:var(--green);">2 · Câmara Técnica de Serviços Assistenciais</div>
+          <p>Avalia prestação de serviços de baixa, média e alta complexidade — hospitais, clínicas, ambulatórios.</p>
+        </div>
+        <div class="callout callout-info" style="margin:0; border-color:var(--orange);">
+          <div class="callout-label" style="color:var(--orange);">3 · Câmara Técnica de Vigilância em Saúde</div>
+          <p>Vigilância sanitária, epidemiológica, ambiental e saúde do trabalhador.</p>
+        </div>
+        <div class="callout callout-info" style="margin:0; border-color:var(--navy);">
+          <div class="callout-label" style="color:var(--navy);">4 · Câmara Técnica de Atenção Primária</div>
+          <p>UBS, ESF, saúde da família — a porta de entrada do SUS.</p>
+        </div>
+      </div>
+      <div class="callout callout-success" style="margin-top:16px; margin-bottom:0;">
+        <div class="callout-label">✅ Obrigação do Conselheiro</div>
+        <p>Todo conselheiro deve participar de <strong>pelo menos uma</strong> câmara técnica. <span class="art-tag">Art. 25, XI</span> É possível participar de mais de uma.</p>
+      </div>
+    </div>
+
+    <h2 class="section-h2">A Secretaria Executiva</h2>
+    <div class="card">
+      <p>A Secretaria Executiva é o "motor administrativo" do conselho — ela torna as reuniões possíveis. <span class="art-tag">Art. 41-43</span></p>
+      <p>O(a) Secretário(a) Executivo(a) é <strong>indicado(a) pela gestão e confirmado(a) pelo Plenário</strong>. Esse é um ponto de tensão potencial: a pessoa é indicada pela Secretaria de Saúde mas trabalha para o conselho.</p>
+      <div class="callout callout-warn" style="margin-bottom:0;">
+        <div class="callout-label">⚠️ Ponto Sensível</div>
+        <p>Se o(a) Secretário(a) Executivo(a) tiver conflito de lealdades (com a gestão vs. com o conselho), o funcionamento pode ser comprometido. O Presidente pode solicitar ao Plenário a substituição em caso de descumprimento do regimento. <span class="art-tag">Art. 43, §2º</span></p>
+      </div>
+    </div>
+
+    <!-- QUIZ MÓDULO 4 -->
+    <div class="quiz-section" id="quiz-4">
+      <div class="quiz-title">🎯 Quiz · Módulo 4</div>
+      <div class="quiz-progress-bar"><div class="quiz-progress-fill" id="q4-prog" style="width:0%"></div></div>
+      <div class="quiz-counter" id="q4-counter">Questão 1 de 4</div>
+      <div class="quiz-question" id="q4-question"></div>
+      <div class="quiz-options" id="q4-options"></div>
+      <div class="quiz-feedback" id="q4-feedback">
+        <div class="feedback-label" id="q4-flabel"></div>
+        <div id="q4-ftext"></div>
+      </div>
+      <div class="quiz-nav">
+        <span class="quiz-score" id="q4-score">Pontos: 0</span>
+        <div style="display:flex;gap:8px;align-items:center;">
+          <button class="btn btn-outline btn-sm" style="opacity:.55;" onclick="resetQuiz(4)">↺ Resetar</button>
+          <button class="btn btn-outline btn-sm" id="q4-next" onclick="nextQuestion(4)" style="display:none;">Próxima →</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+  <div class="module-nav">
+    <button class="btn btn-secondary" onclick="goModule(3)">← Anterior</button>
+    <button class="btn btn-primary" onclick="goModule(5)">Próximo Módulo →</button>
+  </div>
+</article>
+
+<!-- ═══════════════════ MÓDULO 5 — CONSELHOS LOCAIS ═══════════════════ -->
+<article class="module" id="module-5">
+  <div class="module-hero">
+    <div class="module-eyebrow">Módulo 5 · Conselhos Locais</div>
+    <h1>Os Conselhos Locais de <em>Saúde</em></h1>
+    <p>A estrutura de base do controle social, ligada diretamente às unidades de saúde.</p>
+  </div>
+  <div class="content-area">
+
+    <h2 class="section-h2">O que são os Conselhos Locais?</h2>
+    <div class="card">
+      <p>Os Conselhos Locais de Saúde (CLS) são instâncias administrativas do CMS, criadas para acompanhar o funcionamento de unidades de saúde específicas. <span class="art-tag">Art. 44</span></p>
+      <div class="callout callout-warn" style="margin-bottom:0;">
+        <div class="callout-label">⚠️ Atenção à diferença</div>
+        <ul>
+          <li><strong>CMS:</strong> delibera, tem poder decisório sobre política municipal de saúde</li>
+          <li><strong>Conselho Local:</strong> tem caráter <em>consultivo</em> — acompanha, fiscaliza localmente, propõe — mas não delibera com a mesma força do CMS</li>
+        </ul>
+      </div>
+    </div>
+
+    <h2 class="section-h2">Composição dos Conselhos Locais</h2>
+    <p>Cada CLS tem <strong>8 membros efetivos + 8 suplentes</strong>: <span class="art-tag">Art. 45</span></p>
+    <div class="card">
+      <table class="cms-table">
+        <thead><tr><th>Segmento</th><th>Titulares</th><th>Como são escolhidos</th></tr></thead>
+        <tbody>
+          <tr><td>Usuários</td><td>4</td><td>Eleição em Assembleia — participam usuários com 16+ anos cadastrados na UBS</td></tr>
+          <tr><td>Trabalhadores</td><td>2</td><td>Eleição em Assembleia dos trabalhadores lotados na unidade</td></tr>
+          <tr><td>Gestor/Prestador</td><td>2</td><td>Indicação pela Secretaria Municipal de Saúde (obrigatoriamente um é o coordenador/chefe da UBS)</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h2 class="section-h2">Mandato e Funcionamento</h2>
+    <div class="grid-2" style="margin-bottom:24px;">
+      <div class="card" style="margin-bottom:0;">
+        <div class="card-title"><div class="icon yellow">📅</div> Reuniões</div>
+        <p>Mensalmente, em dia e horário escolhidos pelos próprios conselheiros. Reuniões extraordinárias: pelo presidente, vice ou 1/3 dos membros. <span class="art-tag">Art. 56</span></p>
+      </div>
+      <div class="card" style="margin-bottom:0;">
+        <div class="card-title"><div class="icon">⏱️</div> Mandato</div>
+        <p>3 anos, com reeleição possível apenas uma vez consecutiva. <span class="art-tag">Art. 57</span> Mesma regra de faltas do CMS: 3 consecutivas ou 6 intercaladas sem justificativa = perda do mandato. <span class="art-tag">Art. 58</span></p>
+      </div>
+    </div>
+
+    <h2 class="section-h2">O que faz o Conselho Local na prática?</h2>
+    <div class="card">
+      <ul class="checklist">
+        <li><div class="check-icon">✓</div><div>Acompanhar o <strong>estado físico e funcional</strong> da unidade de saúde</div></li>
+        <li><div class="check-icon">✓</div><div>Avaliar a <strong>qualidade dos serviços</strong> prestados à comunidade</div></li>
+        <li><div class="check-icon">✓</div><div>Propor prioridades nas ações de saúde junto ao coordenador da UBS <span class="art-tag">Art. 60, V</span></div></li>
+        <li><div class="check-icon">✓</div><div>Promover reuniões com moradores para participação crítica nos problemas de saúde <span class="art-tag">Art. 60, II</span></div></li>
+        <li><div class="check-icon">✓</div><div>Estimular o uso dos serviços da UBS pela comunidade <span class="art-tag">Art. 60, III</span></div></li>
+        <li><div class="check-icon">✓</div><div>Manter intercâmbio com outros Conselhos Locais e com o CMS <span class="art-tag">Art. 60, IV</span></div></li>
+      </ul>
+      <div class="callout callout-danger" style="margin-top:16px; margin-bottom:0;">
+        <div class="callout-label">🚫 Proibição Importante</div>
+        <p>É vedado aos membros dos Conselhos Locais <strong>obterem privilégios pessoais</strong> para si junto à Unidade de Saúde. <span class="art-tag">Art. 60, VI</span></p>
+      </div>
+    </div>
+
+    <h2 class="section-h2">A Conexão com o CMS</h2>
+    <div class="highlight-box">
+      <h3>🔗 Colegiado dos Conselhos Locais</h3>
+      <p>Os Conselhos Locais se reúnem semestralmente em Colegiado. Nessa reunião, podem eleger em Assembleia <strong>2 representantes do segmento usuário</strong> e <strong>1 do segmento trabalhador</strong> para compor o próprio CMS. <span style="color:rgba(255,255,255,.5)">Art. 59, §5º</span></p>
+      <p style="margin-top:8px;">Isso cria uma cadeia democrática: usuário das UBS → Conselho Local → CMS.</p>
+    </div>
+
+    <!-- QUIZ MÓDULO 5 -->
+    <div class="quiz-section" id="quiz-5">
+      <div class="quiz-title">🎯 Quiz · Módulo 5</div>
+      <div class="quiz-progress-bar"><div class="quiz-progress-fill" id="q5-prog" style="width:0%"></div></div>
+      <div class="quiz-counter" id="q5-counter">Questão 1 de 4</div>
+      <div class="quiz-question" id="q5-question"></div>
+      <div class="quiz-options" id="q5-options"></div>
+      <div class="quiz-feedback" id="q5-feedback">
+        <div class="feedback-label" id="q5-flabel"></div>
+        <div id="q5-ftext"></div>
+      </div>
+      <div class="quiz-nav">
+        <span class="quiz-score" id="q5-score">Pontos: 0</span>
+        <div style="display:flex;gap:8px;align-items:center;">
+          <button class="btn btn-outline btn-sm" style="opacity:.55;" onclick="resetQuiz(5)">↺ Resetar</button>
+          <button class="btn btn-outline btn-sm" id="q5-next" onclick="nextQuestion(5)" style="display:none;">Próxima →</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+  <div class="module-nav">
+    <button class="btn btn-secondary" onclick="goModule(4)">← Anterior</button>
+    <button class="btn btn-primary" onclick="goModule(6)">Próximo Módulo →</button>
+  </div>
+</article>
+
+<!-- ═══════════════════ MÓDULO 6 — SITUAÇÕES REAIS ═══════════════════ -->
+<article class="module" id="module-6">
+  <div class="module-hero">
+    <div class="module-eyebrow">Módulo 6 · Situações Reais</div>
+    <h1>O que fazer quando as coisas <em>ficam difíceis?</em></h1>
+    <p>Simulações baseadas no regimento para situações de conflito, pressão e impasse.</p>
+  </div>
+  <div class="content-area">
+
+    <div class="callout callout-info">
+      <div class="callout-label">🎭 Sobre este módulo</div>
+      <p>As situações abaixo são <strong>simulações baseadas em situações típicas</strong> de conselhos de saúde. A resposta "correta" é sempre baseada no que o regimento prevê.</p>
+    </div>
+
+    <!-- SITUAÇÃO 1 -->
+    <div class="scenario">
+      <div class="scenario-header">
+        <div class="scenario-badge">Situação 1</div>
+        <div class="scenario-title">Falta de Quórum na Reunião</div>
+      </div>
+      <div class="scenario-body">
+        <p class="scenario-desc">É dia de reunião ordinária. Chegou a hora da 1ª chamada: apenas 8 conselheiros de 32 presentes. O gestor de saúde pressiona para pautar e aprovar um contrato urgente neste momento.</p>
+        <div class="tab-bar">
+          <button class="tab-btn active" onclick="switchTab('s1','problema', this)">❓ O Problema</button>
+          <button class="tab-btn" onclick="switchTab('s1','regimento', this)">📋 O que diz o regimento</button>
+          <button class="tab-btn" onclick="switchTab('s1','acao', this)">✅ Ação Correta</button>
+        </div>
+        <div id="s1-problema" class="tab-panel active">
+          <p>Com apenas 8 conselheiros, a reunião pode acontecer em 2ª chamada, mas <strong>não pode deliberar</strong> — seriam necessários pelo menos 11 (1/3 de 32) para qualquer votação. O gestor sabe disso?</p>
+        </div>
+        <div id="s1-regimento" class="tab-panel">
+          <p><span class="art-tag">Art. 14, §2º</span> A reunião em 2ª chamada pode ocorrer com qualquer número, mas <strong>só pode deliberar com a presença de 1/3 dos membros</strong> (no mínimo 11 de 32).</p>
+        </div>
+        <div id="s1-acao" class="tab-panel">
+          <p><strong>O que fazer:</strong></p>
+          <ul style="padding-left:18px; font-size:14px;">
+            <li>A reunião pode acontecer para informes, discussões não-deliberativas</li>
+            <li>Qualquer deliberação deve ser recusada — qualquer conselheiro pode questionar o quórum</li>
+            <li>O item urgente pode ser pautado numa reunião extraordinária com convocação de 24h, esperando quórum adequado</li>
+            <li>Registrar em ata a falta de quórum para deliberação</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- SITUAÇÃO 2 -->
+    <div class="scenario">
+      <div class="scenario-header">
+        <div class="scenario-badge">Situação 2</div>
+        <div class="scenario-title">Gestor Recusa Homologar Deliberação</div>
+      </div>
+      <div class="scenario-body">
+        <p class="scenario-desc">O plenário aprovou por maioria uma resolução exigindo a prestação de contas de um contrato suspeito. O Secretário de Saúde simplesmente não homologa — sem dar nenhuma explicação.</p>
+        <div class="tab-bar">
+          <button class="tab-btn active" onclick="switchTab('s2','problema', this)">❓ O Problema</button>
+          <button class="tab-btn" onclick="switchTab('s2','regimento', this)">📋 O que diz o regimento</button>
+          <button class="tab-btn" onclick="switchTab('s2','acao', this)">✅ Ação Correta</button>
+        </div>
+        <div id="s2-problema" class="tab-panel active">
+          <p>Sem homologação, a deliberação não produz efeito formal. O gestor está usando o poder de homologação como veto silencioso, o que o regimento não permite.</p>
+        </div>
+        <div id="s2-regimento" class="tab-panel">
+          <p><span class="art-tag">Art. 21, §2º</span> Na hipótese de não homologação, o gestor <strong>deve devolver ao CMS com justificativa e proposta alternativa</strong> na reunião seguinte.</p>
+          <p><span class="art-tag">Art. 21, §3º</span> Se o impasse persistir, o CMS <strong>por maioria absoluta pode representar ao Ministério Público</strong>.</p>
+        </div>
+        <div id="s2-acao" class="tab-panel">
+          <p><strong>O que fazer, passo a passo:</strong></p>
+          <div class="flow-steps" style="margin-top:12px;">
+            <div class="flow-step"><div class="step-dot">1</div><div class="step-content"><h4>Cobrar formalmente a justificativa</h4><p>Protocolar ofício ao Secretário exigindo justificativa por escrito no prazo legal.</p></div></div>
+            <div class="flow-step"><div class="step-dot">2</div><div class="step-content"><h4>Pauta na próxima reunião</h4><p>Colocar o impasse em pauta — o assunto retorna obrigatoriamente.</p></div></div>
+            <div class="flow-step"><div class="step-dot">3</div><div class="step-content" style="padding-bottom:0;"><h4>Se persistir: Ministério Público</h4><p>Com maioria absoluta (17 de 32), o CMS pode acionar o MP — que tem poder coercitivo sobre o gestor.</p></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SITUAÇÃO 3 -->
+    <div class="scenario">
+      <div class="scenario-header">
+        <div class="scenario-badge">Situação 3</div>
+        <div class="scenario-title">Pressão Política sobre Conselheiro</div>
+      </div>
+      <div class="scenario-body">
+        <p class="scenario-desc">Um conselheiro representa uma associação de bairro. O vereador "patrono" da associação liga e diz: "Vote a favor do contrato, senão a verba para o seu bairro vai secar."</p>
+        <div class="tab-bar">
+          <button class="tab-btn active" onclick="switchTab('s3','problema', this)">❓ O Problema</button>
+          <button class="tab-btn" onclick="switchTab('s3','regimento', this)">📋 O que diz o regimento</button>
+          <button class="tab-btn" onclick="switchTab('s3','acao', this)">✅ Ação Correta</button>
+        </div>
+        <div id="s3-problema" class="tab-panel active">
+          <p>Esta é pressão política direta — tentativa de cooptar um conselheiro para votar em favor de interesses que não são os dos usuários. É um dos maiores desafios do controle social.</p>
+        </div>
+        <div id="s3-regimento" class="tab-panel">
+          <p>O regimento não proíbe explicitamente pressões externas (o que seria impossível), mas deja claro que o conselheiro representa <em>os usuários e sua entidade</em>, não interesses políticos particulares.</p>
+          <p><span class="art-tag">Art. 25, XII</span> O conselheiro deve consultar e dar ciência à entidade que representa — não aos vereadores ou políticos.</p>
+          <p><span class="art-tag">Art. 10, §3º</span> Falta de decoro pode levar à perda do mandato — mas isso se aplica a condutas no próprio conselho.</p>
+        </div>
+        <div id="s3-acao" class="tab-panel">
+          <p><strong>O que fazer:</strong></p>
+          <ul style="padding-left:18px; font-size:14px; display:flex; flex-direction:column; gap:6px;">
+            <li>Consultar formalmente a entidade/associação sobre o posicionamento antes de votar</li>
+            <li>Registrar a pressão recebida — documentação é proteção</li>
+            <li>Votar de acordo com o interesse dos usuários, não do político</li>
+            <li>Se necessário, tornar pública a pressão sofrida via moção ou comunicado do conselho</li>
+          </ul>
+          <div class="callout callout-info" style="margin-top:12px; margin-bottom:0;">
+            <div class="callout-label">💡 Lembrete</div>
+            <p>O mandato representativo existe para proteger o conselheiro. Ele não vota por si mesmo — vota pelo segmento. Isso dá respaldo institucional para resistir a pressões.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SITUAÇÃO 4 -->
+    <div class="scenario">
+      <div class="scenario-header">
+        <div class="scenario-badge">Situação 4</div>
+        <div class="scenario-title">Conselheiro Acumula Cargos</div>
+      </div>
+      <div class="scenario-body">
+        <p class="scenario-desc">Uma diretora de hospital privado conveniado com o SUS está inscrita como representante dos "usuários" no processo seletivo para o CMS.</p>
+        <div class="tab-bar">
+          <button class="tab-btn active" onclick="switchTab('s4','problema', this)">❓ O Problema</button>
+          <button class="tab-btn" onclick="switchTab('s4','regimento', this)">📋 O que diz o regimento</button>
+          <button class="tab-btn" onclick="switchTab('s4','acao', this)">✅ Ação Correta</button>
+        </div>
+        <div id="s4-problema" class="tab-panel active">
+          <p>Há um claro conflito de interesses: ela representa uma instituição que presta serviços ao SUS e que será fiscalizada pelo conselho. Não pode votar sobre contratos que envolvam seu próprio hospital.</p>
+        </div>
+        <div id="s4-regimento" class="tab-panel">
+          <p><span class="art-tag">Art. 8º</span> A representação dos usuários <strong>não pode ser exercida por prestadores de serviços de saúde</strong>, conforme a Resolução nº 453/2012 do CNS.</p>
+        </div>
+        <div id="s4-acao" class="tab-panel">
+          <p><strong>O que fazer:</strong></p>
+          <ul style="padding-left:18px; font-size:14px;">
+            <li>Qualquer conselheiro pode questionar o impedimento formalmente</li>
+            <li>A Comissão responsável pelo processo seletivo deve verificar e impugnar a candidatura</li>
+            <li>Se já empossada, o plenário pode deliberar sobre o impedimento</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- QUIZ MÓDULO 6 -->
+    <div class="quiz-section" id="quiz-6">
+      <div class="quiz-title">🎯 Quiz · Módulo 6</div>
+      <div class="quiz-progress-bar"><div class="quiz-progress-fill" id="q6-prog" style="width:0%"></div></div>
+      <div class="quiz-counter" id="q6-counter">Questão 1 de 4</div>
+      <div class="quiz-question" id="q6-question"></div>
+      <div class="quiz-options" id="q6-options"></div>
+      <div class="quiz-feedback" id="q6-feedback">
+        <div class="feedback-label" id="q6-flabel"></div>
+        <div id="q6-ftext"></div>
+      </div>
+      <div class="quiz-nav">
+        <span class="quiz-score" id="q6-score">Pontos: 0</span>
+        <div style="display:flex;gap:8px;align-items:center;">
+          <button class="btn btn-outline btn-sm" style="opacity:.55;" onclick="resetQuiz(6)">↺ Resetar</button>
+          <button class="btn btn-outline btn-sm" id="q6-next" onclick="nextQuestion(6)" style="display:none;">Próxima →</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+  <div class="module-nav">
+    <button class="btn btn-secondary" onclick="goModule(5)">← Anterior</button>
+    <button class="btn btn-primary" onclick="goModule(7)">Próximo Módulo →</button>
+  </div>
+</article>
+
+<!-- ═══════════════════ MÓDULO 7 — LIMITES DO REGIMENTO ═══════════════════ -->
+<article class="module" id="module-7">
+  <div class="module-hero">
+    <div class="module-eyebrow">Módulo 7 · Interpretação</div>
+    <h1>O que o regimento <em>pode e não pode</em> mudar?</h1>
+    <p>Entenda o que é flexível, o que é fixo por lei, e onde há margem de interpretação.</p>
+  </div>
+  <div class="content-area">
+
+    <h2 class="section-h2">A Hierarquia das Normas</h2>
+    <p>O regimento existe dentro de uma hierarquia legal. Entender isso evita conflitos e erros.</p>
+
+    <div class="card">
+      <div style="display:flex; flex-direction:column; gap:8px;">
+        <div style="background:var(--red); color:white; padding:12px 20px; border-radius:8px; font-size:13px; font-weight:700; font-family:'Montserrat',sans-serif;">
+          🏛️ CONSTITUIÇÃO FEDERAL (1988) — não pode ser contrariada
+        </div>
+        <div style="text-align:center; color:var(--muted);">↓</div>
+        <div style="background:var(--orange); color:white; padding:12px 20px; border-radius:8px; font-size:13px; font-weight:700; font-family:'Montserrat',sans-serif;">
+          📜 LEIS 8.080 E 8.142/1990 — base federal do SUS
+        </div>
+        <div style="text-align:center; color:var(--muted);">↓</div>
+        <div style="background:var(--blue); color:white; padding:12px 20px; border-radius:8px; font-size:13px; font-weight:700; font-family:'Montserrat',sans-serif;">
+          📋 RESOLUÇÃO 453/2012 DO CNS — normas nacionais de conselhos
+        </div>
+        <div style="text-align:center; color:var(--muted);">↓</div>
+        <div style="background:var(--navy); color:white; padding:12px 20px; border-radius:8px; font-size:13px; font-weight:700; font-family:'Montserrat',sans-serif;">
+          📄 LEI ORGÂNICA MUNICIPAL (Art. 188) — âncora local
+        </div>
+        <div style="text-align:center; color:var(--muted);">↓</div>
+        <div style="background:var(--green); color:white; padding:12px 20px; border-radius:8px; font-size:13px; font-weight:700; font-family:'Montserrat',sans-serif;">
+          📑 REGIMENTO INTERNO DO CMS — pode ser alterado pelo conselho
+        </div>
+      </div>
+    </div>
+
+    <h2 class="section-h2">O que o Regimento PODE mudar?</h2>
+    <div class="card" style="border-top:4px solid var(--green);">
+      <div class="card-title"><div class="icon green">✅</div> Flexível — pode alterar por 2/3 do plenário</div>
+      <ul class="checklist">
+        <li><div class="check-icon">✓</div><div>Dia e horário das reuniões ordinárias</div></li>
+        <li><div class="check-icon">✓</div><div>Número e nome das câmaras técnicas</div></li>
+        <li><div class="check-icon">✓</div><div>Regras de fala (tempo por conselheiro)</div></li>
+        <li><div class="check-icon">✓</div><div>Estrutura interna da Diretoria Executiva</div></li>
+        <li><div class="check-icon">✓</div><div>Número de membros do CMS (dentro da paridade)</div></li>
+        <li><div class="check-icon">✓</div><div>Criação de comissões e grupos de trabalho</div></li>
+        <li><div class="check-icon">✓</div><div>Procedimentos administrativos internos</div></li>
+      </ul>
+    </div>
+
+    <h2 class="section-h2">O que o Regimento NÃO PODE mudar?</h2>
+    <div class="card" style="border-top:4px solid var(--red);">
+      <div class="card-title"><div class="icon red">🚫</div> Imutável — depende de lei federal ou resolução do CNS</div>
+      <ul class="checklist">
+        <li><div class="check-icon" style="background:var(--red);">✗</div><div><strong>Paridade 50/25/25</strong> — definida pela Lei 8.142 e Res. 453/CNS</div></li>
+        <li><div class="check-icon" style="background:var(--red);">✗</div><div><strong>Impedimento de prestadores no segmento de usuários</strong> — Res. 453/CNS</div></li>
+        <li><div class="check-icon" style="background:var(--red);">✗</div><div><strong>Obrigatoriedade de prestação de contas quadrimestral</strong> — Lei 8.142</div></li>
+        <li><div class="check-icon" style="background:var(--red);">✗</div><div><strong>Conferências Municipais a cada 4 anos</strong> — Lei 8.142</div></li>
+        <li><div class="check-icon" style="background:var(--red);">✗</div><div><strong>Natureza deliberativa do conselho</strong> — base constitucional</div></li>
+        <li><div class="check-icon" style="background:var(--red);">✗</div><div><strong>Proibição de remuneração</strong> — Lei 8.142 e princípio do voluntariado</div></li>
+      </ul>
+    </div>
+
+    <h2 class="section-h2">Como alterar o Regimento?</h2>
+    <div class="highlight-box">
+      <h3>📋 Processo de Alteração Regimental</h3>
+      <ul>
+        <li>Reunião <strong>extraordinária</strong> convocada especificamente para esse fim <span class="art-tag">Art. 64</span></li>
+        <li>Convocação com <strong>mínimo 5 dias úteis</strong> de antecedência</li>
+        <li>Aprovação por <strong>2/3 do Plenário</strong> (mínimo de 22 votos em 32)</li>
+      </ul>
+    </div>
+
+    <h2 class="section-h2">🔍 As Zonas Cinzentas do Regimento</h2>
+    <div class="accordion">
+      <button class="accordion-header" onclick="toggleAccordion(this)">
+        O Presidente pode vetar qualquer deliberação? <span class="accordion-arrow">▼</span>
+      </button>
+      <div class="accordion-body">
+        <p>O Art. 26, inciso 7 diz que o Presidente pode "vetar deliberações que comprometam sua competência político-administrativa." Mas isso é uma zona cinzenta — a expressão "competência político-administrativa" é vaga.</p>
+        <p>Na prática, esse poder de veto do Presidente é questionável se usado para bloquear deliberações legítimas do plenário. O plenário é soberano — pode contestar um veto presidencial.</p>
+      </div>
+    </div>
+    <div class="accordion">
+      <button class="accordion-header" onclick="toggleAccordion(this)">
+        Casos omissos: quem decide? <span class="accordion-arrow">▼</span>
+      </button>
+      <div class="accordion-body">
+        <p>O Art. 66 é claro: "Os casos omissos e as dúvidas surgidas na aplicação do presente Regimento Interno serão dirimidos pelo <strong>Plenário do CMS</strong>."</p>
+        <p>Isso é importante: o próprio conselho tem a palavra final sobre a interpretação do regimento. Não é o gestor, não é o vereador — é o plenário.</p>
+      </div>
+    </div>
+    <div class="accordion">
+      <button class="accordion-header" onclick="toggleAccordion(this)">
+        O que é "falta de decoro"? <span class="accordion-arrow">▼</span>
+      </button>
+      <div class="accordion-body">
+        <p>O Art. 10, §3º prevê perda de mandato por "falta de decoro", definida por Comissão de Ética. Mas o regimento não define o que é "decoro" — isso é uma lacuna intencional para que cada situação seja avaliada contextualmente.</p>
+        <p>Na prática, falta de decoro pode incluir: comportamento ofensivo em reuniões, vazamento de informações sigilosas, ou uso do cargo para fins pessoais. A Comissão de Ética deve ser criada pelo próprio plenário.</p>
+      </div>
+    </div>
+
+    <!-- QUIZ MÓDULO 7 -->
+    <div class="quiz-section" id="quiz-7">
+      <div class="quiz-title">🎯 Quiz · Módulo 7</div>
+      <div class="quiz-progress-bar"><div class="quiz-progress-fill" id="q7-prog" style="width:0%"></div></div>
+      <div class="quiz-counter" id="q7-counter">Questão 1 de 4</div>
+      <div class="quiz-question" id="q7-question"></div>
+      <div class="quiz-options" id="q7-options"></div>
+      <div class="quiz-feedback" id="q7-feedback">
+        <div class="feedback-label" id="q7-flabel"></div>
+        <div id="q7-ftext"></div>
+      </div>
+      <div class="quiz-nav">
+        <span class="quiz-score" id="q7-score">Pontos: 0</span>
+        <div style="display:flex;gap:8px;align-items:center;">
+          <button class="btn btn-outline btn-sm" style="opacity:.55;" onclick="resetQuiz(7)">↺ Resetar</button>
+          <button class="btn btn-outline btn-sm" id="q7-next" onclick="nextQuestion(7)" style="display:none;">Próxima →</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+  <div class="module-nav">
+    <button class="btn btn-secondary" onclick="goModule(6)">← Anterior</button>
+    <button class="btn btn-primary" onclick="goModule(8)">Último Módulo →</button>
+  </div>
+</article>
+
+<!-- ═══════════════════ MÓDULO 8 — ENCERRAMENTO ═══════════════════ -->
+<article class="module" id="module-8">
+  <div class="module-hero">
+    <div class="module-eyebrow">Módulo 8 · Conclusão</div>
+    <h1>Você está <em>pronto</em>.</h1>
+    <p>Checklist final, resumo prático e sua pontuação total.</p>
+  </div>
+  <div class="content-area">
+
+    <!-- PONTUAÇÃO FINAL -->
+    <div class="final-screen">
+      <div class="trophy">🏆</div>
+      <div class="final-score-display" id="final-score-display">---</div>
+      <h2>Pontos conquistados</h2>
+      <p id="final-msg">Complete os quizzes dos módulos anteriores para ver sua pontuação total!</p>
+      <div style="margin-top:20px;" id="final-breakdown"></div>
+    </div>
+
+    <h2 class="section-h2">✅ Checklist do Conselheiro Eficaz</h2>
+    <div class="card">
+      <p style="margin-bottom:16px; font-size:14px; color:var(--muted);">Use este checklist nas suas atividades como conselheiro:</p>
+      <div id="checklist-interactive" style="display:flex; flex-direction:column; gap:8px;"></div>
+    </div>
+
+    <h2 class="section-h2">📋 Resumo Prático — Os Números que Importam</h2>
+    <div class="card">
+      <table class="cms-table">
+        <thead><tr><th>O que</th><th>Número/Prazo</th><th>Artigo</th></tr></thead>
+        <tbody>
+          <tr><td>Total de conselheiros do CMS</td><td>32 membros</td><td>Art. 6º</td></tr>
+          <tr><td>Quórum para deliberar</td><td>1/3 (mínimo 11)</td><td>Art. 14, §2º</td></tr>
+          <tr><td>Quórum 1ª chamada</td><td>Metade + 1 (17)</td><td>Art. 14, §2º</td></tr>
+          <tr><td>Convocação ordinária</td><td>48 horas antes</td><td>Art. 14, §1º</td></tr>
+          <tr><td>Convocação extraordinária</td><td>24 horas antes</td><td>Art. 14, §1º</td></tr>
+          <tr><td>Tempo de fala por conselheiro</td><td>3 minutos</td><td>Art. 22, VI</td></tr>
+          <tr><td>Tempo para justificar pauta</td><td>5 minutos</td><td>Art. 22, IV</td></tr>
+          <tr><td>Faltas consecutivas para perda</td><td>3 reuniões</td><td>Art. 10</td></tr>
+          <tr><td>Faltas intercaladas para perda</td><td>6 no ano civil</td><td>Art. 10</td></tr>
+          <tr><td>Justificativa de falta: prazo</td><td>Até o início da reunião</td><td>Art. 11</td></tr>
+          <tr><td>Duração do mandato</td><td>3 anos</td><td>Art. 7º, §2º</td></tr>
+          <tr><td>Reconduções possíveis</td><td>Apenas 1 vez</td><td>Art. 7º, §2º</td></tr>
+          <tr><td>Prestação de contas do FMS</td><td>Quadrimestral</td><td>Art. 3º, I</td></tr>
+          <tr><td>Publicação de deliberação</td><td>Máximo 30 dias</td><td>Art. 21, §1º</td></tr>
+          <tr><td>Aprovação de alteração regimental</td><td>2/3 do plenário</td><td>Art. 64</td></tr>
+          <tr><td>Para acionar o MP</td><td>Maioria absoluta</td><td>Art. 21, §3º</td></tr>
+          <tr><td>Conferências Municipais</td><td>A cada 4 anos</td><td>Art. 62</td></tr>
+          <tr><td>Conselho Local: membros</td><td>8 titulares + 8 suplentes</td><td>Art. 45</td></tr>
+          <tr><td>Conselho Local: reuniões</td><td>Mensais</td><td>Art. 56</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h2 class="section-h2">📌 Referências Rápidas</h2>
+    <div class="grid-2" style="margin-bottom:24px;">
+      <div class="card" style="margin-bottom:0; border-top:4px solid var(--yellow);">
+        <div style="font-family:'Montserrat',sans-serif; font-weight:700; font-size:13px; color:var(--navy); margin-bottom:12px;">LEIS FUNDAMENTAIS</div>
+        <ul style="font-size:13px; list-style:none; display:flex; flex-direction:column; gap:6px;">
+          <li>📜 Lei nº 8.080/1990 — Lei Orgânica da Saúde</li>
+          <li>📜 Lei nº 8.142/1990 — Participação da Comunidade no SUS</li>
+          <li>📜 Resolução CNS nº 453/2012 — Diretrizes dos Conselhos</li>
+          <li>📜 Art. 188 da Lei Orgânica de Montes Claros</li>
+        </ul>
+      </div>
+      <div class="card" style="margin-bottom:0; border-top:4px solid var(--blue);">
+        <div style="font-family:'Montserrat',sans-serif; font-weight:700; font-size:13px; color:var(--navy); margin-bottom:12px;">CONTATOS DO CMS</div>
+        <ul style="font-size:13px; list-style:none; display:flex; flex-direction:column; gap:6px;">
+          <li>📧 <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="0f6c627c62606c62684f68626e6663216c6062">[email&#160;protected]</a></li>
+          <li>🏛️ Auditório da Secretaria Municipal de Saúde</li>
+          <li>📍 Montes Claros – MG</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="highlight-box">
+      <h3>💬 Uma última reflexão</h3>
+      <p>O controle social não é automático. Ele depende de conselheiros que conhecem seus poderes, que consultam suas bases, que leem os documentos, que fazem as perguntas difíceis — e que permanecem independentes mesmo sob pressão.</p>
+      <p style="margin-top:10px;">O regimento é uma ferramenta. A efetividade do conselho depende de quem o usa — e como.</p>
+      <p style="margin-top:10px; font-style:italic; color:var(--yellow);">"A saúde pública é muito importante para ser deixada só nas mãos dos gestores."</p>
+    </div>
+
+    <!-- QUIZ FINAL MÓDULO 8 -->
+    <div class="quiz-section" id="quiz-8">
+      <div class="quiz-title">🎯 Quiz Final · Módulo 8</div>
+      <div class="quiz-progress-bar"><div class="quiz-progress-fill" id="q8-prog" style="width:0%"></div></div>
+      <div class="quiz-counter" id="q8-counter">Questão 1 de 4</div>
+      <div class="quiz-question" id="q8-question"></div>
+      <div class="quiz-options" id="q8-options"></div>
+      <div class="quiz-feedback" id="q8-feedback">
+        <div class="feedback-label" id="q8-flabel"></div>
+        <div id="q8-ftext"></div>
+      </div>
+      <div class="quiz-nav">
+        <span class="quiz-score" id="q8-score">Pontos: 0</span>
+        <div style="display:flex;gap:8px;align-items:center;">
+          <button class="btn btn-outline btn-sm" style="opacity:.55;" onclick="resetQuiz(8)">↺ Resetar</button>
+          <button class="btn btn-outline btn-sm" id="q8-next" onclick="nextQuestion(8)" style="display:none;">Próxima →</button>
+        </div>
+      </div>
+    </div>
+
+    <div style="text-align:center; margin-top:40px; padding:40px; background:var(--navy); border-radius:var(--radius);">
+      <div style="font-family:'Montserrat',sans-serif; font-size:12px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:var(--yellow); margin-bottom:16px;">PARABÉNS!</div>
+      <p style="color:rgba(255,255,255,.7); font-size:15px; margin-bottom:24px;">Você concluiu a Mini Formação Básica do Conselheiro Municipal de Saúde.</p>
+      <button class="btn btn-primary" onclick="restartCourse()">↺ Reiniciar Formação</button>
+      <button class="btn btn-outline" onclick="goModule(0)" style="margin-left:12px; margin-top:8px;">⟵ Voltar ao Início</button>
+    </div>
+
+  </div>
+  <div class="module-nav">
+    <button class="btn btn-secondary" onclick="goModule(7)">← Anterior</button>
+    <span style="color:var(--muted); font-size:13px;">Fim da Formação 🎓</span>
+  </div>
+</article>
+
+<!-- ═══════════════════ MÓDULO 9 — QUIZ COMPLETO ═══════════════════ -->
+<article class="module" id="module-9">
+  <div class="module-hero" style="background: linear-gradient(135deg, var(--navy) 0%, #1a3a6b 100%);">
+    <div class="module-eyebrow">Avaliação Final</div>
+    <h1>Quiz <em>Completo</em></h1>
+    <p>Todas as 36 questões da formação em sequência. Teste seu conhecimento total sobre o Regimento Interno.</p>
+  </div>
+  <div class="content-area">
+
+    <div class="callout callout-info">
+      <div class="callout-label">📋 Como funciona</div>
+      <p>Este quiz reúne todas as questões dos 9 módulos em ordem. Cada questão indica de qual módulo ela vem. Você pode refazê-lo quantas vezes quiser — os resultados dos quizzes individuais não são afetados.</p>
+    </div>
+
+    <div class="quiz-section" id="quiz-full" style="background: linear-gradient(135deg, #0a2244 0%, var(--navy) 100%); border: 1px solid rgba(245,196,0,.2);">
+      <div class="quiz-title" style="color:var(--yellow);">⭐ Quiz Completo — 36 Questões</div>
+      <div class="quiz-progress-bar"><div class="quiz-progress-fill" id="qfull-prog" style="width:0%; background:var(--yellow);"></div></div>
+      <div class="quiz-counter" id="qfull-counter" style="color:rgba(255,255,255,.6);">Questão 1 de 36</div>
+      <div class="quiz-question" id="qfull-question"></div>
+      <div class="quiz-options" id="qfull-options"></div>
+      <div class="quiz-feedback" id="qfull-feedback">
+        <div class="feedback-label" id="qfull-flabel"></div>
+        <div id="qfull-ftext"></div>
+      </div>
+      <div class="quiz-nav">
+        <span class="quiz-score" id="qfull-score">Pontos: 0</span>
+        <div style="display:flex;gap:8px;align-items:center;">
+          <button class="btn btn-outline btn-sm" style="opacity:.55;" onclick="resetQuiz('full')">↺ Resetar</button>
+          <button class="btn btn-outline btn-sm" id="qfull-next" onclick="nextFullQuestion()" style="display:none;">Próxima →</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+  <div class="module-nav">
+    <button class="btn btn-secondary" onclick="goModule(8)">← Encerramento</button>
+    <button class="btn btn-primary" onclick="restartCourse()">↺ Reiniciar Formação</button>
+  </div>
+</article>
+
+    </main>
+  </div>
+</div><!-- end course-layout -->
+
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+document.addEventListener('DOMContentLoaded', function() {
+// ══════════════════════════════════════════════════════════
+//  DATA — QUIZZES (9 módulos × 4 questões = 36 perguntas)
+// ══════════════════════════════════════════════════════════
+const QUIZZES = [
+  // MÓDULO 0
+  [
+    {
+      q: "O CMS de Montes Claros é descrito no regimento como um órgão de natureza:",
+      opts: ["Consultiva e temporária", "Deliberativa, normativa, fiscalizadora e permanente", "Apenas fiscalizadora e provisória", "Opinativa e transitória"],
+      correct: 1,
+      feedback: "Correto! O Art. 1º define o CMS como órgão 'deliberativo, normativo, fiscalizador e de natureza permanente'. Cada um desses adjetivos tem peso — o CMS não só opina, ele decide e permanece independentemente de governo."
+    },
+    {
+      q: "Qual lei federal criou os Conselhos de Saúde em todo o Brasil?",
+      opts: ["Lei nº 8.080/1990", "Lei nº 8.142/1990", "Resolução CNS 453/2012", "Constituição Federal de 1988"],
+      correct: 1,
+      feedback: "A Lei nº 8.142/1990 criou os Conselhos de Saúde e definiu que a participação da comunidade é condição para o repasse de recursos federais do SUS ao município. Sem conselho funcionando, não há verba."
+    },
+    {
+      q: "Para alterar o Regimento Interno do CMS, é necessário:",
+      opts: ["Apenas maioria simples em qualquer reunião", "Aprovação do Prefeito Municipal", "Reunião extraordinária com convocação de 5 dias úteis + 2/3 do plenário", "Aprovação da Câmara Municipal de Vereadores"],
+      correct: 2,
+      feedback: "Art. 64: alterações do regimento exigem reunião extraordinária convocada com 5 dias úteis de antecedência e aprovação por 2/3 do plenário. Isso protege o regimento de mudanças apressadas ou por pressão."
+    },
+    {
+      q: "Um gestor municipal afirma que o CMS é um 'órgão de governo' e por isso deve seguir suas orientações. Isso é:",
+      opts: ["Verdadeiro, pois a prefeitura financia o conselho", "Falso — o CMS é da sociedade civil, criado por lei federal", "Parcialmente verdadeiro apenas para o segmento gestor", "Verdadeiro apenas durante o mandato do prefeito atual"],
+      correct: 1,
+      feedback: "O CMS não é órgão do governo municipal — é uma instância colegiada com representação da sociedade, criada por lei federal. A prefeitura provê infraestrutura (Art. 19), mas não controla o conselho."
+    }
+  ],
+  // MÓDULO 1
+  [
+    {
+      q: "O CMS aprovou uma deliberação exigindo dados de um contrato. O Secretário de Saúde se recusou a homologar e ficou em silêncio. O próximo passo correto é:",
+      opts: ["Aceitar a decisão do secretário e encerrar o assunto", "Cobrar justificativa formal do secretário e pautar na próxima reunião", "Acionar imediatamente o Ministério Público", "Fazer uma moção de apoio ao secretário"],
+      correct: 1,
+      feedback: "Art. 21, §2º: na não-homologação, o gestor DEVE devolver com justificativa e proposta alternativa. O MP (Art. 21, §3º) é o passo seguinte se o impasse persistir — e exige maioria absoluta."
+    },
+    {
+      q: "Qual das alternativas abaixo está DENTRO das competências do CMS?",
+      opts: ["Contratar médicos para trabalhar no SUS municipal", "Aprovar a proposta orçamentária setorial da saúde", "Definir os preços das consultas particulares", "Ordenar a interdição de um hospital privado"],
+      correct: 1,
+      feedback: "Art. 3º, inciso VI: aprovar a proposta orçamentária da saúde é competência do CMS. O conselho não contrata servidores, não interfere no privado diretamente e não tem poder de interdição."
+    },
+    {
+      q: "A diferença entre uma 'Deliberação' e uma 'Moção' do CMS é:",
+      opts: ["Não há diferença — são a mesma coisa", "Deliberação tem força decisória e precisa de homologação; Moção expressa posicionamento", "Moção é mais poderosa que deliberação", "Deliberação é apenas para assuntos financeiros"],
+      correct: 1,
+      feedback: "Art. 21: deliberações são decisões que obrigam homologação pelo gestor. Moções expressam o juízo do conselho (apoio, crítica, reconhecimento) sem criar obrigações da mesma forma. Cada instrumento tem seu uso."
+    },
+    {
+      q: "Pode o CMS solicitar cópias de contratos e convênios da Secretaria Municipal de Saúde?",
+      opts: ["Não — esses documentos são sigilosos do governo", "Sim — o Art. 3º, inciso 20 garante acesso a qualquer informação técnica e financeira do SUS", "Apenas se houver autorização do prefeito", "Somente documentos com menos de 2 anos"],
+      correct: 1,
+      feedback: "Art. 3º, inciso 20: o CMS pode solicitar informações de caráter técnico-administrativo, econômico-financeiro, sobre trabalhadores, convênios e contratos. Negar esses documentos é obstrução ao controle social."
+    }
+  ],
+  // MÓDULO 2
+  [
+    {
+      q: "O CMS tem 32 membros. Numa reunião em 2ª chamada, com apenas 9 conselheiros presentes, é possível deliberar?",
+      opts: ["Sim — em 2ª chamada qualquer número é suficiente para tudo", "Não — são necessários pelo menos 11 membros (1/3 de 32) para deliberar", "Sim — mas apenas para assuntos financeiros", "Não — são necessários ao menos 17 membros"],
+      correct: 1,
+      feedback: "Art. 14, §2º: a 2ª chamada permite iniciar a reunião com qualquer número, MAS para DELIBERAR é necessário o mínimo de 1/3 dos membros. Com 32 conselheiros, isso significa 11 presentes."
+    },
+    {
+      q: "Um conselheiro quer incluir um assunto urgente na pauta de uma reunião ordinária que já está convocada. O que diz o regimento?",
+      opts: ["É proibido incluir itens fora da pauta original", "O conselheiro pode solicitar a inclusão, mas o plenário decide se aprova", "Apenas o Presidente pode incluir novos itens", "O item pode ser discutido apenas nos 'Assuntos Gerais', sem votação"],
+      correct: 1,
+      feedback: "Art. 22, inciso 2: qualquer conselheiro titular pode solicitar inclusão de assunto na pauta, 'desde que submetida à aprovação do Plenário'. O plenário é soberano — aprova ou rejeita a inclusão."
+    },
+    {
+      q: "Um conselheiro pede 'vistas' sobre um contrato complexo. O que acontece a seguir?",
+      opts: ["O assunto é arquivado definitivamente", "O assunto retorna obrigatoriamente na próxima reunião ordinária", "O conselheiro tem 30 dias para decidir quando pautar novamente", "O Presidente decide se o assunto volta ou não"],
+      correct: 1,
+      feedback: "Art. 22, inciso 3: 'o assunto retornar – impreterivelmente – na reunião ordinária seguinte para apreciação e votação.' O pedido de vistas suspende, não cancela — e tem prazo obrigatório."
+    },
+    {
+      q: "As votações no CMS são:",
+      opts: ["Secretas, para proteger os conselheiros", "Abertas — a favor, contra ou abstenção — sem voto secreto", "Por aclamação, sem contagem formal", "Eletrônicas e sem registro nominal"],
+      correct: 1,
+      feedback: "Art. 22, inciso 10: votações são apuradas 'mediante manifestação expressa do conselheiro (a favor, contrário e abstenção), ficando excluído o voto secreto'. Transparência é um princípio do controle social."
+    }
+  ],
+  // MÓDULO 3
+  [
+    {
+      q: "Um conselheiro faltou a 4 reuniões consecutivas sem nenhuma justificativa. Qual é a consequência?",
+      opts: ["Recebe uma advertência formal", "Perde o mandato automaticamente — é dispensado", "Paga multa à entidade que representa", "Nada acontece — é apenas orientado"],
+      correct: 1,
+      feedback: "Art. 10: 3 faltas consecutivas ou 6 intercaladas sem justificativa formal = dispensa automática do mandato. A entidade é comunicada para providenciar substituição."
+    },
+    {
+      q: "Quem NÃO pode ser representante dos Usuários no CMS?",
+      opts: ["Aposentado membro de associação de bairro", "Médica que trabalha em hospital conveniado com o SUS", "Integrante de movimento de pessoas com deficiência", "Representante de entidade ambiental"],
+      correct: 1,
+      feedback: "Art. 8º: prestadores de serviços de saúde não podem representar os usuários. Uma médica de hospital conveniado com o SUS tem interesse direto nos contratos que o conselho fiscaliza — conflito evidente."
+    },
+    {
+      q: "A participação do conselheiro no CMS é:",
+      opts: ["Remunerada conforme tabela aprovada pelo plenário", "Considerada serviço de relevância pública, vedada qualquer remuneração", "Voluntária mas com direito a diárias e transporte pagos", "Paga apenas para representantes do segmento de usuários"],
+      correct: 1,
+      feedback: "Art. 12: participação é serviço de relevância pública, vedado qualquer tipo de remuneração. O conselheiro atua de forma voluntária. A prefeitura deve prover infraestrutura, mas não paga salário ou honorários."
+    },
+    {
+      q: "Um conselheiro titular que não pode comparecer à reunião deve:",
+      opts: ["Simplesmente não ir, sem necessidade de comunicar ninguém", "Comunicar o suplente para que ele compareça no seu lugar", "Enviar procuração ao conselheiro da entidade ao lado", "Ligar para o Secretário de Saúde pedindo cancelamento da reunião"],
+      correct: 1,
+      feedback: "Art. 25, inciso 14: o conselheiro deve 'comunicar ao seu suplente quando não puder comparecer à reunião do CMS ou não puder participar desta em tempo integral.' É dever, não opção."
+    }
+  ],
+  // MÓDULO 4
+  [
+    {
+      q: "Quem elege o Presidente do CMS?",
+      opts: ["O Secretário Municipal de Saúde", "O Prefeito Municipal", "Os conselheiros titulares, em eleição aberta — o mais votado é Presidente", "O Ministério da Saúde"],
+      correct: 2,
+      feedback: "Art. 15: a Diretoria Executiva é eleita pelos membros titulares em eleição aberta. O Presidente é o mais votado e o Vice é o segundo colocado. Somente titulares podem ser candidatos."
+    },
+    {
+      q: "A Secretaria Executiva do CMS é exercida por:",
+      opts: ["Um conselheiro eleito pelo plenário", "Servidor indicado pela Gestão e confirmado pelo Plenário", "Funcionário do Ministério da Saúde", "Voluntário da sociedade civil"],
+      correct: 1,
+      feedback: "Art. 43: a Secretaria Executiva é exercida por servidor indicado pela gestão e confirmado pelo plenário. Após confirmação, o(a) Secretário(a) Municipal homologa. O plenário pode solicitar substituição em caso de irregularidades."
+    },
+    {
+      q: "Todo conselheiro tem a obrigação de participar de:",
+      opts: ["Todas as 4 câmaras técnicas simultaneamente", "Pelo menos uma câmara técnica", "Apenas da câmara temática do seu segmento", "Nenhuma câmara — participação é opcional"],
+      correct: 1,
+      feedback: "Art. 25, inciso 11: incumbe a todo conselheiro 'participar de pelo menos uma comissão temática/câmara técnica.' É obrigação, não opcional. E é possível participar de mais de uma."
+    },
+    {
+      q: "Qual é a câmara técnica responsável por analisar a prestação de contas financeiras?",
+      opts: ["Câmara Técnica de Atenção Primária", "Câmara Técnica de Vigilância em Saúde", "Câmara Técnica de Instrumentos de Gestão, Finanças, Contabilidade e Auditoria", "Câmara Técnica de Prestação de Serviços Assistenciais"],
+      correct: 2,
+      feedback: "Art. 33, inciso 1: a Câmara Técnica de Instrumentos de Gestão, Finanças, Contabilidade e Auditoria é responsável pela análise financeira — incluindo a prestação de contas quadrimestral do Fundo Municipal de Saúde."
+    }
+  ],
+  // MÓDULO 5
+  [
+    {
+      q: "Qual é o caráter dos Conselhos Locais de Saúde em relação ao CMS?",
+      opts: ["Deliberativo — as mesmas decisões vinculantes do CMS", "Consultivo — acompanham, fiscalizam e propõem localmente", "Administrativo — gerenciam diretamente as UBS", "Jurídico — emitem pareceres com força de lei"],
+      correct: 1,
+      feedback: "Art. 44: os Conselhos Locais têm 'caráter consultivo, seguindo as diretrizes do CMS.' Não deliberam com a mesma força do CMS, mas fiscalizam e propõem localmente — papel fundamental na base do SUS."
+    },
+    {
+      q: "Quem pode votar na eleição para membros do Conselho Local de Saúde (segmento usuários)?",
+      opts: ["Qualquer cidadão maior de 18 anos do município", "Usuários com 16+ anos cadastrados na respectiva UBS de abrangência", "Apenas associados de entidades da sociedade civil", "Qualquer trabalhador da unidade de saúde"],
+      correct: 1,
+      feedback: "Art. 59, §3º: podem participar da eleição os usuários maiores de 16 anos cadastrados na respectiva unidade de saúde de abrangência do Conselho Local."
+    },
+    {
+      q: "Qual é a composição de um Conselho Local de Saúde?",
+      opts: ["32 membros, igual ao CMS", "8 membros titulares + 8 suplentes", "12 membros titulares + 6 suplentes", "16 membros titulares"],
+      correct: 1,
+      feedback: "Art. 45: os Conselhos Locais têm 8 membros efetivos e 8 suplentes — 4 usuários, 2 trabalhadores e 2 representantes do gestor, mantendo a paridade 50/25/25."
+    },
+    {
+      q: "Um membro do Conselho Local pede ao coordenador da UBS um agendamento preferencial para si. Isso é:",
+      opts: ["Permitido — é um benefício do cargo", "Proibido pelo regimento — vedada a obtenção de privilégios pessoais junto à UBS", "Permitido apenas para tratamentos de urgência", "Dependente de aprovação do plenário do Conselho Local"],
+      correct: 1,
+      feedback: "Art. 60, inciso 6: 'é vedado aos membros dos Conselhos Locais obterem privilégios pessoais para si junto à Unidade de Saúde.' Usar o cargo para benefício próprio compromete a credibilidade e a independência do conselho."
+    }
+  ],
+  // MÓDULO 6
+  [
+    {
+      q: "Numa reunião com 9 conselheiros presentes (de 32), o gestor pressiona para votar um contrato urgente. O que deve acontecer?",
+      opts: ["Votação deve prosseguir — é urgente", "Votação deve ser recusada — falta o quórum mínimo de 11 para deliberar", "A votação é válida se o presidente concordar", "Votação só pode ocorrer em unanimidade nessa situação"],
+      correct: 1,
+      feedback: "Art. 14, §2º: 1/3 dos 32 membros = 11. Com 9 presentes, não há quórum para deliberar. A urgência pode ser resolvida com uma reunião extraordinária (24h de antecedência), esperando o quórum mínimo."
+    },
+    {
+      q: "O Secretário de Saúde não homologa uma deliberação e não dá explicação. O prazo máximo para publicar deliberações é de:",
+      opts: ["10 dias após aprovação", "30 dias após aprovação pelo Plenário", "60 dias após aprovação", "A critério do secretário"],
+      correct: 1,
+      feedback: "Art. 21, §1º: deliberações devem ser tornadas públicas no prazo máximo de 30 dias após aprovação. A não-homologação deve vir acompanhada de justificativa. Silêncio não é opção legal."
+    },
+    {
+      q: "Um conselheiro recebe pressão de um vereador para votar em favor de um contrato. Com base no regimento, o conselheiro deve:",
+      opts: ["Aceitar a orientação do vereador — ele foi eleito pelo povo", "Consultar a entidade que representa e votar conforme o interesse dos usuários", "Abster-se de votar para evitar conflito", "Pedir transferência de mandato para outro conselheiro"],
+      correct: 1,
+      feedback: "Art. 25, inciso 12: o conselheiro deve 'discutir, repassar informações e dar ciência à entidade/segmento que representa.' O mandato é representativo — não pessoal. A lealdade é com a base, não com o político."
+    },
+    {
+      q: "Uma prestadora de serviços de saúde se candidata como representante dos 'usuários' no CMS. Ela pode?",
+      opts: ["Sim — qualquer cidadão pode ser representante dos usuários", "Não — prestadores de serviços de saúde são impedidos de representar usuários", "Sim — desde que não seja proprietária do serviço", "Depende da aprovação do plenário em cada caso"],
+      correct: 1,
+      feedback: "Art. 8º c/c Resolução CNS 453/2012: prestadores de serviços de saúde não podem representar o segmento de usuários. O conflito de interesses é óbvio — ela estaria fiscalizando serviços que ela mesma presta."
+    }
+  ],
+  // MÓDULO 7
+  [
+    {
+      q: "A paridade 50/25/25 no CMS pode ser alterada pelo próprio conselho via mudança regimental?",
+      opts: ["Sim — o conselho pode alterar qualquer coisa em seu regimento", "Não — a paridade é definida pela Lei 8.142/1990 e Resolução CNS 453/2012, que estão acima do regimento", "Sim — se aprovado por maioria qualificada de 3/4", "Apenas o segmento de usuários pode solicitar alteração"],
+      correct: 1,
+      feedback: "A paridade 50/25/25 é definida por lei federal (8.142/1990) e pela Resolução 453/2012 do CNS. O regimento interno está na base da hierarquia normativa e não pode contrariar legislação superior."
+    },
+    {
+      q: "Quando surgem dúvidas sobre como interpretar o regimento, quem tem a palavra final?",
+      opts: ["O Secretário Municipal de Saúde", "O Presidente do CMS", "O Plenário do CMS", "O Ministério Público"],
+      correct: 2,
+      feedback: "Art. 66: 'Os casos omissos e as dúvidas surgidas na aplicação do presente Regimento Interno serão dirimidos pelo Plenário do CMS.' O plenário é soberano na interpretação de seu próprio regimento."
+    },
+    {
+      q: "Para alterar o Regimento Interno, o processo exige:",
+      opts: ["Maioria simples em reunião ordinária", "Reunião extraordinária + convocação de 5 dias úteis + aprovação de 2/3 do plenário", "Apenas aprovação do Presidente do CMS", "Decreto do Prefeito Municipal"],
+      correct: 1,
+      feedback: "Art. 64: propostas de alterações devem ser apreciadas em reunião extraordinária, convocada com 5 dias úteis de antecedência, e aprovadas por 2/3 do Plenário. Esse quórum elevado protege o regimento de mudanças oportunistas."
+    },
+    {
+      q: "Qual das situações abaixo pode levar à perda do mandato por 'falta de decoro'?",
+      opts: ["Discordância técnica com o gestor em plenária", "Condutas que serão avaliadas por Comissão de Ética, como comportamento ofensivo ou uso do cargo para fins pessoais", "Votar contrário à posição da maioria em 3 reuniões consecutivas", "Pedir pedido de vistas em mais de 2 matérias no mesmo mês"],
+      correct: 1,
+      feedback: "Art. 10, §3º: a perda do mandato por decoro é declarada por maioria absoluta após análise de Comissão de Ética. O regimento não define 'decoro' em detalhes — é avaliado caso a caso. Divergência técnica legítima nunca é falta de decoro."
+    }
+  ],
+  // MÓDULO 8
+  [
+    {
+      q: "O CMS pode oferecer cursos de capacitação aos conselheiros?",
+      opts: ["Não — isso é responsabilidade exclusiva do Ministério da Saúde", "Sim — o regimento prevê expressamente capacitação de conselheiros", "Apenas para novos conselheiros no primeiro mandato", "Somente se houver verba aprovada pelo vereadores"],
+      correct: 1,
+      feedback: "Art. 61, Parágrafo único: 'O CMS oferecerá curso de capacitação de conselheiros, visando à preparação dos mesmos para o exercício do mandato.' Esta formação que você está fazendo está no regimento!"
+    },
+    {
+      q: "As Conferências Municipais de Saúde devem acontecer:",
+      opts: ["Anualmente", "A cada 2 anos", "A cada 4 anos (ou extraordinariamente)", "A cada 6 anos"],
+      correct: 2,
+      feedback: "Art. 62: as Conferências Municipais reúnem-se 'a cada 04 (quatro) anos ou extraordinariamente, em qualquer período, a critério das instâncias competentes'. São grandes eventos de avaliação e proposição de diretrizes de saúde."
+    },
+    {
+      q: "Qual é o instrumento correto para o CMS se posicionar publicamente contra uma ação da gestão que considera prejudicial à saúde da população?",
+      opts: ["Declaração pessoal do presidente em redes sociais", "Moção de crítica ou oposição, aprovada em plenário", "Decreto do conselho com força de lei", "Carta aberta sem votação formal"],
+      correct: 1,
+      feedback: "Art. 21, inciso 3: moções 'expressam o juízo do Conselho, sobre fatos ou situações, com o propósito de manifestar reconhecimento, apoio, crítica ou oposição.' É o instrumento formal para posicionamento público do conselho."
+    },
+    {
+      q: "Para que o CMS possa representar formalmente ao Ministério Público sobre uma deliberação não implementada, é necessário:",
+      opts: ["Decisão de apenas 5 conselheiros", "Aprovação por maioria absoluta dos membros do plenário", "Autorização prévia do Secretário de Saúde", "Aprovação por unanimidade"],
+      correct: 1,
+      feedback: "Art. 21, §3º: 'o Conselho Municipal de Saúde, com aprovação da maioria absoluta de seus membros, poderá representar ao Ministério Público.' Com 32 membros, isso significa pelo menos 17 votos favoráveis."
+    }
+  ]
+];
+
+
+// ══════════════════════════════════════════════════════════
+//  FULL QUIZ — todas as 36 questões em sequência
+// ══════════════════════════════════════════════════════════
+const FULL_QUIZ = QUIZZES.reduce((acc, moduleQs, mi) => {
+  return acc.concat(moduleQs.map(q => Object.assign({}, q, { moduleLabel: 'Módulo ' + mi })));
+}, []);
+
+// ══════════════════════════════════════════════════════════
+//  CHECKLIST DATA
+// ══════════════════════════════════════════════════════════
+const CHECKLIST_ITEMS = [
+  "Li os documentos enviados na convocação antes da reunião",
+  "Consultei minha entidade/base sobre os assuntos em pauta",
+  "Justifiquei minhas ausências por escrito, quando necessário",
+  "Participei ativamente da minha câmara técnica",
+  "Questionei o quórum antes de qualquer deliberação suspeita",
+  "Communiquei meu suplente quando não pude comparecer",
+  "Acompanhei a publicação das deliberações aprovadas",
+  "Verifiquei se a prestação de contas quadrimestral foi apresentada",
+  "Repassei informações das reuniões à minha entidade",
+  "Mantive minha independência diante de pressões políticas",
+  "Cobrei documentos e informações quando solicitados foram negados",
+  "Conheci os poderes e limites do CMS antes de votar"
+];
+
+// ══════════════════════════════════════════════════════════
+//  STATE
+// ══════════════════════════════════════════════════════════
+let state = {
+  currentModule: 0,
+  quizState: Array(9).fill(null).map(() => ({ qi: 0, score: 0, done: false })),
+  fullQuizState: { qi: 0, score: 0, done: false },
+  completedModules: [],
+  checklistState: Array(CHECKLIST_ITEMS.length).fill(false)
+};
+
+function loadState() {
+  try {
+    const s = localStorage.getItem('cms-formacao-state');
+    if (s) state = JSON.parse(s);
+  } catch(e) {}
+}
+
+function saveState() {
+  try {
+    localStorage.setItem('cms-formacao-state', JSON.stringify(state));
+  } catch(e) {}
+}
+
+// ══════════════════════════════════════════════════════════
+//  COURSE FLOW
+// ══════════════════════════════════════════════════════════
+function startCourse() {
+  document.getElementById('welcome-screen').style.display = 'none';
+  document.getElementById('course-layout').style.display = 'block';
+  loadState();
+  renderAllQuizzes();
+  renderFullQuiz();
+  renderChecklist();
+  goModule(state.currentModule);
+  updateProgress();
+}
+
+function goModule(n) {
+  document.querySelectorAll('.module').forEach(m => m.classList.remove('active'));
+  document.getElementById('module-' + n).classList.add('active');
+  document.querySelectorAll('.nav-item').forEach(i => {
+    i.classList.remove('active');
+    if (parseInt(i.dataset.module) === n) i.classList.add('active');
+  });
+  state.currentModule = n;
+  saveState();
+  document.getElementById('main-content').scrollTo(0,0);
+  window.scrollTo(0,0);
+  closeSidebar();
+  updateProgress();
+  if (n === 8) updateFinalScore();
+}
+
+function updateProgress() {
+  const completed = state.completedModules.length;
+  const pct = Math.round((completed / 9) * 100);
+  document.getElementById('progress-text').textContent = pct + '%';
+  // update nav items
+  document.querySelectorAll('.nav-item').forEach(item => {
+    const m = parseInt(item.dataset.module);
+    item.classList.remove('completed');
+    if (state.completedModules.includes(m) && m !== state.currentModule) {
+      item.classList.add('completed');
+    }
+  });
+}
+
+function markModuleComplete(m) {
+  if (!state.completedModules.includes(m)) {
+    state.completedModules.push(m);
+    saveState();
+    updateProgress();
+  }
+}
+
+// ══════════════════════════════════════════════════════════
+//  QUIZ ENGINE
+// ══════════════════════════════════════════════════════════
+function renderAllQuizzes() {
+  for (let m = 0; m < 9; m++) renderQuestion(m);
+}
+
+function quizScaffold(m) {
+  // Rebuilds the quiz inner HTML after showQuizComplete wiped it
+  const container = document.getElementById('quiz-' + m);
+  container.innerHTML =
+    '<div class="quiz-title">🎯 Quiz · Módulo ' + m + '</div>' +
+    '<div class="quiz-progress-bar"><div class="quiz-progress-fill" id="q' + m + '-prog" style="width:0%"></div></div>' +
+    '<div class="quiz-counter" id="q' + m + '-counter">Questão 1 de ' + QUIZZES[m].length + '</div>' +
+    '<div class="quiz-question" id="q' + m + '-question"></div>' +
+    '<div class="quiz-options" id="q' + m + '-options"></div>' +
+    '<div class="quiz-feedback" id="q' + m + '-feedback">' +
+      '<div class="feedback-label" id="q' + m + '-flabel"></div>' +
+      '<div id="q' + m + '-ftext"></div>' +
+    '</div>' +
+    '<div class="quiz-nav">' +
+      '<span class="quiz-score" id="q' + m + '-score">Pontos: 0</span>' +
+      '<div style="display:flex;gap:8px;align-items:center;">' +
+        '<button class="btn btn-outline btn-sm" style="opacity:.55;" onclick="resetQuiz(' + m + ')">↺ Resetar</button>' +
+        '<button class="btn btn-outline btn-sm" id="q' + m + '-next" onclick="nextQuestion(' + m + ')" style="display:none;">Próxima →</button>' +
+      '</div>' +
+    '</div>';
+}
+
+function renderQuestion(m) {
+  const qs = state.quizState[m];
+  const quiz = QUIZZES[m];
+  if (!quiz) return;
+  const qi = qs.qi;
+  const total = quiz.length;
+
+  // If already done, show final state
+  if (qs.done) {
+    showQuizComplete(m);
+    return;
+  }
+
+  // Re-scaffold if elements were wiped by showQuizComplete
+  if (!document.getElementById('q' + m + '-counter')) {
+    quizScaffold(m);
+  }
+
+  const q = quiz[qi];
+  document.getElementById('q' + m + '-counter').textContent = 'Questão ' + (qi+1) + ' de ' + total;
+  document.getElementById('q' + m + '-question').textContent = q.q;
+  document.getElementById('q' + m + '-prog').style.width = (qi / total * 100) + '%';
+  document.getElementById('q' + m + '-score').textContent = 'Pontos: ' + qs.score;
+
+  const optsEl = document.getElementById('q' + m + '-options');
+  optsEl.innerHTML = '';
+  q.opts.forEach((opt, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'quiz-option';
+    btn.textContent = opt;
+    btn.onclick = () => answerQuestion(m, i);
+    optsEl.appendChild(btn);
+  });
+
+  const fb = document.getElementById('q' + m + '-feedback');
+  fb.className = 'quiz-feedback';
+  document.getElementById('q' + m + '-next').style.display = 'none';
+}
+
+function answerQuestion(m, chosen) {
+  const qs = state.quizState[m];
+  const q = QUIZZES[m][qs.qi];
+  const correct = q.correct;
+  const optsEl = document.getElementById('q' + m + '-options');
+  const opts = optsEl.querySelectorAll('.quiz-option');
+
+  opts.forEach(b => b.disabled = true);
+  opts[correct].classList.add('correct');
+
+  const fb = document.getElementById('q' + m + '-feedback');
+  const flabel = document.getElementById('q' + m + '-flabel');
+  const ftext = document.getElementById('q' + m + '-ftext');
+  fb.classList.add('show');
+
+  if (chosen === correct) {
+    opts[chosen].classList.add('correct');
+    qs.score++;
+    fb.classList.add('correct');
+    flabel.textContent = '✓ Correto!';
+    ftext.textContent = q.feedback;
+  } else {
+    opts[chosen].classList.add('wrong');
+    opts[correct].classList.add('reveal');
+    fb.classList.add('wrong');
+    flabel.textContent = '✗ Incorreto';
+    ftext.textContent = q.feedback;
+  }
+
+  document.getElementById('q' + m + '-score').textContent = 'Pontos: ' + qs.score;
+  saveState();
+
+  const nextBtn = document.getElementById('q' + m + '-next');
+  nextBtn.style.display = 'block';
+
+  const isLast = qs.qi >= QUIZZES[m].length - 1;
+  nextBtn.textContent = isLast ? 'Ver Resultado →' : 'Próxima →';
+}
+
+function nextQuestion(m) {
+  const qs = state.quizState[m];
+  qs.qi++;
+  if (qs.qi >= QUIZZES[m].length) {
+    qs.done = true;
+    markModuleComplete(m);
+    saveState();
+    showQuizComplete(m);
+  } else {
+    saveState();
+    renderQuestion(m);
+  }
+}
+
+function showQuizComplete(m) {
+  const isFullQuiz = (m === 'full');
+  const qs = isFullQuiz ? state.fullQuizState : state.quizState[m];
+  const quizData = isFullQuiz ? FULL_QUIZ : QUIZZES[m];
+  const total = quizData.length;
+  const pct = Math.round(qs.score / total * 100);
+  const containerId = isFullQuiz ? 'quiz-full' : 'quiz-' + m;
+  const container = document.getElementById(containerId);
+  const label = isFullQuiz ? 'Quiz Completo' : 'Quiz · Módulo ' + m;
+  const emoji = pct >= 75 ? '🎉' : pct >= 50 ? '👍' : '📚';
+  const msg   = pct >= 75 ? 'Excelente!' : pct >= 50 ? 'Bom resultado!' : 'Revise os módulos e tente novamente.';
+  const resetArg = isFullQuiz ? "'full'" : m;
+
+  container.innerHTML =
+    '<div class="quiz-title">🎯 ' + label + ' — Concluído!</div>' +
+    '<div style="text-align:center; padding:24px 0;">' +
+      '<div style="font-size:64px;font-family:Montserrat,sans-serif;font-weight:900;color:var(--yellow);line-height:1;">' + qs.score +
+        '<span style="font-size:32px;color:rgba(255,255,255,.4);">/' + total + '</span></div>' +
+      '<div style="color:rgba(255,255,255,.8);font-size:16px;font-weight:700;margin-top:10px;">' + emoji + ' ' + msg + '</div>' +
+      '<div style="color:rgba(255,255,255,.5);font-size:13px;margin-top:4px;">' + pct + '% de acerto</div>' +
+    '</div>' +
+    '<div style="text-align:center;padding-top:16px;border-top:1px solid rgba(255,255,255,.1);">' +
+      '<button class="btn btn-outline btn-sm" onclick="resetQuiz(' + resetArg + ')">↺ Refazer Quiz</button>' +
+    '</div>';
+
+  if (!isFullQuiz && m === 8) updateFinalScore();
+  if (isFullQuiz) updateFinalScore();
+}
+
+function resetQuiz(m) {
+  const isFullQuiz = (m === 'full');
+  if (isFullQuiz) {
+    state.fullQuizState = { qi: 0, score: 0, done: false };
+    saveState();
+    renderFullQuiz();
+  } else {
+    state.quizState[m] = { qi: 0, score: 0, done: false };
+    saveState();
+    renderQuestion(m);
+  }
+}
+
+// ══════════════════════════════════════════════════════════
+//  FINAL SCORE
+// ══════════════════════════════════════════════════════════
+function updateFinalScore() {
+  let total = 0, max = 0;
+  const breakdown = [];
+  state.quizState.forEach((qs, m) => {
+    const qlen = QUIZZES[m] ? QUIZZES[m].length : 0;
+    total += qs.score;
+    max += qlen;
+    if (qs.done) {
+      breakdown.push(`<span style="color:var(--yellow)">Módulo ${m}:</span> ${qs.score}/${qlen}`);
+    }
+  });
+
+  document.getElementById('final-score-display').textContent = total + ' / ' + max;
+  const pct = max > 0 ? Math.round(total/max*100) : 0;
+  document.getElementById('final-msg').textContent = 
+    total === 0 ? 'Complete os módulos e quizzes para ver sua pontuação!' :
+    pct >= 80 ? `Incrível! ${pct}% de acerto — você está preparado(a)!` :
+    pct >= 60 ? `Bom trabalho! ${pct}% — revise os pontos em dúvida.` :
+    `Continue estudando! ${pct}% — releia os módulos com atenção.`;
+
+  const bdEl = document.getElementById('final-breakdown');
+  if (breakdown.length > 0) {
+    bdEl.innerHTML = `<div style="display:flex;flex-wrap:wrap;gap:10px;justify-content:center;font-size:12px;color:rgba(255,255,255,.6);">${breakdown.join('<span style="color:rgba(255,255,255,.2)"> | </span>')}</div>`;
+  }
+}
+
+// ══════════════════════════════════════════════════════════
+//  CHECKLIST
+// ══════════════════════════════════════════════════════════
+function renderChecklist() {
+  const el = document.getElementById('checklist-interactive');
+  if (!el) return;
+  el.innerHTML = '';
+  CHECKLIST_ITEMS.forEach((item, i) => {
+    const div = document.createElement('div');
+    div.style.cssText = 'display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--border);cursor:pointer;';
+    div.onclick = () => toggleCheck(i);
+    
+    const box = document.createElement('div');
+    box.id = 'chk-' + i;
+    box.style.cssText = `width:22px;height:22px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:11px;transition:all .2s;background:${state.checklistState[i] ? 'var(--green)' : 'var(--border)'};color:white;`;
+    box.textContent = state.checklistState[i] ? '✓' : '';
+    
+    const label = document.createElement('span');
+    label.style.cssText = `font-size:14px;${state.checklistState[i] ? 'text-decoration:line-through;color:var(--muted);' : ''}`;
+    label.id = 'chklabel-' + i;
+    label.textContent = item;
+    
+    div.appendChild(box);
+    div.appendChild(label);
+    el.appendChild(div);
+  });
+}
+
+function toggleCheck(i) {
+  state.checklistState[i] = !state.checklistState[i];
+  saveState();
+  const box = document.getElementById('chk-' + i);
+  const label = document.getElementById('chklabel-' + i);
+  if (box && label) {
+    box.style.background = state.checklistState[i] ? 'var(--green)' : 'var(--border)';
+    box.textContent = state.checklistState[i] ? '✓' : '';
+    label.style.textDecoration = state.checklistState[i] ? 'line-through' : 'none';
+    label.style.color = state.checklistState[i] ? 'var(--muted)' : 'var(--ink)';
+  }
+}
+
+// ══════════════════════════════════════════════════════════
+//  ACCORDION
+// ══════════════════════════════════════════════════════════
+function toggleAccordion(header) {
+  const body = header.nextElementSibling;
+  const isOpen = header.classList.contains('open');
+  header.classList.toggle('open', !isOpen);
+  body.classList.toggle('open', !isOpen);
+}
+
+// ══════════════════════════════════════════════════════════
+//  TABS
+// ══════════════════════════════════════════════════════════
+function switchTab(group, tab, btn) {
+  document.querySelectorAll(`[id^="${group}-"]`).forEach(el => el.classList.remove('active'));
+  const el = document.getElementById(group + '-' + tab);
+  if (el) el.classList.add('active');
+  
+  if (btn) {
+    const bar = btn.closest('.tab-bar');
+    if (bar) bar.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+  }
+}
+
+
+// ══════════════════════════════════════════════════════════
+//  FULL QUIZ ENGINE
+// ══════════════════════════════════════════════════════════
+function renderFullQuiz() {
+  const qs = state.fullQuizState;
+  if (qs.done) { showQuizComplete('full'); return; }
+  const qi = qs.qi;
+  const total = FULL_QUIZ.length;
+  const q = FULL_QUIZ[qi];
+
+  document.getElementById('qfull-counter').textContent = 'Questão ' + (qi+1) + ' de ' + total;
+  document.getElementById('qfull-question').innerHTML =
+    '<span style="display:inline-block;background:rgba(255,255,255,.1);border-radius:4px;padding:2px 8px;font-size:10px;font-family:Montserrat,sans-serif;font-weight:700;letter-spacing:1px;margin-bottom:10px;color:rgba(255,255,255,.6);">' + q.moduleLabel.toUpperCase() + '</span><br>' + q.q;
+  document.getElementById('qfull-prog').style.width = (qi / total * 100) + '%';
+  document.getElementById('qfull-score').textContent = 'Pontos: ' + qs.score;
+
+  const optsEl = document.getElementById('qfull-options');
+  optsEl.innerHTML = '';
+  q.opts.forEach(function(opt, i) {
+    const btn = document.createElement('button');
+    btn.className = 'quiz-option';
+    btn.textContent = opt;
+    btn.onclick = function() { answerFullQuestion(i); };
+    optsEl.appendChild(btn);
+  });
+
+  const fb = document.getElementById('qfull-feedback');
+  fb.className = 'quiz-feedback';
+  document.getElementById('qfull-next').style.display = 'none';
+}
+
+function answerFullQuestion(chosen) {
+  const qs = state.fullQuizState;
+  const q = FULL_QUIZ[qs.qi];
+  const correct = q.correct;
+  const optsEl = document.getElementById('qfull-options');
+  const opts = optsEl.querySelectorAll('.quiz-option');
+
+  opts.forEach(function(b) { b.disabled = true; });
+  opts[correct].classList.add('correct');
+
+  const fb = document.getElementById('qfull-feedback');
+  const flabel = document.getElementById('qfull-flabel');
+  const ftext = document.getElementById('qfull-ftext');
+  fb.classList.add('show');
+
+  if (chosen === correct) {
+    opts[chosen].classList.add('correct');
+    qs.score++;
+    fb.classList.add('correct');
+    flabel.textContent = '✓ Correto!';
+  } else {
+    opts[chosen].classList.add('wrong');
+    opts[correct].classList.add('reveal');
+    fb.classList.add('wrong');
+    flabel.textContent = '✗ Incorreto';
+  }
+  ftext.textContent = q.feedback;
+  document.getElementById('qfull-score').textContent = 'Pontos: ' + qs.score;
+  saveState();
+
+  const nextBtn = document.getElementById('qfull-next');
+  nextBtn.style.display = 'block';
+  nextBtn.textContent = (qs.qi >= FULL_QUIZ.length - 1) ? 'Ver Resultado →' : 'Próxima →';
+}
+
+function nextFullQuestion() {
+  const qs = state.fullQuizState;
+  qs.qi++;
+  if (qs.qi >= FULL_QUIZ.length) {
+    qs.done = true;
+    saveState();
+    showQuizComplete('full');
+  } else {
+    saveState();
+    renderFullQuiz();
+  }
+}
+
+// ══════════════════════════════════════════════════════════
+//  SIDEBAR
+// ══════════════════════════════════════════════════════════
+function toggleSidebar() {
+  document.getElementById('sidebar').classList.toggle('open');
+}
+function closeSidebar() {
+  if (window.innerWidth <= 768) {
+    document.getElementById('sidebar').classList.remove('open');
+  }
+}
+document.addEventListener('click', function(e) {
+  const sidebar = document.getElementById('sidebar');
+  const ham = document.getElementById('hamburger');
+  if (sidebar && ham && !sidebar.contains(e.target) && !ham.contains(e.target)) {
+    closeSidebar();
+  }
+});
+
+// ══════════════════════════════════════════════════════════
+//  RESTART
+// ══════════════════════════════════════════════════════════
+function restartCourse() {
+  state = {
+    currentModule: 0,
+    quizState: Array(9).fill(null).map(() => ({ qi: 0, score: 0, done: false })),
+    completedModules: [],
+    checklistState: Array(CHECKLIST_ITEMS.length).fill(false)
+  };
+  saveState();
+  renderAllQuizzes();
+  renderFullQuiz();
+  renderChecklist();
+  goModule(0);
+  updateProgress();
+}
+
+// Expose to global scope for inline onclick handlers
+window.startCourse    = startCourse;
+window.goModule       = goModule;
+window.nextQuestion   = nextQuestion;
+window.answerQuestion = answerQuestion;
+window.toggleAccordion= toggleAccordion;
+window.switchTab      = switchTab;
+window.toggleSidebar  = toggleSidebar;
+window.restartCourse      = restartCourse;
+window.resetQuiz          = resetQuiz;
+window.answerFullQuestion = answerFullQuestion;
+window.nextFullQuestion   = nextFullQuestion;
+
+}); // end DOMContentLoaded
+</script>
+</body>
+</html>

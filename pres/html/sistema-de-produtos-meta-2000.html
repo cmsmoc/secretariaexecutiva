@@ -1,0 +1,1090 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Sistema de Produtos — Do Mercado Pra Mesa | Meta R$2.000 em 15 dias</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;800&family=Lato:wght@300;400;600;700&display=swap" rel="stylesheet"/>
+<style>
+/* ══════════════════════════════════════════
+   TOKENS
+══════════════════════════════════════════ */
+:root{
+  --sage:#5a8a6a; --sage-d:#3d6b52; --sage-p:#e8f2ec; --sage-m:#f4f9f6;
+  --bege:#f7f3ec; --bege-m:#ede7db;
+  --yellow:#e8c547; --yellow-p:#fdf6d8;
+  --ink:#1e1e1e; --ink-m:#3d3d3d; --ink-s:#6b6b6b;
+  --red:#c0392b; --red-p:#fdecea;
+  --white:#fff;
+  --r:14px; --r-lg:20px;
+  --sh:0 4px 20px rgba(0,0,0,.08);
+  --sh-lg:0 12px 40px rgba(0,0,0,.12);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:'Lato',sans-serif;background:var(--bege);color:var(--ink);line-height:1.7}
+img{display:block;max-width:100%}
+strong{font-weight:700}
+h1,h2,h3,h4{font-family:'Playfair Display',serif;line-height:1.2}
+
+/* ══════════════════════════════════════════
+   LAYOUT
+══════════════════════════════════════════ */
+.wrap{max-width:920px;margin:0 auto;padding:0 24px}
+.sec{padding:72px 0;border-bottom:1px solid var(--bege-m)}
+.sec:last-child{border:none}
+
+/* ══════════════════════════════════════════
+   TYPOGRAPHY HELPERS
+══════════════════════════════════════════ */
+.eyebrow{display:inline-block;font-size:.68rem;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--sage);margin-bottom:10px}
+.lead{font-size:1.05rem;color:var(--ink-m);font-weight:300;max-width:600px;margin-top:8px}
+
+/* ══════════════════════════════════════════
+   HEADER
+══════════════════════════════════════════ */
+.master-header{
+  background:var(--sage-d);
+  color:#fff;
+  padding:0;
+  overflow:hidden;
+  position:relative;
+}
+.master-header::before{
+  content:'';position:absolute;
+  right:-120px;top:-120px;
+  width:480px;height:480px;
+  background:radial-gradient(circle,rgba(255,255,255,.06) 0%,transparent 70%);
+  border-radius:50%;
+}
+.master-header__inner{
+  padding:60px 24px 52px;
+  position:relative;z-index:1;
+  max-width:920px;margin:0 auto;
+}
+.master-header__tag{
+  display:inline-block;background:var(--yellow);color:var(--ink);
+  font-size:.72rem;font-weight:800;letter-spacing:.12em;text-transform:uppercase;
+  padding:5px 14px;border-radius:50px;margin-bottom:16px;
+}
+.master-header h1{font-size:clamp(1.8rem,4.5vw,2.8rem);color:#fff;margin-bottom:10px}
+.master-header h1 em{font-style:italic;color:var(--yellow)}
+.master-header p{color:rgba(255,255,255,.72);font-size:1rem;font-weight:300;max-width:560px}
+
+/* ══════════════════════════════════════════
+   MATH SECTION — A CONTA DOS R$2.000
+══════════════════════════════════════════ */
+.math-grid{display:grid;gap:16px;margin-top:28px}
+.math-card{
+  background:var(--white);border-radius:var(--r);padding:22px 24px;
+  box-shadow:var(--sh);display:flex;gap:16px;align-items:flex-start;
+  border-left:4px solid var(--sage);
+}
+.math-card--yellow{border-color:var(--yellow)}
+.math-card--total{background:var(--sage-d);border:none;color:#fff}
+.math-card__icon{font-size:1.8rem;flex-shrink:0;line-height:1}
+.math-card__label{font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--ink-s);margin-bottom:4px}
+.math-card--total .math-card__label{color:rgba(255,255,255,.6)}
+.math-card__value{font-family:'Playfair Display',serif;font-size:1.6rem;font-weight:800;color:var(--sage-d);line-height:1}
+.math-card--total .math-card__value{color:var(--yellow);font-size:2rem}
+.math-card__desc{font-size:.82rem;color:var(--ink-s);margin-top:4px;line-height:1.4}
+.math-card--total .math-card__desc{color:rgba(255,255,255,.65)}
+.math-equation{
+  background:var(--bege-m);border-radius:var(--r);padding:20px 24px;
+  margin-top:16px;font-size:.92rem;color:var(--ink-m);line-height:2;
+}
+.math-equation strong{color:var(--sage-d);font-size:1rem}
+@media(min-width:600px){.math-grid{grid-template-columns:1fr 1fr 1fr}}
+
+/* ══════════════════════════════════════════
+   PRODUCT SYSTEM — 3 CARDS
+══════════════════════════════════════════ */
+.products{display:flex;flex-direction:column;gap:48px;margin-top:36px}
+
+.product{border-radius:var(--r-lg);overflow:hidden;box-shadow:var(--sh-lg)}
+
+/* header faixas */
+.product__hd{padding:24px 28px;color:#fff;display:flex;align-items:flex-start;justify-content:space-between;gap:20px;flex-wrap:wrap}
+.product__hd--p1{background:var(--sage)}
+.product__hd--p2{background:var(--sage-d)}
+.product__hd--p3{background:var(--ink)}
+
+.product__tier{font-size:.65rem;font-weight:800;letter-spacing:.14em;text-transform:uppercase;opacity:.75;margin-bottom:6px}
+.product__name{font-family:'Playfair Display',serif;font-size:1.5rem;color:#fff;line-height:1.15;margin-bottom:6px}
+.product__tagline{font-size:.88rem;color:rgba(255,255,255,.75);font-weight:300;line-height:1.4;max-width:460px}
+.product__price-box{text-align:right;flex-shrink:0}
+.product__from{font-size:.78rem;color:rgba(255,255,255,.45);text-decoration:line-through}
+.product__price{font-family:'Playfair Display',serif;font-size:2.2rem;font-weight:800;color:var(--yellow);line-height:1}
+.product__price sup{font-size:.5em;vertical-align:super;margin-right:2px}
+.product__qty{font-size:.75rem;color:rgba(255,255,255,.6);margin-top:3px}
+
+/* body */
+.product__body{background:var(--white);padding:28px}
+.product__promise{
+  background:var(--sage-p);border-radius:var(--r);padding:16px 20px;
+  font-weight:700;font-size:.97rem;color:var(--sage-d);margin-bottom:24px;
+  line-height:1.5;border-left:3px solid var(--sage);
+}
+
+.product__cols{display:grid;gap:24px}
+@media(min-width:640px){.product__cols{grid-template-columns:1fr 1fr}}
+@media(min-width:800px){.product__cols--3{grid-template-columns:1fr 1fr 1fr}}
+
+.pcol h4{
+  font-family:'Lato',sans-serif;font-size:.7rem;font-weight:800;
+  text-transform:uppercase;letter-spacing:.12em;color:var(--ink-s);
+  margin-bottom:12px;padding-bottom:6px;border-bottom:1px solid var(--bege-m);
+}
+
+.plist{list-style:none;display:flex;flex-direction:column;gap:9px}
+.plist li{display:flex;gap:10px;font-size:.88rem;color:var(--ink-m);line-height:1.45}
+.plist li .bul{flex-shrink:0;width:20px;height:20px;background:var(--sage-p);color:var(--sage);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.65rem;font-weight:900;margin-top:2px}
+.plist li .bul--x{background:var(--red-p);color:var(--red)}
+
+.badge-row{display:flex;flex-wrap:wrap;gap:6px}
+.badge{display:inline-block;background:var(--bege-m);color:var(--ink-m);font-size:.73rem;font-weight:700;padding:4px 12px;border-radius:50px}
+.badge--green{background:var(--sage-p);color:var(--sage-d)}
+.badge--yellow{background:var(--yellow-p);color:#a07d00}
+
+.product__copy{
+  margin-top:24px;background:var(--bege);border-radius:var(--r);padding:20px 22px;
+  border-left:3px solid var(--yellow);
+}
+.product__copy h4{font-size:.7rem;font-weight:800;text-transform:uppercase;letter-spacing:.12em;color:var(--yellow);margin-bottom:10px;font-family:'Lato',sans-serif}
+.product__copy p{font-size:.9rem;color:var(--ink-m);line-height:1.6}
+.product__copy .headline{font-family:'Playfair Display',serif;font-size:1.1rem;color:var(--ink);font-weight:700;margin-bottom:6px}
+
+.product__funnel-note{
+  margin-top:20px;background:var(--ink);border-radius:var(--r);padding:16px 20px;
+  display:flex;gap:12px;align-items:flex-start;
+}
+.product__funnel-note .icon{font-size:1.3rem;flex-shrink:0}
+.product__funnel-note p{font-size:.85rem;color:rgba(255,255,255,.75);line-height:1.5}
+.product__funnel-note strong{color:var(--yellow)}
+
+/* ══════════════════════════════════════════
+   CONTENT PAGES — MOCK DO PDF
+══════════════════════════════════════════ */
+.mockup-pages{display:grid;gap:12px;margin-top:20px}
+@media(min-width:560px){.mockup-pages{grid-template-columns:repeat(3,1fr)}}
+@media(min-width:800px){.mockup-pages{grid-template-columns:repeat(4,1fr)}}
+
+.mockup-page{
+  background:var(--white);border-radius:10px;padding:16px;
+  box-shadow:var(--sh);border-top:3px solid var(--sage);
+  font-size:.8rem;color:var(--ink-m);
+}
+.mockup-page__num{font-size:.65rem;color:var(--ink-s);margin-bottom:4px}
+.mockup-page__title{font-weight:700;font-size:.85rem;color:var(--ink);margin-bottom:6px}
+.mockup-page__lines{display:flex;flex-direction:column;gap:4px}
+.mockup-page__line{height:6px;background:var(--bege-m);border-radius:3px}
+.mockup-page__line--short{width:60%}
+.mockup-page__line--med{width:80%}
+
+/* ══════════════════════════════════════════
+   15-DAY ROADMAP
+══════════════════════════════════════════ */
+.roadmap{margin-top:32px}
+.phase{margin-bottom:32px}
+.phase__header{
+  background:var(--sage-d);color:#fff;
+  border-radius:var(--r) var(--r) 0 0;
+  padding:16px 22px;
+  display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;
+}
+.phase__title{font-family:'Playfair Display',serif;font-size:1.05rem;color:#fff}
+.phase__goal{background:var(--yellow);color:var(--ink);font-size:.78rem;font-weight:800;padding:4px 14px;border-radius:50px}
+.phase__days{background:var(--white);border-radius:0 0 var(--r) var(--r);overflow:hidden;box-shadow:var(--sh)}
+.phase__day{
+  display:flex;gap:0;border-bottom:1px solid var(--bege-m);
+}
+.phase__day:last-child{border:none}
+.phase__day-num{
+  flex-shrink:0;width:64px;background:var(--sage-m);
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:700;
+  color:var(--sage-d);padding:16px 8px;
+}
+.phase__day-content{padding:14px 18px;flex:1}
+.phase__day-label{font-size:.68rem;font-weight:800;text-transform:uppercase;letter-spacing:.1em;color:var(--sage);margin-bottom:4px}
+.phase__day-tasks{font-size:.88rem;color:var(--ink-m);line-height:1.5}
+.phase__day-tasks span{display:block;padding:2px 0}
+.phase__day-tasks span::before{content:'→ ';color:var(--sage);font-weight:700}
+.phase__day-kpi{
+  flex-shrink:0;background:var(--sage-p);padding:14px 16px;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  min-width:96px;text-align:center;
+}
+.phase__day-kpi .k-val{font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:700;color:var(--sage-d);line-height:1}
+.phase__day-kpi .k-label{font-size:.65rem;color:var(--sage);font-weight:700;text-transform:uppercase;letter-spacing:.07em;margin-top:2px}
+
+/* ══════════════════════════════════════════
+   SUMMARY BAR
+══════════════════════════════════════════ */
+.summary-bar{
+  display:grid;gap:2px;
+  background:var(--sage-d);border-radius:var(--r);overflow:hidden;
+  margin-top:32px;box-shadow:var(--sh-lg);
+}
+@media(min-width:640px){.summary-bar{grid-template-columns:repeat(4,1fr)}}
+.sb-cell{padding:20px 18px;text-align:center;background:var(--sage-d);border-bottom:1px solid rgba(255,255,255,.08)}
+@media(min-width:640px){.sb-cell{border-bottom:none;border-right:1px solid rgba(255,255,255,.08)}}
+.sb-cell:last-child{border:none}
+.sb-cell__label{font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:rgba(255,255,255,.55);margin-bottom:6px}
+.sb-cell__value{font-family:'Playfair Display',serif;font-size:1.8rem;font-weight:800;color:var(--yellow);line-height:1}
+.sb-cell__note{font-size:.75rem;color:rgba(255,255,255,.5);margin-top:3px}
+
+/* ══════════════════════════════════════════
+   TIPS & ALERTS
+══════════════════════════════════════════ */
+.alert{border-radius:var(--r);padding:18px 22px;margin-top:20px;font-size:.9rem;line-height:1.6}
+.alert--green{background:var(--sage-p);border-left:4px solid var(--sage);color:var(--ink-m)}
+.alert--yellow{background:var(--yellow-p);border-left:4px solid var(--yellow);color:var(--ink-m)}
+.alert--red{background:var(--red-p);border-left:4px solid var(--red);color:var(--ink-m)}
+.alert strong{color:var(--ink)}
+
+/* ══════════════════════════════════════════
+   SECTION DIVIDER
+══════════════════════════════════════════ */
+.sec-title{display:flex;align-items:center;gap:16px;margin-bottom:8px}
+.sec-title__num{
+  flex-shrink:0;width:42px;height:42px;background:var(--sage);color:#fff;
+  border-radius:50%;display:flex;align-items:center;justify-content:center;
+  font-family:'Playfair Display',serif;font-size:1.2rem;font-weight:700;
+}
+.sec-title h2{font-size:clamp(1.5rem,3.5vw,2rem);margin:0}
+
+/* NAV tabs */
+.tab-nav{
+  display:flex;gap:8px;flex-wrap:wrap;
+  position:sticky;top:0;z-index:50;
+  background:var(--bege);padding:12px 24px;
+  border-bottom:1px solid var(--bege-m);
+  max-width:100%;overflow-x:auto;
+}
+.tab-nav a{
+  flex-shrink:0;
+  display:inline-block;background:var(--white);color:var(--ink-m);
+  font-size:.78rem;font-weight:700;text-decoration:none;
+  padding:7px 16px;border-radius:50px;
+  border:1px solid var(--bege-m);
+  transition:.2s;white-space:nowrap;
+}
+.tab-nav a:hover{background:var(--sage);color:#fff;border-color:var(--sage)}
+
+/* PRINT NOTE */
+.print-note{
+  background:var(--ink);color:rgba(255,255,255,.7);
+  text-align:center;padding:12px 20px;font-size:.8rem;
+}
+.print-note strong{color:var(--yellow)}
+</style>
+</head>
+<body>
+
+<!-- PRINT NOTE -->
+<div class="print-note">
+  <strong>Do Mercado Pra Mesa</strong> — Sistema de Produtos · Use Ctrl+P para imprimir este documento como referência
+</div>
+
+<!-- NAV -->
+<nav class="tab-nav">
+  <a href="#matematica">A Conta</a>
+  <a href="#p1">Produto 1 — Checklist</a>
+  <a href="#p2">Produto 2 — Guia 7 Dias</a>
+  <a href="#p3">Produto 3 — Plano Mensal</a>
+  <a href="#roadmap">Roadmap 15 dias</a>
+</nav>
+
+<!-- MASTER HEADER -->
+<div class="master-header">
+  <div class="master-header__inner">
+    <div class="master-header__tag">🎯 Documento estratégico — uso interno</div>
+    <h1>Sistema de 3 Produtos<br/><em>Do Mercado Pra Mesa</em></h1>
+    <p>Arquitetura completa de produtos, copy, conteúdo e roadmap de execução para atingir R$2.000 em 15 dias.</p>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════
+     A MATEMÁTICA DOS R$2.000
+══════════════════════════════════════════ -->
+<section class="sec" id="matematica">
+  <div class="wrap">
+    <div class="sec-title">
+      <div class="sec-title__num">0</div>
+      <h2>A Matemática dos R$2.000 em 15 dias</h2>
+    </div>
+    <p class="lead">
+      Antes de produzir qualquer coisa, entenda o número exato que precisa
+      chegar. Com 3 produtos e conversão realista, a meta é alcançável
+      sem tráfego pago nos primeiros dias.
+    </p>
+
+    <div class="math-grid">
+      <div class="math-card">
+        <div class="math-card__icon">🟢</div>
+        <div>
+          <div class="math-card__label">Produto 1 — Checklist</div>
+          <div class="math-card__value">R$9</div>
+          <div class="math-card__desc">Meta: 30 vendas = R$270<br/>Isca barata que gera leads quentes</div>
+        </div>
+      </div>
+      <div class="math-card math-card--yellow">
+        <div class="math-card__icon">⭐</div>
+        <div>
+          <div class="math-card__label">Produto 2 — Guia 7 Dias</div>
+          <div class="math-card__value">R$37</div>
+          <div class="math-card__desc">Meta: 42 vendas = R$1.554<br/>Produto principal do funil</div>
+        </div>
+      </div>
+      <div class="math-card" style="border-color:var(--ink)">
+        <div class="math-card__icon">🚀</div>
+        <div>
+          <div class="math-card__label">Produto 3 — Plano Mensal</div>
+          <div class="math-card__value">R$57</div>
+          <div class="math-card__desc">Meta: 4 upsells = R$228<br/>~10% dos compradores do guia</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="math-equation">
+      <strong>30 × R$9</strong> (checklist) = R$270 &nbsp;+&nbsp;
+      <strong>42 × R$37</strong> (guia) = R$1.554 &nbsp;+&nbsp;
+      <strong>4 × R$57</strong> (upsell) = R$228
+      <br/>
+      <strong style="font-size:1.1rem;color:var(--sage-d)">TOTAL = R$2.052 em 15 dias ✓</strong>
+      <br/><span style="font-size:.82rem;color:var(--ink-s)">
+        Ou: 54 vendas só do Guia (R$37) = R$1.998. Você não precisa dos 3 ao mesmo tempo — mas
+        ter os 3 torna a meta muito mais fácil de bater.
+      </span>
+    </div>
+
+    <div class="alert alert--green" style="margin-top:20px">
+      <strong>📊 Benchmark real:</strong> Para 42 vendas em 15 dias você precisa de ~3 vendas/dia.
+      Com 500 seguidores no Instagram e 2 Reels por semana, isso é completamente viável no orgânico.
+      Com R$30/dia em anúncio Meta, você pode chegar em 5–8 vendas/dia.
+    </div>
+
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════════════════
+     PRODUTO 1 — CHECKLIST DO MERCADO
+══════════════════════════════════════════ -->
+<section class="sec" id="p1">
+  <div class="wrap">
+    <div class="sec-title">
+      <div class="sec-title__num">1</div>
+      <h2>Produto 1 — Checklist do Mercado</h2>
+    </div>
+
+    <div class="product">
+      <div class="product__hd product__hd--p1">
+        <div>
+          <div class="product__tier">Produto de entrada · Tripwire</div>
+          <div class="product__name">Lista de Compras Inteligente<br/>para 7 Dias com R$120</div>
+          <div class="product__tagline">O único checklist que você precisa levar no celular quando for ao mercado — e não gastar um centavo a mais.</div>
+        </div>
+        <div class="product__price-box">
+          <div class="product__from">De R$19</div>
+          <div class="product__price"><sup>R$</sup>9</div>
+          <div class="product__qty">Meta: 30 vendas</div>
+        </div>
+      </div>
+
+      <div class="product__body">
+        <div class="product__promise">
+          💬 Promessa: "Você nunca mais vai ao mercado sem saber o que comprar. Esta lista organiza cada item, cada quantidade e cada categoria — tudo calculado para durar os 7 dias inteiros dentro do orçamento de R$120."
+        </div>
+
+        <div class="product__cols product__cols--3">
+
+          <div class="pcol">
+            <h4>Conteúdo — página por página</h4>
+            <ul class="plist">
+              <li><span class="bul">✓</span><div><strong>Pág 1 — Capa</strong><br/>Título + instrução de uso (imprima ou salve no celular)</div></li>
+              <li><span class="bul">✓</span><div><strong>Pág 2 — Hortifruti</strong><br/>Cenoura 500g · Chuchu 2un · Tomate 500g · Cebola 500g · Alho 1 cabeça · Banana 6un · Batata 500g</div></li>
+              <li><span class="bul">✓</span><div><strong>Pág 3 — Proteínas</strong><br/>Frango (coxa/sobrecoxa) 1kg · Ovos 12un · Sardinha em lata 2un · Feijão carioca 500g</div></li>
+              <li><span class="bul">✓</span><div><strong>Pág 4 — Grãos e Carbos</strong><br/>Arroz 1kg · Macarrão 500g · Aveia 500g · Pão de forma 1 pacote</div></li>
+              <li><span class="bul">✓</span><div><strong>Pág 5 — Laticínios e Outros</strong><br/>Leite 1L · Margarina 500g · Queijo muçarela fatiado 150g</div></li>
+              <li><span class="bul">✓</span><div><strong>Pág 6 — Temperos</strong><br/>Óleo 500ml · Sal · Alho em pó · Colorau · Vinagre</div></li>
+              <li><span class="bul">✓</span><div><strong>Pág 7 — Totalizador</strong><br/>Custo estimado por item + total geral ≤ R$120 + checkbox marcável</div></li>
+              <li><span class="bul">✓</span><div><strong>Pág 8 — Bônus CTA</strong><br/>"Agora que você tem o que comprar, quer saber o que cozinhar em cada dia?"</div></li>
+            </ul>
+          </div>
+
+          <div class="pcol">
+            <h4>Formato e produção</h4>
+            <div class="badge-row" style="margin-bottom:14px">
+              <span class="badge--green badge">PDF 8 páginas</span>
+              <span class="badge--green badge">A4 vertical</span>
+              <span class="badge--yellow badge">Canva grátis</span>
+              <span class="badge">Imprimível</span>
+              <span class="badge">Funciona no celular</span>
+            </div>
+            <ul class="plist">
+              <li><span class="bul">✓</span>Produção: 3–4 horas no Canva</li>
+              <li><span class="bul">✓</span>Fonte grande para leitura no celular no mercado</li>
+              <li><span class="bul">✓</span>Checkbox ao lado de cada item (☐)</li>
+              <li><span class="bul">✓</span>Cor por categoria para identificar rápido</li>
+              <li><span class="bul">✓</span>Última página: foto real do carrinho + total da nota</li>
+            </ul>
+            <div style="margin-top:16px">
+              <h4>Diferenciais</h4>
+              <ul class="plist">
+                <li><span class="bul">✓</span>Único produto do gênero com custo por item detalhado</li>
+                <li><span class="bul">✓</span>Dica: onde comprar cada item mais barato (feira vs. mercado vs. atacadão)</li>
+                <li><span class="bul">✓</span>Versão light para feira e versão completa para supermercado</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="pcol">
+            <h4>Papel no funil</h4>
+            <ul class="plist">
+              <li><span class="bul">✓</span><strong>Entrada de baixo atrito</strong> — R$9 elimina a objeção de preço</li>
+              <li><span class="bul">✓</span>Captura o e-mail automaticamente na Hotmart/Kiwify</li>
+              <li><span class="bul">✓</span>Cria confiança antes de oferecer o guia de R$37</li>
+              <li><span class="bul">✓</span>CTA direto na última página leva para o Produto 2</li>
+              <li><span class="bul">✓</span>Meta de conversão: 15% dos que veem o checklist compram o Guia</li>
+            </ul>
+            <div style="margin-top:16px">
+              <h4>Onde vender</h4>
+              <ul class="plist">
+                <li><span class="bul">✓</span>Link na bio do Instagram</li>
+                <li><span class="bul">✓</span>Story com enquete: "você sabe quanto gasta por item?"</li>
+                <li><span class="bul">✓</span>Grupos de faculdade / repúblicas no WhatsApp</li>
+                <li><span class="bul">✓</span>Oferta de "R$9 só hoje" com contador</li>
+              </ul>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- COPY PRONTO -->
+        <div class="product__copy">
+          <h4>📝 Copy pronto — Post do Instagram</h4>
+          <div class="headline">"Quanto você gasta no mercado e ainda sai sem comida pra semana inteira? 🛒"</div>
+          <p>
+            Esse era eu toda semana. Até montar a lista certa de uma vez por todas.<br/><br/>
+            Criei um checklist com <strong>tudo que você precisa comprar</strong> para 7 dias de comida
+            por R$120 — separado por categoria, com quantidade e custo de cada item.<br/><br/>
+            Você leva no celular, vai marcando enquanto pega e sai do mercado
+            sem gastar além do que planejou.<br/><br/>
+            📥 R$9 só. Link na bio.<br/>
+            (Tem screenshot da nota fiscal lá dentro pra você ver que é real)
+          </p>
+        </div>
+
+        <div class="product__funnel-note">
+          <div class="icon">⚡</div>
+          <p><strong>Gatilho de upsell automático:</strong> Ao entregar o checklist, a plataforma (Hotmart/Kiwify)
+          mostra automaticamente: <em>"Espera! Você tem a lista. Agora quer saber o que cozinhar
+          em cada dia da semana, com receitas prontas? Guia completo por R$37 →"</em></p>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════════════════
+     PRODUTO 2 — GUIA 7 DIAS
+══════════════════════════════════════════ -->
+<section class="sec" id="p2">
+  <div class="wrap">
+    <div class="sec-title">
+      <div class="sec-title__num">2</div>
+      <h2>Produto 2 — Guia 7 Dias de Comida com R$120</h2>
+    </div>
+
+    <div class="product">
+      <div class="product__hd product__hd--p2">
+        <div>
+          <div class="product__tier">Produto principal · Low Ticket</div>
+          <div class="product__name">7 Dias de Comida com R$120<br/>— Guia Completo</div>
+          <div class="product__tagline">Cardápio de 7 dias, lista de compras, 10 receitas rápidas e dicas de economia. Tudo junto. Você só executa.</div>
+        </div>
+        <div class="product__price-box">
+          <div class="product__from">De R$67</div>
+          <div class="product__price"><sup>R$</sup>37</div>
+          <div class="product__qty">Meta: 42 vendas = R$1.554</div>
+        </div>
+      </div>
+
+      <div class="product__body">
+        <div class="product__promise">
+          💬 Promessa: "Em 7 dias você vai comer melhor do que come hoje, gastar menos do que gasta, e ainda sobrar dinheiro no final da semana. Garantido — ou devolvemos tudo."
+        </div>
+
+        <!-- MOCK PAGES -->
+        <h4 style="font-size:.72rem;text-transform:uppercase;letter-spacing:.12em;color:var(--ink-s);margin-bottom:14px;font-family:'Lato',sans-serif;font-weight:800">
+          Estrutura do PDF — 36 páginas
+        </h4>
+        <div class="mockup-pages">
+          <div class="mockup-page" style="border-color:var(--sage)">
+            <div class="mockup-page__num">Pág 1</div>
+            <div class="mockup-page__title">Capa</div>
+            <div class="mockup-page__lines">
+              <div class="mockup-page__line"></div>
+              <div class="mockup-page__line--short mockup-page__line"></div>
+              <div class="mockup-page__line--med mockup-page__line"></div>
+            </div>
+          </div>
+          <div class="mockup-page">
+            <div class="mockup-page__num">Pág 2</div>
+            <div class="mockup-page__title">Carta do Autor</div>
+            <div class="mockup-page__lines">
+              <div class="mockup-page__line"></div>
+              <div class="mockup-page__line--med mockup-page__line"></div>
+              <div class="mockup-page__line"></div>
+              <div class="mockup-page__line--short mockup-page__line"></div>
+            </div>
+          </div>
+          <div class="mockup-page">
+            <div class="mockup-page__num">Pág 3–5</div>
+            <div class="mockup-page__title">Lista de Compras Completa</div>
+            <div class="mockup-page__lines">
+              <div class="mockup-page__line"></div>
+              <div class="mockup-page__line--med mockup-page__line"></div>
+              <div class="mockup-page__line"></div>
+              <div class="mockup-page__line--short mockup-page__line"></div>
+            </div>
+          </div>
+          <div class="mockup-page" style="border-color:var(--yellow)">
+            <div class="mockup-page__num">Pág 6–12</div>
+            <div class="mockup-page__title">Cardápio 7 Dias</div>
+            <div class="mockup-page__lines">
+              <div class="mockup-page__line"></div>
+              <div class="mockup-page__line--med mockup-page__line"></div>
+              <div class="mockup-page__line"></div>
+              <div class="mockup-page__line--short mockup-page__line"></div>
+            </div>
+          </div>
+          <div class="mockup-page">
+            <div class="mockup-page__num">Pág 13–28</div>
+            <div class="mockup-page__title">10 Receitas Passo a Passo</div>
+            <div class="mockup-page__lines">
+              <div class="mockup-page__line"></div>
+              <div class="mockup-page__line--med mockup-page__line"></div>
+              <div class="mockup-page__line"></div>
+            </div>
+          </div>
+          <div class="mockup-page">
+            <div class="mockup-page__num">Pág 29–32</div>
+            <div class="mockup-page__title">Dicas de Economia</div>
+            <div class="mockup-page__lines">
+              <div class="mockup-page__line"></div>
+              <div class="mockup-page__line--short mockup-page__line"></div>
+              <div class="mockup-page__line--med mockup-page__line"></div>
+            </div>
+          </div>
+          <div class="mockup-page">
+            <div class="mockup-page__num">Pág 33–35</div>
+            <div class="mockup-page__title">Tabela de Substituições</div>
+            <div class="mockup-page__lines">
+              <div class="mockup-page__line"></div>
+              <div class="mockup-page__line"></div>
+              <div class="mockup-page__line--short mockup-page__line"></div>
+            </div>
+          </div>
+          <div class="mockup-page" style="border-color:var(--ink)">
+            <div class="mockup-page__num">Pág 36</div>
+            <div class="mockup-page__title">Página Final + Upsell</div>
+            <div class="mockup-page__lines">
+              <div class="mockup-page__line--med mockup-page__line"></div>
+              <div class="mockup-page__line--short mockup-page__line"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="product__cols" style="margin-top:28px">
+
+          <div class="pcol">
+            <h4>Conteúdo detalhado do cardápio</h4>
+            <ul class="plist">
+              <li><span class="bul">✓</span><div><strong>Segunda:</strong> Café — aveia com banana · Almoço — arroz, feijão, frango refogado, salada · Jantar — omelete de queijo</div></li>
+              <li><span class="bul">✓</span><div><strong>Terça:</strong> Café — pão com margarina e ovo · Almoço — macarrão com frango · Jantar — sopa de legumes</div></li>
+              <li><span class="bul">✓</span><div><strong>Quarta:</strong> Café — vitamina de banana · Almoço — arroz, feijão, sardinha refogada · Jantar — farofa com ovo</div></li>
+              <li><span class="bul">✓</span><div><strong>Quinta:</strong> Café — pão com queijo · Almoço — arroz, feijão, frango ao molho · Jantar — omelete com legumes</div></li>
+              <li><span class="bul">✓</span><div><strong>Sexta:</strong> Café — aveia com leite · Almoço — macarrão ao alho e óleo com frango · Jantar — sopa restante</div></li>
+              <li><span class="bul">✓</span><div><strong>Sábado:</strong> Café — pão com ovo mexido · Almoço — arroz, feijão, bife acebolado · Jantar — batata cozida com sardinha</div></li>
+              <li><span class="bul">✓</span><div><strong>Domingo:</strong> Café — vitamina · Almoço — frango assado com batata · Jantar — arroz, feijão, ovo estrelado</div></li>
+            </ul>
+          </div>
+
+          <div class="pcol">
+            <h4>As 10 receitas do guia</h4>
+            <ul class="plist">
+              <li><span class="bul">✓</span><strong>Frango refogado básico</strong> — 20 min — R$4,50 por porção</li>
+              <li><span class="bul">✓</span><strong>Feijão temperado do zero</strong> — 30 min — R$1,80/porção</li>
+              <li><span class="bul">✓</span><strong>Omelete fácil 3 formas</strong> — 10 min — R$1,20/porção</li>
+              <li><span class="bul">✓</span><strong>Macarrão ao alho e óleo</strong> — 15 min — R$2,00/porção</li>
+              <li><span class="bul">✓</span><strong>Sopa de legumes econômica</strong> — 25 min — R$1,50/porção</li>
+              <li><span class="bul">✓</span><strong>Vitamina de banana com aveia</strong> — 5 min — R$0,90/porção</li>
+              <li><span class="bul">✓</span><strong>Sardinha refogada com tomate</strong> — 10 min — R$1,40/porção</li>
+              <li><span class="bul">✓</span><strong>Arroz soltinho sempre</strong> — 20 min — R$0,80/porção</li>
+              <li><span class="bul">✓</span><strong>Frango assado no forno</strong> — 45 min — R$5,00/porção</li>
+              <li><span class="bul">✓</span><strong>Farofa simples com ovos</strong> — 10 min — R$1,10/porção</li>
+            </ul>
+          </div>
+
+        </div>
+
+        <!-- COPY PRONTO -->
+        <div class="product__copy">
+          <h4>📝 Copy pronto — Headline da landing page e DM de venda</h4>
+          <div class="headline">"Você passa a semana sem saber o que comer — mesmo tendo ido ao mercado."</div>
+          <p>
+            Isso acontece porque ninguém nunca te ensinou a planejar a alimentação com pouco dinheiro.
+            Não é culpa sua.<br/><br/>
+            O guia <strong>7 Dias de Comida com R$120</strong> resolve isso de uma vez.
+            Você recebe o cardápio da semana inteira, a lista de compras pronta e as receitas
+            passo a passo — tudo em um único PDF que você abre no celular.<br/><br/>
+            <strong>R$37. Acesso imediato. 7 dias de garantia.</strong><br/>
+            Se não funcionar, você pede o dinheiro de volta. Simples assim.
+          </p>
+        </div>
+
+        <div class="product__funnel-note">
+          <div class="icon">⚡</div>
+          <p><strong>Upsell na página de obrigado:</strong> <em>"Parabéns! Seu guia chegou no e-mail.
+          Uma coisa antes de fechar: semana que vem você vai querer continuar.
+          O <strong>Plano Mensal</strong> tem 30 dias completos — por só R$57 a mais.
+          Aparece só aqui, agora."</em></p>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════════════════
+     PRODUTO 3 — PLANO MENSAL
+══════════════════════════════════════════ -->
+<section class="sec" id="p3">
+  <div class="wrap">
+    <div class="sec-title">
+      <div class="sec-title__num">3</div>
+      <h2>Produto 3 — Plano Mensal 30 Dias</h2>
+    </div>
+
+    <div class="product">
+      <div class="product__hd product__hd--p3">
+        <div>
+          <div class="product__tier">Upsell · Produto avançado</div>
+          <div class="product__name">30 Dias de Comida Planejada<br/>— Plano Mensal Completo</div>
+          <div class="product__tagline">O mês inteiro organizado: 4 semanas diferentes, 30+ receitas, 4 listas de compras e acesso ao grupo privado com suporte direto.</div>
+        </div>
+        <div class="product__price-box">
+          <div class="product__from">De R$97</div>
+          <div class="product__price"><sup>R$</sup>57</div>
+          <div class="product__qty">Meta: 4 upsells = R$228</div>
+        </div>
+      </div>
+
+      <div class="product__body">
+        <div class="product__promise">
+          💬 Promessa: "Um mês inteiro sem precisar pensar 'o que vou comer hoje?'. Quatro semanas de cardápio, quatro listas de compras e um grupo onde você tira dúvidas diretamente comigo."
+        </div>
+
+        <div class="product__cols">
+          <div class="pcol">
+            <h4>O que está incluso</h4>
+            <ul class="plist">
+              <li><span class="bul">✓</span><div><strong>4 cardápios semanais diferentes</strong> — sem repetir a mesma semana</div></li>
+              <li><span class="bul">✓</span><div><strong>4 listas de compras</strong> — uma por semana, cada uma ≤ R$120</div></li>
+              <li><span class="bul">✓</span><div><strong>30+ receitas</strong> — além das 10 do guia principal. Mais variedade, mesma simplicidade.</div></li>
+              <li><span class="bul">✓</span><div><strong>Guia de batch cooking</strong> — como preparar as proteínas e grãos da semana em 1 hora no domingo</div></li>
+              <li><span class="bul">✓</span><div><strong>Planilha de controle de gastos</strong> — Google Sheets editável para acompanhar quanto gastou vs. o planejado</div></li>
+              <li><span class="bul">✓</span><div><strong>Grupo WhatsApp privado 30 dias</strong> — tira dúvidas direto, recebe receitas extras, prints reais de compras</div></li>
+            </ul>
+          </div>
+
+          <div class="pcol">
+            <h4>Por que funciona como upsell</h4>
+            <ul class="plist">
+              <li><span class="bul">✓</span>Cliente acabou de comprar o Guia — está 100% engajado com o problema</li>
+              <li><span class="bul">✓</span>Pergunta natural na cabeça dele: <em>"e semana que vem?"</em></li>
+              <li><span class="bul">✓</span>R$57 parece pequeno comparado ao valor percebido de um mês organizado</li>
+              <li><span class="bul">✓</span>Grupo WhatsApp cria percepção de exclusividade e suporte</li>
+              <li><span class="bul">✓</span>Taxa de conversão esperada: 8–12% dos compradores do guia</li>
+            </ul>
+            <div style="margin-top:16px">
+              <h4>Como produzir em 1 dia</h4>
+              <ul class="plist">
+                <li><span class="bul">✓</span>Replique a estrutura do Guia × 4 semanas</li>
+                <li><span class="bul">✓</span>Varie os ingredientes dentro do mesmo orçamento</li>
+                <li><span class="bul">✓</span>Planilha: copie um template gratuito do Google Sheets</li>
+                <li><span class="bul">✓</span>Grupo: crie no WhatsApp e adicione manualmente por 30 dias</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="product__copy">
+          <h4>📝 Copy pronto — Página de obrigado (upsell)</h4>
+          <div class="headline">"Você fez a parte mais difícil: decidiu mudar. Agora vai até o fim do mês?"</div>
+          <p>
+            Seu Guia dos 7 Dias já está no seu e-mail.<br/><br/>
+            Mas a realidade é que na semana 2 você vai querer continuar — e não vai ter o cardápio pronto.
+            Por isso criamos o <strong>Plano Mensal: 30 dias de alimentação planejada</strong>,
+            com 4 semanas diferentes, 30+ receitas e acesso ao nosso grupo privado por 30 dias.<br/><br/>
+            Você comprou o Guia por R$37. Por <strong>R$57 a mais você garante o mês inteiro</strong>
+            — sem precisar se preocupar com isso de novo.<br/><br/>
+            <strong>⚠️ Essa oferta aparece só aqui, só agora. Depois volta ao preço de R$97.</strong>
+          </p>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════════════════
+     ROADMAP 15 DIAS
+══════════════════════════════════════════ -->
+<section class="sec" id="roadmap">
+  <div class="wrap">
+    <div class="sec-title">
+      <div class="sec-title__num">4</div>
+      <h2>Roadmap de 15 Dias — Meta R$2.000</h2>
+    </div>
+    <p class="lead">
+      Cada dia tem uma tarefa principal. Sem lista longa. Sem paralisia.
+      Uma coisa por vez, na ordem certa.
+    </p>
+
+    <div class="roadmap">
+
+      <!-- FASE 1 -->
+      <div class="phase">
+        <div class="phase__header">
+          <div>
+            <div class="phase__title">Fase 1 — Dias 1 a 4: Construir</div>
+            <div style="color:rgba(255,255,255,.65);font-size:.82rem;margin-top:2px">Produto no ar antes de qualquer venda</div>
+          </div>
+          <div class="phase__goal">Meta: R$0 (investimento de tempo)</div>
+        </div>
+        <div class="phase__days">
+          <div class="phase__day">
+            <div class="phase__day-num">1</div>
+            <div class="phase__day-content">
+              <div class="phase__day-label">Produto 1 — Checklist</div>
+              <div class="phase__day-tasks">
+                <span>Escrever a lista de compras completa com quantidades e preços estimados</span>
+                <span>Montar no Canva (template simples, 8 páginas)</span>
+                <span>Exportar PDF e testar no celular — está legível?</span>
+                <span>Subir na Hotmart ou Kiwify por R$9</span>
+              </div>
+            </div>
+            <div class="phase__day-kpi">
+              <div class="k-val">4h</div>
+              <div class="k-label">de trabalho</div>
+            </div>
+          </div>
+          <div class="phase__day">
+            <div class="phase__day-num">2</div>
+            <div class="phase__day-content">
+              <div class="phase__day-label">Produto 2 — Guia (conteúdo)</div>
+              <div class="phase__day-tasks">
+                <span>Escrever o cardápio dos 7 dias (café + almoço + jantar por dia)</span>
+                <span>Escrever as 10 receitas — passo a passo direto, sem enrolação</span>
+                <span>Escrever a seção de dicas de economia (5 dicas práticas)</span>
+              </div>
+            </div>
+            <div class="phase__day-kpi">
+              <div class="k-val">6h</div>
+              <div class="k-label">de trabalho</div>
+            </div>
+          </div>
+          <div class="phase__day">
+            <div class="phase__day-num">3</div>
+            <div class="phase__day-content">
+              <div class="phase__day-label">Produto 2 — Guia (design + vídeos)</div>
+              <div class="phase__day-tasks">
+                <span>Montar o PDF no Canva (reuse o estilo do checklist)</span>
+                <span>Subir na Hotmart/Kiwify por R$37 com upsell configurado</span>
+                <span>Gravar vídeo 1 (tour pelo guia, 5 min) e vídeo 2 (mercado real, 8 min)</span>
+              </div>
+            </div>
+            <div class="phase__day-kpi">
+              <div class="k-val">7h</div>
+              <div class="k-label">de trabalho</div>
+            </div>
+          </div>
+          <div class="phase__day">
+            <div class="phase__day-num">4</div>
+            <div class="phase__day-content">
+              <div class="phase__day-label">Infraestrutura + Landing Page</div>
+              <div class="phase__day-tasks">
+                <span>Subir landing page no GitHub Pages (arquivo já pronto)</span>
+                <span>Testar fluxo completo: clique → checkout → entrega do produto</span>
+                <span>Gravar vídeo 3 (cozinhando 3 refeições, 6 min) e editar no CapCut</span>
+                <span>Criar highlights no Instagram: "depoimentos" + "mercado"</span>
+              </div>
+            </div>
+            <div class="phase__day-kpi">
+              <div class="k-val">5h</div>
+              <div class="k-label">de trabalho</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- FASE 2 -->
+      <div class="phase">
+        <div class="phase__header">
+          <div>
+            <div class="phase__title">Fase 2 — Dias 5 a 8: Lançar no orgânico</div>
+            <div style="color:rgba(255,255,255,.65);font-size:.82rem;margin-top:2px">Rede pessoal + Instagram + grupos</div>
+          </div>
+          <div class="phase__goal">Meta acumulada: R$500</div>
+        </div>
+        <div class="phase__days">
+          <div class="phase__day">
+            <div class="phase__day-num">5</div>
+            <div class="phase__day-content">
+              <div class="phase__day-label">🚀 DIA DO LANÇAMENTO</div>
+              <div class="phase__day-tasks">
+                <span>Post no feed: foto real das compras + copy direto sobre o checklist (R$9)</span>
+                <span>3 stories: um com enquete ("você sabe quanto custa cada item?"), um com o problema, um com CTA</span>
+                <span>Mensagem direta para 30 contatos que se encaixam no público</span>
+                <span>Postar em 3–5 grupos de faculdade / repúblicas no WhatsApp</span>
+              </div>
+            </div>
+            <div class="phase__day-kpi">
+              <div class="k-val">R$90</div>
+              <div class="k-label">meta do dia</div>
+            </div>
+          </div>
+          <div class="phase__day">
+            <div class="phase__day-num">6</div>
+            <div class="phase__day-content">
+              <div class="phase__day-label">Reels + Oferta do Guia</div>
+              <div class="phase__day-tasks">
+                <span>Publicar Reels 1: filmagem real no mercado com narração do processo</span>
+                <span>Post no feed: oferta do Guia completo (R$37) com copy do problema principal</span>
+                <span>Responder todos os comentários e DMs com atenção real</span>
+              </div>
+            </div>
+            <div class="phase__day-kpi">
+              <div class="k-val">R$150</div>
+              <div class="k-label">meta do dia</div>
+            </div>
+          </div>
+          <div class="phase__day">
+            <div class="phase__day-num">7</div>
+            <div class="phase__day-content">
+              <div class="phase__day-label">Prova Social</div>
+              <div class="phase__day-tasks">
+                <span>Pedir print de feedback para os primeiros compradores via WhatsApp</span>
+                <span>Repostar depoimento nos stories (mesmo que seja texto simples)</span>
+                <span>Publicar Reels 2: montando o cardápio da semana — "o que vou comer"</span>
+              </div>
+            </div>
+            <div class="phase__day-kpi">
+              <div class="k-val">R$150</div>
+              <div class="k-label">meta do dia</div>
+            </div>
+          </div>
+          <div class="phase__day">
+            <div class="phase__day-num">8</div>
+            <div class="phase__day-content">
+              <div class="phase__day-label">Revisão e ajuste</div>
+              <div class="phase__day-tasks">
+                <span>Analisar: qual conteúdo gerou mais cliques no link?</span>
+                <span>Ajustar botão ou headline da landing page se conversão estiver baixa</span>
+                <span>Enviar e-mail para lista (compradores do checklist) com oferta do guia</span>
+              </div>
+            </div>
+            <div class="phase__day-kpi">
+              <div class="k-val">R$110</div>
+              <div class="k-label">meta do dia</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- FASE 3 -->
+      <div class="phase">
+        <div class="phase__header">
+          <div>
+            <div class="phase__title">Fase 3 — Dias 9 a 12: Ampliar com anúncio</div>
+            <div style="color:rgba(255,255,255,.65);font-size:.82rem;margin-top:2px">Meta Ads simples + upsell ativado</div>
+          </div>
+          <div class="phase__goal">Meta acumulada: R$1.400</div>
+        </div>
+        <div class="phase__days">
+          <div class="phase__day">
+            <div class="phase__day-num">9</div>
+            <div class="phase__day-content">
+              <div class="phase__day-label">Criar anúncio Meta Ads</div>
+              <div class="phase__day-tasks">
+                <span>Criar campanha simples no Meta Ads — objetivo: tráfego para a landing page</span>
+                <span>Criativo: print do depoimento + headline "7 dias de comida com R$120"</span>
+                <span>Orçamento: R$20/dia. Público: 18–28 anos, Brasil, interesses em alimentação/economia</span>
+                <span>Configurar Produto 3 (Plano Mensal) na página de obrigado do Guia</span>
+              </div>
+            </div>
+            <div class="phase__day-kpi">
+              <div class="k-val">R$200</div>
+              <div class="k-label">meta do dia</div>
+            </div>
+          </div>
+          <div class="phase__day">
+            <div class="phase__day-num">10</div>
+            <div class="phase__day-content">
+              <div class="phase__day-label">Monitorar + escalar</div>
+              <div class="phase__day-tasks">
+                <span>Checar CTR e CPC do anúncio — se CTR > 2%, aumentar orçamento para R$30</span>
+                <span>Publicar Reels 3: comparativo — "semana sem plano vs. semana com plano"</span>
+                <span>Novo post no feed com depoimento de cliente real</span>
+              </div>
+            </div>
+            <div class="phase__day-kpi">
+              <div class="k-val">R$220</div>
+              <div class="k-label">meta do dia</div>
+            </div>
+          </div>
+          <div class="phase__day">
+            <div class="phase__day-num">11</div>
+            <div class="phase__day-content">
+              <div class="phase__day-label">Upsell + E-mail marketing</div>
+              <div class="phase__day-tasks">
+                <span>E-mail para todos os compradores do Guia: oferta do Plano Mensal (R$57)</span>
+                <span>Stories mostrando o que está dentro do Plano Mensal — uma semana por slide</span>
+                <span>DM para os compradores que engajaram mais: pergunta sobre experiência + oferta</span>
+              </div>
+            </div>
+            <div class="phase__day-kpi">
+              <div class="k-val">R$200</div>
+              <div class="k-label">meta do dia</div>
+            </div>
+          </div>
+          <div class="phase__day">
+            <div class="phase__day-num">12</div>
+            <div class="phase__day-content">
+              <div class="phase__day-label">Reels viral + novo público</div>
+              <div class="phase__day-tasks">
+                <span>Publicar Reels 4: "fui ao mercado com R$120 — veja o que comprei" (filmagem real)</span>
+                <span>Boost deste Reels por R$15 para ampliar alcance</span>
+                <span>Criar novo post: "para quem é e para quem NÃO é" — segmenta o público</span>
+              </div>
+            </div>
+            <div class="phase__day-kpi">
+              <div class="k-val">R$230</div>
+              <div class="k-label">meta do dia</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- FASE 4 -->
+      <div class="phase">
+        <div class="phase__header">
+          <div>
+            <div class="phase__title">Fase 4 — Dias 13 a 15: Fechar a meta</div>
+            <div style="color:rgba(255,255,255,.65);font-size:.82rem;margin-top:2px">Urgência + escassez + fechamento</div>
+          </div>
+          <div class="phase__goal">Meta final: R$2.000+</div>
+        </div>
+        <div class="phase__days">
+          <div class="phase__day">
+            <div class="phase__day-num">13</div>
+            <div class="phase__day-content">
+              <div class="phase__day-label">Urgência na oferta</div>
+              <div class="phase__day-tasks">
+                <span>Mudar landing page: adicionar "Oferta encerra domingo" + preço de R$47 (sobe após prazo)</span>
+                <span>Stories com contador regressivo de 48h</span>
+                <span>E-mail: "últimas 48 horas para o preço de lançamento"</span>
+              </div>
+            </div>
+            <div class="phase__day-kpi">
+              <div class="k-val">R$300</div>
+              <div class="k-label">meta do dia</div>
+            </div>
+          </div>
+          <div class="phase__day">
+            <div class="phase__day-num">14</div>
+            <div class="phase__day-content">
+              <div class="phase__day-label">Último dia de lançamento</div>
+              <div class="phase__day-tasks">
+                <span>3 stories: manhã (lembrete), tarde (depoimento), noite (última chance)</span>
+                <span>Post no feed: "amanhã o preço sobe para R$47" — copy direto e sem drama</span>
+                <span>DM para quem salvou o post ou clicou mas não comprou: pergunta + oferta pessoal</span>
+              </div>
+            </div>
+            <div class="phase__day-kpi">
+              <div class="k-val">R$350</div>
+              <div class="k-label">meta do dia</div>
+            </div>
+          </div>
+          <div class="phase__day">
+            <div class="phase__day-num">15</div>
+            <div class="phase__day-content">
+              <div class="phase__day-label">🏁 Fechamento + contagem</div>
+              <div class="phase__day-tasks">
+                <span>Subir preço para R$47 (mantém o produto no ar, mas encerra o lançamento)</span>
+                <span>Somar receita total: Produto 1 + Produto 2 + Produto 3</span>
+                <span>Entrevistar 3 compradores: o que funcionou, o que falta, ideia para próximo produto</span>
+                <span>Planejar mês 2 com base nos dados reais de conversão</span>
+              </div>
+            </div>
+            <div class="phase__day-kpi">
+              <div class="k-val">R$2k</div>
+              <div class="k-label">meta total</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- SUMMARY BAR -->
+    <div class="summary-bar">
+      <div class="sb-cell">
+        <div class="sb-cell__label">Produto 1</div>
+        <div class="sb-cell__value">R$270</div>
+        <div class="sb-cell__note">30 × R$9</div>
+      </div>
+      <div class="sb-cell">
+        <div class="sb-cell__label">Produto 2</div>
+        <div class="sb-cell__value">R$1.554</div>
+        <div class="sb-cell__note">42 × R$37</div>
+      </div>
+      <div class="sb-cell">
+        <div class="sb-cell__label">Produto 3</div>
+        <div class="sb-cell__value">R$228</div>
+        <div class="sb-cell__note">4 × R$57</div>
+      </div>
+      <div class="sb-cell">
+        <div class="sb-cell__label">Total 15 dias</div>
+        <div class="sb-cell__value">R$2.052</div>
+        <div class="sb-cell__note">Meta: atingida ✓</div>
+      </div>
+    </div>
+
+    <div class="alert alert--yellow" style="margin-top:20px">
+      <strong>⚡ Caminho mais curto para R$2.000:</strong> Se só o Produto 2 vender, você precisa de
+      54 vendas × R$37. São 3,6 vendas por dia durante 15 dias.
+      Com 1.000 seguidores engajados no Instagram, isso é completamente realista com 2 Reels por semana
+      e stories diários. Sem precisar de anúncio pago no começo.
+    </div>
+
+    <div class="alert alert--red" style="margin-top:12px">
+      <strong>⛔ O que mata o resultado:</strong> Perfeicionismo no design, esperar ter mais seguidores,
+      não pedir depoimento para os primeiros compradores, e não fazer stories todos os dias.
+      O produto simples que está no ar vende. O produto perfeito que nunca saiu não vende nada.
+    </div>
+
+  </div>
+</section>
+
+</body>
+</html>

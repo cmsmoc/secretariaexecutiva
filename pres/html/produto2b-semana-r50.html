@@ -1,0 +1,1279 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"/>
+<title>Como Comer a Semana Inteira com R$50</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;800&family=Lato:wght@300;400;600;700;900&display=swap" rel="stylesheet"/>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Lato', sans-serif;
+    background: #fff;
+    color: #1e1e1e;
+    line-height: 1.65;
+  }
+
+  :root {
+    --black: #111111;
+    --dark: #1e1e1e;
+    --dark-m: #2d2d2d;
+    --yellow: #e8c547;
+    --yellow-pale: #fdf6d8;
+    --green: #2e5e3e;
+    --green-pale: #dff0e6;
+    --bege: #f5f2ed;
+    --bege-m: #ebe5db;
+    --ink-s: #6b6b6b;
+    --border: #ddd8ce;
+    --red: #c0392b;
+    --red-pale: #fdecea;
+  }
+
+  .page {
+    width: 210mm;
+    min-height: 297mm;
+    margin: 0 auto;
+    padding: 16mm 18mm 14mm 18mm;
+    background: #fff;
+    page-break-after: always;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .page:last-child { page-break-after: auto; }
+
+  @media print {
+    * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    body { background: #fff; }
+    .page {
+      width: 210mm;
+      min-height: 297mm;
+      margin: 0;
+      padding: 16mm 18mm 14mm 18mm;
+      page-break-after: always;
+      box-shadow: none;
+    }
+    .page:last-child { page-break-after: auto; }
+    @page { size: A4; margin: 0; }
+  }
+
+  @media screen {
+    body { background: #cccccc; padding: 20px 0; }
+    .page { box-shadow: 0 4px 30px rgba(0,0,0,0.2); margin: 20px auto; }
+  }
+
+  /* CAPA AGRESSIVA */
+  .capa {
+    background: var(--black);
+    width: 210mm;
+    min-height: 297mm;
+    margin: 0 auto;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .capa-stripe {
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 8px;
+    background: var(--yellow);
+  }
+
+  .capa-stripe-bottom {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 8px;
+    background: var(--yellow);
+  }
+
+  .capa-side-accent {
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 4px;
+    background: var(--yellow);
+  }
+
+  .capa-inner {
+    position: relative;
+    z-index: 1;
+    padding: 22mm 18mm;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+
+  .capa-brand {
+    display: inline-block;
+    border: 1.5px solid rgba(255,255,255,0.2);
+    color: rgba(255,255,255,0.6);
+    font-size: 7.5pt;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    padding: 4px 12px;
+    border-radius: 3px;
+    margin-bottom: 16mm;
+    width: fit-content;
+  }
+
+  .capa-flag {
+    display: inline-block;
+    background: var(--yellow);
+    color: var(--black);
+    font-size: 8pt;
+    font-weight: 900;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 5px 14px;
+    border-radius: 0;
+    margin-bottom: 8px;
+  }
+
+  .capa h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: 36pt;
+    color: #fff;
+    line-height: 1.05;
+    font-weight: 800;
+    margin-bottom: 8px;
+  }
+
+  .capa h1 em { color: var(--yellow); font-style: italic; }
+
+  .capa-sub {
+    font-size: 10.5pt;
+    color: rgba(255,255,255,0.55);
+    font-weight: 300;
+    line-height: 1.55;
+    margin-bottom: 10mm;
+    max-width: 150mm;
+  }
+
+  .capa-tagline {
+    background: rgba(232,197,71,0.12);
+    border: 1px solid rgba(232,197,71,0.3);
+    border-radius: 4px;
+    padding: 4mm 5mm;
+    margin-bottom: 10mm;
+  }
+
+  .capa-tagline p {
+    font-family: 'Playfair Display', serif;
+    font-size: 13pt;
+    color: var(--yellow);
+    font-style: italic;
+    line-height: 1.4;
+    margin: 0;
+  }
+
+  .capa-includes {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 5px;
+    margin-bottom: 14mm;
+  }
+
+  .ci-item {
+    display: flex;
+    gap: 8px;
+    font-size: 9pt;
+    color: rgba(255,255,255,0.7);
+    line-height: 1.4;
+    align-items: flex-start;
+  }
+
+  .ci-check { color: var(--yellow); font-weight: 700; flex-shrink: 0; font-size: 10pt; }
+
+  .capa-bottom {
+    border-top: 1px solid rgba(255,255,255,0.1);
+    padding-top: 5mm;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+  }
+
+  .price-tag {
+    background: var(--yellow);
+    padding: 3mm 6mm;
+    border-radius: 3px;
+    display: inline-block;
+  }
+
+  .price-tag-label { font-size: 7pt; font-weight: 700; color: rgba(0,0,0,0.5); text-transform: uppercase; }
+  .price-tag-value { font-family: 'Playfair Display', serif; font-size: 24pt; font-weight: 800; color: var(--black); line-height: 1; }
+
+  .capa-note { font-size: 8pt; color: rgba(255,255,255,0.3); text-align: right; line-height: 1.6; }
+
+  /* PAGE HEADER */
+  .ph {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 4mm;
+    border-bottom: 1.5px solid var(--black);
+    margin-bottom: 6mm;
+  }
+
+  .ph-brand { font-size: 7pt; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--black); }
+  .ph-title { font-size: 7pt; color: var(--ink-s); }
+
+  /* TYPOGRAPHY */
+  .sec-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 20pt;
+    color: var(--dark);
+    margin-bottom: 2mm;
+    font-weight: 700;
+  }
+
+  .sec-sub { font-size: 9.5pt; color: var(--ink-s); margin-bottom: 5mm; font-weight: 300; }
+
+  .chapter-divider {
+    background: var(--black);
+    color: #fff;
+    padding: 7px 14px;
+    border-radius: 4px;
+    font-size: 8.5pt;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-bottom: 4mm;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .chapter-divider.yellow {
+    background: var(--yellow);
+    color: var(--black);
+  }
+
+  /* HIGHLIGHT */
+  .highlight {
+    background: var(--bege);
+    border-left: 3px solid var(--black);
+    border-radius: 4px;
+    padding: 3.5mm 4.5mm;
+    margin-bottom: 4mm;
+  }
+
+  .highlight-title { font-size: 7.5pt; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: var(--dark); margin-bottom: 2mm; }
+  .highlight p, .highlight li { font-size: 9pt; color: #3d3d3d; line-height: 1.55; }
+  .highlight ul { list-style: none; padding: 0; }
+  .highlight ul li { margin-bottom: 3px; padding-left: 14px; position: relative; }
+  .highlight ul li::before { content: "→"; position: absolute; left: 0; color: var(--black); font-weight: 700; }
+
+  .yellow-box {
+    background: var(--yellow-pale);
+    border-left: 3px solid #c9a028;
+    border-radius: 4px;
+    padding: 3.5mm 4.5mm;
+    margin-bottom: 4mm;
+  }
+
+  .yellow-box-title { font-size: 7.5pt; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: #8a6c00; margin-bottom: 2mm; }
+  .yellow-box p { font-size: 9pt; color: #3d3d3d; line-height: 1.55; margin: 0; }
+
+  .red-box {
+    background: var(--red-pale);
+    border-left: 3px solid var(--red);
+    border-radius: 4px;
+    padding: 3.5mm 4.5mm;
+    margin-bottom: 4mm;
+  }
+
+  .red-box-title { font-size: 7.5pt; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: var(--red); margin-bottom: 2mm; }
+  .red-box p { font-size: 9pt; color: #3d3d3d; line-height: 1.55; margin: 0; }
+
+  /* TABELAS */
+  .lista-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 4mm;
+    font-size: 8.5pt;
+  }
+
+  .lista-table thead tr { background: var(--black); }
+  .lista-table thead th { padding: 6px 8px; color: #fff; text-align: left; font-size: 7pt; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; }
+  .lista-table thead th.price { text-align: right; }
+  .lista-table tbody tr { border-bottom: 1px solid var(--border); }
+  .lista-table tbody tr:last-child { border-bottom: none; }
+  .lista-table tbody td { padding: 5px 8px; color: #3d3d3d; vertical-align: middle; }
+  .lista-table tbody td.price { text-align: right; font-weight: 600; color: var(--dark); }
+  .lista-table tbody td.note { font-size: 7.5pt; color: var(--ink-s); font-style: italic; }
+
+  /* TOTAL BOX */
+  .total-box {
+    background: var(--black);
+    border-radius: 6px;
+    padding: 4mm 5mm;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 3mm;
+  }
+
+  .total-label { color: rgba(255,255,255,0.65); font-size: 8.5pt; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; }
+  .total-value { font-family: 'Playfair Display', serif; font-size: 22pt; color: var(--yellow); font-weight: 800; }
+  .total-note { font-size: 7pt; color: rgba(255,255,255,0.4); text-align: right; margin-top: 2px; }
+
+  /* CARDÁPIO */
+  .card-dia {
+    border: 1.5px solid var(--border);
+    border-radius: 5px;
+    overflow: hidden;
+    margin-bottom: 3.5mm;
+  }
+
+  .card-dia-header {
+    background: var(--dark);
+    color: #fff;
+    padding: 5px 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .card-dia-title { font-family: 'Playfair Display', serif; font-size: 10.5pt; font-weight: 700; }
+  .card-dia-cost { font-size: 8pt; color: var(--yellow); font-weight: 700; }
+
+  .card-dia-body { display: grid; grid-template-columns: 1fr 1fr 1fr; }
+
+  .card-ref { padding: 5px 10px; border-right: 1px solid var(--border); }
+  .card-ref:last-child { border-right: none; }
+  .cr-label { font-size: 7pt; font-weight: 700; text-transform: uppercase; letter-spacing: 0.07em; color: var(--ink-s); margin-bottom: 3px; display: block; }
+  .cr-main { font-size: 8.5pt; font-weight: 600; color: var(--dark); display: block; line-height: 1.3; }
+  .cr-extra { font-size: 7.5pt; color: var(--ink-s); display: block; }
+
+  /* RECEITAS */
+  .receita-card {
+    border: 1.5px solid var(--border);
+    border-radius: 5px;
+    margin-bottom: 4.5mm;
+    overflow: hidden;
+  }
+
+  .receita-header {
+    background: var(--bege);
+    padding: 5px 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .receita-nome { font-family: 'Playfair Display', serif; font-size: 11.5pt; font-weight: 700; color: var(--dark); }
+  .receita-tags { display: flex; gap: 6px; }
+  .rtag { background: var(--black); color: #fff; font-size: 7pt; font-weight: 700; padding: 2px 7px; border-radius: 3px; }
+  .rtag.yellow { background: var(--yellow); color: var(--black); }
+
+  .receita-body { display: grid; grid-template-columns: 1fr 1.6fr; }
+  .receita-ing { padding: 8px 12px; border-right: 1px solid var(--border); background: #fafafa; }
+  .receita-modo { padding: 8px 12px; }
+  .rcol-title { font-size: 7pt; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--ink-s); margin-bottom: 5px; padding-bottom: 3px; border-bottom: 1px solid var(--border); }
+
+  .receita-ing ul { list-style: none; padding: 0; margin: 0; }
+  .receita-ing ul li { font-size: 8pt; color: #3d3d3d; line-height: 1.6; padding-left: 10px; position: relative; }
+  .receita-ing ul li::before { content: "·"; position: absolute; left: 2px; color: var(--black); font-weight: 700; }
+
+  .receita-modo ol { padding-left: 15px; margin: 0; }
+  .receita-modo ol li { font-size: 8pt; color: #3d3d3d; line-height: 1.6; margin-bottom: 3px; }
+
+  .receita-footer { background: var(--bege); border-top: 1px solid var(--border); padding: 4px 12px; display: flex; gap: 14px; font-size: 7.5pt; color: var(--ink-s); }
+  .rf-item span { color: var(--black); font-weight: 700; }
+
+  /* SUBSTITUIÇÕES */
+  .subs-table { width: 100%; border-collapse: collapse; font-size: 8.5pt; margin-bottom: 4mm; }
+  .subs-table thead tr { background: var(--black); }
+  .subs-table thead th { padding: 6px 10px; color: #fff; text-align: left; font-size: 7.5pt; font-weight: 700; }
+  .subs-table tbody tr { border-bottom: 1px solid var(--border); }
+  .subs-table tbody tr:nth-child(even) { background: var(--bege); }
+  .subs-table tbody td { padding: 6px 10px; color: #3d3d3d; }
+  .subs-table tbody td:first-child { font-weight: 600; color: var(--dark); }
+  .subs-table tbody td.arr { text-align: center; color: var(--black); font-weight: 700; width: 30px; }
+
+  /* DICAS */
+  .dica-card { border: 1px solid var(--border); border-radius: 5px; padding: 4mm 5mm; margin-bottom: 3mm; display: flex; gap: 4mm; }
+  .dica-icon { font-size: 15pt; flex-shrink: 0; line-height: 1; margin-top: 2px; }
+  .dica-content { flex: 1; }
+  .dica-title { font-size: 9.5pt; font-weight: 700; color: var(--dark); margin-bottom: 2px; }
+  .dica-text { font-size: 8.5pt; color: #3d3d3d; line-height: 1.5; }
+
+  /* ORG TABLE */
+  .org-table { width: 100%; border-collapse: collapse; font-size: 8.5pt; margin-bottom: 4mm; }
+  .org-table thead tr { background: var(--black); }
+  .org-table thead th { padding: 6px 8px; color: #fff; font-size: 7.5pt; font-weight: 700; text-align: left; }
+  .org-table tbody tr { border-bottom: 1px solid var(--border); }
+  .org-table tbody tr:nth-child(even) { background: var(--bege); }
+  .org-table tbody td { padding: 6px 8px; color: #3d3d3d; vertical-align: top; }
+  .org-table tbody td:first-child { font-weight: 700; color: var(--dark); white-space: nowrap; }
+
+  /* CTA DARK */
+  .cta-page {
+    background: var(--black);
+    width: 210mm;
+    min-height: 297mm;
+    margin: 0 auto;
+    padding: 22mm 18mm;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    page-break-after: auto;
+    position: relative;
+  }
+
+  .cta-stripe-top { position: absolute; top: 0; left: 0; right: 0; height: 6px; background: var(--yellow); }
+  .cta-stripe-bottom { position: absolute; bottom: 0; left: 0; right: 0; height: 6px; background: var(--yellow); }
+
+  .cta-eyebrow { font-size: 8pt; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; color: var(--yellow); margin-bottom: 4mm; }
+  .cta-title { font-family: 'Playfair Display', serif; font-size: 26pt; color: #fff; line-height: 1.2; margin-bottom: 5mm; font-weight: 800; }
+  .cta-title em { color: var(--yellow); font-style: italic; }
+  .cta-sub { font-size: 10pt; color: rgba(255,255,255,0.55); font-weight: 300; line-height: 1.65; max-width: 130mm; margin: 0 auto 7mm; }
+
+  .cta-box { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 6px; padding: 5mm 7mm; margin-bottom: 6mm; text-align: left; width: 100%; max-width: 140mm; }
+  .cta-box h4 { font-size: 7.5pt; font-weight: 700; text-transform: uppercase; letter-spacing: 0.12em; color: var(--yellow); margin-bottom: 3mm; }
+  .cta-item { display: flex; gap: 8px; margin-bottom: 5px; font-size: 9.5pt; color: rgba(255,255,255,0.75); line-height: 1.45; }
+  .cta-dot { color: var(--yellow); flex-shrink: 0; font-weight: 700; }
+
+  .price-block { background: rgba(232,197,71,0.15); border: 1.5px solid var(--yellow); border-radius: 6px; padding: 5mm 10mm; margin-bottom: 5mm; }
+  .price-old { font-size: 10pt; color: rgba(255,255,255,0.3); text-decoration: line-through; }
+  .price-new { font-family: 'Playfair Display', serif; font-size: 30pt; color: var(--yellow); font-weight: 800; }
+
+  .cta-note { font-size: 8pt; color: rgba(255,255,255,0.25); margin-top: 5mm; }
+
+  p { font-size: 9.5pt; color: #3d3d3d; line-height: 1.65; margin-bottom: 3mm; }
+  strong { font-weight: 700; }
+</style>
+</head>
+<body>
+
+<!-- CAPA -->
+<div class="capa">
+  <div class="capa-stripe"></div>
+  <div class="capa-stripe-bottom"></div>
+  <div class="capa-side-accent"></div>
+  <div class="capa-inner">
+    <div>
+      <div class="capa-brand">Do Mercado Pra Mesa</div>
+      <br/>
+      <div class="capa-flag">Sobrevivência Inteligente</div>
+      <h1>Como Comer a<br/>Semana Inteira<br/>com <em>R$50</em></h1>
+      <p class="capa-sub">
+        Não é gourmet. É estratégia. Com cinquenta reais você consegue ter café, almoço e jantar por 7 dias — se souber o que comprar.
+      </p>
+      <div class="capa-tagline">
+        <p>"Quem não tem dinheiro tem que ter método. E o método está aqui."</p>
+      </div>
+      <div class="capa-includes">
+        <div class="ci-item"><span class="ci-check">✓</span><span>Lista de compras com R$50 exatos</span></div>
+        <div class="ci-item"><span class="ci-check">✓</span><span>Cardápio 7 dias completo</span></div>
+        <div class="ci-item"><span class="ci-check">✓</span><span>10+ receitas simples e reais</span></div>
+        <div class="ci-item"><span class="ci-check">✓</span><span>Tabela de substituições</span></div>
+        <div class="ci-item"><span class="ci-check">✓</span><span>Dicas de economia extrema</span></div>
+        <div class="ci-item"><span class="ci-check">✓</span><span>Organização semanal</span></div>
+      </div>
+    </div>
+    <div class="capa-bottom">
+      <div class="price-tag">
+        <div class="price-tag-label">Variante Agressiva</div>
+        <div class="price-tag-value">R$37</div>
+      </div>
+      <div class="capa-note">
+        Do Mercado Pra Mesa<br/>
+        Série Economia Real · Vol. 2
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- INTRODUÇÃO -->
+<div class="page">
+  <div class="ph">
+    <span class="ph-brand">Do Mercado Pra Mesa</span>
+    <span class="ph-title">Como Comer a Semana Inteira com R$50</span>
+  </div>
+
+  <div class="sec-title">A realidade de quem tem pouco</div>
+  <p class="sec-sub">Sem julgamento. Com solução.</p>
+
+  <p>Tem gente no Brasil que chega na semana com R$50 no bolso e precisa se alimentar. Isso é real. E esses R$50 podem render a semana toda — ou sumir em 2 dias no delivery mais barato que encontrar.</p>
+
+  <p>A diferença entre os dois caminhos não é sorte. É método.</p>
+
+  <p>Esse guia foi feito pra situação de aperto real. Não tem desperdício de palavra. Não tem enfeite. Tem o que funciona quando a margem de erro é zero.</p>
+
+  <div class="red-box">
+    <div class="red-box-title">⚠ Isso é diferente do guia de R$120</div>
+    <p>No guia de R$120 tem variedade, conforto e proteína premium. Aqui o jogo é outro. Vamos usar os ingredientes mais baratos e mais rendosos do mercado brasileiro — e fazer isso de um jeito que ainda é comida de verdade, não papelão temperado.</p>
+  </div>
+
+  <div style="height: 3mm;"></div>
+
+  <div class="chapter-divider">🧠 A lógica dos R$50</div>
+
+  <div class="highlight">
+    <ul>
+      <li>Menos variedade, mais rendimento — a repetição é aliada, não inimiga</li>
+      <li>Proteína barata e rendosa: ovo + feijão + sardinha. Ponto final.</li>
+      <li>Carboidrato é base, não inimigo — arroz e macarrão resolvem</li>
+      <li>Hortifruti de preço mínimo: o que for mais barato no dia</li>
+      <li>Tempero faz diferença — com cebola, alho e sal você já tem base pra tudo</li>
+      <li>Zero desperdício — tudo que sobrar vai pra sopa do dia seguinte</li>
+    </ul>
+  </div>
+
+  <div style="height: 4mm;"></div>
+
+  <div class="yellow-box">
+    <div class="yellow-box-title">💬 Antes de continuar — o que significa "comer a semana"</div>
+    <p>Esse guia cobre café da manhã, almoço e jantar por 7 dias para 1 pessoa. Se forem 2 pessoas, multiplique o orçamento por 1,6 (não por 2 — algumas coisas já rendem pras duas). Com R$80 dá pra seguir esse guia para duas pessoas.</p>
+  </div>
+
+  <div class="dica-card">
+    <div class="dica-icon">📊</div>
+    <div class="dica-content">
+      <div class="dica-title">O math é simples</div>
+      <div class="dica-text">R$50 ÷ 7 dias = R$7,14 por dia. R$7,14 ÷ 3 refeições = R$2,38 por refeição. Parece impossível. Não é. Com os ingredientes certos, cada porção de ovo + arroz + feijão sai por R$1,80. A sopa sai por R$1,20. Você vai ver.</div>
+    </div>
+  </div>
+</div>
+
+<!-- LISTA DE COMPRAS R$50 -->
+<div class="page">
+  <div class="ph">
+    <span class="ph-brand">Do Mercado Pra Mesa</span>
+    <span class="ph-title">Lista de Compras — R$50</span>
+  </div>
+
+  <div class="sec-title">Lista de compras com R$50</div>
+  <p class="sec-sub">Cada item foi escolhido por custo-benefício extremo. Nada aqui é desperdício.</p>
+
+  <div class="chapter-divider">🍗 Proteínas — a base de tudo</div>
+  <table class="lista-table">
+    <thead><tr><th>Item</th><th>Qtd</th><th>Unid.</th><th class="price">Est. Preço</th><th>Por quê?</th></tr></thead>
+    <tbody>
+      <tr>
+        <td>Ovos</td><td>12</td><td>unidades</td><td class="price">R$9,00</td>
+        <td class="note">Proteína mais versátil por preço</td>
+      </tr>
+      <tr>
+        <td>Feijão carioca</td><td>500</td><td>g</td><td class="price">R$4,00</td>
+        <td class="note">Proteína vegetal + carboidrato em 1</td>
+      </tr>
+      <tr>
+        <td>Sardinha em lata</td><td>2</td><td>latas</td><td class="price">R$7,00</td>
+        <td class="note">Proteína animal mais barata do mercado</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="chapter-divider">🍚 Carboidratos — energia para a semana</div>
+  <table class="lista-table">
+    <thead><tr><th>Item</th><th>Qtd</th><th>Unid.</th><th class="price">Est. Preço</th><th>Rende</th></tr></thead>
+    <tbody>
+      <tr>
+        <td>Arroz branco (marca popular)</td><td>1</td><td>kg</td><td class="price">R$4,50</td>
+        <td class="note">~14 porções de ½ xícara cru</td>
+      </tr>
+      <tr>
+        <td>Macarrão (qualquer tipo)</td><td>500</td><td>g</td><td class="price">R$4,00</td>
+        <td class="note">4 a 5 refeições</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="chapter-divider">🥬 Hortifruti mínimo essencial</div>
+  <table class="lista-table">
+    <thead><tr><th>Item</th><th>Qtd</th><th>Unid.</th><th class="price">Est. Preço</th><th>Uso</th></tr></thead>
+    <tbody>
+      <tr>
+        <td>Cebola</td><td>500</td><td>g</td><td class="price">R$2,00</td>
+        <td class="note">Base de toda receita</td>
+      </tr>
+      <tr>
+        <td>Alho</td><td>1</td><td>cabeça</td><td class="price">R$2,00</td>
+        <td class="note">Sabor sem custo</td>
+      </tr>
+      <tr>
+        <td>Banana prata</td><td>1</td><td>cacho pequeno (~1kg)</td><td class="price">R$4,00</td>
+        <td class="note">Café da manhã + lanche</td>
+      </tr>
+      <tr>
+        <td>Repolho</td><td>½</td><td>cabeça (~600g)</td><td class="price">R$2,50</td>
+        <td class="note">O vegetal mais barato e rendoso</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="chapter-divider">🧂 Temperos & Básicos</div>
+  <table class="lista-table">
+    <thead><tr><th>Item</th><th>Qtd</th><th>Unid.</th><th class="price">Est. Preço</th></tr></thead>
+    <tbody>
+      <tr><td>Óleo de soja</td><td>500</td><td>ml</td><td class="price">R$4,50</td></tr>
+      <tr><td>Sal refinado</td><td>500</td><td>g</td><td class="price">R$1,50</td></tr>
+      <tr><td>Extrato de tomate (sachê)</td><td>2</td><td>un.</td><td class="price">R$4,00</td></tr>
+      <tr><td>Caldo de galinha (tablete)</td><td>1</td><td>caixa (6 tab)</td><td class="price">R$3,50</td></tr>
+      <tr><td>Café em pó</td><td>250</td><td>g</td><td class="price">R$6,00</td></tr>
+      <tr><td>Açúcar cristal</td><td>500</td><td>g</td><td class="price">R$2,50</td></tr>
+    </tbody>
+  </table>
+
+  <div class="total-box">
+    <div>
+      <div class="total-label">Total da semana</div>
+      <div class="total-note">15 itens · 1 pessoa · 7 dias</div>
+    </div>
+    <div style="text-align: right;">
+      <div class="total-value">R$50,00</div>
+      <div class="total-note">nem um centavo acima</div>
+    </div>
+  </div>
+
+  <div class="red-box" style="margin-top: 4mm;">
+    <div class="red-box-title">❗ O que foi cortado — e por quê</div>
+    <p>Frango: caro demais por kg quando você está no limite. Queijo e laticínios: não essenciais quando o ovo já resolve proteína e gordura. Pão de forma: substituído pela banana no café da manhã. Batata-doce e cenoura: o repolho é mais barato e mais rendoso. Esses cortes dói? Um pouco. Mas a conta fecha.</p>
+  </div>
+</div>
+
+<!-- CARDÁPIO R$50 — DIAS 1–4 -->
+<div class="page">
+  <div class="ph">
+    <span class="ph-brand">Do Mercado Pra Mesa</span>
+    <span class="ph-title">Cardápio — Dias 1 a 4</span>
+  </div>
+
+  <div class="sec-title">Cardápio da semana</div>
+  <p class="sec-sub">Com R$50 não tem menu de restaurante. Tem sistema. E sistema funciona.</p>
+
+  <div class="card-dia">
+    <div class="card-dia-header">
+      <div class="card-dia-title">Segunda-feira — Dia 1</div>
+      <div class="card-dia-cost">~R$6,80 no dia</div>
+    </div>
+    <div class="card-dia-body">
+      <div class="card-ref">
+        <span class="cr-label">☕ Manhã</span>
+        <span class="cr-main">Café puro + banana</span>
+        <span class="cr-extra">café com açúcar + 2 bananas</span>
+      </div>
+      <div class="card-ref">
+        <span class="cr-label">🍽 Almoço</span>
+        <span class="cr-main">Arroz + feijão + ovo frito</span>
+        <span class="cr-extra">+ repolho refogado</span>
+      </div>
+      <div class="card-ref">
+        <span class="cr-label">🌙 Jantar</span>
+        <span class="cr-main">Omelete simples</span>
+        <span class="cr-extra">2 ovos + sal + sobra de repolho</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="card-dia">
+    <div class="card-dia-header">
+      <div class="card-dia-title">Terça-feira — Dia 2</div>
+      <div class="card-dia-cost">~R$6,20 no dia</div>
+    </div>
+    <div class="card-dia-body">
+      <div class="card-ref">
+        <span class="cr-label">☕ Manhã</span>
+        <span class="cr-main">Café + banana</span>
+        <span class="cr-extra">igual ao dia 1 — funciona</span>
+      </div>
+      <div class="card-ref">
+        <span class="cr-label">🍽 Almoço</span>
+        <span class="cr-main">Macarrão com sardinha</span>
+        <span class="cr-extra">+ extrato de tomate + alho</span>
+      </div>
+      <div class="card-ref">
+        <span class="cr-label">🌙 Jantar</span>
+        <span class="cr-main">Arroz + feijão</span>
+        <span class="cr-extra">o básico que sustenta</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="card-dia">
+    <div class="card-dia-header">
+      <div class="card-dia-title">Quarta-feira — Dia 3</div>
+      <div class="card-dia-cost">~R$7,30 no dia</div>
+    </div>
+    <div class="card-dia-body">
+      <div class="card-ref">
+        <span class="cr-label">☕ Manhã</span>
+        <span class="cr-main">Ovos mexidos</span>
+        <span class="cr-extra">+ café (proteína de manhã = foco)</span>
+      </div>
+      <div class="card-ref">
+        <span class="cr-label">🍽 Almoço</span>
+        <span class="cr-main">Arroz + feijão + sardinha</span>
+        <span class="cr-extra">abrir a 2ª lata</span>
+      </div>
+      <div class="card-ref">
+        <span class="cr-label">🌙 Jantar</span>
+        <span class="cr-main">Sopa de repolho</span>
+        <span class="cr-extra">repolho + caldo de galinha</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="card-dia">
+    <div class="card-dia-header">
+      <div class="card-dia-title">Quinta-feira — Dia 4</div>
+      <div class="card-dia-cost">~R$6,50 no dia</div>
+    </div>
+    <div class="card-dia-body">
+      <div class="card-ref">
+        <span class="cr-label">☕ Manhã</span>
+        <span class="cr-main">Café + banana</span>
+        <span class="cr-extra">último dia das bananas</span>
+      </div>
+      <div class="card-ref">
+        <span class="cr-label">🍽 Almoço</span>
+        <span class="cr-main">Omelete + arroz</span>
+        <span class="cr-extra">2 ovos com cebola refogada</span>
+      </div>
+      <div class="card-ref">
+        <span class="cr-label">🌙 Jantar</span>
+        <span class="cr-main">Macarrão ao alho e óleo</span>
+        <span class="cr-extra">+ ovo frito por cima</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="yellow-box">
+    <div class="yellow-box-title">🍳 O ovo é sua âncora</div>
+    <p>Com 12 ovos você tem proteína pra 4 refeições de 3 ovos ou 6 refeições de 2 ovos. Mexido, frito, cozido, omelete — o ovo se adapta a qualquer situação. Com cebola e alho refogados antes de juntar o ovo, o sabor muda completamente. Use isso.</p>
+  </div>
+</div>
+
+<!-- CARDÁPIO R$50 — DIAS 5–7 -->
+<div class="page">
+  <div class="ph">
+    <span class="ph-brand">Do Mercado Pra Mesa</span>
+    <span class="ph-title">Cardápio — Dias 5 a 7</span>
+  </div>
+
+  <div class="sec-title">Cardápio — a reta final</div>
+  <p class="sec-sub">Os últimos 3 dias. O que ainda tem na despensa + criatividade.</p>
+
+  <div class="card-dia">
+    <div class="card-dia-header">
+      <div class="card-dia-title">Sexta-feira — Dia 5</div>
+      <div class="card-dia-cost">~R$6,00 no dia</div>
+    </div>
+    <div class="card-dia-body">
+      <div class="card-ref">
+        <span class="cr-label">☕ Manhã</span>
+        <span class="cr-main">Café puro</span>
+        <span class="cr-extra">sem banana — acabou na quinta</span>
+      </div>
+      <div class="card-ref">
+        <span class="cr-label">🍽 Almoço</span>
+        <span class="cr-main">Arroz + feijão + ovo</span>
+        <span class="cr-extra">+ repolho refogado</span>
+      </div>
+      <div class="card-ref">
+        <span class="cr-label">🌙 Jantar</span>
+        <span class="cr-main">Macarrão simples</span>
+        <span class="cr-extra">alho, óleo e sal</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="card-dia">
+    <div class="card-dia-header">
+      <div class="card-dia-title">Sábado — Dia 6</div>
+      <div class="card-dia-cost">~R$5,80 no dia</div>
+    </div>
+    <div class="card-dia-body">
+      <div class="card-ref">
+        <span class="cr-label">☕ Manhã</span>
+        <span class="cr-main">Ovos mexidos</span>
+        <span class="cr-extra">2 ovos com sal e café</span>
+      </div>
+      <div class="card-ref">
+        <span class="cr-label">🍽 Almoço</span>
+        <span class="cr-main">Arroz + feijão</span>
+        <span class="cr-extra">o feijão já foi temperado — só esquentar</span>
+      </div>
+      <div class="card-ref">
+        <span class="cr-label">🌙 Jantar</span>
+        <span class="cr-main">Macarrão com ovo e repolho</span>
+        <span class="cr-extra">tudo que ainda tem</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="card-dia">
+    <div class="card-dia-header">
+      <div class="card-dia-title">Domingo — Dia 7</div>
+      <div class="card-dia-cost">~R$5,40 no dia</div>
+    </div>
+    <div class="card-dia-body">
+      <div class="card-ref">
+        <span class="cr-label">☕ Manhã</span>
+        <span class="cr-main">Café com açúcar</span>
+        <span class="cr-extra">simples. Funciona.</span>
+      </div>
+      <div class="card-ref">
+        <span class="cr-label">🍽 Almoço</span>
+        <span class="cr-main">Arroz + feijão + ovo</span>
+        <span class="cr-extra">+ o que sobrou de repolho</span>
+      </div>
+      <div class="card-ref">
+        <span class="cr-label">🌙 Jantar</span>
+        <span class="cr-main">Sopa da sobrevivência</span>
+        <span class="cr-extra">tudo que sobrou + caldo + água</span>
+      </div>
+    </div>
+  </div>
+
+  <div style="height: 3mm;"></div>
+
+  <div class="highlight">
+    <div class="highlight-title">📊 Custo real por dia</div>
+    <ul>
+      <li>Dia 1: ~R$6,80</li>
+      <li>Dia 2: ~R$6,20</li>
+      <li>Dia 3: ~R$7,30</li>
+      <li>Dia 4: ~R$6,50</li>
+      <li>Dia 5: ~R$6,00</li>
+      <li>Dia 6: ~R$5,80</li>
+      <li>Dia 7: ~R$5,40</li>
+      <li><strong>Total: R$44,00 — sobram R$6,00 de margem</strong></li>
+    </ul>
+  </div>
+
+  <div class="red-box" style="margin-top: 4mm;">
+    <div class="red-box-title">🔴 Os dias mais difíceis são o 5 e o 6</div>
+    <p>A banana acabou. A variedade reduziu. É o momento que mais provoca a tentação de pedir um lanche barato. Não ceda. O macarrão ao alho e óleo com ovo frito por cima é uma refeição completa por R$2,50. Mais barato que qualquer coisa fora de casa.</p>
+  </div>
+</div>
+
+<!-- RECEITAS R$50 -->
+<div class="page">
+  <div class="ph">
+    <span class="ph-brand">Do Mercado Pra Mesa</span>
+    <span class="ph-title">Receitas — versão extrema</span>
+  </div>
+
+  <div class="sec-title">As receitas</div>
+  <p class="sec-sub">Baratas, rápidas e que realmente sustentam.</p>
+
+  <div class="receita-card">
+    <div class="receita-header">
+      <div class="receita-nome">Ovo Frito Perfeito</div>
+      <div class="receita-tags"><span class="rtag yellow">⏱ 5 min</span><span class="rtag">R$0,75/un</span></div>
+    </div>
+    <div class="receita-body">
+      <div class="receita-ing">
+        <div class="rcol-title">Ingredientes (1 ovo)</div>
+        <ul>
+          <li>1 ovo</li>
+          <li>1 fio de óleo</li>
+          <li>Sal e pimenta</li>
+        </ul>
+      </div>
+      <div class="receita-modo">
+        <div class="rcol-title">Modo de preparo</div>
+        <ol>
+          <li>Frigideira em fogo médio com fio de óleo.</li>
+          <li>Quebra o ovo com cuidado.</li>
+          <li>Salpica sal. Quando a clara firmar, apaga o fogo.</li>
+          <li>A gema cremosa é o ponto. Não passa disso.</li>
+        </ol>
+      </div>
+    </div>
+    <div class="receita-footer">
+      <div class="rf-item">Dica: <span>3 ovos fritos + arroz + feijão = refeição completa</span></div>
+    </div>
+  </div>
+
+  <div class="receita-card">
+    <div class="receita-header">
+      <div class="receita-nome">Macarrão ao Alho e Óleo com Ovo</div>
+      <div class="receita-tags"><span class="rtag yellow">⏱ 18 min</span><span class="rtag">R$2,50/porção</span></div>
+    </div>
+    <div class="receita-body">
+      <div class="receita-ing">
+        <div class="rcol-title">Ingredientes (1 porção)</div>
+        <ul>
+          <li>100g macarrão</li>
+          <li>4 dentes de alho fatiados</li>
+          <li>2 col. sopa de óleo</li>
+          <li>Sal + 1 ovo frito</li>
+        </ul>
+      </div>
+      <div class="receita-modo">
+        <div class="rcol-title">Modo de preparo</div>
+        <ol>
+          <li>Cozinhe o macarrão em água salgada. Escorra.</li>
+          <li>Na mesma panela, toste o alho fatiado no óleo até dourar.</li>
+          <li>Misture o macarrão cozido no óleo com alho. Sal a gosto.</li>
+          <li>Coloque 1 ovo frito por cima. Pronto.</li>
+        </ol>
+      </div>
+    </div>
+    <div class="receita-footer">
+      <div class="rf-item">Segredo: <span>o alho torrado faz toda a diferença no sabor</span></div>
+    </div>
+  </div>
+
+  <div class="receita-card">
+    <div class="receita-header">
+      <div class="receita-nome">Repolho Refogado com Ovo</div>
+      <div class="receita-tags"><span class="rtag yellow">⏱ 12 min</span><span class="rtag">R$1,60/porção</span></div>
+    </div>
+    <div class="receita-body">
+      <div class="receita-ing">
+        <div class="rcol-title">Ingredientes (1 porção)</div>
+        <ul>
+          <li>200g repolho fatiado fino</li>
+          <li>2 dentes de alho</li>
+          <li>2 ovos</li>
+          <li>Sal + óleo</li>
+        </ul>
+      </div>
+      <div class="receita-modo">
+        <div class="rcol-title">Modo de preparo</div>
+        <ol>
+          <li>Refogue o alho no óleo por 1 min.</li>
+          <li>Junte o repolho. Refogue em fogo alto por 5 min mexendo.</li>
+          <li>Abra espaço na frigideira e bata os 2 ovos. Mexa tudo junto.</li>
+          <li>Sal, finaliza com limão se tiver. Serve com arroz e feijão.</li>
+        </ol>
+      </div>
+    </div>
+    <div class="receita-footer">
+      <div class="rf-item">Dica: <span>repolho + ovo + arroz é um prato completo que passa sem culpa</span></div>
+    </div>
+  </div>
+
+  <div class="receita-card">
+    <div class="receita-header">
+      <div class="receita-nome">Sardinha Ensopada</div>
+      <div class="receita-tags"><span class="rtag yellow">⏱ 10 min</span><span class="rtag">R$3,50/porção</span></div>
+    </div>
+    <div class="receita-body">
+      <div class="receita-ing">
+        <div class="rcol-title">Ingredientes (2 porções)</div>
+        <ul>
+          <li>1 lata de sardinha em molho</li>
+          <li>1 cebola picada</li>
+          <li>2 dentes de alho</li>
+          <li>1 sachê extrato de tomate</li>
+          <li>Sal e cheiro-verde (se tiver)</li>
+        </ul>
+      </div>
+      <div class="receita-modo">
+        <div class="rcol-title">Modo de preparo</div>
+        <ol>
+          <li>Refogue cebola e alho no óleo.</li>
+          <li>Adicione o extrato de tomate + ½ copo de água. Misture.</li>
+          <li>Abra a sardinha e jogue tudo (peixe + líquido) na panela.</li>
+          <li>Amasse levemente. Cozinhe 5 min. Sirva com arroz.</li>
+        </ol>
+      </div>
+    </div>
+    <div class="receita-footer">
+      <div class="rf-item">Dica: <span>o líquido da lata tem sabor — não jogue fora</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- RECEITAS 5–7 + DICAS -->
+<div class="page">
+  <div class="ph">
+    <span class="ph-brand">Do Mercado Pra Mesa</span>
+    <span class="ph-title">Receitas + Dicas de Economia Extrema</span>
+  </div>
+
+  <div class="receita-card">
+    <div class="receita-header">
+      <div class="receita-nome">Sopa da Sobrevivência</div>
+      <div class="receita-tags"><span class="rtag yellow">⏱ 25 min</span><span class="rtag">R$1,80/porção</span></div>
+    </div>
+    <div class="receita-body">
+      <div class="receita-ing">
+        <div class="rcol-title">Ingredientes (2 porções)</div>
+        <ul>
+          <li>Sobras de repolho, arroz, feijão</li>
+          <li>1 tablete de caldo de galinha</li>
+          <li>Alho + cebola</li>
+          <li>1 litro de água</li>
+          <li>Sal a gosto</li>
+        </ul>
+      </div>
+      <div class="receita-modo">
+        <div class="rcol-title">Modo de preparo</div>
+        <ol>
+          <li>Refogue alho e cebola em fogo médio.</li>
+          <li>Adicione a água + caldo de galinha. Leve ao fogo.</li>
+          <li>Jogue todas as sobras na panela. Misture.</li>
+          <li>Cozinhe por 15 min em fogo baixo. Ajuste o sal.</li>
+          <li>Sirva quente. Sustenta por 4 horas.</li>
+        </ol>
+      </div>
+    </div>
+    <div class="receita-footer">
+      <div class="rf-item">Filosofia: <span>sobra não existe — existe material pra sopa</span></div>
+    </div>
+  </div>
+
+  <div class="receita-card">
+    <div class="receita-header">
+      <div class="receita-nome">Feijão Básico Rápido (sem panela de pressão)</div>
+      <div class="receita-tags"><span class="rtag yellow">⏱ 40 min</span><span class="rtag">R$1,20/porção</span></div>
+    </div>
+    <div class="receita-body">
+      <div class="receita-ing">
+        <div class="rcol-title">Ingredientes (3 porções)</div>
+        <ul>
+          <li>250g feijão carioca</li>
+          <li>Alho + cebola</li>
+          <li>Sal + óleo</li>
+          <li>Água (molho 4h antes)</li>
+        </ul>
+      </div>
+      <div class="receita-modo">
+        <div class="rcol-title">Modo de preparo</div>
+        <ol>
+          <li>Deixe de molho por 4h — drene a água.</li>
+          <li>Cozinhe na pressão por 20 min (ou panela normal 40–50 min).</li>
+          <li>Refogue alho e cebola. Misture com o feijão cozido.</li>
+          <li>Tempere com sal. Cozinhe mais 10 min descoberto.</li>
+        </ol>
+      </div>
+    </div>
+    <div class="receita-footer">
+      <div class="rf-item">Rende: <span>3 refeições — congele o que não for usar em 2 dias</span></div>
+    </div>
+  </div>
+
+  <div style="height: 2mm;"></div>
+  <div class="chapter-divider yellow">💰 Dicas de economia extrema</div>
+
+  <div class="dica-card">
+    <div class="dica-icon">📦</div>
+    <div class="dica-content">
+      <div class="dica-title">Cozinhe tudo de uma vez — gás custa dinheiro</div>
+      <div class="dica-text">Colocar o feijão e o arroz no fogão ao mesmo tempo enquanto você refoga a cebola economiza tempo, gás e energia. A rotina de cozinhar várias coisas simultâneas faz diferença no final do mês.</div>
+    </div>
+  </div>
+
+  <div class="dica-card">
+    <div class="dica-icon">🛒</div>
+    <div class="dica-content">
+      <div class="dica-title">Repolho é o vegetal número 1 do orçamento curto</div>
+      <div class="dica-text">Metade de uma cabeça (~600g) custa ~R$2,50 e rende por mais de 4 dias se armazenado na geladeira em saco plástico fechado. Salada crua, refogado, na sopa — o repolho se adapta a tudo.</div>
+    </div>
+  </div>
+
+  <div class="dica-card">
+    <div class="dica-icon">🥚</div>
+    <div class="dica-content">
+      <div class="dica-title">1 ovo a mais no almoço = menos fome à tarde</div>
+      <div class="dica-text">Em vez de 2 ovos, use 3. O custo de R$0,75 a mais evita que você gaste R$5 num lanche às 16h por não ter saído satisfeito. Proteína é saciedade — não economize no que sustenta.</div>
+    </div>
+  </div>
+
+  <div class="dica-card">
+    <div class="dica-icon">💧</div>
+    <div class="dica-content">
+      <div class="dica-title">Água é tempero gratuito</div>
+      <div class="dica-text">Sopa com 1 litro de água + 1 tablete de caldo de galinha é uma refeição real por R$0,60 de líquido. A água quente com o caldo já tem sabor, sustenta e aquece. Simples demais pra ignorar.</div>
+    </div>
+  </div>
+</div>
+
+<!-- SUBSTITUIÇÕES -->
+<div class="page">
+  <div class="ph">
+    <span class="ph-brand">Do Mercado Pra Mesa</span>
+    <span class="ph-title">Tabela de Substituições — Versão R$50</span>
+  </div>
+
+  <div class="sec-title">Tabela de substituições</div>
+  <p class="sec-sub">Para quando o preço sobe, acabou o ingrediente ou o mercado do bairro não tem.</p>
+
+  <table class="subs-table">
+    <thead>
+      <tr>
+        <th>Se não tiver...</th>
+        <th class="arr"></th>
+        <th>Use no lugar</th>
+        <th>Custo comparado</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>Ovo</td><td class="arr">→</td><td>Sardinha (1 lata = 3 refeições)</td><td>Mais barato por refeição</td></tr>
+      <tr><td>Sardinha</td><td class="arr">→</td><td>Ovo (3 unidades)</td><td>Proteína equivalente</td></tr>
+      <tr><td>Repolho</td><td class="arr">→</td><td>Couve ou chuchu</td><td>Preço similar, verfique no dia</td></tr>
+      <tr><td>Feijão carioca</td><td class="arr">→</td><td>Lentilha (cozinha mais rápido)</td><td>Geralmente mais barato</td></tr>
+      <tr><td>Feijão carioca</td><td class="arr">→</td><td>Feijão preto</td><td>Preço similar — sem molho</td></tr>
+      <tr><td>Arroz</td><td class="arr">→</td><td>Macarrão</td><td>Mais barato por porção</td></tr>
+      <tr><td>Macarrão</td><td class="arr">→</td><td>Arroz</td><td>Preço similar</td></tr>
+      <tr><td>Banana</td><td class="arr">→</td><td>Café puro (sem lanche)</td><td>Economiza o dia</td></tr>
+      <tr><td>Caldo de galinha</td><td class="arr">→</td><td>Sal grosso + alho + cebola</td><td>Mais barato, igualmente saboroso</td></tr>
+      <tr><td>Óleo de soja</td><td class="arr">→</td><td>Qualquer óleo vegetal em oferta</td><td>Compre o mais barato da prateleira</td></tr>
+    </tbody>
+  </table>
+
+  <div class="red-box">
+    <div class="red-box-title">⛔ O que não substituir</div>
+    <p>Não retire o feijão — é sua principal fonte de ferro, proteína vegetal e fibras. Não retire completamente o ovo — é o alimento mais completo por preço. E não reduza sal e alho — são temperos que transformam comida básica em comida que você come de bom grado por 7 dias.</p>
+  </div>
+
+  <div style="height: 4mm;"></div>
+
+  <div class="chapter-divider">🎯 O segredo da semana com R$50</div>
+
+  <div class="highlight">
+    <ul>
+      <li>Ovo + feijão + arroz formam a base nutricional da semana — proteína, carboidrato e ferro</li>
+      <li>A sardinha entra 2 vezes como proteína animal — mais barata que frango nesse volume</li>
+      <li>O repolho é o único vegetal — mas ele já tem vitamina C, fibras e cobre o quesito de legumes</li>
+      <li>Banana fecha o café da manhã dos 4 primeiros dias com açúcar natural e potássio</li>
+      <li>Alho e cebola são a base aromática de cada receita — sem eles, tudo fica sem graça</li>
+      <li>Zero desperdício: o que sobrar de qualquer refeição vira a sopa do jantar</li>
+    </ul>
+  </div>
+
+  <div class="yellow-box">
+    <div class="yellow-box-title">💡 Dica final de compra</div>
+    <p>Antes de ir ao mercado, verifique se já tem algum item em casa. Sal, óleo e café são itens que geralmente já têm um pouco restando. Cada item que você não precisa comprar é dinheiro sobrando — e com R$50, qualquer centavo salvo é liberdade.</p>
+  </div>
+</div>
+
+<!-- ORGANIZAÇÃO SEMANAL -->
+<div class="page">
+  <div class="ph">
+    <span class="ph-brand">Do Mercado Pra Mesa</span>
+    <span class="ph-title">Organização Semanal</span>
+  </div>
+
+  <div class="sec-title">Como organizar a semana</div>
+  <p class="sec-sub">Quem não planeja gasta mais. Sem exceção.</p>
+
+  <table class="org-table">
+    <thead>
+      <tr>
+        <th>Quando</th>
+        <th>O que fazer</th>
+        <th>Tempo</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Antes de começar</td>
+        <td>Verificar o que ainda tem em casa. Ir ao mercado com a lista exata. Não comprar nada fora da lista.</td>
+        <td>30–40 min</td>
+      </tr>
+      <tr>
+        <td>Dia 1 — tarde</td>
+        <td>Cozinhar o feijão inteiro de uma vez. Armazenar metade na geladeira (até 4 dias) ou congelar (até 30 dias). Não deixar pra fazer todo dia — cansa e você vai desistir.</td>
+        <td>45 min</td>
+      </tr>
+      <tr>
+        <td>Todo dia</td>
+        <td>Cozinhar o arroz na hora (15 min). Fritar ou mexer os ovos de 5 a 8 min. Refogar o repolho em 10 min. Esquentar o feijão em 3 min.</td>
+        <td>20–30 min</td>
+      </tr>
+      <tr>
+        <td>Dia 3 ou 4</td>
+        <td>Verificar o que está acabando. O feijão vai estar pela metade. A banana pode já ter acabado. Ajustar o cardápio dos dias seguintes se precisar.</td>
+        <td>5 min</td>
+      </tr>
+      <tr>
+        <td>Fim de cada refeição</td>
+        <td>Guardar as sobras imediatamente na geladeira. Não deixar na panela — perde mais rápido. A sobra de hoje é o jantar de amanhã.</td>
+        <td>2 min</td>
+      </tr>
+      <tr>
+        <td>Dia 7 — jantar</td>
+        <td>Fazer a sopa da sobrevivência com tudo que sobrou. Nenhum ingrediente deve sobrar no final da semana. Se sobrou, você comprou demais — ajuste da próxima vez.</td>
+        <td>25 min</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div style="height: 4mm;"></div>
+
+  <div class="chapter-divider">⚡ A mentalidade que faz funcionar</div>
+
+  <div class="dica-card">
+    <div class="dica-icon">🧠</div>
+    <div class="dica-content">
+      <div class="dica-title">Repetição não é fracasso</div>
+      <div class="dica-text">Com R$50 você vai comer arroz, feijão e ovo várias vezes. Isso é estratégia, não pobreza permanente. Quem julgar o prato não está pagando a conta. Foque na meta: sair da semana sem dívida e com estômago cheio.</div>
+    </div>
+  </div>
+
+  <div class="dica-card">
+    <div class="dica-icon">🚫</div>
+    <div class="dica-content">
+      <div class="dica-title">A armadilha do delivery "baratinho"</div>
+      <div class="dica-text">O lanche de R$12 parece pequeno. Mas é o custo de 2 dias de almoço nesse sistema. Uma vez que você cede, o orçamento vai junto. Não existe "só dessa vez" quando a margem é zero.</div>
+    </div>
+  </div>
+
+  <div class="dica-card">
+    <div class="dica-icon">📈</div>
+    <div class="dica-content">
+      <div class="dica-title">Essa é a base — não o limite</div>
+      <div class="dica-text">R$50 por semana é o piso mínimo. Se na próxima semana você tiver R$80, adicione frango desfiado no cardápio e uma fruta extra. O sistema é escalável. Quanto mais você tem, mais você personaliza — mas a base continua a mesma.</div>
+    </div>
+  </div>
+
+  <div class="yellow-box" style="margin-top: 3mm;">
+    <div class="yellow-box-title">📊 Custo mensal com esse sistema</div>
+    <p>4 semanas com R$50 = R$200 por mês em comida. No Brasil, o tíquete médio de delivery é R$35–50 por pedido. Quem pede delivery 3x por semana gasta R$420–600/mês só nisso. Esse guia custa R$37 e economiza R$220+ no primeiro mês. O retorno é imediato.</p>
+  </div>
+</div>
+
+<!-- CTA FINAL -->
+<div class="cta-page">
+  <div class="cta-stripe-top"></div>
+  <div class="cta-stripe-bottom"></div>
+
+  <div class="cta-eyebrow">Você passou a semana</div>
+  <h2 class="cta-title">
+    Agora vai além<br/>dos <em>R$50.</em>
+  </h2>
+  <p class="cta-sub">
+    Você provou que é possível comer a semana inteira com R$50. Com disciplina e método. Agora imagine ter um guia novo todo mês — com mais orçamento, mais variedade, mais receitas. Sem perder o sistema.
+  </p>
+  <div style="width: 50px; height: 2px; background: var(--yellow); margin: 5mm auto;"></div>
+
+  <div class="cta-box">
+    <h4>O que tem no Plano Mensal:</h4>
+    <div class="cta-item"><span class="cta-dot">✓</span><span>4 semanas de cardápio novo por mês — R$50, R$80, R$120 e R$180</span></div>
+    <div class="cta-item"><span class="cta-dot">✓</span><span>Receitas novas toda semana — sem repetição cansativa</span></div>
+    <div class="cta-item"><span class="cta-dot">✓</span><span>Guia de sazonalidade: o que está mais barato em cada mês do ano</span></div>
+    <div class="cta-item"><span class="cta-dot">✓</span><span>Grupo de compradores com dicas em tempo real</span></div>
+    <div class="cta-item"><span class="cta-dot">✓</span><span>Suporte para dúvidas sobre receitas e substituições</span></div>
+  </div>
+
+  <div class="price-block">
+    <div style="font-size: 8pt; color: rgba(255,255,255,0.4); margin-bottom: 3px;">Plano Mensal — Do Mercado Pra Mesa</div>
+    <div class="price-old">Preço cheio: R$87/mês</div>
+    <div class="price-new">R$57<span style="font-size: 14pt; color: rgba(232,197,71,0.7);">/mês</span></div>
+  </div>
+
+  <p style="font-size: 9pt; color: rgba(255,255,255,0.4); max-width: 130mm; text-align: center; line-height: 1.6;">
+    Cancele quando quiser. Sem fidelidade, sem taxa.
+  </p>
+
+  <div class="cta-note">Acesse o link na bio ou no grupo onde você recebeu esse produto.</div>
+</div>
+
+</body>
+</html>
