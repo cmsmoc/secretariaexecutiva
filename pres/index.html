@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Inventário de Apresentações — CMS Montes Claros</title>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;900&family=Open+Sans:wght@300;400;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@48,700,1,0" rel="stylesheet" />
+<style>
+/* ════════════════════════════════════════════════════
+   CMS MONTES CLAROS · INVENTÁRIO (GALERIA)
+════════════════════════════════════════════════════ */
+
+:root {
+  --cms-navy:   #0D2E5A;
+  --cms-blue:   #1B6CB5;
+  --cms-green:  #1E8A4A;
+  --cms-yellow: #F5C400;
+  --cms-white:  #FFFFFF;
+  --cms-off:    #F7F8FA;
+  --cms-ink:    #111827;
+  --cms-muted:  #6B7280;
+  --cms-border: #E5E7EB;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Open Sans', sans-serif;
+  background: var(--cms-off);
+  color: var(--cms-ink);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ── HEADER ── */
+header {
+  background: var(--cms-navy);
+  color: var(--cms-white);
+  padding: 48px 24px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+.tri-stripe {
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 6px;
+  background: linear-gradient(to right, var(--cms-yellow) 33%, var(--cms-green) 33% 66%, var(--cms-blue) 66%);
+}
+header h1 {
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 900;
+  font-size: clamp(28px, 4vw, 48px);
+  letter-spacing: -1px;
+  margin-bottom: 8px;
+}
+header p {
+  color: rgba(255,255,255,0.7);
+  font-size: 16px;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+/* ── GALERIA (GRID) ── */
+main {
+  flex: 1;
+  padding: 64px 24px;
+  max-width: 1400px;
+  width: 100%;
+  margin: 0 auto;
+}
+.gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 40px;
+}
+
+/* ── CARDS DE APRESENTAÇÃO ── */
+.card {
+  background: var(--cms-white);
+  border-radius: 8px;
+  border: 1px solid var(--cms-border);
+  overflow: hidden;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+  transition: transform 0.2s, box-shadow 0.2s;
+  display: flex;
+  flex-direction: column;
+  cursor: pointer;
+}
+.card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 32px rgba(0,0,0,0.1);
+  border-color: var(--cms-blue);
+}
+
+/* O truque do Thumbnail com iframe escalonado */
+.thumb-container {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  position: relative;
+  overflow: hidden;
+  background: var(--cms-navy);
+  border-bottom: 3px solid var(--cms-yellow);
+}
+.thumb-iframe {
+  width: 400%;  /* Renderiza o iframe 4x maior */
+  height: 400%;
+  transform: scale(0.25); /* E o reduz para 25%, criando um thumbnail em HD */
+  transform-origin: top left;
+  border: none;
+  pointer-events: none; /* Evita interação no thumbnail */
+  position: absolute;
+  top: 0; left: 0;
+}
+
+.card-content {
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+.card-title {
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 700;
+  font-size: 16px;
+  color: var(--cms-navy);
+  margin-bottom: 12px;
+  line-height: 1.4;
+}
+.card-meta {
+  font-size: 12px;
+  color: var(--cms-muted);
+  margin-top: auto;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* ── MODAL (POPUP) ── */
+#presentation-modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(17, 24, 39, 0.95);
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+#presentation-modal.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.modal-header {
+  height: 56px;
+  background: var(--cms-navy);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 24px;
+  border-bottom: 2px solid var(--cms-yellow);
+}
+.modal-title {
+  color: var(--cms-white);
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 700;
+  font-size: 14px;
+  letter-spacing: 1px;
+}
+.btn-close {
+  background: transparent;
+  border: none;
+  color: var(--cms-white);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 700;
+  font-size: 12px;
+  transition: color 0.2s;
+}
+.btn-close:hover {
+  color: var(--cms-yellow);
+}
+
+.modal-body {
+  flex: 1;
+  position: relative;
+  background: var(--cms-ink);
+}
+.modal-body iframe {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: none;
+}
+
+/* ── LOADER / STATUS ── */
+#status-message {
+  text-align: center;
+  padding: 40px;
+  color: var(--cms-muted);
+  font-weight: 600;
+  grid-column: 1 / -1;
+}
+.material-symbols-rounded {
+  font-family: 'Material Symbols Rounded', sans-serif !important;
+  vertical-align: middle;
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="tri-stripe"></div>
+  <span class="material-symbols-rounded" style="font-size: 48px; color: var(--cms-yellow); margin-bottom: 16px;">library_books</span>
+  <h1>Apresentações Institucionais</h1>
+  <p>Inventário de arquivos interativos e apresentações do Conselho Municipal de Saúde de Montes Claros</p>
+</header>
+
+<main>
+  <div class="gallery-grid" id="gallery">
+    <div id="status-message">Carregando apresentações...</div>
+  </div>
+</main>
+
+<!-- Modal Fullscreen -->
+<div id="presentation-modal">
+  <div class="modal-header">
+    <div class="modal-title" id="modal-title-text">Apresentação CMS</div>
+    <button class="btn-close" onclick="closeModal()">
+      <span class="material-symbols-rounded">close</span> FECHAR
+    </button>
+  </div>
+  <div class="modal-body">
+    <iframe id="fullscreen-iframe" src=""></iframe>
+  </div>
+</div>
+
+<script>
+  // =========================================================================
+  // CONFIGURAÇÃO DO REPOSITÓRIO GITHUB
+  // Altere estas variáveis para as suas informações do GitHub.
+  // =========================================================================
+  const GITHUB_USERNAME = "cmsmoc"; // Ex: "cms-montes-claros"
+  const GITHUB_REPO = "secretariaexecutiva/pres"; // Ex: "apresentacoes"
+  const FOLDER_PATH = "";                // Deixe em branco "" se os arquivos estiverem na raiz
+  
+  // =========================================================================
+  // MODO MANUAL (FALLBACK)
+  // Caso a API do GitHub falhe (ou você teste offline no seu PC), 
+  // ele usará esta lista. Coloque os nomes exatos dos seus arquivos HTML aqui.
+  // =========================================================================
+  const MANUAL_FILES = [
+    "apresentacao_poder_informacao_completa.html",
+    "exemplo_arquivo_2.html"
+    // Adicione mais se precisar testar localmente
+  ];
+
+  const galleryEl = document.getElementById('gallery');
+  const modal = document.getElementById('presentation-modal');
+  const modalIframe = document.getElementById('fullscreen-iframe');
+  const modalTitle = document.getElementById('modal-title-text');
+
+  // Inicializa o app
+  async function init() {
+    let files = [];
+    
+    try {
+      // Tenta buscar os arquivos automaticamente via API do GitHub
+      const apiUrl = `https://api.github.com/repos/${GITHUB_USERNAME}/${GITHUB_REPO}/contents/${FOLDER_PATH}`;
+      const response = await fetch(apiUrl);
+      
+      if (response.ok) {
+        const data = await response.json();
+        // Filtra apenas arquivos com extensão .html (e ignora o próprio index.html)
+        files = data
+          .filter(item => item.name.endsWith('.html') && item.name !== 'index.html')
+          .map(item => item.name);
+      } else {
+        throw new Error("Erro na API");
+      }
+    } catch (error) {
+      console.log("Modo Automático falhou ou rodando localmente. Usando lista manual.");
+      // Se falhar (ex: testando no PC ou repo não configurado), usa a lista manual
+      files = MANUAL_FILES;
+    }
+
+    renderGallery(files);
+  }
+
+  // Renderiza os cartões na tela
+  function renderGallery(files) {
+    galleryEl.innerHTML = ''; // Limpa mensagem de loading
+
+    if (files.length === 0) {
+      galleryEl.innerHTML = '<div id="status-message">Nenhuma apresentação HTML encontrada na pasta.</div>';
+      return;
+    }
+
+    files.forEach(filename => {
+      // Formata o nome do arquivo para um título mais amigável (remove .html, troca _ por espaço)
+      let niceTitle = filename.replace('.html', '').replace(/_/g, ' ');
+      // Capitaliza a primeira letra
+      niceTitle = niceTitle.charAt(0).toUpperCase() + niceTitle.slice(1);
+
+      const card = document.createElement('div');
+      card.className = 'card';
+      card.onclick = () => openModal(filename, niceTitle);
+
+      card.innerHTML = `
+        <div class="thumb-container">
+          <iframe class="thumb-iframe" src="${filename}" scrolling="no" tabindex="-1"></iframe>
+        </div>
+        <div class="card-content">
+          <h3 class="card-title">${niceTitle}</h3>
+          <div class="card-meta">
+            <span class="material-symbols-rounded" style="font-size: 16px;">html</span> Arquivo Web Institucional
+          </div>
+        </div>
+      `;
+      
+      galleryEl.appendChild(card);
+    });
+  }
+
+  // Controle do Modal (Popup)
+  function openModal(filename, title) {
+    modalTitle.innerText = title;
+    modalIframe.src = filename;
+    modal.classList.add('active');
+    document.body.style.overflow = 'hidden'; // Impede rolagem do fundo
+  }
+
+  function closeModal() {
+    modal.classList.remove('active');
+    modalIframe.src = ""; // Para o vídeo/apresentação que estiver rodando
+    document.body.style.overflow = 'auto'; // Restaura rolagem
+  }
+
+  // Fechar modal com a tecla ESC
+  window.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') closeModal();
+  });
+
+  // Executa ao carregar
+  init();
+</script>
+
+</body>
+</html>
