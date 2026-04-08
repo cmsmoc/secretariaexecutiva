@@ -1,0 +1,1523 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dinheiro, Planejamento e Controle no SUS – CMS Montes Claros</title>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;900&family=Open+Sans:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --blue:#1B6CB5;--navy:#0D2E5A;--green:#1E8A4A;--yellow:#F5C400;
+  --white:#FFFFFF;--off:#F7F8FA;--ink:#111827;--muted:#6B7280;
+  --border:#E5E7EB;--red:#DC2626;--orange:#D97706;--radius:12px;
+  --shadow:0 4px 20px rgba(0,0,0,0.08);
+}
+html{scroll-behavior:smooth}
+body{font-family:'Open Sans',sans-serif;background:var(--off);color:var(--ink);line-height:1.7;font-size:15px}
+
+/* TOPBAR */
+.topbar{background:var(--navy);position:sticky;top:0;z-index:300;display:flex;align-items:center;justify-content:space-between;padding:0 32px;height:56px;box-shadow:0 2px 12px rgba(0,0,0,0.25)}
+.topbar-brand{font-family:'Montserrat',sans-serif;font-weight:900;font-size:12px;letter-spacing:2px;text-transform:uppercase;color:white}
+.topbar-brand span{color:var(--yellow)}
+.topbar-right{display:flex;align-items:center;gap:20px}
+.progress-pill{background:rgba(255,255,255,0.1);border-radius:20px;padding:4px 14px;font-size:11px;font-weight:700;color:rgba(255,255,255,0.8);font-family:'Montserrat',sans-serif;letter-spacing:1px}
+.progress-pill span{color:var(--yellow)}
+#hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;padding:4px}
+#hamburger span{width:22px;height:2px;background:white;border-radius:2px;transition:all .3s}
+
+/* LAYOUT */
+.layout{display:flex;min-height:calc(100vh - 56px)}
+.sidebar{width:280px;min-width:280px;background:var(--navy);padding:24px 0;position:sticky;top:56px;height:calc(100vh - 56px);overflow-y:auto;transition:transform .3s}
+.sidebar::-webkit-scrollbar{width:4px}
+.sidebar::-webkit-scrollbar-thumb{background:rgba(255,255,255,.15);border-radius:2px}
+.sidebar-section-label{font-family:'Montserrat',sans-serif;font-size:9px;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;color:rgba(255,255,255,.35);padding:16px 24px 6px}
+.nav-item{display:flex;align-items:center;gap:12px;padding:10px 24px;cursor:pointer;transition:background .15s;border:none;background:none;width:100%;text-align:left;text-decoration:none}
+.nav-item:hover{background:rgba(255,255,255,.06)}
+.nav-item.active{background:rgba(27,108,181,.35);border-left:3px solid var(--yellow)}
+.nav-item.active .nav-num{background:var(--yellow);color:var(--navy)}
+.nav-item.completed .nav-num{background:var(--green);color:white}
+.nav-num{width:26px;height:26px;border-radius:50%;background:rgba(255,255,255,.1);color:rgba(255,255,255,.6);font-family:'Montserrat',sans-serif;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .2s}
+.nav-text{font-size:12px;font-weight:600;color:rgba(255,255,255,.65);line-height:1.3}
+.nav-item.active .nav-text{color:white}
+.nav-item.completed .nav-text{color:rgba(255,255,255,.8)}
+
+/* MAIN */
+.main{flex:1;overflow:hidden}
+.module{display:none;animation:fadeIn .35s ease}
+.module.active{display:block}
+@keyframes fadeIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+
+/* HERO */
+.module-hero{background:var(--navy);padding:56px 48px 48px;position:relative;overflow:hidden}
+.module-hero::before{content:'';position:absolute;bottom:-80px;right:-80px;width:400px;height:400px;border-radius:50%;background:radial-gradient(circle,rgba(245,196,0,.12) 0%,transparent 65%)}
+.module-eyebrow{font-family:'Montserrat',sans-serif;font-size:10px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--yellow);margin-bottom:12px}
+.module-hero h1{font-family:'Montserrat',sans-serif;font-size:clamp(26px,4vw,46px);font-weight:900;line-height:1.05;letter-spacing:-1px;color:white;max-width:680px;margin-bottom:16px}
+.module-hero h1 em{color:var(--yellow);font-style:normal}
+.module-hero p{font-size:15px;color:rgba(255,255,255,.65);max-width:560px}
+
+/* CONTENT */
+.content-area{padding:40px 48px 60px;max-width:860px}
+
+/* CARDS */
+.card{background:white;border-radius:var(--radius);border:1px solid var(--border);box-shadow:var(--shadow);padding:28px;margin-bottom:24px}
+.card-title{font-family:'Montserrat',sans-serif;font-size:16px;font-weight:700;color:var(--navy);margin-bottom:14px;display:flex;align-items:center;gap:10px}
+.card-title .icon{width:32px;height:32px;border-radius:8px;background:var(--blue);color:white;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
+.card-title .icon.yellow{background:var(--yellow);color:var(--navy)}
+.card-title .icon.green{background:var(--green)}
+.card-title .icon.red{background:var(--red)}
+.card-title .icon.orange{background:var(--orange)}
+
+/* CALLOUTS */
+.callout{border-radius:10px;padding:18px 20px;margin:20px 0;border-left:4px solid}
+.callout-info{background:#EFF6FF;border-color:var(--blue)}
+.callout-warn{background:#FFFBEB;border-color:var(--yellow)}
+.callout-danger{background:#FEF2F2;border-color:var(--red)}
+.callout-success{background:#F0FDF4;border-color:var(--green)}
+.callout-label{font-family:'Montserrat',sans-serif;font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;margin-bottom:8px}
+.callout-info .callout-label{color:var(--blue)}
+.callout-warn .callout-label{color:var(--orange)}
+.callout-danger .callout-label{color:var(--red)}
+.callout-success .callout-label{color:var(--green)}
+.callout p,.callout ul{font-size:14px}
+.callout ul{padding-left:18px;margin-top:6px}
+.callout li{margin-bottom:4px}
+
+/* FONTE TAG */
+.fonte-tag{display:inline-block;padding:2px 10px;background:var(--navy);color:white;border-radius:4px;font-size:10px;font-weight:700;font-family:'Montserrat',sans-serif;letter-spacing:1px;text-transform:uppercase;margin-right:6px;vertical-align:middle}
+
+/* GRID */
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+.grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px}
+
+/* STAT CARD */
+.stat-card{background:var(--navy);color:white;border-radius:var(--radius);padding:24px;text-align:center}
+.stat-num{font-family:'Montserrat',sans-serif;font-size:36px;font-weight:900;color:var(--yellow);line-height:1}
+.stat-label{font-size:12px;color:rgba(255,255,255,.65);margin-top:6px}
+
+/* TABLE */
+.cms-table{width:100%;border-collapse:collapse;border-radius:var(--radius);overflow:hidden;font-size:14px}
+.cms-table thead tr{background:var(--navy);color:white}
+.cms-table th{padding:12px 16px;text-align:left;font-weight:700;font-family:'Montserrat',sans-serif;font-size:11px;letter-spacing:.5px}
+.cms-table td{padding:11px 16px;border-top:1px solid var(--border)}
+.cms-table tbody tr:nth-child(even) td{background:var(--off)}
+
+/* ACCORDION */
+.accordion{margin-bottom:12px;border-radius:10px;overflow:hidden;border:1px solid var(--border)}
+.accordion-header{background:white;padding:16px 20px;display:flex;justify-content:space-between;align-items:center;cursor:pointer;font-weight:600;font-size:14px;color:var(--navy);border:none;width:100%;text-align:left;transition:background .15s}
+.accordion-header:hover{background:var(--off)}
+.accordion-arrow{transition:transform .25s;font-size:12px;color:var(--muted)}
+.accordion-header.open .accordion-arrow{transform:rotate(180deg)}
+.accordion-body{display:none;padding:16px 20px;background:var(--off);font-size:14px;border-top:1px solid var(--border)}
+.accordion-body.open{display:block}
+
+/* TABS */
+.tab-bar{display:flex;border-bottom:2px solid var(--border);margin-bottom:24px}
+.tab-btn{padding:10px 20px;font-family:'Montserrat',sans-serif;font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;border:none;background:none;cursor:pointer;color:var(--muted);border-bottom:2px solid transparent;margin-bottom:-2px;transition:all .2s}
+.tab-btn.active{color:var(--blue);border-bottom-color:var(--blue)}
+.tab-panel{display:none}
+.tab-panel.active{display:block}
+
+/* QUIZ */
+.quiz-section{background:var(--navy);border-radius:var(--radius);padding:32px;margin-top:32px}
+.quiz-title{font-family:'Montserrat',sans-serif;font-size:11px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--yellow);margin-bottom:8px}
+.quiz-counter{color:rgba(255,255,255,.5);font-size:12px;margin-bottom:24px}
+.quiz-question{font-size:17px;font-weight:700;color:white;font-family:'Montserrat',sans-serif;margin-bottom:24px;line-height:1.45}
+.quiz-options{display:flex;flex-direction:column;gap:10px}
+.quiz-option{background:rgba(255,255,255,.07);border:2px solid rgba(255,255,255,.12);border-radius:10px;padding:14px 18px;cursor:pointer;color:rgba(255,255,255,.85);font-size:14px;transition:all .2s;text-align:left;width:100%}
+.quiz-option:hover:not(:disabled){background:rgba(255,255,255,.12);border-color:rgba(255,255,255,.3)}
+.quiz-option.correct{background:rgba(30,138,74,.25);border-color:var(--green);color:white}
+.quiz-option.wrong{background:rgba(220,38,38,.2);border-color:var(--red);color:white}
+.quiz-option.reveal{background:rgba(30,138,74,.15);border-color:rgba(30,138,74,.4)}
+.quiz-feedback{margin-top:20px;padding:18px 20px;border-radius:10px;display:none;font-size:14px}
+.quiz-feedback.correct{background:rgba(30,138,74,.2);border:1px solid rgba(30,138,74,.4);color:#86EFAC}
+.quiz-feedback.wrong{background:rgba(220,38,38,.15);border:1px solid rgba(220,38,38,.3);color:#FCA5A5}
+.quiz-feedback.show{display:block}
+.feedback-label{font-family:'Montserrat',sans-serif;font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;margin-bottom:8px}
+.quiz-feedback.correct .feedback-label{color:var(--green)}
+.quiz-feedback.wrong .feedback-label{color:var(--red)}
+.quiz-nav{display:flex;align-items:center;justify-content:space-between;margin-top:24px}
+.quiz-progress-bar{height:4px;background:rgba(255,255,255,.1);border-radius:2px;margin-bottom:20px}
+.quiz-progress-fill{height:100%;background:var(--yellow);border-radius:2px;transition:width .4s ease}
+.quiz-score{color:var(--yellow);font-weight:700;font-size:13px;font-family:'Montserrat',sans-serif}
+
+/* BUTTONS */
+.btn{display:inline-flex;align-items:center;gap:8px;font-family:'Montserrat',sans-serif;font-size:12px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;padding:12px 24px;border-radius:8px;border:none;cursor:pointer;text-decoration:none;transition:all .2s}
+.btn-primary{background:var(--yellow);color:var(--navy)}
+.btn-primary:hover{opacity:.88;transform:translateY(-1px)}
+.btn-secondary{background:var(--blue);color:white}
+.btn-secondary:hover{opacity:.88}
+.btn-outline{background:transparent;border:2px solid rgba(255,255,255,.3);color:rgba(255,255,255,.8)}
+.btn-outline:hover{border-color:white;color:white}
+.btn-sm{padding:8px 18px;font-size:11px}
+
+/* MODULE NAV */
+.module-nav{display:flex;justify-content:space-between;align-items:center;padding:32px 48px;border-top:1px solid var(--border);background:white}
+
+/* CHECKLIST */
+.checklist{list-style:none}
+.checklist li{display:flex;align-items:flex-start;gap:12px;padding:10px 0;border-bottom:1px solid var(--border);font-size:14px}
+.checklist li:last-child{border-bottom:none}
+.check-icon{width:22px;height:22px;border-radius:50%;background:var(--green);color:white;display:flex;align-items:center;justify-content:center;font-size:11px;flex-shrink:0;margin-top:1px}
+.check-icon.red{background:var(--red)}
+
+/* HIGHLIGHT BOX */
+.highlight-box{background:linear-gradient(135deg,var(--navy) 0%,#1a4a7a 100%);border-radius:var(--radius);padding:28px;color:white;margin-bottom:24px}
+.highlight-box h3{font-family:'Montserrat',sans-serif;font-weight:700;font-size:18px;color:var(--yellow);margin-bottom:12px}
+.highlight-box p{color:rgba(255,255,255,.8);font-size:14px}
+.highlight-box ul{color:rgba(255,255,255,.8);font-size:14px;padding-left:18px;margin-top:8px}
+.highlight-box li{margin-bottom:5px}
+.highlight-box strong{color:#93C5FD}
+
+/* FLOW STEPS */
+.flow-steps{display:flex;flex-direction:column;gap:0}
+.flow-step{display:flex;gap:16px;position:relative}
+.flow-step:not(:last-child)::after{content:'';position:absolute;left:15px;top:36px;width:2px;height:calc(100% + 0px);background:var(--border)}
+.step-dot{width:32px;height:32px;border-radius:50%;flex-shrink:0;background:var(--blue);color:white;display:flex;align-items:center;justify-content:center;font-family:'Montserrat',sans-serif;font-size:12px;font-weight:700;position:relative;z-index:1}
+.step-content{padding-bottom:24px}
+.step-content h4{font-weight:700;font-size:14px;color:var(--navy);margin-bottom:4px}
+.step-content p{font-size:13px;color:var(--muted);margin:0}
+
+/* PERSONA CARDS */
+.persona-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:24px}
+.persona-card{border-radius:var(--radius);padding:24px;border:2px solid}
+.persona-active{background:#F0FDF4;border-color:var(--green)}
+.persona-passive{background:#FEF2F2;border-color:#FCA5A5}
+.persona-label{font-family:'Montserrat',sans-serif;font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;margin-bottom:12px}
+.persona-active .persona-label{color:var(--green)}
+.persona-passive .persona-label{color:var(--red)}
+.persona-card ul{font-size:13px;list-style:none;display:flex;flex-direction:column;gap:6px}
+.persona-card li{display:flex;gap:8px}
+
+/* ALERT BOX */
+.alert-box{background:var(--navy);border-radius:var(--radius);padding:20px 24px;margin-bottom:16px;border-left:4px solid var(--yellow)}
+.alert-box-title{font-family:'Montserrat',sans-serif;font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--yellow);margin-bottom:8px}
+.alert-box p{color:rgba(255,255,255,.8);font-size:14px;margin:0}
+
+/* WELCOME */
+#welcome-screen{min-height:100vh;background:var(--navy);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:48px 24px;text-align:center}
+.welcome-logo{font-family:'Montserrat',sans-serif;font-size:11px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--yellow);margin-bottom:32px}
+.welcome-title{font-family:'Montserrat',sans-serif;font-size:clamp(28px,5.5vw,58px);font-weight:900;color:white;line-height:1.0;letter-spacing:-2px;max-width:760px;margin-bottom:24px}
+.welcome-title em{color:var(--yellow);font-style:normal}
+.welcome-sub{font-size:15px;color:rgba(255,255,255,.6);max-width:500px;margin-bottom:40px}
+.welcome-meta{display:flex;gap:32px;margin-bottom:48px;flex-wrap:wrap;justify-content:center}
+.meta-item{text-align:center}
+.meta-num{font-family:'Montserrat',sans-serif;font-size:28px;font-weight:900;color:var(--yellow);line-height:1}
+.meta-label{font-size:12px;color:rgba(255,255,255,.5);margin-top:4px}
+.stripe{width:120px;height:4px;margin:0 auto 40px;border-radius:2px;background:linear-gradient(to right,var(--yellow) 33%,var(--green) 33% 66%,var(--blue) 66%)}
+
+/* FINAL */
+.final-screen{background:var(--navy);border-radius:var(--radius);padding:40px;text-align:center;margin-bottom:24px}
+.trophy{font-size:64px;margin-bottom:16px}
+.final-score-display{font-family:'Montserrat',sans-serif;font-size:72px;font-weight:900;color:var(--yellow);line-height:1}
+.final-screen h2{color:white;font-family:'Montserrat',sans-serif;font-size:24px;font-weight:700;margin:12px 0 8px}
+.final-screen p{color:rgba(255,255,255,.65);font-size:14px}
+
+/* TYPOGRAPHY */
+.section-h2{font-family:'Montserrat',sans-serif;font-size:22px;font-weight:900;color:var(--navy);margin:32px 0 16px;letter-spacing:-.5px}
+.section-h3{font-family:'Montserrat',sans-serif;font-size:16px;font-weight:700;color:var(--navy);margin:24px 0 12px}
+p{margin-bottom:12px}
+strong{color:var(--navy)}
+.quote-block{border-left:4px solid var(--blue);padding:14px 20px;background:var(--off);border-radius:0 8px 8px 0;margin:20px 0;font-size:14px}
+.quote-source{font-size:11px;color:var(--muted);margin-top:6px;font-family:'Montserrat',sans-serif;font-weight:700}
+
+/* CYCLE DIAGRAM */
+.cycle-wrap{display:flex;align-items:center;justify-content:center;gap:0;flex-wrap:wrap;margin:24px 0}
+.cycle-node{background:var(--navy);color:white;border-radius:var(--radius);padding:18px 20px;text-align:center;flex:1;min-width:140px;max-width:200px}
+.cycle-node-label{font-family:'Montserrat',sans-serif;font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--yellow);margin-bottom:6px}
+.cycle-node-title{font-size:15px;font-weight:700}
+.cycle-arrow{font-size:24px;color:var(--muted);padding:0 8px;align-self:center}
+
+/* RESPONSIVE */
+@media(max-width:768px){
+  .sidebar{position:fixed;top:56px;left:0;z-index:200;transform:translateX(-100%);height:calc(100vh - 56px)}
+  .sidebar.open{transform:translateX(0)}
+  .main{width:100%}
+  #hamburger{display:flex}
+  .content-area{padding:24px 20px 48px}
+  .module-hero{padding:36px 20px}
+  .module-nav{padding:20px;flex-direction:column;gap:12px}
+  .grid-2{grid-template-columns:1fr}
+  .grid-3{grid-template-columns:1fr}
+  .persona-grid{grid-template-columns:1fr}
+  .cycle-wrap{flex-direction:column}
+  .cycle-arrow{transform:rotate(90deg)}
+  .quiz-section{padding:20px}
+}
+</style>
+</head>
+<body>
+
+<!-- WELCOME -->
+<div id="welcome-screen">
+  <div class="welcome-logo">Conselho Municipal de Saúde · <span style="color:white">Montes Claros – MG</span></div>
+  <div class="stripe"></div>
+  <h1 class="welcome-title">O Dinheiro, o <em>Planejamento</em><br>e o Controle no SUS</h1>
+  <p class="welcome-sub">Como funciona a gestão da saúde pública — e qual é o papel real do conselheiro nisso tudo.</p>
+  <div class="welcome-meta">
+    <div class="meta-item"><div class="meta-num">9</div><div class="meta-label">Módulos</div></div>
+    <div class="meta-item"><div class="meta-num">36</div><div class="meta-label">Questões</div></div>
+    <div class="meta-item"><div class="meta-num">~90</div><div class="meta-label">Minutos</div></div>
+  </div>
+  <button class="btn btn-primary" onclick="startCourse()" style="font-size:14px;padding:16px 40px;">▶ Começar Agora</button>
+  <p style="margin-top:20px;color:rgba(255,255,255,.35);font-size:12px;">Seu progresso é salvo automaticamente no navegador</p>
+</div>
+
+<!-- COURSE -->
+<div id="course-layout" style="display:none">
+  <div class="topbar">
+    <div class="topbar-brand">CMS <span>Montes Claros</span> · Gestão e Controle no SUS</div>
+    <div class="topbar-right">
+      <div class="progress-pill">Progresso: <span id="progress-text">0%</span></div>
+      <div id="hamburger" onclick="toggleSidebar()"><span></span><span></span><span></span></div>
+    </div>
+  </div>
+  <div class="layout">
+    <nav class="sidebar" id="sidebar">
+      <div class="sidebar-section-label">Módulos</div>
+      <button class="nav-item" data-module="0" onclick="goModule(0)"><div class="nav-num">0</div><div class="nav-text">Introdução</div></button>
+      <button class="nav-item" data-module="1" onclick="goModule(1)"><div class="nav-num">1</div><div class="nav-text">O Ciclo da Gestão</div></button>
+      <button class="nav-item" data-module="2" onclick="goModule(2)"><div class="nav-num">2</div><div class="nav-text">Plano Municipal de Saúde</div></button>
+      <button class="nav-item" data-module="3" onclick="goModule(3)"><div class="nav-num">3</div><div class="nav-text">Programação Anual (PAS)</div></button>
+      <button class="nav-item" data-module="4" onclick="goModule(4)"><div class="nav-num">4</div><div class="nav-text">Relatório de Gestão (RAG)</div></button>
+      <button class="nav-item" data-module="5" onclick="goModule(5)"><div class="nav-num">5</div><div class="nav-text">Orçamento e Prestação de Contas</div></button>
+      <button class="nav-item" data-module="6" onclick="goModule(6)"><div class="nav-num">6</div><div class="nav-text">O Papel do Conselho</div></button>
+      <button class="nav-item" data-module="7" onclick="goModule(7)"><div class="nav-num">7</div><div class="nav-text">Situações Reais</div></button>
+      <button class="nav-item" data-module="8" onclick="goModule(8)"><div class="nav-num">8</div><div class="nav-text">Encerramento</div></button>
+      <div class="sidebar-section-label" style="margin-top:16px">Avaliação</div>
+      <button class="nav-item" data-module="9" onclick="goModule(9)"><div class="nav-num" style="background:var(--yellow);color:var(--navy)">★</div><div class="nav-text" style="color:rgba(255,255,255,.85)">Quiz Completo</div></button>
+    </nav>
+
+    <main class="main" id="main-content">
+
+<!-- ═══ MÓDULO 0 — INTRODUÇÃO ═══ -->
+<article class="module active" id="module-0">
+  <div class="module-hero">
+    <div class="module-eyebrow">Módulo 0 · Introdução</div>
+    <h1>Para onde vai o <em>dinheiro</em> da saúde?</h1>
+    <p>Quem decide, quem executa, e onde o conselheiro entra em tudo isso.</p>
+  </div>
+  <div class="content-area">
+
+    <div class="callout callout-info">
+      <div class="callout-label">💡 A pergunta que todo conselheiro deveria fazer</div>
+      <p>O município de Montes Claros recebe dezenas de milhões de reais por ano para a saúde. <strong>Você sabe para onde esse dinheiro vai?</strong> Quem decide o que será comprado, contratado, construído? Quem verifica se foi feito de verdade? Este curso responde a essas perguntas — e mostra o papel central do conselheiro nesse processo.</p>
+    </div>
+
+    <h2 class="section-h2">O problema que ninguém fala</h2>
+    <p>Muitos conselheiros chegam às reuniões, votam a aprovação das contas e vão embora. Mas aprovaram o quê? Com base em quê? Entenderam o que estava escrito naquele relatório de 80 páginas?</p>
+
+    <div class="persona-grid">
+      <div class="persona-card persona-active">
+        <div class="persona-label">👤 Conselheiro Comprometido</div>
+        <ul>
+          <li><span style="color:var(--green)">✓</span> Lê o Plano de Saúde antes de votar</li>
+          <li><span style="color:var(--green)">✓</span> Pergunta por que uma meta não foi cumprida</li>
+          <li><span style="color:var(--green)">✓</span> Compara o que foi prometido com o que foi feito</li>
+          <li><span style="color:var(--green)">✓</span> Exige documentos antes das reuniões</li>
+          <li><span style="color:var(--green)">✓</span> Representa sua base com informação</li>
+        </ul>
+      </div>
+      <div class="persona-card persona-passive">
+        <div class="persona-label">👤 Conselheiro Displicente</div>
+        <ul>
+          <li><span style="color:var(--red)">✗</span> Aprova contas sem ler o relatório</li>
+          <li><span style="color:var(--red)">✗</span> Não sabe o que é PAS ou RAG</li>
+          <li><span style="color:var(--red)">✗</span> Nunca questiona números ou metas</li>
+          <li><span style="color:var(--red)">✗</span> Acredita que fiscalizar é "criar problema"</li>
+          <li><span style="color:var(--red)">✗</span> Sua presença é apenas formal</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="callout callout-warn">
+      <div class="callout-label">⚠️ Importante</div>
+      <p>O conselheiro displicente não é necessariamente mal-intencionado. Na maioria das vezes, é simplesmente alguém que <strong>nunca recebeu formação adequada</strong>. Este curso existe para mudar isso.</p>
+    </div>
+
+    <h2 class="section-h2">O que você vai aprender aqui</h2>
+    <div class="card">
+      <div class="flow-steps">
+        <div class="flow-step"><div class="step-dot" style="background:var(--yellow);color:var(--navy)">1</div><div class="step-content"><h4>O Ciclo da Gestão</h4><p>Como o dinheiro é planejado, executado e avaliado no SUS</p></div></div>
+        <div class="flow-step"><div class="step-dot">2</div><div class="step-content"><h4>Os Instrumentos</h4><p>PMS, PAS, RAG, LOA — o que cada um significa e para que serve</p></div></div>
+        <div class="flow-step"><div class="step-dot">3</div><div class="step-content"><h4>O Papel do Conselho</h4><p>O que analisar, o que questionar, quando aprovar ou não</p></div></div>
+        <div class="flow-step" style="padding-bottom:0"><div class="step-dot" style="background:var(--green)">4</div><div class="step-content" style="padding-bottom:0"><h4>Situações Reais</h4><p>Como agir diante de inconsistências, metas não cumpridas e falta de informação</p></div></div>
+      </div>
+    </div>
+
+    <div class="highlight-box">
+      <h3>🛡️ Fiscalizar é proteger — não obstruir</h3>
+      <p>Existe um equívoco comum: a ideia de que conselheiro que questiona "cria problema para a gestão." Na realidade, o contrário é verdade.</p>
+      <ul>
+        <li>Gestão <strong>bem fiscalizada</strong> usa melhor o dinheiro público</li>
+        <li>Controle social <strong>reduz desperdício</strong> e irregularidades</li>
+        <li>Transparência <strong>fortalece a confiança</strong> da população no SUS</li>
+        <li>Conselho atuante <strong>legitima</strong> as próprias decisões da gestão</li>
+      </ul>
+      <p style="margin-top:10px;font-style:italic;color:var(--yellow);">"Um bom gestor quer um bom conselho. Porque um bom conselho protege a gestão também."</p>
+    </div>
+
+    <div class="quiz-section" id="quiz-0">
+      <div class="quiz-title">🎯 Quiz · Módulo 0</div>
+      <div class="quiz-progress-bar"><div class="quiz-progress-fill" id="q0-prog" style="width:0%"></div></div>
+      <div class="quiz-counter" id="q0-counter">Questão 1 de 4</div>
+      <div class="quiz-question" id="q0-question"></div>
+      <div class="quiz-options" id="q0-options"></div>
+      <div class="quiz-feedback" id="q0-feedback"><div class="feedback-label" id="q0-flabel"></div><div id="q0-ftext"></div></div>
+      <div class="quiz-nav">
+        <span class="quiz-score" id="q0-score">Pontos: 0</span>
+        <div style="display:flex;gap:8px;align-items:center">
+          <button class="btn btn-outline btn-sm" style="opacity:.55" onclick="resetQuiz(0)">↺ Resetar</button>
+          <button class="btn btn-outline btn-sm" id="q0-next" onclick="nextQuestion(0)" style="display:none">Próxima →</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="module-nav"><span style="color:var(--muted);font-size:13px">← Início</span><button class="btn btn-primary" onclick="goModule(1)">Próximo Módulo →</button></div>
+</article>
+
+<!-- ═══ MÓDULO 1 — CICLO DA GESTÃO ═══ -->
+<article class="module" id="module-1">
+  <div class="module-hero">
+    <div class="module-eyebrow">Módulo 1 · O Ciclo</div>
+    <h1>Planejar → Executar → <em>Avaliar</em></h1>
+    <p>A lógica que governa tudo na gestão pública da saúde — e onde o conselho age em cada etapa.</p>
+  </div>
+  <div class="content-area">
+
+    <h2 class="section-h2">A lógica do ciclo</h2>
+    <p>Toda gestão pública séria segue um ciclo. No SUS, isso está previsto em lei e é sustentado por instrumentos específicos. Entender esse ciclo é entender como o dinheiro da saúde percorre seu caminho — do papel à realidade.</p>
+
+    <div class="cycle-wrap">
+      <div class="cycle-node" style="border-top:4px solid var(--yellow)">
+        <div class="cycle-node-label">Etapa 1</div>
+        <div class="cycle-node-title">📋 Planejar</div>
+        <div style="font-size:12px;color:rgba(255,255,255,.6);margin-top:6px">O que faremos?<br>Com quanto?</div>
+      </div>
+      <div class="cycle-arrow">→</div>
+      <div class="cycle-node" style="border-top:4px solid var(--blue)">
+        <div class="cycle-node-label">Etapa 2</div>
+        <div class="cycle-node-title">⚙️ Executar</div>
+        <div style="font-size:12px;color:rgba(255,255,255,.6);margin-top:6px">Fazer o que foi<br>planejado</div>
+      </div>
+      <div class="cycle-arrow">→</div>
+      <div class="cycle-node" style="border-top:4px solid var(--green)">
+        <div class="cycle-node-label">Etapa 3</div>
+        <div class="cycle-node-title">📊 Avaliar</div>
+        <div style="font-size:12px;color:rgba(255,255,255,.6);margin-top:6px">Deu certo?<br>O que melhorar?</div>
+      </div>
+      <div class="cycle-arrow">→</div>
+      <div class="cycle-node" style="border-top:4px solid var(--yellow)">
+        <div class="cycle-node-label">Volta ao início</div>
+        <div class="cycle-node-title">🔄 Replanejar</div>
+        <div style="font-size:12px;color:rgba(255,255,255,.6);margin-top:6px">Corrigir e planejar<br>o próximo período</div>
+      </div>
+    </div>
+
+    <h2 class="section-h2">Os instrumentos de cada etapa</h2>
+    <div class="card">
+      <table class="cms-table">
+        <thead><tr><th>Etapa</th><th>Instrumento</th><th>O que é</th><th>Prazo</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Planejar</strong></td><td>Plano Municipal de Saúde (PMS)</td><td>Define objetivos e diretrizes para 4 anos</td><td>Quadrienal</td></tr>
+          <tr><td><strong>Planejar</strong></td><td>Programação Anual de Saúde (PAS)</td><td>Detalha metas e ações para o ano</td><td>Anual</td></tr>
+          <tr><td><strong>Executar</strong></td><td>Lei Orçamentária Anual (LOA)</td><td>Autoriza o gasto do dinheiro</td><td>Anual</td></tr>
+          <tr><td><strong>Avaliar</strong></td><td>Relatório Anual de Gestão (RAG)</td><td>Mostra o que foi feito vs. o que foi planejado</td><td>Anual</td></tr>
+          <tr><td><strong>Avaliar</strong></td><td>Prestação de Contas Quadrimestral</td><td>Demonstra como o dinheiro foi gasto</td><td>4x/ano</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h2 class="section-h2">O papel do conselho em cada etapa</h2>
+    <div class="grid-3" style="margin-bottom:24px">
+      <div class="card" style="margin-bottom:0;border-top:4px solid var(--yellow)">
+        <div style="font-family:'Montserrat',sans-serif;font-weight:700;font-size:13px;color:var(--navy);margin-bottom:10px">📋 No Planejamento</div>
+        <ul style="font-size:13px;list-style:none;display:flex;flex-direction:column;gap:6px">
+          <li>→ Estabelecer diretrizes para o Plano <span class="fonte-tag">Lei 8.080, Art.37</span></li>
+          <li>→ Aprovar o Plano Municipal de Saúde</li>
+          <li>→ Aprovar a proposta orçamentária da saúde</li>
+        </ul>
+      </div>
+      <div class="card" style="margin-bottom:0;border-top:4px solid var(--blue)">
+        <div style="font-family:'Montserrat',sans-serif;font-weight:700;font-size:13px;color:var(--navy);margin-bottom:10px">⚙️ Na Execução</div>
+        <ul style="font-size:13px;list-style:none;display:flex;flex-direction:column;gap:6px">
+          <li>→ Acompanhar se as ações estão sendo realizadas</li>
+          <li>→ Fiscalizar aplicação dos recursos</li>
+          <li>→ Receber informações periódicas da gestão</li>
+        </ul>
+      </div>
+      <div class="card" style="margin-bottom:0;border-top:4px solid var(--green)">
+        <div style="font-family:'Montserrat',sans-serif;font-weight:700;font-size:13px;color:var(--navy);margin-bottom:10px">📊 Na Avaliação</div>
+        <ul style="font-size:13px;list-style:none;display:flex;flex-direction:column;gap:6px">
+          <li>→ Analisar o Relatório de Gestão</li>
+          <li>→ Aprovar ou reprovar prestação de contas</li>
+          <li>→ Exigir explicações sobre metas não cumpridas</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="callout callout-danger">
+      <div class="callout-label">🚨 O Erro Mais Comum</div>
+      <p>Muitos conselhos só participam da etapa de <strong>avaliação</strong> — e ainda assim de forma passiva. O conselheiro eficaz atua nas <strong>três etapas</strong>: ajuda a planejar, acompanha a execução e avalia com rigor.</p>
+    </div>
+
+    <h2 class="section-h2">Por que esse ciclo importa para o conselheiro?</h2>
+    <div class="accordion">
+      <button class="accordion-header" onclick="toggleAccordion(this)">E se o município não seguir o ciclo? <span class="accordion-arrow">▼</span></button>
+      <div class="accordion-body"><p>Gestão sem planejamento adequado tende a gastar de forma reativa — apagando incêndios em vez de investir estrategicamente. Sem avaliação, erros se repetem. O conselheiro que conhece o ciclo pode identificar quando uma etapa está sendo pulada ou feita de forma vazia (apenas formal).</p></div>
+    </div>
+    <div class="accordion">
+      <button class="accordion-header" onclick="toggleAccordion(this)">O ciclo tem base legal? <span class="accordion-arrow">▼</span></button>
+      <div class="accordion-body"><p>Sim. A Lei 8.080/1990 (Art. 36-37) estabelece os instrumentos de planejamento do SUS. A Lei 8.142/1990 vincula o repasse de recursos federais à existência de Plano de Saúde e Fundo Municipal de Saúde aprovados pelo conselho. A Portaria GM/MS 2.135/2013 regulamenta especificamente o planejamento no SUS.</p></div>
+    </div>
+
+    <div class="quiz-section" id="quiz-1">
+      <div class="quiz-title">🎯 Quiz · Módulo 1</div>
+      <div class="quiz-progress-bar"><div class="quiz-progress-fill" id="q1-prog" style="width:0%"></div></div>
+      <div class="quiz-counter" id="q1-counter">Questão 1 de 4</div>
+      <div class="quiz-question" id="q1-question"></div>
+      <div class="quiz-options" id="q1-options"></div>
+      <div class="quiz-feedback" id="q1-feedback"><div class="feedback-label" id="q1-flabel"></div><div id="q1-ftext"></div></div>
+      <div class="quiz-nav">
+        <span class="quiz-score" id="q1-score">Pontos: 0</span>
+        <div style="display:flex;gap:8px;align-items:center">
+          <button class="btn btn-outline btn-sm" style="opacity:.55" onclick="resetQuiz(1)">↺ Resetar</button>
+          <button class="btn btn-outline btn-sm" id="q1-next" onclick="nextQuestion(1)" style="display:none">Próxima →</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="module-nav"><button class="btn btn-secondary" onclick="goModule(0)">← Anterior</button><button class="btn btn-primary" onclick="goModule(2)">Próximo Módulo →</button></div>
+</article>
+
+<!-- ═══ MÓDULO 2 — PLANO MUNICIPAL DE SAÚDE ═══ -->
+<article class="module" id="module-2">
+  <div class="module-hero">
+    <div class="module-eyebrow">Módulo 2 · Planejamento</div>
+    <h1>O Plano Municipal de <em>Saúde</em></h1>
+    <p>O documento que define para onde a saúde do município vai nos próximos quatro anos.</p>
+  </div>
+  <div class="content-area">
+
+    <h2 class="section-h2">O que é o Plano Municipal de Saúde?</h2>
+    <div class="quote-block">"O Plano de Saúde é o instrumento central de planejamento para definição e implementação de todas as iniciativas no âmbito da saúde de cada esfera de gestão do SUS."<div class="quote-source">Portaria GM/MS nº 2.135/2013</div></div>
+
+    <p>Traduzindo: o Plano Municipal de Saúde (PMS) é o <strong>documento estratégico</strong> que define o que a secretaria de saúde vai fazer nos próximos <strong>4 anos</strong>. Ele deve conter:</p>
+    <div class="card">
+      <ul class="checklist">
+        <li><div class="check-icon">✓</div><div><strong>Análise da situação de saúde</strong> — quais são os problemas de saúde da população local?</div></li>
+        <li><div class="check-icon">✓</div><div><strong>Objetivos e diretrizes</strong> — quais são as prioridades para os próximos 4 anos?</div></li>
+        <li><div class="check-icon">✓</div><div><strong>Metas</strong> — o que especificamente será alcançado? (com números)</div></li>
+        <li><div class="check-icon">✓</div><div><strong>Indicadores</strong> — como saberemos se a meta foi atingida?</div></li>
+        <li><div class="check-icon">✓</div><div><strong>Recursos previstos</strong> — quanto vai custar?</div></li>
+      </ul>
+    </div>
+
+    <h2 class="section-h2">Por que o conselho precisa conhecer o PMS?</h2>
+    <p>Porque <strong>tudo parte do Plano</strong>. A Programação Anual de Saúde é elaborada com base no Plano. O orçamento da saúde deve ser compatível com o Plano. O Relatório de Gestão avalia se o Plano está sendo seguido.</p>
+    <p>Conselheiro que não conhece o Plano Municipal de Saúde <em>não tem parâmetro para avaliar nada</em>.</p>
+
+    <h2 class="section-h2">O que o conselheiro deve observar no PMS</h2>
+    <div class="tab-bar">
+      <button class="tab-btn active" onclick="switchTab('pms','metas',this)">📊 Metas e Indicadores</button>
+      <button class="tab-btn" onclick="switchTab('pms','epidemio',this)">🏥 Diagnóstico</button>
+      <button class="tab-btn" onclick="switchTab('pms','recursos',this)">💰 Recursos</button>
+      <button class="tab-btn" onclick="switchTab('pms','participacao',this)">👥 Participação</button>
+    </div>
+    <div id="pms-metas" class="tab-panel active">
+      <div class="card">
+        <div class="card-title"><div class="icon yellow">📊</div>Perguntas sobre Metas</div>
+        <ul style="font-size:14px;list-style:none;display:flex;flex-direction:column;gap:10px">
+          <li>→ As metas são <strong>mensuráveis</strong>? (têm número, não são vagas como "melhorar o atendimento")</li>
+          <li>→ Os <strong>indicadores</strong> são claros? Como serão medidos?</li>
+          <li>→ As metas são <strong>realistas</strong> ou são apenas otimistas no papel?</li>
+          <li>→ Há metas para as <strong>prioridades reais</strong> da população (doenças mais frequentes, filas, acesso)?</li>
+        </ul>
+        <div class="callout callout-warn" style="margin-top:16px;margin-bottom:0">
+          <div class="callout-label">⚠️ Pegadinha</div>
+          <p>Planos com metas vagas ("ampliar o acesso", "qualificar o atendimento") são difíceis de avaliar — e por isso fáceis de "cumprir" no papel sem mudar a realidade. Exija metas com <strong>números e prazos</strong>.</p>
+        </div>
+      </div>
+    </div>
+    <div id="pms-epidemio" class="tab-panel">
+      <div class="card">
+        <div class="card-title"><div class="icon">🏥</div>Perguntas sobre o Diagnóstico</div>
+        <ul style="font-size:14px;list-style:none;display:flex;flex-direction:column;gap:10px">
+          <li>→ O plano inclui análise das <strong>principais causas de adoecimento</strong> e morte no município?</li>
+          <li>→ Há dados sobre <strong>grupos vulneráveis</strong> (idosos, pessoas com deficiência, zona rural)?</li>
+          <li>→ O diagnóstico está <strong>atualizado</strong> — ou usa dados de anos atrás?</li>
+          <li>→ As prioridades do plano correspondem aos <strong>problemas identificados</strong>? (diagnóstico e objetivos precisam ser coerentes)</li>
+        </ul>
+      </div>
+    </div>
+    <div id="pms-recursos" class="tab-panel">
+      <div class="card">
+        <div class="card-title"><div class="icon green">💰</div>Perguntas sobre Recursos</div>
+        <ul style="font-size:14px;list-style:none;display:flex;flex-direction:column;gap:10px">
+          <li>→ O plano estima o <strong>custo de cada ação</strong>?</li>
+          <li>→ Os recursos previstos são <strong>compatíveis com o orçamento real</strong> do município?</li>
+          <li>→ Quais ações dependem de <strong>recursos federais ou estaduais</strong>? Isso está claro?</li>
+          <li>→ Há <strong>priorização</strong> caso os recursos não cheguem como esperado?</li>
+        </ul>
+      </div>
+    </div>
+    <div id="pms-participacao" class="tab-panel">
+      <div class="card">
+        <div class="card-title"><div class="icon red">👥</div>Perguntas sobre Participação</div>
+        <ul style="font-size:14px;list-style:none;display:flex;flex-direction:column;gap:10px">
+          <li>→ O plano foi elaborado <strong>com participação do conselho</strong>? Ou foi entregue pronto para aprovação?</li>
+          <li>→ Houve <strong>consulta à população</strong> sobre prioridades?</li>
+          <li>→ O conselho aprovou as <strong>diretrizes</strong> antes do plano ser elaborado?</li>
+          <li>→ O plano é <strong>acessível</strong> — um cidadão comum consegue entendê-lo?</li>
+        </ul>
+        <div class="callout callout-success" style="margin-top:16px;margin-bottom:0">
+          <div class="callout-label">✅ Como deve ser</div>
+          <p>O CMS deve estabelecer <strong>diretrizes</strong> para o Plano antes de ele ser elaborado — não apenas recebê-lo pronto. Isso está na Lei 8.080/90 e significa que o conselho deve agir <em>antes</em>, não apenas reagir.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="quiz-section" id="quiz-2">
+      <div class="quiz-title">🎯 Quiz · Módulo 2</div>
+      <div class="quiz-progress-bar"><div class="quiz-progress-fill" id="q2-prog" style="width:0%"></div></div>
+      <div class="quiz-counter" id="q2-counter">Questão 1 de 4</div>
+      <div class="quiz-question" id="q2-question"></div>
+      <div class="quiz-options" id="q2-options"></div>
+      <div class="quiz-feedback" id="q2-feedback"><div class="feedback-label" id="q2-flabel"></div><div id="q2-ftext"></div></div>
+      <div class="quiz-nav">
+        <span class="quiz-score" id="q2-score">Pontos: 0</span>
+        <div style="display:flex;gap:8px;align-items:center">
+          <button class="btn btn-outline btn-sm" style="opacity:.55" onclick="resetQuiz(2)">↺ Resetar</button>
+          <button class="btn btn-outline btn-sm" id="q2-next" onclick="nextQuestion(2)" style="display:none">Próxima →</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="module-nav"><button class="btn btn-secondary" onclick="goModule(1)">← Anterior</button><button class="btn btn-primary" onclick="goModule(3)">Próximo Módulo →</button></div>
+</article>
+
+<!-- ═══ MÓDULO 3 — PAS ═══ -->
+<article class="module" id="module-3">
+  <div class="module-hero">
+    <div class="module-eyebrow">Módulo 3 · Programação Anual</div>
+    <h1>A Programação Anual de <em>Saúde (PAS)</em></h1>
+    <p>Como o Plano de 4 anos vira ação concreta no ano seguinte.</p>
+  </div>
+  <div class="content-area">
+
+    <h2 class="section-h2">O que é a PAS?</h2>
+    <p>Se o Plano Municipal de Saúde é o <strong>mapa de 4 anos</strong>, a Programação Anual de Saúde (PAS) é o <strong>roteiro do ano</strong>. Ela pega as grandes diretrizes do Plano e as desdobra em ações específicas, com recursos alocados e responsáveis definidos.</p>
+
+    <div class="grid-2" style="margin-bottom:24px">
+      <div class="card" style="margin-bottom:0;border-top:4px solid var(--navy)">
+        <div class="card-title"><div class="icon">📋</div>Plano Municipal de Saúde</div>
+        <ul style="font-size:13px;list-style:none;display:flex;flex-direction:column;gap:6px">
+          <li>📅 Duração: <strong>4 anos</strong></li>
+          <li>🎯 Foco: objetivos e diretrizes estratégicas</li>
+          <li>💰 Nível: macro — estimativas gerais</li>
+          <li>📊 Linguagem: mais aberta, orientadora</li>
+        </ul>
+      </div>
+      <div class="card" style="margin-bottom:0;border-top:4px solid var(--yellow)">
+        <div class="card-title"><div class="icon yellow">⚡</div>Programação Anual (PAS)</div>
+        <ul style="font-size:13px;list-style:none;display:flex;flex-direction:column;gap:6px">
+          <li>📅 Duração: <strong>1 ano</strong></li>
+          <li>🎯 Foco: ações e metas operacionais</li>
+          <li>💰 Nível: micro — valores e responsáveis</li>
+          <li>📊 Linguagem: mais específica, mensurável</li>
+        </ul>
+      </div>
+    </div>
+
+    <h2 class="section-h2">O que deve ter numa boa PAS?</h2>
+    <div class="card">
+      <ul class="checklist">
+        <li><div class="check-icon">✓</div><div><strong>Ações específicas</strong> com descrição clara do que será feito</div></li>
+        <li><div class="check-icon">✓</div><div><strong>Metas quantitativas</strong> para cada ação (ex: "realizar 1.200 consultas de pré-natal")</div></li>
+        <li><div class="check-icon">✓</div><div><strong>Responsáveis</strong> — quem vai executar cada ação?</div></li>
+        <li><div class="check-icon">✓</div><div><strong>Recursos financeiros</strong> previstos para cada ação</div></li>
+        <li><div class="check-icon">✓</div><div><strong>Cronograma</strong> — quando cada ação acontecerá?</div></li>
+        <li><div class="check-icon">✓</div><div><strong>Vínculo com o Plano</strong> — a que objetivo do PMS cada ação corresponde?</div></li>
+      </ul>
+    </div>
+
+    <h2 class="section-h2">Como o conselheiro usa a PAS na prática?</h2>
+    <div class="highlight-box">
+      <h3>🔍 A PAS é o parâmetro de cobrança</h3>
+      <p>A PAS é o documento que o conselheiro usa para <strong>cobrar resultados durante o ano</strong>. Quando a gestão apresentar o RAG (Relatório de Gestão) no final do ano, o conselheiro deve comparar o RAG com a PAS item por item:</p>
+      <ul>
+        <li>"A meta era 1.200 consultas de pré-natal. Quantas foram feitas?"</li>
+        <li>"Foi prevista abertura de 2 UBS. Foram abertas?"</li>
+        <li>"R$ 500 mil eram previstos para vigilância sanitária. Foi executado?"</li>
+      </ul>
+      <p style="margin-top:10px">Sem a PAS, o conselheiro não tem parâmetro para questionar — a gestão pode apresentar qualquer resultado e dizer que foi bom.</p>
+    </div>
+
+    <div class="callout callout-danger">
+      <div class="callout-label">🚨 Sinal de alerta</div>
+      <p>Se a PAS for elaborada <strong>depois que as ações já começaram</strong>, ou se ela for igual ao ano anterior sem ajustes, ou se não tiver metas numéricas — esses são sinais de que o planejamento é apenas formal, não real.</p>
+    </div>
+
+    <div class="quiz-section" id="quiz-3">
+      <div class="quiz-title">🎯 Quiz · Módulo 3</div>
+      <div class="quiz-progress-bar"><div class="quiz-progress-fill" id="q3-prog" style="width:0%"></div></div>
+      <div class="quiz-counter" id="q3-counter">Questão 1 de 4</div>
+      <div class="quiz-question" id="q3-question"></div>
+      <div class="quiz-options" id="q3-options"></div>
+      <div class="quiz-feedback" id="q3-feedback"><div class="feedback-label" id="q3-flabel"></div><div id="q3-ftext"></div></div>
+      <div class="quiz-nav">
+        <span class="quiz-score" id="q3-score">Pontos: 0</span>
+        <div style="display:flex;gap:8px;align-items:center">
+          <button class="btn btn-outline btn-sm" style="opacity:.55" onclick="resetQuiz(3)">↺ Resetar</button>
+          <button class="btn btn-outline btn-sm" id="q3-next" onclick="nextQuestion(3)" style="display:none">Próxima →</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="module-nav"><button class="btn btn-secondary" onclick="goModule(2)">← Anterior</button><button class="btn btn-primary" onclick="goModule(4)">Próximo Módulo →</button></div>
+</article>
+
+<!-- ═══ MÓDULO 4 — RAG ═══ -->
+<article class="module" id="module-4">
+  <div class="module-hero">
+    <div class="module-eyebrow">Módulo 4 · Avaliação</div>
+    <h1>O Relatório Anual de <em>Gestão (RAG)</em></h1>
+    <p>O documento que mostra — ou deveria mostrar — se o que foi prometido foi cumprido.</p>
+  </div>
+  <div class="content-area">
+
+    <h2 class="section-h2">O que é o RAG?</h2>
+    <p>O Relatório Anual de Gestão (RAG) é o instrumento que a gestão usa para <strong>prestar contas ao conselho</strong> sobre a execução do que foi planejado na PAS. Ele responde à pergunta: <em>"O que foi feito com o dinheiro da saúde no ano passado?"</em></p>
+
+    <div class="callout callout-info">
+      <div class="callout-label">📋 Base legal</div>
+      <p>A elaboração do RAG é obrigação legal da gestão. <span class="fonte-tag">Lei 8.142/1990</span> A lei exige que o relatório seja apreciado pelo Conselho de Saúde para que o município receba recursos federais do SUS no período seguinte.</p>
+    </div>
+
+    <h2 class="section-h2">Como ler um RAG — guia prático</h2>
+    <div class="card">
+      <div class="flow-steps">
+        <div class="flow-step"><div class="step-dot" style="background:var(--yellow);color:var(--navy)">1</div><div class="step-content"><h4>Pegue a PAS do mesmo ano</h4><p>Você vai comparar o que foi planejado com o que foi executado. Sem a PAS, o RAG não tem parâmetro.</p></div></div>
+        <div class="flow-step"><div class="step-dot">2</div><div class="step-content"><h4>Verifique se as metas estão listadas</h4><p>O RAG deve mencionar cada meta da PAS e informar o percentual de execução.</p></div></div>
+        <div class="flow-step"><div class="step-dot">3</div><div class="step-content"><h4>Procure as metas não cumpridas</h4><p>Um bom RAG não esconde metas que não foram atingidas — ele explica por quê.</p></div></div>
+        <div class="flow-step"><div class="step-dot">4</div><div class="step-content"><h4>Confira os recursos financeiros</h4><p>O que foi previsto no orçamento? O que foi efetivamente executado? A diferença precisa de justificativa.</p></div></div>
+        <div class="flow-step" style="padding-bottom:0"><div class="step-dot" style="background:var(--green)">5</div><div class="step-content" style="padding-bottom:0"><h4>Pergunte sobre resultados de saúde</h4><p>Não basta fazer — precisa melhorar. A mortalidade infantil caiu? O tempo de espera diminuiu? Os indicadores de saúde melhoraram?</p></div></div>
+      </div>
+    </div>
+
+    <h2 class="section-h2">Sinais de alerta num RAG</h2>
+    <div class="grid-2" style="margin-bottom:24px">
+      <div class="card" style="margin-bottom:0;border-top:4px solid var(--red)">
+        <div style="font-family:'Montserrat',sans-serif;font-weight:700;font-size:13px;color:var(--red);margin-bottom:12px">🚨 RAG Problemático</div>
+        <ul style="font-size:13px;list-style:none;display:flex;flex-direction:column;gap:8px">
+          <li><span style="color:var(--red)">✗</span> Não menciona as metas da PAS</li>
+          <li><span style="color:var(--red)">✗</span> Lista atividades sem percentuais de execução</li>
+          <li><span style="color:var(--red)">✗</span> Não explica metas não cumpridas</li>
+          <li><span style="color:var(--red)">✗</span> Muito texto, poucos dados</li>
+          <li><span style="color:var(--red)">✗</span> Não mostra impacto nos indicadores de saúde</li>
+          <li><span style="color:var(--red)">✗</span> Entregue na véspera da reunião</li>
+        </ul>
+      </div>
+      <div class="card" style="margin-bottom:0;border-top:4px solid var(--green)">
+        <div style="font-family:'Montserrat',sans-serif;font-weight:700;font-size:13px;color:var(--green);margin-bottom:12px">✅ RAG de Qualidade</div>
+        <ul style="font-size:13px;list-style:none;display:flex;flex-direction:column;gap:8px">
+          <li><span style="color:var(--green)">✓</span> Vincula cada ação à meta da PAS</li>
+          <li><span style="color:var(--green)">✓</span> Mostra % de execução de cada meta</li>
+          <li><span style="color:var(--green)">✓</span> Explica desvios e propõe correções</li>
+          <li><span style="color:var(--green)">✓</span> Dados claros e verificáveis</li>
+          <li><span style="color:var(--green)">✓</span> Apresenta evolução de indicadores</li>
+          <li><span style="color:var(--green)">✓</span> Entregue com antecedência adequada</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="accordion">
+      <button class="accordion-header" onclick="toggleAccordion(this)">O conselho pode reprovar o RAG? <span class="accordion-arrow">▼</span></button>
+      <div class="accordion-body"><p>Sim. O conselho delibera sobre a aprovação do RAG. Se o relatório for inconsistente, incompleto ou mostrar gestão inadequada dos recursos, o conselho pode recusar a aprovação, solicitar complementações ou encaminhar ao Ministério Público.</p><p>Na prática, a maioria dos conselhos aprova o RAG sem análise aprofundada — o que enfraquece o controle social e não incentiva a gestão a melhorar a qualidade dos relatórios.</p></div>
+    </div>
+
+    <div class="quiz-section" id="quiz-4">
+      <div class="quiz-title">🎯 Quiz · Módulo 4</div>
+      <div class="quiz-progress-bar"><div class="quiz-progress-fill" id="q4-prog" style="width:0%"></div></div>
+      <div class="quiz-counter" id="q4-counter">Questão 1 de 4</div>
+      <div class="quiz-question" id="q4-question"></div>
+      <div class="quiz-options" id="q4-options"></div>
+      <div class="quiz-feedback" id="q4-feedback"><div class="feedback-label" id="q4-flabel"></div><div id="q4-ftext"></div></div>
+      <div class="quiz-nav">
+        <span class="quiz-score" id="q4-score">Pontos: 0</span>
+        <div style="display:flex;gap:8px;align-items:center">
+          <button class="btn btn-outline btn-sm" style="opacity:.55" onclick="resetQuiz(4)">↺ Resetar</button>
+          <button class="btn btn-outline btn-sm" id="q4-next" onclick="nextQuestion(4)" style="display:none">Próxima →</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="module-nav"><button class="btn btn-secondary" onclick="goModule(3)">← Anterior</button><button class="btn btn-primary" onclick="goModule(5)">Próximo Módulo →</button></div>
+</article>
+
+<!-- ═══ MÓDULO 5 — ORÇAMENTO E PRESTAÇÃO DE CONTAS ═══ -->
+<article class="module" id="module-5">
+  <div class="module-hero">
+    <div class="module-eyebrow">Módulo 5 · Finanças</div>
+    <h1>Orçamento e <em>Prestação de Contas</em></h1>
+    <p>Como o dinheiro entra, como é autorizado e como o conselho fiscaliza o gasto.</p>
+  </div>
+  <div class="content-area">
+
+    <h2 class="section-h2">De onde vem o dinheiro da saúde?</h2>
+    <div class="grid-3" style="margin-bottom:24px">
+      <div class="stat-card"><div class="stat-num">15%</div><div class="stat-label">Receita própria municipal mínima vinculada à saúde (EC 29/2000)</div></div>
+      <div class="stat-card" style="background:var(--blue)"><div class="stat-num" style="font-size:28px;color:white">+</div><div class="stat-label">Transferências federais (FNS, PAB, programas específicos)</div></div>
+      <div class="stat-card" style="background:#1a4a7a"><div class="stat-num" style="font-size:28px;color:rgba(255,255,255,.7)">+</div><div class="stat-label">Transferências estaduais (conforme legislação estadual)</div></div>
+    </div>
+
+    <h2 class="section-h2">O Orçamento Público — Entendendo o Básico</h2>
+    <div class="card">
+      <table class="cms-table">
+        <thead><tr><th>Instrumento</th><th>O que é</th><th>Período</th><th>Papel do Conselho</th></tr></thead>
+        <tbody>
+          <tr><td><strong>PPA</strong> — Plano Plurianual</td><td>Define grandes diretrizes orçamentárias</td><td>4 anos</td><td>Conhecer e influenciar</td></tr>
+          <tr><td><strong>LDO</strong> — Lei de Diretrizes Orçamentárias</td><td>Estabelece metas e prioridades para o ano</td><td>Anual</td><td>Acompanhar</td></tr>
+          <tr><td><strong>LOA</strong> — Lei Orçamentária Anual</td><td>Autoriza os gastos detalhados do ano</td><td>Anual</td><td>Aprovar proposta setorial</td></tr>
+          <tr><td><strong>Fundo Municipal de Saúde</strong></td><td>Conta específica para recursos da saúde</td><td>Permanente</td><td>Fiscalizar e aprovar contas</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h2 class="section-h2">A Prestação de Contas Quadrimestral</h2>
+    <p>A cada <strong>4 meses</strong>, o gestor deve apresentar ao conselho a prestação de contas do Fundo Municipal de Saúde. <span class="fonte-tag">Lei 8.142/1990</span></p>
+    <div class="card">
+      <div class="card-title"><div class="icon yellow">💰</div>O que verificar na prestação de contas</div>
+      <ul class="checklist">
+        <li><div class="check-icon">✓</div><div><strong>Receitas recebidas</strong>: quanto entrou de cada fonte (federal, estadual, municipal)?</div></li>
+        <li><div class="check-icon">✓</div><div><strong>Despesas executadas</strong>: para onde foi o dinheiro? Em quê foi gasto?</div></li>
+        <li><div class="check-icon">✓</div><div><strong>Percentual de execução</strong>: o que foi previsto vs. o que foi gasto</div></li>
+        <li><div class="check-icon">✓</div><div><strong>Contratos e convênios</strong>: com quem o município tem contratos? Por quanto? Por quanto tempo?</div></li>
+        <li><div class="check-icon">✓</div><div><strong>Transferências para entidades</strong>: ONGs, Santas Casas e outros que recebem repasses públicos</div></li>
+      </ul>
+    </div>
+
+    <h2 class="section-h2">Sinais de alerta nas finanças</h2>
+    <div style="display:flex;flex-direction:column;gap:12px;margin-bottom:24px">
+      <div class="alert-box"><div class="alert-box-title">🚩 Alerta 1</div><p>Despesas muito concentradas em poucos fornecedores — especialmente em contratos de prestação de serviços sem licitação adequada.</p></div>
+      <div class="alert-box"><div class="alert-box-title">🚩 Alerta 2</div><p>Percentual de execução orçamentária muito baixo no meio do ano — pode indicar subdimensionamento ou paralisia dos serviços.</p></div>
+      <div class="alert-box"><div class="alert-box-title">🚩 Alerta 3</div><p>Recursos aplicados fora da função saúde — o município tem obrigação constitucional de aplicar um percentual mínimo e não pode usar esse dinheiro para outros fins.</p></div>
+      <div class="alert-box"><div class="alert-box-title">🚩 Alerta 4</div><p>Transferências a entidades sem relatório de atividades apresentado ao conselho — dinheiro público dado a terceiros exige prestação de contas.</p></div>
+    </div>
+
+    <div class="quiz-section" id="quiz-5">
+      <div class="quiz-title">🎯 Quiz · Módulo 5</div>
+      <div class="quiz-progress-bar"><div class="quiz-progress-fill" id="q5-prog" style="width:0%"></div></div>
+      <div class="quiz-counter" id="q5-counter">Questão 1 de 4</div>
+      <div class="quiz-question" id="q5-question"></div>
+      <div class="quiz-options" id="q5-options"></div>
+      <div class="quiz-feedback" id="q5-feedback"><div class="feedback-label" id="q5-flabel"></div><div id="q5-ftext"></div></div>
+      <div class="quiz-nav">
+        <span class="quiz-score" id="q5-score">Pontos: 0</span>
+        <div style="display:flex;gap:8px;align-items:center">
+          <button class="btn btn-outline btn-sm" style="opacity:.55" onclick="resetQuiz(5)">↺ Resetar</button>
+          <button class="btn btn-outline btn-sm" id="q5-next" onclick="nextQuestion(5)" style="display:none">Próxima →</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="module-nav"><button class="btn btn-secondary" onclick="goModule(4)">← Anterior</button><button class="btn btn-primary" onclick="goModule(6)">Próximo Módulo →</button></div>
+</article>
+
+<!-- ═══ MÓDULO 6 — PAPEL DO CONSELHO ═══ -->
+<article class="module" id="module-6">
+  <div class="module-hero">
+    <div class="module-eyebrow">Módulo 6 · Atuação</div>
+    <h1>O Papel do Conselho <em>na Prática</em></h1>
+    <p>O que perguntar, o que exigir e quando aprovar ou não.</p>
+  </div>
+  <div class="content-area">
+
+    <h2 class="section-h2">As perguntas que um conselheiro eficaz faz</h2>
+    <div class="card">
+      <div class="tab-bar">
+        <button class="tab-btn active" onclick="switchTab('perguntas','plano',this)">📋 Sobre o Plano</button>
+        <button class="tab-btn" onclick="switchTab('perguntas','orcamento',this)">💰 Sobre o Orçamento</button>
+        <button class="tab-btn" onclick="switchTab('perguntas','rag',this)">📊 Sobre o RAG</button>
+      </div>
+      <div id="perguntas-plano" class="tab-panel active">
+        <ul style="font-size:14px;list-style:none;display:flex;flex-direction:column;gap:10px">
+          <li>→ "Qual é a meta para redução da mortalidade infantil neste plano?"</li>
+          <li>→ "Por que esse objetivo foi priorizado e não aquele?"</li>
+          <li>→ "Como vamos medir se essa diretriz está sendo seguida?"</li>
+          <li>→ "Esse plano foi discutido com a população? Como?"</li>
+          <li>→ "As metas são compatíveis com os recursos disponíveis?"</li>
+        </ul>
+      </div>
+      <div id="perguntas-orcamento" class="tab-panel">
+        <ul style="font-size:14px;list-style:none;display:flex;flex-direction:column;gap:10px">
+          <li>→ "Quanto do orçamento está previsto para atenção básica vs. média complexidade?"</li>
+          <li>→ "Qual é o percentual da receita municipal aplicado em saúde?"</li>
+          <li>→ "Quem são os principais fornecedores? Como foram contratados?"</li>
+          <li>→ "Por que houve subeexecução nesta rubrica?"</li>
+          <li>→ "Quais entidades recebem repasses? Prestaram contas?"</li>
+        </ul>
+      </div>
+      <div id="perguntas-rag" class="tab-panel">
+        <ul style="font-size:14px;list-style:none;display:flex;flex-direction:column;gap:10px">
+          <li>→ "Esta meta tinha 100% previsto — por que foi executado apenas 60%?"</li>
+          <li>→ "Os indicadores de saúde melhoraram ou pioraram? Por quê?"</li>
+          <li>→ "O que foi feito com o recurso que não foi executado conforme previsto?"</li>
+          <li>→ "Quais ações serão ajustadas no próximo ano em função dos resultados?"</li>
+          <li>→ "Este relatório reflete a realidade vivida pela população?"</li>
+        </ul>
+      </div>
+    </div>
+
+    <h2 class="section-h2">Quando aprovar e quando não aprovar?</h2>
+    <div class="grid-2" style="margin-bottom:24px">
+      <div class="card" style="margin-bottom:0;border-top:4px solid var(--green)">
+        <div style="font-family:'Montserrat',sans-serif;font-weight:700;font-size:13px;color:var(--green);margin-bottom:12px">✅ Aprovar quando...</div>
+        <ul style="font-size:13px;list-style:none;display:flex;flex-direction:column;gap:8px">
+          <li>→ O documento está completo e compreensível</li>
+          <li>→ As metas são mensuráveis e realistas</li>
+          <li>→ Os recursos estão bem justificados</li>
+          <li>→ Há coerência entre plano, orçamento e execução</li>
+          <li>→ Há transparência sobre o que não funcionou</li>
+        </ul>
+      </div>
+      <div class="card" style="margin-bottom:0;border-top:4px solid var(--red)">
+        <div style="font-family:'Montserrat',sans-serif;font-weight:700;font-size:13px;color:var(--red);margin-bottom:12px">🚫 Não aprovar / solicitar revisão quando...</div>
+        <ul style="font-size:13px;list-style:none;display:flex;flex-direction:column;gap:8px">
+          <li>→ O documento está incompleto ou incompreensível</li>
+          <li>→ As metas são vagas e não mensuráveis</li>
+          <li>→ Há inconsistência entre os números</li>
+          <li>→ Metas não cumpridas não têm explicação</li>
+          <li>→ O documento foi entregue sem tempo para análise</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="callout callout-success">
+      <div class="callout-label">✅ Boa prática</div>
+      <p>Antes de aprovar qualquer documento, o conselho pode encaminhar para análise da <strong>Câmara Técnica de Gestão e Finanças</strong>. A câmara técnica faz uma análise detalhada e apresenta um parecer ao plenário — facilitando a tomada de decisão fundamentada.</p>
+    </div>
+
+    <h2 class="section-h2">Quando o conselho pode exigir mais informações?</h2>
+    <div class="highlight-box">
+      <h3>📄 Sempre. Sem exceção.</h3>
+      <p>O conselho tem o direito de solicitar qualquer informação técnica, administrativa, financeira e operacional sobre o SUS municipal. Isso inclui: contratos, convênios, folhas de pagamento, notas fiscais, relatórios técnicos. <span style="color:rgba(255,255,255,.5)">Lei 8.080/90, Art. 37</span></p>
+      <ul>
+        <li>Negar informação ao conselho é obstrução ao controle social</li>
+        <li>O conselheiro pode solicitar via Câmara Técnica ou diretamente pelo plenário</li>
+        <li>Registre sempre por escrito (ata, ofício) os pedidos não atendidos</li>
+      </ul>
+    </div>
+
+    <div class="quiz-section" id="quiz-6">
+      <div class="quiz-title">🎯 Quiz · Módulo 6</div>
+      <div class="quiz-progress-bar"><div class="quiz-progress-fill" id="q6-prog" style="width:0%"></div></div>
+      <div class="quiz-counter" id="q6-counter">Questão 1 de 4</div>
+      <div class="quiz-question" id="q6-question"></div>
+      <div class="quiz-options" id="q6-options"></div>
+      <div class="quiz-feedback" id="q6-feedback"><div class="feedback-label" id="q6-flabel"></div><div id="q6-ftext"></div></div>
+      <div class="quiz-nav">
+        <span class="quiz-score" id="q6-score">Pontos: 0</span>
+        <div style="display:flex;gap:8px;align-items:center">
+          <button class="btn btn-outline btn-sm" style="opacity:.55" onclick="resetQuiz(6)">↺ Resetar</button>
+          <button class="btn btn-outline btn-sm" id="q6-next" onclick="nextQuestion(6)" style="display:none">Próxima →</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="module-nav"><button class="btn btn-secondary" onclick="goModule(5)">← Anterior</button><button class="btn btn-primary" onclick="goModule(7)">Próximo Módulo →</button></div>
+</article>
+
+<!-- ═══ MÓDULO 7 — SITUAÇÕES REAIS ═══ -->
+<article class="module" id="module-7">
+  <div class="module-hero">
+    <div class="module-eyebrow">Módulo 7 · Situações Reais</div>
+    <h1>O que fazer quando as coisas <em>não batem</em>?</h1>
+    <p>Simulações práticas das situações mais comuns que um conselheiro enfrenta.</p>
+  </div>
+  <div class="content-area">
+
+    <!-- SITUAÇÃO 1 -->
+    <div class="card" style="border-top:4px solid var(--red);margin-bottom:24px">
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px">
+        <div style="background:var(--red);color:white;border-radius:6px;padding:4px 12px;font-family:'Montserrat',sans-serif;font-size:10px;font-weight:700;letter-spacing:1px">SITUAÇÃO 1</div>
+        <div style="font-weight:700;font-size:15px;color:var(--navy)">Relatório Inconsistente</div>
+      </div>
+      <p style="font-style:italic;font-size:14px;color:var(--muted);margin-bottom:16px">O gestor apresenta o RAG com 95% das metas cumpridas. Mas na reunião anterior, vários conselheiros relataram que UBS estavam fechadas, falta de medicamentos e filas enormes. Os números não batem com a realidade sentida.</p>
+      <div class="tab-bar">
+        <button class="tab-btn active" onclick="switchTab('s1','diagnostico',this)">❓ O Problema</button>
+        <button class="tab-btn" onclick="switchTab('s1','acao',this)">✅ Como agir</button>
+      </div>
+      <div id="s1-diagnostico" class="tab-panel active">
+        <p>Há uma discrepância entre os dados do RAG e a realidade observada. Isso pode indicar: (1) metas mal definidas que são fáceis de "cumprir" no papel, (2) dados incorretos, (3) metodologia inadequada de medição.</p>
+        <p>O conselheiro não deve simplesmente aprovar. Mas também não deve apenas "achar que está errado" — precisa questionar com base em evidências.</p>
+      </div>
+      <div id="s1-acao" class="tab-panel">
+        <ul style="font-size:14px;padding-left:18px;display:flex;flex-direction:column;gap:8px">
+          <li>Solicite os <strong>dados primários</strong> que embasam os percentuais do RAG</li>
+          <li>Peça a <strong>metodologia de cálculo</strong> dos indicadores — como foi medido?</li>
+          <li>Compare com dados externos: DATASUS, relatórios do TCE, ouvidoria</li>
+          <li>Encaminhe para análise da <strong>Câmara Técnica</strong> antes de votar</li>
+          <li>Se necessário, solicite a presença de técnicos para esclarecer em plenário</li>
+          <li>Registre em ata as inconsistências identificadas — mesmo que o RAG seja aprovado</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- SITUAÇÃO 2 -->
+    <div class="card" style="border-top:4px solid var(--orange);margin-bottom:24px">
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px">
+        <div style="background:var(--orange);color:white;border-radius:6px;padding:4px 12px;font-family:'Montserrat',sans-serif;font-size:10px;font-weight:700;letter-spacing:1px">SITUAÇÃO 2</div>
+        <div style="font-weight:700;font-size:15px;color:var(--navy)">Metas Sistematicamente Não Cumpridas</div>
+      </div>
+      <p style="font-style:italic;font-size:14px;color:var(--muted);margin-bottom:16px">Pelo terceiro ano consecutivo, a meta de realização de cirurgias eletivas foi cumprida em menos de 40%. A gestão justifica com "falta de profissionais" e "pandemia" — mas a pandemia acabou há dois anos.</p>
+      <div class="tab-bar">
+        <button class="tab-btn active" onclick="switchTab('s2','diagnostico',this)">❓ O Problema</button>
+        <button class="tab-btn" onclick="switchTab('s2','acao',this)">✅ Como agir</button>
+      </div>
+      <div id="s2-diagnostico" class="tab-panel active">
+        <p>Meta repetidamente não cumprida sem mudança de estratégia indica um de dois problemas: (1) a meta era irreal desde o início e nunca foi revisada, ou (2) há um problema estrutural que a gestão não está resolvendo.</p>
+      </div>
+      <div id="s2-acao" class="tab-panel">
+        <ul style="font-size:14px;padding-left:18px;display:flex;flex-direction:column;gap:8px">
+          <li>Exija um <strong>plano de ação</strong> específico para superar o problema identificado</li>
+          <li>Questione: "O que foi feito de diferente nos últimos 3 anos para resolver isso?"</li>
+          <li>Solicite dados sobre a <strong>fila de espera</strong>: quantos pacientes aguardam? Há quanto tempo?</li>
+          <li>Proponha revisão da meta na próxima PAS com justificativa técnica</li>
+          <li>Se o problema for falta de profissionais, pergunte sobre concursos, contratos e convênios na área</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- SITUAÇÃO 3 -->
+    <div class="card" style="border-top:4px solid var(--blue);margin-bottom:24px">
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px">
+        <div style="background:var(--blue);color:white;border-radius:6px;padding:4px 12px;font-family:'Montserrat',sans-serif;font-size:10px;font-weight:700;letter-spacing:1px">SITUAÇÃO 3</div>
+        <div style="font-weight:700;font-size:15px;color:var(--navy)">Documentos Entregues na Véspera</div>
+      </div>
+      <p style="font-style:italic;font-size:14px;color:var(--muted);margin-bottom:16px">O RAG de 90 páginas chegou por e-mail às 23h da noite anterior à reunião que vai votar a aprovação. É impossível analisar em tempo hábil.</p>
+      <div class="tab-bar">
+        <button class="tab-btn active" onclick="switchTab('s3','diagnostico',this)">❓ O Problema</button>
+        <button class="tab-btn" onclick="switchTab('s3','acao',this)">✅ Como agir</button>
+      </div>
+      <div id="s3-diagnostico" class="tab-panel active">
+        <p>Enviar documentos complexos sem tempo para análise é uma prática — às vezes intencional — que garante aprovação sem escrutínio real. O conselheiro que aprova assim está assumindo responsabilidade sem informação.</p>
+      </div>
+      <div id="s3-acao" class="tab-panel">
+        <ul style="font-size:14px;padding-left:18px;display:flex;flex-direction:column;gap:8px">
+          <li>O conselheiro tem o direito de pedir <strong>adiamento da votação</strong></li>
+          <li>Documente em ata o horário de recebimento do material</li>
+          <li>Proponha que o plenário estabeleça uma <strong>norma interna</strong>: documentos enviados com menos de X dias de antecedência não serão votados na mesma reunião</li>
+          <li>Use o mecanismo de <strong>"pedido de vistas"</strong> para adiar a votação para a próxima reunião</li>
+          <li>Reforce que isso não é obstrucionismo — é <strong>responsabilidade</strong></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="quiz-section" id="quiz-7">
+      <div class="quiz-title">🎯 Quiz · Módulo 7</div>
+      <div class="quiz-progress-bar"><div class="quiz-progress-fill" id="q7-prog" style="width:0%"></div></div>
+      <div class="quiz-counter" id="q7-counter">Questão 1 de 4</div>
+      <div class="quiz-question" id="q7-question"></div>
+      <div class="quiz-options" id="q7-options"></div>
+      <div class="quiz-feedback" id="q7-feedback"><div class="feedback-label" id="q7-flabel"></div><div id="q7-ftext"></div></div>
+      <div class="quiz-nav">
+        <span class="quiz-score" id="q7-score">Pontos: 0</span>
+        <div style="display:flex;gap:8px;align-items:center">
+          <button class="btn btn-outline btn-sm" style="opacity:.55" onclick="resetQuiz(7)">↺ Resetar</button>
+          <button class="btn btn-outline btn-sm" id="q7-next" onclick="nextQuestion(7)" style="display:none">Próxima →</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="module-nav"><button class="btn btn-secondary" onclick="goModule(6)">← Anterior</button><button class="btn btn-primary" onclick="goModule(8)">Próximo Módulo →</button></div>
+</article>
+
+<!-- ═══ MÓDULO 8 — ENCERRAMENTO ═══ -->
+<article class="module" id="module-8">
+  <div class="module-hero">
+    <div class="module-eyebrow">Módulo 8 · Conclusão</div>
+    <h1>O Conselheiro que <em>Faz Diferença</em></h1>
+    <p>Checklist final, referência rápida e pontuação total.</p>
+  </div>
+  <div class="content-area">
+
+    <div class="final-screen">
+      <div class="trophy">🏆</div>
+      <div class="final-score-display" id="final-score-display">---</div>
+      <h2>Pontos conquistados</h2>
+      <p id="final-msg">Complete os quizzes dos módulos anteriores para ver sua pontuação total!</p>
+      <div style="margin-top:20px" id="final-breakdown"></div>
+    </div>
+
+    <h2 class="section-h2">✅ Checklist do Conselheiro de Gestão</h2>
+    <div class="card">
+      <p style="margin-bottom:16px;font-size:14px;color:var(--muted)">Marque o que você já pratica — e o que ainda precisa desenvolver:</p>
+      <div id="checklist-interactive" style="display:flex;flex-direction:column;gap:8px"></div>
+    </div>
+
+    <h2 class="section-h2">📋 Referência Rápida dos Instrumentos</h2>
+    <div class="card">
+      <table class="cms-table">
+        <thead><tr><th>Instrumento</th><th>Período</th><th>O que o conselheiro faz</th><th>Base Legal</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Plano Municipal de Saúde (PMS)</strong></td><td>4 anos</td><td>Define diretrizes, aprova o plano</td><td>Lei 8.080/90 Art.36</td></tr>
+          <tr><td><strong>Programação Anual de Saúde (PAS)</strong></td><td>Anual</td><td>Analisa metas e indicadores</td><td>Portaria 2.135/2013</td></tr>
+          <tr><td><strong>Relatório Anual de Gestão (RAG)</strong></td><td>Anual</td><td>Aprova ou reprova, exige explicações</td><td>Lei 8.142/90</td></tr>
+          <tr><td><strong>Prestação de Contas Quadrimestral</strong></td><td>4x ao ano</td><td>Analisa receitas e despesas</td><td>Lei 8.142/90</td></tr>
+          <tr><td><strong>LOA — Proposta Orçamentária da Saúde</strong></td><td>Anual</td><td>Aprova proposta setorial</td><td>Lei 8.080/90 Art.36</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="highlight-box">
+      <h3>💬 A última reflexão</h3>
+      <p>Fiscalizar sem conhecimento é ineficaz. Conhecimento sem ação é omissão. O conselheiro que faz diferença une as duas coisas: <strong>entende os instrumentos</strong> e <strong>age com base neles</strong>.</p>
+      <p style="margin-top:10px">O dinheiro da saúde pública pertence ao povo. O conselheiro é o representante do povo dentro do sistema. Essa não é uma função simbólica — é uma responsabilidade concreta.</p>
+      <p style="margin-top:10px;font-style:italic;color:var(--yellow);">"Controle social bem exercido não prejudica a gestão — ele a torna melhor."</p>
+    </div>
+
+    <div class="quiz-section" id="quiz-8">
+      <div class="quiz-title">🎯 Quiz Final · Módulo 8</div>
+      <div class="quiz-progress-bar"><div class="quiz-progress-fill" id="q8-prog" style="width:0%"></div></div>
+      <div class="quiz-counter" id="q8-counter">Questão 1 de 4</div>
+      <div class="quiz-question" id="q8-question"></div>
+      <div class="quiz-options" id="q8-options"></div>
+      <div class="quiz-feedback" id="q8-feedback"><div class="feedback-label" id="q8-flabel"></div><div id="q8-ftext"></div></div>
+      <div class="quiz-nav">
+        <span class="quiz-score" id="q8-score">Pontos: 0</span>
+        <div style="display:flex;gap:8px;align-items:center">
+          <button class="btn btn-outline btn-sm" style="opacity:.55" onclick="resetQuiz(8)">↺ Resetar</button>
+          <button class="btn btn-outline btn-sm" id="q8-next" onclick="nextQuestion(8)" style="display:none">Próxima →</button>
+        </div>
+      </div>
+    </div>
+
+    <div style="text-align:center;margin-top:40px;padding:40px;background:var(--navy);border-radius:var(--radius)">
+      <div style="font-family:'Montserrat',sans-serif;font-size:12px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--yellow);margin-bottom:16px">PARABÉNS!</div>
+      <p style="color:rgba(255,255,255,.7);font-size:15px;margin-bottom:24px">Você concluiu a formação sobre Gestão e Controle no SUS.</p>
+      <button class="btn btn-primary" onclick="restartCourse()">↺ Reiniciar Formação</button>
+      <button class="btn btn-outline" onclick="goModule(9)" style="margin-left:12px;margin-top:8px">★ Quiz Completo</button>
+    </div>
+  </div>
+  <div class="module-nav"><button class="btn btn-secondary" onclick="goModule(7)">← Anterior</button><span style="color:var(--muted);font-size:13px">Fim da Formação 🎓</span></div>
+</article>
+
+<!-- ═══ MÓDULO 9 — QUIZ COMPLETO ═══ -->
+<article class="module" id="module-9">
+  <div class="module-hero" style="background:linear-gradient(135deg,var(--navy) 0%,#1a3a6b 100%)">
+    <div class="module-eyebrow">Avaliação Final</div>
+    <h1>Quiz <em>Completo</em></h1>
+    <p>Todas as 36 questões em sequência. Teste seu domínio completo sobre gestão e controle no SUS.</p>
+  </div>
+  <div class="content-area">
+    <div class="callout callout-info">
+      <div class="callout-label">📋 Como funciona</div>
+      <p>Este quiz reúne todas as questões dos 9 módulos em sequência. Cada questão indica de qual módulo ela vem. Os resultados dos quizzes individuais não são afetados — você pode refazê-lo à vontade.</p>
+    </div>
+    <div class="quiz-section" id="quiz-full" style="background:linear-gradient(135deg,#0a2244 0%,var(--navy) 100%);border:1px solid rgba(245,196,0,.2)">
+      <div class="quiz-title" style="color:var(--yellow)">⭐ Quiz Completo — 36 Questões</div>
+      <div class="quiz-progress-bar"><div class="quiz-progress-fill" id="qfull-prog" style="width:0%;background:var(--yellow)"></div></div>
+      <div class="quiz-counter" id="qfull-counter" style="color:rgba(255,255,255,.6)">Questão 1 de 36</div>
+      <div class="quiz-question" id="qfull-question"></div>
+      <div class="quiz-options" id="qfull-options"></div>
+      <div class="quiz-feedback" id="qfull-feedback"><div class="feedback-label" id="qfull-flabel"></div><div id="qfull-ftext"></div></div>
+      <div class="quiz-nav">
+        <span class="quiz-score" id="qfull-score">Pontos: 0</span>
+        <div style="display:flex;gap:8px;align-items:center">
+          <button class="btn btn-outline btn-sm" style="opacity:.55" onclick="resetQuiz('full')">↺ Resetar</button>
+          <button class="btn btn-outline btn-sm" id="qfull-next" onclick="nextFullQuestion()" style="display:none">Próxima →</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="module-nav"><button class="btn btn-secondary" onclick="goModule(8)">← Encerramento</button><button class="btn btn-primary" onclick="restartCourse()">↺ Reiniciar Formação</button></div>
+</article>
+
+    </main>
+  </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+
+// ══════════════════════════════════════════════════════════
+//  QUIZZES DATA
+// ══════════════════════════════════════════════════════════
+const QUIZZES = [
+// MÓDULO 0
+[
+  {q:"Por que um conselheiro que aprova documentos sem lê-los compromete o controle social?",opts:["Porque pode ser punido criminalmente","Porque não tem base para questionar, acompanhar ou cobrar resultados","Porque o regimento proíbe aprovação sem leitura","Porque precisa assinar todos os documentos individualmente"],correct:1,feedback:"Controle social eficaz depende de informação. Sem ler, o conselheiro não sabe o que está aprovando, não pode comparar o prometido com o executado, e não representa adequadamente sua base."},
+  {q:"Qual é a afirmação CORRETA sobre a relação entre fiscalização e gestão?",opts:["Fiscalizar prejudica a gestão porque cria obstáculos","Fiscalizar melhora a gestão porque incentiva transparência e uso eficiente dos recursos","Fiscalizar é papel exclusivo do TCE e do Ministério Público","Fiscalizar só faz sentido quando há suspeita de irregularidade"],correct:1,feedback:"Gestão bem fiscalizada tende a ser mais eficiente, transparente e legítima. O controle social não é adversarial — é complementar à boa gestão. Gestores comprometidos deveriam querer um conselho atuante."},
+  {q:"Qual é o perfil do conselheiro comprometido com o controle social?",opts:["Aprova tudo para manter boa relação com a gestão","Questiona tudo sem embasamento técnico","Lê documentos, faz perguntas fundamentadas e compara o prometido com o executado","Representa apenas os interesses do seu grupo de origem"],correct:2,feedback:"O conselheiro eficaz equilibra independência e colaboração: lê os documentos, faz perguntas com base no que leu, acompanha a execução ao longo do ano e cobra com evidências — não com achismo."},
+  {q:"O dinheiro da saúde pública pertence a quem?",opts:["À Secretaria de Saúde que o administra","Ao Prefeito Municipal enquanto gestor eleito","À população — o conselheiro é seu representante no sistema","Ao Fundo Nacional de Saúde que faz os repasses"],correct:2,feedback:"Os recursos da saúde são públicos — pertencem à população. O conselheiro não é um fiscal burocrático; é o representante da sociedade dentro do sistema. Essa perspectiva muda a forma como o papel é exercido."}
+],
+// MÓDULO 1
+[
+  {q:"Qual instrumento de planejamento do SUS define objetivos para os próximos 4 anos?",opts:["Programação Anual de Saúde (PAS)","Relatório Anual de Gestão (RAG)","Plano Municipal de Saúde (PMS)","Lei Orçamentária Anual (LOA)"],correct:2,feedback:"O Plano Municipal de Saúde é o instrumento quadrienal que define os objetivos estratégicos. A PAS traduz esse plano em ações anuais. O RAG avalia se o que foi planejado foi executado."},
+  {q:"Em qual etapa do ciclo de gestão o Relatório Anual de Gestão (RAG) se encaixa?",opts:["Planejamento","Execução","Avaliação","Financiamento"],correct:2,feedback:"O RAG é o instrumento de avaliação — ele olha para trás e responde: 'o que foi feito com o que foi planejado?' Essa é a etapa em que o conselho exerce sua função mais visível de controle."},
+  {q:"Um conselho que só age na etapa de avaliação (aprovando relatórios) está:",opts:["Atuando plenamente — essa é a função do conselho","Atuando parcialmente — perde a influência nas etapas de planejamento e execução","Agindo corretamente, pois a execução é responsabilidade da gestão","Cumprindo a lei — a lei só exige presença na avaliação"],correct:1,feedback:"O conselho deve agir nas três etapas: estabelecendo diretrizes no planejamento, acompanhando durante a execução e avaliando ao final. Conselhos que atuam apenas no final perdem poder de influenciar as decisões antes que sejam tomadas."},
+  {q:"A Lei 8.142/1990 vincula o repasse de recursos federais à existência de:",opts:["Prefeito eleito democraticamente","Secretaria de Saúde estruturada com equipe técnica","Conselho de Saúde e Plano de Saúde aprovados pelo conselho","Relatório de Gestão apresentado ao TCE"],correct:2,feedback:"A Lei 8.142/90 é clara: sem Conselho de Saúde em funcionamento e sem Plano de Saúde aprovado pelo conselho, o município não recebe recursos federais do SUS. Isso dá ao conselho um poder estrutural enorme — muitas vezes subutilizado."}
+],
+// MÓDULO 2
+[
+  {q:"O Plano Municipal de Saúde deve conter, entre outros elementos:",opts:["Apenas a listagem de equipamentos a serem comprados","Análise da situação de saúde, objetivos, metas com indicadores e recursos previstos","Somente as metas pactuadas com o Ministério da Saúde","A relação de servidores da Secretaria de Saúde"],correct:1,feedback:"Um Plano de Saúde completo inclui: diagnóstico epidemiológico, objetivos estratégicos, metas mensuráveis com indicadores, recursos previstos e responsáveis. Planos sem esses elementos são documentos formais sem função real."},
+  {q:"Uma meta como 'melhorar a qualidade do atendimento nas UBS' é:",opts:["Excelente — é abrangente e ambiciosa","Problemática — é vaga, não mensurável e impossível de avaliar objetivamente","Adequada para um plano de 4 anos","Aceitável se acompanhada de relatório qualitativo"],correct:1,feedback:"Metas vagas são difíceis de avaliar — e por isso fáceis de 'cumprir' no papel sem mudar a realidade. O conselheiro deve exigir metas com números: 'reduzir o tempo médio de espera de 45 para 20 minutos até dezembro de 2025'."},
+  {q:"Quando o conselho deve agir em relação ao Plano Municipal de Saúde?",opts:["Apenas ao final, para aprovar o plano elaborado pela gestão","Antes da elaboração, estabelecendo diretrizes, e depois para aprovar","Nunca — o plano é responsabilidade exclusiva da Secretaria de Saúde","Apenas se houver denúncia de irregularidade no plano"],correct:1,feedback:"Lei 8.080/90, Art.37: o conselho deve estabelecer diretrizes para o Plano antes de ele ser elaborado. Isso significa que o conselho age antes, influenciando as prioridades — não apenas recebe o plano pronto para carimbar."},
+  {q:"Por que o conselheiro precisa conhecer o Plano Municipal de Saúde?",opts:["Para poder criticar a gestão com argumentos políticos","Porque o plano é o parâmetro para avaliar tudo — PAS, RAG e orçamento derivam dele","Para poder propor sua substituição a qualquer momento","Porque é uma exigência formal do regimento interno"],correct:1,feedback:"O PMS é o documento-mãe: a PAS deve ser coerente com ele, o orçamento deve viabilizá-lo e o RAG deve avaliar seu cumprimento. Conselheiro sem conhecimento do plano não tem base para questionar nada dos outros instrumentos."}
+],
+// MÓDULO 3
+[
+  {q:"Qual é a principal diferença entre o Plano Municipal de Saúde e a Programação Anual de Saúde?",opts:["O PMS é para estados; a PAS é para municípios","O PMS define estratégias para 4 anos; a PAS desdobra em ações e metas para 1 ano","São a mesma coisa com nomes diferentes","O PMS é elaborado pela gestão; a PAS é elaborada pelo conselho"],correct:1,feedback:"O PMS é o mapa estratégico de 4 anos — define para onde ir. A PAS é o roteiro operacional anual — define como chegar lá esse ano, com ações específicas, metas numéricas, responsáveis e recursos."},
+  {q:"Uma PAS de qualidade deve ter, obrigatoriamente:",opts:["Apenas as ações previstas para o primeiro semestre","Ações com metas quantitativas, responsáveis, recursos e vínculo com o PMS","Somente as ações financiadas com recursos federais","A relação de todos os servidores que executarão as ações"],correct:1,feedback:"Uma PAS sem metas quantitativas não permite avaliação posterior. Sem responsáveis definidos, não há accountability. Sem vínculo com o PMS, pode-se desviar dos objetivos estratégicos. Todos esses elementos são necessários para que o documento seja um instrumento real de gestão."},
+  {q:"Como o conselheiro usa a PAS durante o ano?",opts:["Guarda o documento e só olha no final do ano","Usa a PAS como parâmetro para cobrar resultados ao longo do ano, comparando com o executado","Usa apenas para criticar a gestão em reuniões","A PAS é para uso interno da gestão — o conselheiro não precisa acessá-la"],correct:1,feedback:"A PAS é a ferramenta de cobrança do conselheiro ao longo do ano. Sem ela, não há parâmetro: a gestão pode apresentar qualquer resultado e dizer que foi bom. Com a PAS em mãos, o conselheiro pode perguntar: 'A meta era X. Chegamos lá? Se não, por quê?'"},
+  {q:"Se a PAS for apresentada ao conselho com as ações já iniciadas, isso indica:",opts:["Eficiência — a gestão não perdeu tempo esperando aprovação","Um sinal de alerta: o planejamento pode ser apenas formal, não real","Uma prática comum e aceitável no SUS","Que o conselho aprovou informalmente em reunião anterior"],correct:1,feedback:"PAS elaborada depois que as ações já começaram é um sinal de que o planejamento é retrospectivo — serve para justificar o que já foi decidido, não para orientar decisões futuras. O conselheiro deve questionar o timing de elaboração e aprovação."}
+],
+// MÓDULO 4
+[
+  {q:"Para que serve o Relatório Anual de Gestão (RAG)?",opts:["Para apresentar as metas do próximo ano","Para demonstrar o que foi realizado em relação ao que foi planejado na PAS","Para solicitar recursos adicionais ao Ministério da Saúde","Para registrar as reclamações recebidas pela ouvidoria"],correct:1,feedback:"O RAG é o instrumento de prestação de contas da gestão ao conselho. Ele deve mostrar: o que foi planejado (via PAS), o que foi executado, e o resultado nos indicadores de saúde da população."},
+  {q:"Um RAG que lista muitas atividades realizadas, mas não menciona as metas da PAS nem os percentuais de execução, é:",opts:["Completo — lista tudo o que foi feito","Problemático — sem vínculo com as metas, não permite avaliação real","Aceitável se acompanhado de apresentação verbal da gestão","Padrão para municípios de médio porte"],correct:1,feedback:"Um RAG sem vínculo com as metas da PAS não permite avaliação — é uma lista de atividades, não um instrumento de gestão. O conselheiro deve exigir que cada ação do RAG seja relacionada à meta da PAS correspondente, com percentual de execução."},
+  {q:"O conselho pode reprovar o RAG?",opts:["Não — o conselho só pode fazer recomendações","Sim — o conselho delibera sobre a aprovação e pode recusar, solicitar complementações ou encaminhar ao MP","Apenas se o TCE identificar irregularidade primeiro","Somente por unanimidade do plenário"],correct:1,feedback:"Sim, o conselho pode reprovar o RAG. Na prática, a maioria aprova sem análise aprofundada — o que enfraquece o controle social. A reprovação deve ser fundamentada e seguida de exigência de correções ou, em casos graves, representação ao Ministério Público."},
+  {q:"Ao analisar o RAG, a primeira coisa que o conselheiro deve fazer é:",opts:["Contar o número de páginas para verificar se é completo","Comparar as ações e resultados do RAG com as metas definidas na PAS do mesmo ano","Verificar se o documento foi assinado pelo Secretário de Saúde","Checar se o documento foi publicado no Diário Oficial"],correct:1,feedback:"O RAG só tem sentido quando comparado com o que foi planejado. A PAS do mesmo ano é o parâmetro de avaliação. Sem essa comparação, o conselheiro não consegue identificar o que foi cumprido, o que foi parcialmente cumprido e o que não foi feito."}
+],
+// MÓDULO 5
+[
+  {q:"Com que frequência o gestor deve apresentar a prestação de contas do Fundo Municipal de Saúde ao conselho?",opts:["Anualmente, junto com o RAG","Semestralmente","Quadrimestralmente — a cada 4 meses","Mensalmente"],correct:2,feedback:"Lei 8.142/1990: a prestação de contas do Fundo Municipal de Saúde deve ser apresentada quadrimestralmente (a cada 4 meses) ao Conselho de Saúde. Isso significa 3 apresentações por ano, permitindo acompanhamento contínuo da execução financeira."},
+  {q:"Qual é o percentual mínimo da receita municipal que deve ser aplicado em saúde?",opts:["10%","12%","15%","20%"],correct:2,feedback:"A Emenda Constitucional 29/2000 e a Lei Complementar 141/2012 estabelecem que os municípios devem aplicar no mínimo 15% de suas receitas próprias em saúde. Verificar esse percentual na prestação de contas é uma das primeiras coisas que o conselheiro deve fazer."},
+  {q:"Despesas muito concentradas em poucos fornecedores nos relatórios financeiros são:",opts:["Normal — é mais eficiente trabalhar com poucos fornecedores grandes","Um sinal de alerta que merece investigação sobre o processo de contratação","Irrelevante para o controle social — isso é função do TCE","Aceitável se os fornecedores forem locais"],correct:1,feedback:"Concentração de despesas em poucos fornecedores pode indicar direcionamento de licitações, contratos sem competitividade ou favorecimento. O conselheiro deve perguntar: como esses contratos foram feitos? Houve licitação? Quais são os preços praticados?"},
+  {q:"O que é o Fundo Municipal de Saúde?",opts:["Uma conta bancária exclusiva para os salários dos profissionais de saúde","Uma conta específica para movimentação dos recursos da saúde, sujeita a controle do conselho","Um fundo de reserva para emergências sanitárias","O orçamento total da Secretaria de Saúde incluindo todos os setores municipais"],correct:1,feedback:"O Fundo Municipal de Saúde é a conta específica por onde deve transitar todo o dinheiro da saúde. Sua existência é exigida pela Lei 8.142/1990. O conselho tem papel central na fiscalização da movimentação desse fundo — receitas, despesas, saldos e aplicações."}
+],
+// MÓDULO 6
+[
+  {q:"Um gestor apresenta um plano com metas vagas como 'expandir o acesso'. O conselheiro deve:",opts:["Aprovar — a gestão tem autonomia para definir suas metas","Solicitar que as metas sejam reformuladas com números, prazos e indicadores mensuráveis","Reprovar o plano inteiramente e exigir um novo","Aprovar com ressalvas verbais sem registro em ata"],correct:1,feedback:"Metas vagas impossibilitam avaliação posterior. O conselheiro deve solicitar a reformulação com critérios mensuráveis: 'quantas pessoas?', 'até quando?', 'como será medido?'. Isso não é obstrucionismo — é a função básica do controle social."},
+  {q:"O conselho pode solicitar cópia de contratos firmados pela Secretaria de Saúde com prestadores privados?",opts:["Não — contratos são documentos sigilosos do governo","Sim — o conselho tem direito de acesso a qualquer informação relacionada ao SUS municipal","Apenas se houver suspeita formal de irregularidade","Somente os contratos acima de determinado valor"],correct:1,feedback:"Lei 8.080/90, Art.37: o conselho pode solicitar informações de caráter técnico, administrativo, econômico-financeiro sobre o SUS municipal — incluindo contratos e convênios. Negar essa informação é obstrução ao controle social e pode ser denunciada ao Ministério Público."},
+  {q:"Quando é adequado NÃO aprovar o RAG?",opts:["Quando o conselheiro tem discordância política com o gestor","Quando o relatório está incompleto, tem inconsistências ou metas não cumpridas sem explicação","Sempre que o conselho quiser demonstrar independência","Apenas quando o TCE já tiver reprovado as contas"],correct:1,feedback:"A reprovação do RAG deve ser técnica, não política. É adequada quando: o documento está incompleto, há inconsistências entre números, metas não cumpridas não têm justificativa, ou há evidências de uso inadequado de recursos. A decisão deve ser fundamentada e registrada em ata."},
+  {q:"Qual é a boa prática antes de o plenário votar a aprovação do RAG ou da PAS?",opts:["Fazer uma votação rápida no início da reunião antes da apresentação","Encaminhar para análise da Câmara Técnica, que emitirá parecer ao plenário","Distribuir o documento apenas na reunião de votação","Aprovar com votos simbólicos para não atrasar a gestão"],correct:1,feedback:"As Câmaras Técnicas existem justamente para fazer análise aprofundada de documentos técnicos complexos. Encaminhar o RAG e a PAS para a Câmara Técnica de Gestão e Finanças antes da votação garante que o plenário decide com base em parecer fundamentado — não em impressões superficiais."}
+],
+// MÓDULO 7
+[
+  {q:"O gestor apresenta um RAG com 95% de metas cumpridas, mas conselheiros relatam UBS fechadas e falta de medicamentos. O que fazer?",opts:["Aprovar — dados oficiais têm mais peso que relatos","Aprovar com elogio à gestão pelos bons resultados","Solicitar os dados primários que embasam os percentuais e encaminhar à câmara técnica","Reprovar imediatamente sem analisar os dados"],correct:2,feedback:"A discrepância entre dados e realidade precisa ser investigada, não ignorada. Solicitar os dados primários, a metodologia de cálculo dos indicadores e cruzar com fontes externas (DATASUS, ouvidoria) é o caminho correto. A reprovação sem análise seria tão irresponsável quanto a aprovação cega."},
+  {q:"O RAG de 90 páginas chegou por e-mail às 23h antes da reunião de aprovação. O conselheiro deve:",opts:["Aprovar para não atrasar os processos — é responsabilidade da gestão enviar antes","Pedir adiamento da votação e propor norma interna de prazo mínimo para envio de documentos","Reprovar por desorganização da gestão","Delegar a leitura ao presidente do conselho"],correct:1,feedback:"Aprovar documentos sem tempo de análise é assumir responsabilidade sem informação — o que enfraquece o controle social. Pedir adiamento é legítimo e pode ser usado como oportunidade para o conselho estabelecer uma norma interna (decisão de plenário) sobre prazo mínimo de entrega de documentos."},
+  {q:"Uma meta de cirurgias eletivas está sendo cumprida em menos de 40% pelo terceiro ano consecutivo. O que o conselheiro deve exigir?",opts:["Apenas registrar em ata e aprovar o RAG assim mesmo","Exigir um plano de ação específico e questionar o que foi feito diferentemente nos últimos 3 anos","Propor a extinção do programa","Solicitar a demissão do gestor responsável"],correct:1,feedback:"Meta repetidamente não cumprida sem mudança de estratégia indica problema estrutural ou meta irreal. O conselheiro deve exigir: (1) explicação concreta do que impediu o cumprimento, (2) plano de ação com medidas específicas para o próximo período, (3) revisão da meta se ela for cronicamente inacessível."},
+  {q:"Ao identificar inconsistência grave num relatório financeiro, o conselheiro pode:",opts:["Apenas questionar verbalmente na reunião e aguardar a próxima prestação de contas","Registrar a inconsistência em ata, solicitar esclarecimentos formais e, persistindo o problema, encaminhar ao Ministério Público","Divulgar imediatamente nas redes sociais para pressionar a gestão","Encaminhar à polícia para investigação criminal imediata"],correct:1,feedback:"O fluxo correto é: (1) registrar em ata, (2) solicitar esclarecimentos formais por escrito, (3) se não respondido, deliberar em plenário, (4) se impasse persistir, o conselho pode — por maioria — representar ao Ministério Público, que tem poder de investigação e coerção."}
+],
+// MÓDULO 8
+[
+  {q:"Por que o RAG deve ser analisado em conjunto com a PAS do mesmo ano?",opts:["Por determinação formal do Ministério da Saúde","Porque o RAG só tem sentido como instrumento de avaliação quando comparado com o que foi planejado","Para verificar se os documentos têm o mesmo número de páginas","Para confirmar se foram elaborados pela mesma equipe técnica"],correct:1,feedback:"O par PAS + RAG é o coração do ciclo de gestão: a PAS define o que será feito; o RAG mostra o que foi feito. Sem essa comparação, o RAG é apenas uma lista de atividades — não um instrumento de avaliação. O conselheiro deve sempre analisar os dois juntos."},
+  {q:"Qual é a sequência correta do ciclo de gestão no SUS?",opts:["Avaliar → Executar → Planejar","Planejar → Avaliar → Executar","Planejar → Executar → Avaliar → Replanejar","Executar → Planejar → Avaliar"],correct:2,feedback:"O ciclo correto é: Planejar (PMS, PAS) → Executar (LOA, ações) → Avaliar (RAG, prestação de contas) → Replanejar (incorporar lições para o próximo ciclo). Entender esse ciclo é o que permite ao conselheiro agir no momento certo, com o instrumento certo."},
+  {q:"O que caracteriza um conselheiro que 'faz diferença' na gestão do SUS municipal?",opts:["Aprova tudo rapidamente para mostrar cooperação com a gestão","Une conhecimento dos instrumentos com ação baseada neles — lê, questiona, exige e acompanha","Questiona tudo sem analisar os documentos, para demonstrar independência","Representa apenas os interesses financeiros de sua entidade"],correct:1,feedback:"Conhecimento sem ação é omissão; ação sem conhecimento é ruído. O conselheiro que faz diferença une as duas dimensões: entende o que é o PMS, a PAS, o RAG e o orçamento — e age com base nesse conhecimento para proteger o SUS e a população."},
+  {q:"Um município que não apresenta Plano de Saúde aprovado pelo Conselho pode:",opts:["Continuar recebendo recursos federais normalmente","Perder o direito de receber transferências federais do SUS","Receber recursos com desconto de 10%","Ser multado pelo Ministério da Saúde"],correct:1,feedback:"Lei 8.142/1990: a existência de Conselho de Saúde em funcionamento e de Plano de Saúde aprovado é condição para o repasse de recursos federais. Isso confere ao conselho um poder estrutural — sua existência e atuação têm consequências financeiras diretas para o município."}
+]
+];
+
+const FULL_QUIZ = QUIZZES.reduce((acc,mqs,mi) => acc.concat(mqs.map(q => Object.assign({},q,{moduleLabel:'Módulo '+mi}))), []);
+
+const CHECKLIST_ITEMS = [
+  "Li o Plano Municipal de Saúde vigente do município",
+  "Conheço as metas da PAS do ano corrente",
+  "Comparo o RAG com a PAS ao analisar relatórios",
+  "Verifico o percentual da receita aplicado em saúde nas prestações de contas",
+  "Faço perguntas sobre metas não cumpridas com justificativa baseada nos documentos",
+  "Encaminho documentos complexos para análise da Câmara Técnica antes de votar",
+  "Solicito documentos com antecedência suficiente para análise",
+  "Registro em ata inconsistências e pedidos não atendidos",
+  "Conheço as principais fontes de recursos do Fundo Municipal de Saúde",
+  "Acompanho a execução das ações ao longo do ano, não só no final",
+  "Consulto dados externos (DATASUS, ouvidoria) para cruzar com os relatórios oficiais",
+  "Entendo que fiscalizar é proteger o SUS — não obstruir a gestão"
+];
+
+// ══════════════════════════════════════════════════════════
+//  STATE
+// ══════════════════════════════════════════════════════════
+let state = {
+  currentModule: 0,
+  quizState: Array(9).fill(null).map(()=>({qi:0,score:0,done:false})),
+  fullQuizState: {qi:0,score:0,done:false},
+  completedModules: [],
+  checklistState: Array(CHECKLIST_ITEMS.length).fill(false)
+};
+
+function loadState(){try{const s=localStorage.getItem('cms-gestao-sus-state');if(s)state=JSON.parse(s);}catch(e){}}
+function saveState(){try{localStorage.setItem('cms-gestao-sus-state',JSON.stringify(state));}catch(e){}}
+
+// ══════════════════════════════════════════════════════════
+//  FLOW
+// ══════════════════════════════════════════════════════════
+function startCourse(){
+  document.getElementById('welcome-screen').style.display='none';
+  document.getElementById('course-layout').style.display='block';
+  loadState();
+  renderAllQuizzes();
+  renderFullQuiz();
+  renderChecklist();
+  goModule(state.currentModule);
+  updateProgress();
+}
+
+function goModule(n){
+  document.querySelectorAll('.module').forEach(m=>m.classList.remove('active'));
+  document.getElementById('module-'+n).classList.add('active');
+  document.querySelectorAll('.nav-item').forEach(i=>{
+    i.classList.remove('active');
+    if(parseInt(i.dataset.module)===n)i.classList.add('active');
+  });
+  state.currentModule=n;
+  saveState();
+  window.scrollTo(0,0);
+  closeSidebar();
+  updateProgress();
+  if(n===8)updateFinalScore();
+}
+
+function updateProgress(){
+  const pct=Math.round((state.completedModules.length/9)*100);
+  document.getElementById('progress-text').textContent=pct+'%';
+  document.querySelectorAll('.nav-item').forEach(item=>{
+    const m=parseInt(item.dataset.module);
+    item.classList.remove('completed');
+    if(state.completedModules.includes(m)&&m!==state.currentModule)item.classList.add('completed');
+  });
+}
+
+function markModuleComplete(m){
+  if(!state.completedModules.includes(m)){state.completedModules.push(m);saveState();updateProgress();}
+}
+
+// ══════════════════════════════════════════════════════════
+//  QUIZ ENGINE
+// ══════════════════════════════════════════════════════════
+function quizScaffold(m){
+  const container=document.getElementById('quiz-'+m);
+  container.innerHTML=
+    '<div class="quiz-title">🎯 Quiz · Módulo '+m+'</div>'+
+    '<div class="quiz-progress-bar"><div class="quiz-progress-fill" id="q'+m+'-prog" style="width:0%"></div></div>'+
+    '<div class="quiz-counter" id="q'+m+'-counter">Questão 1 de '+QUIZZES[m].length+'</div>'+
+    '<div class="quiz-question" id="q'+m+'-question"></div>'+
+    '<div class="quiz-options" id="q'+m+'-options"></div>'+
+    '<div class="quiz-feedback" id="q'+m+'-feedback"><div class="feedback-label" id="q'+m+'-flabel"></div><div id="q'+m+'-ftext"></div></div>'+
+    '<div class="quiz-nav">'+
+      '<span class="quiz-score" id="q'+m+'-score">Pontos: 0</span>'+
+      '<div style="display:flex;gap:8px;align-items:center">'+
+        '<button class="btn btn-outline btn-sm" style="opacity:.55" onclick="resetQuiz('+m+')">↺ Resetar</button>'+
+        '<button class="btn btn-outline btn-sm" id="q'+m+'-next" onclick="nextQuestion('+m+')" style="display:none">Próxima →</button>'+
+      '</div>'+
+    '</div>';
+}
+
+function renderAllQuizzes(){for(let m=0;m<9;m++)renderQuestion(m);}
+
+function renderQuestion(m){
+  const qs=state.quizState[m];
+  const quiz=QUIZZES[m];
+  if(!quiz)return;
+  if(qs.done){showQuizComplete(m);return;}
+  if(!document.getElementById('q'+m+'-counter'))quizScaffold(m);
+  const qi=qs.qi;
+  const q=quiz[qi];
+  document.getElementById('q'+m+'-counter').textContent='Questão '+(qi+1)+' de '+quiz.length;
+  document.getElementById('q'+m+'-question').textContent=q.q;
+  document.getElementById('q'+m+'-prog').style.width=(qi/quiz.length*100)+'%';
+  document.getElementById('q'+m+'-score').textContent='Pontos: '+qs.score;
+  const optsEl=document.getElementById('q'+m+'-options');
+  optsEl.innerHTML='';
+  q.opts.forEach((opt,i)=>{
+    const btn=document.createElement('button');
+    btn.className='quiz-option';btn.textContent=opt;
+    btn.onclick=()=>answerQuestion(m,i);
+    optsEl.appendChild(btn);
+  });
+  const fb=document.getElementById('q'+m+'-feedback');
+  fb.className='quiz-feedback';
+  document.getElementById('q'+m+'-next').style.display='none';
+}
+
+function answerQuestion(m,chosen){
+  const qs=state.quizState[m];
+  const q=QUIZZES[m][qs.qi];
+  const correct=q.correct;
+  const opts=document.getElementById('q'+m+'-options').querySelectorAll('.quiz-option');
+  opts.forEach(b=>b.disabled=true);
+  opts[correct].classList.add('correct');
+  const fb=document.getElementById('q'+m+'-feedback');
+  fb.classList.add('show');
+  if(chosen===correct){opts[chosen].classList.add('correct');qs.score++;fb.classList.add('correct');document.getElementById('q'+m+'-flabel').textContent='✓ Correto!';}
+  else{opts[chosen].classList.add('wrong');opts[correct].classList.add('reveal');fb.classList.add('wrong');document.getElementById('q'+m+'-flabel').textContent='✗ Incorreto';}
+  document.getElementById('q'+m+'-ftext').textContent=q.feedback;
+  document.getElementById('q'+m+'-score').textContent='Pontos: '+qs.score;
+  saveState();
+  const nb=document.getElementById('q'+m+'-next');
+  nb.style.display='block';
+  nb.textContent=qs.qi>=QUIZZES[m].length-1?'Ver Resultado →':'Próxima →';
+}
+
+function nextQuestion(m){
+  const qs=state.quizState[m];
+  qs.qi++;
+  if(qs.qi>=QUIZZES[m].length){qs.done=true;markModuleComplete(m);saveState();showQuizComplete(m);}
+  else{saveState();renderQuestion(m);}
+}
+
+function showQuizComplete(m){
+  const isF=(m==='full');
+  const qs=isF?state.fullQuizState:state.quizState[m];
+  const data=isF?FULL_QUIZ:QUIZZES[m];
+  const total=data.length;
+  const pct=Math.round(qs.score/total*100);
+  const cid=isF?'quiz-full':'quiz-'+m;
+  const label=isF?'Quiz Completo':'Quiz · Módulo '+m;
+  const emoji=pct>=75?'🎉':pct>=50?'👍':'📚';
+  const msg=pct>=75?'Excelente!':pct>=50?'Bom resultado!':'Revise os módulos e tente novamente.';
+  const ra=isF?"'full'":m;
+  document.getElementById(cid).innerHTML=
+    '<div class="quiz-title">🎯 '+label+' — Concluído!</div>'+
+    '<div style="text-align:center;padding:24px 0">'+
+      '<div style="font-size:64px;font-family:Montserrat,sans-serif;font-weight:900;color:var(--yellow);line-height:1">'+qs.score+'<span style="font-size:32px;color:rgba(255,255,255,.4)">/'+total+'</span></div>'+
+      '<div style="color:rgba(255,255,255,.8);font-size:16px;font-weight:700;margin-top:10px">'+emoji+' '+msg+'</div>'+
+      '<div style="color:rgba(255,255,255,.5);font-size:13px;margin-top:4px">'+pct+'% de acerto</div>'+
+    '</div>'+
+    '<div style="text-align:center;padding-top:16px;border-top:1px solid rgba(255,255,255,.1)">'+
+      '<button class="btn btn-outline btn-sm" onclick="resetQuiz('+ra+')">↺ Refazer Quiz</button>'+
+    '</div>';
+  if(!isF&&m===8)updateFinalScore();
+  if(isF)updateFinalScore();
+}
+
+function resetQuiz(m){
+  const isF=(m==='full');
+  if(isF){state.fullQuizState={qi:0,score:0,done:false};saveState();renderFullQuiz();}
+  else{state.quizState[m]={qi:0,score:0,done:false};saveState();renderQuestion(m);}
+}
+
+// ══════════════════════════════════════════════════════════
+//  FULL QUIZ
+// ══════════════════════════════════════════════════════════
+function renderFullQuiz(){
+  const qs=state.fullQuizState;
+  if(qs.done){showQuizComplete('full');return;}
+  const qi=qs.qi;const total=FULL_QUIZ.length;const q=FULL_QUIZ[qi];
+  document.getElementById('qfull-counter').textContent='Questão '+(qi+1)+' de '+total;
+  document.getElementById('qfull-question').innerHTML=
+    '<span style="display:inline-block;background:rgba(255,255,255,.1);border-radius:4px;padding:2px 8px;font-size:10px;font-family:Montserrat,sans-serif;font-weight:700;letter-spacing:1px;margin-bottom:10px;color:rgba(255,255,255,.6)">'+q.moduleLabel.toUpperCase()+'</span><br>'+q.q;
+  document.getElementById('qfull-prog').style.width=(qi/total*100)+'%';
+  document.getElementById('qfull-score').textContent='Pontos: '+qs.score;
+  const optsEl=document.getElementById('qfull-options');
+  optsEl.innerHTML='';
+  q.opts.forEach((opt,i)=>{
+    const btn=document.createElement('button');
+    btn.className='quiz-option';btn.textContent=opt;
+    btn.onclick=()=>answerFullQuestion(i);
+    optsEl.appendChild(btn);
+  });
+  document.getElementById('qfull-feedback').className='quiz-feedback';
+  document.getElementById('qfull-next').style.display='none';
+}
+
+function answerFullQuestion(chosen){
+  const qs=state.fullQuizState;const q=FULL_QUIZ[qs.qi];const correct=q.correct;
+  const opts=document.getElementById('qfull-options').querySelectorAll('.quiz-option');
+  opts.forEach(b=>b.disabled=true);
+  opts[correct].classList.add('correct');
+  const fb=document.getElementById('qfull-feedback');fb.classList.add('show');
+  if(chosen===correct){opts[chosen].classList.add('correct');qs.score++;fb.classList.add('correct');document.getElementById('qfull-flabel').textContent='✓ Correto!';}
+  else{opts[chosen].classList.add('wrong');opts[correct].classList.add('reveal');fb.classList.add('wrong');document.getElementById('qfull-flabel').textContent='✗ Incorreto';}
+  document.getElementById('qfull-ftext').textContent=q.feedback;
+  document.getElementById('qfull-score').textContent='Pontos: '+qs.score;
+  saveState();
+  const nb=document.getElementById('qfull-next');nb.style.display='block';
+  nb.textContent=qs.qi>=FULL_QUIZ.length-1?'Ver Resultado →':'Próxima →';
+}
+
+function nextFullQuestion(){
+  const qs=state.fullQuizState;qs.qi++;
+  if(qs.qi>=FULL_QUIZ.length){qs.done=true;saveState();showQuizComplete('full');}
+  else{saveState();renderFullQuiz();}
+}
+
+// ══════════════════════════════════════════════════════════
+//  FINAL SCORE
+// ══════════════════════════════════════════════════════════
+function updateFinalScore(){
+  let total=0,max=0;const bd=[];
+  state.quizState.forEach((qs,m)=>{const l=QUIZZES[m]?QUIZZES[m].length:0;total+=qs.score;max+=l;if(qs.done)bd.push('<span style="color:var(--yellow)">Módulo '+m+':</span> '+qs.score+'/'+l);});
+  const el=document.getElementById('final-score-display');if(el)el.textContent=total+' / '+max;
+  const pct=max>0?Math.round(total/max*100):0;
+  const msg=document.getElementById('final-msg');
+  if(msg)msg.textContent=total===0?'Complete os módulos e quizzes para ver sua pontuação!':pct>=80?'Incrível! '+pct+'% — você domina o tema!':pct>=60?'Bom trabalho! '+pct+'% — revise os pontos em dúvida.':'Continue estudando! '+pct+'% — releia os módulos com atenção.';
+  const bdEl=document.getElementById('final-breakdown');
+  if(bdEl&&bd.length>0)bdEl.innerHTML='<div style="display:flex;flex-wrap:wrap;gap:10px;justify-content:center;font-size:12px;color:rgba(255,255,255,.6)">'+bd.join('<span style="color:rgba(255,255,255,.2)"> | </span>')+'</div>';
+}
+
+// ══════════════════════════════════════════════════════════
+//  CHECKLIST
+// ══════════════════════════════════════════════════════════
+function renderChecklist(){
+  const el=document.getElementById('checklist-interactive');if(!el)return;
+  el.innerHTML='';
+  CHECKLIST_ITEMS.forEach((item,i)=>{
+    const div=document.createElement('div');
+    div.style.cssText='display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--border);cursor:pointer;';
+    div.onclick=()=>toggleCheck(i);
+    const box=document.createElement('div');
+    box.id='chk-'+i;
+    box.style.cssText='width:22px;height:22px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:11px;transition:all .2s;background:'+(state.checklistState[i]?'var(--green)':'var(--border)')+';color:white;';
+    box.textContent=state.checklistState[i]?'✓':'';
+    const label=document.createElement('span');
+    label.style.cssText='font-size:14px;'+(state.checklistState[i]?'text-decoration:line-through;color:var(--muted);':'');
+    label.id='chklabel-'+i;label.textContent=item;
+    div.appendChild(box);div.appendChild(label);el.appendChild(div);
+  });
+}
+
+function toggleCheck(i){
+  state.checklistState[i]=!state.checklistState[i];saveState();
+  const box=document.getElementById('chk-'+i);const label=document.getElementById('chklabel-'+i);
+  if(box){box.style.background=state.checklistState[i]?'var(--green)':'var(--border)';box.textContent=state.checklistState[i]?'✓':'';}
+  if(label){label.style.textDecoration=state.checklistState[i]?'line-through':'none';label.style.color=state.checklistState[i]?'var(--muted)':'var(--ink)';}
+}
+
+// ══════════════════════════════════════════════════════════
+//  ACCORDION & TABS
+// ══════════════════════════════════════════════════════════
+function toggleAccordion(header){
+  const body=header.nextElementSibling;
+  const open=header.classList.contains('open');
+  header.classList.toggle('open',!open);body.classList.toggle('open',!open);
+}
+
+function switchTab(group,tab,btn){
+  document.querySelectorAll('[id^="'+group+'-"]').forEach(el=>el.classList.remove('active'));
+  const el=document.getElementById(group+'-'+tab);if(el)el.classList.add('active');
+  if(btn){const bar=btn.closest('.tab-bar');if(bar)bar.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');}
+}
+
+// ══════════════════════════════════════════════════════════
+//  SIDEBAR
+// ══════════════════════════════════════════════════════════
+function toggleSidebar(){document.getElementById('sidebar').classList.toggle('open');}
+function closeSidebar(){if(window.innerWidth<=768)document.getElementById('sidebar').classList.remove('open');}
+document.addEventListener('click',function(e){
+  const sb=document.getElementById('sidebar');const hb=document.getElementById('hamburger');
+  if(sb&&hb&&!sb.contains(e.target)&&!hb.contains(e.target))closeSidebar();
+});
+
+// ══════════════════════════════════════════════════════════
+//  RESTART
+// ══════════════════════════════════════════════════════════
+function restartCourse(){
+  state={currentModule:0,quizState:Array(9).fill(null).map(()=>({qi:0,score:0,done:false})),fullQuizState:{qi:0,score:0,done:false},completedModules:[],checklistState:Array(CHECKLIST_ITEMS.length).fill(false)};
+  saveState();renderAllQuizzes();renderFullQuiz();renderChecklist();goModule(0);updateProgress();
+}
+
+// ══════════════════════════════════════════════════════════
+//  EXPOSE TO WINDOW
+// ══════════════════════════════════════════════════════════
+window.startCourse=startCourse;window.goModule=goModule;window.nextQuestion=nextQuestion;
+window.answerQuestion=answerQuestion;window.toggleAccordion=toggleAccordion;
+window.switchTab=switchTab;window.toggleSidebar=toggleSidebar;window.restartCourse=restartCourse;
+window.resetQuiz=resetQuiz;window.answerFullQuestion=answerFullQuestion;window.nextFullQuestion=nextFullQuestion;
+
+}); // end DOMContentLoaded
+</script>
+</body>
+</html>

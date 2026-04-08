@@ -1,0 +1,2288 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IA, Dados e Conhecimento na Saúde — CMS Montes Claros</title>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,400;0,600;0,700;0,900;1,400&family=Open+Sans:wght@300;400;600;700&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --cms-blue:#1B6CB5;
+  --cms-navy:#0D2E5A;
+  --cms-green:#1E8A4A;
+  --cms-yellow:#F5C400;
+  --cms-white:#FFFFFF;
+  --cms-off:#F7F8FA;
+  --cms-ink:#111827;
+  --cms-muted:#6B7280;
+  --cms-border:#E5E7EB;
+  --cms-alert:#FEF3C7;
+  --cms-alert-border:#F59E0B;
+  --cms-insight:#EFF6FF;
+  --cms-insight-border:#1B6CB5;
+  --cms-error:#FEE2E2;
+  --cms-error-border:#EF4444;
+  --cms-success:#DCFCE7;
+  --cms-success-border:#1E8A4A;
+}
+
+html{scroll-behavior:smooth}
+body{font-family:'Open Sans',sans-serif;background:var(--cms-off);color:var(--cms-ink);line-height:1.65;font-size:15px}
+
+/* TOPBAR */
+.topbar{
+  background:var(--cms-navy);
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 40px;height:56px;
+  position:sticky;top:0;z-index:1000;
+  box-shadow:0 2px 12px rgba(0,0,0,.25);
+}
+.topbar-brand{
+  font-family:'Montserrat',sans-serif;font-weight:900;font-size:12px;
+  letter-spacing:2px;text-transform:uppercase;color:#fff;
+}
+.topbar-brand span{color:var(--cms-yellow)}
+.topbar-right{display:flex;align-items:center;gap:20px}
+.topbar-tag{
+  font-family:'Montserrat',sans-serif;font-size:10px;font-weight:700;
+  letter-spacing:2px;text-transform:uppercase;
+  color:rgba(255,255,255,.5);
+}
+
+/* HERO */
+.hero{
+  background:var(--cms-navy);
+  padding:80px 40px 72px;
+  position:relative;overflow:hidden;
+  min-height:380px;display:flex;align-items:center;
+}
+.hero::before{
+  content:'';position:absolute;
+  bottom:-80px;right:-80px;
+  width:600px;height:600px;border-radius:50%;
+  background:radial-gradient(circle,rgba(245,196,0,.10) 0%,transparent 65%);
+}
+.hero::after{
+  content:'';position:absolute;
+  top:-40px;left:40%;
+  width:1px;height:500px;
+  background:linear-gradient(to bottom,transparent,rgba(255,255,255,.05),transparent);
+}
+.hero-inner{position:relative;z-index:2;max-width:720px}
+.hero-label{
+  font-family:'Montserrat',sans-serif;font-size:10px;font-weight:700;
+  letter-spacing:3px;text-transform:uppercase;
+  color:var(--cms-yellow);margin-bottom:20px;
+  display:inline-flex;align-items:center;gap:10px;
+}
+.hero-label::before{content:'';width:24px;height:2px;background:var(--cms-yellow)}
+.hero h1{
+  font-family:'Montserrat',sans-serif;
+  font-size:clamp(32px,5vw,60px);
+  font-weight:900;line-height:1.0;letter-spacing:-2px;
+  color:#fff;margin-bottom:20px;
+}
+.hero h1 em{color:var(--cms-yellow);font-style:normal;display:block}
+.hero-sub{font-size:15px;color:rgba(255,255,255,.55);font-weight:300;max-width:500px;margin-bottom:36px}
+.hero-meta{display:flex;gap:28px;flex-wrap:wrap}
+.hero-badge{
+  display:flex;align-items:center;gap:8px;
+  font-family:'Montserrat',sans-serif;font-size:11px;font-weight:700;
+  letter-spacing:1px;text-transform:uppercase;color:rgba(255,255,255,.6);
+}
+.hero-badge .dot{width:6px;height:6px;border-radius:50%;background:var(--cms-yellow)}
+
+/* PROGRESS BAR */
+.progress-shell{
+  background:#fff;border-bottom:1px solid var(--cms-border);
+  padding:16px 40px;position:sticky;top:56px;z-index:900;
+}
+.progress-info{
+  display:flex;justify-content:space-between;align-items:center;
+  margin-bottom:10px;
+}
+.progress-label{
+  font-family:'Montserrat',sans-serif;font-size:11px;font-weight:700;
+  letter-spacing:1.5px;text-transform:uppercase;color:var(--cms-muted);
+}
+.progress-pct{
+  font-family:'Montserrat',sans-serif;font-size:13px;font-weight:900;
+  color:var(--cms-blue);
+}
+.progress-track{
+  height:6px;background:var(--cms-border);border-radius:99px;overflow:hidden;
+}
+.progress-fill{
+  height:100%;background:linear-gradient(90deg,var(--cms-blue),var(--cms-green));
+  border-radius:99px;transition:width .5s cubic-bezier(.4,0,.2,1);
+  width:0%;
+}
+.module-dots{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap}
+.module-dot{
+  width:28px;height:28px;border-radius:50%;
+  border:2px solid var(--cms-border);
+  background:#fff;cursor:pointer;
+  font-family:'Montserrat',sans-serif;font-size:10px;font-weight:900;
+  color:var(--cms-muted);display:flex;align-items:center;justify-content:center;
+  transition:all .25s;position:relative;
+}
+.module-dot.done{background:var(--cms-green);border-color:var(--cms-green);color:#fff}
+.module-dot.active{background:var(--cms-blue);border-color:var(--cms-blue);color:#fff;transform:scale(1.1)}
+.module-dot:hover{border-color:var(--cms-blue)}
+
+/* LAYOUT */
+.shell{max-width:820px;margin:0 auto;padding:0 24px}
+.module-view{display:none;padding:60px 0}
+.module-view.active{display:block;animation:fadeSlide .4s ease}
+@keyframes fadeSlide{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+
+/* MODULE HEADER */
+.mod-eyebrow{
+  font-family:'Montserrat',sans-serif;font-size:10px;font-weight:700;
+  letter-spacing:3px;text-transform:uppercase;color:var(--cms-blue);
+  margin-bottom:8px;display:flex;align-items:center;gap:10px;
+}
+.mod-num{
+  background:var(--cms-blue);color:#fff;
+  width:22px;height:22px;border-radius:50%;
+  display:inline-flex;align-items:center;justify-content:center;
+  font-size:10px;font-weight:900;flex-shrink:0;
+}
+.mod-title{
+  font-family:'Montserrat',sans-serif;
+  font-size:clamp(26px,4vw,40px);
+  font-weight:900;letter-spacing:-1.5px;line-height:1.05;
+  color:var(--cms-navy);margin-bottom:8px;
+}
+.mod-subtitle{
+  font-size:15px;color:var(--cms-muted);font-weight:300;
+  margin-bottom:40px;padding-bottom:40px;
+  border-bottom:2px solid var(--cms-border);
+}
+
+/* CONTENT BLOCKS */
+.content-block{margin-bottom:32px}
+.content-block p{margin-bottom:14px;font-size:15px;line-height:1.75}
+.content-block p:last-child{margin-bottom:0}
+
+h3.block-title{
+  font-family:'Montserrat',sans-serif;font-size:16px;font-weight:800;
+  color:var(--cms-navy);margin-bottom:14px;letter-spacing:-.3px;
+}
+h4.block-sub{
+  font-family:'Montserrat',sans-serif;font-size:13px;font-weight:700;
+  color:var(--cms-blue);margin-bottom:10px;letter-spacing:.5px;text-transform:uppercase;
+}
+
+/* CALLOUTS */
+.callout{
+  border-radius:10px;padding:20px 24px;margin:24px 0;
+  border-left:4px solid;position:relative;
+}
+.callout-icon{
+  font-size:18px;margin-bottom:8px;display:block;
+}
+.callout-label{
+  font-family:'Montserrat',sans-serif;font-size:10px;font-weight:700;
+  letter-spacing:2px;text-transform:uppercase;margin-bottom:6px;opacity:.7;
+}
+.callout p,.callout li{font-size:14px;line-height:1.65}
+.callout ul{padding-left:18px;margin-top:6px}
+.callout ul li{margin-bottom:5px}
+
+.callout.insight{background:var(--cms-insight);border-color:var(--cms-blue)}
+.callout.insight .callout-label{color:var(--cms-blue)}
+.callout.alert{background:var(--cms-alert);border-color:var(--cms-alert-border)}
+.callout.alert .callout-label{color:#92400E}
+.callout.error{background:var(--cms-error);border-color:var(--cms-error-border)}
+.callout.error .callout-label{color:#991B1B}
+.callout.success{background:var(--cms-success);border-color:var(--cms-success-border)}
+.callout.success .callout-label{color:#14532D}
+
+/* ACCORDION */
+.accordion{margin:20px 0}
+.acc-item{
+  border:1px solid var(--cms-border);border-radius:10px;
+  overflow:hidden;margin-bottom:8px;
+  background:#fff;
+}
+.acc-trigger{
+  width:100%;display:flex;align-items:center;justify-content:space-between;
+  padding:16px 20px;cursor:pointer;background:none;border:none;
+  font-family:'Open Sans',sans-serif;font-size:14px;font-weight:600;
+  color:var(--cms-navy);text-align:left;transition:background .2s;
+}
+.acc-trigger:hover{background:var(--cms-off)}
+.acc-trigger .acc-arrow{
+  font-size:18px;transition:transform .25s;flex-shrink:0;color:var(--cms-blue);
+}
+.acc-item.open .acc-arrow{transform:rotate(180deg)}
+.acc-body{
+  max-height:0;overflow:hidden;transition:max-height .35s cubic-bezier(.4,0,.2,1);
+}
+.acc-body-inner{
+  padding:0 20px 20px;font-size:14px;color:var(--cms-ink);line-height:1.7;
+  border-top:1px solid var(--cms-border);padding-top:16px;
+}
+.acc-body-inner p{margin-bottom:10px}
+.acc-body-inner ul{padding-left:18px}
+.acc-body-inner ul li{margin-bottom:5px}
+
+/* ACTIVITY */
+.activity{
+  background:linear-gradient(135deg,var(--cms-navy) 0%,#1a4a8a 100%);
+  border-radius:14px;padding:32px;color:#fff;margin:36px 0;
+}
+.activity-header{
+  display:flex;align-items:center;gap:12px;margin-bottom:20px;
+}
+.activity-icon{
+  background:var(--cms-yellow);color:var(--cms-navy);
+  width:40px;height:40px;border-radius:10px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:20px;flex-shrink:0;
+}
+.activity-meta{}
+.activity-tag{
+  font-family:'Montserrat',sans-serif;font-size:9px;font-weight:700;
+  letter-spacing:2.5px;text-transform:uppercase;color:var(--cms-yellow);margin-bottom:3px;
+}
+.activity-title{
+  font-family:'Montserrat',sans-serif;font-size:17px;font-weight:800;
+  letter-spacing:-.3px;
+}
+.activity p{font-size:14px;color:rgba(255,255,255,.75);margin-bottom:16px;line-height:1.65}
+.activity label{
+  display:block;font-size:12px;font-weight:600;
+  color:rgba(255,255,255,.6);margin-bottom:6px;
+  letter-spacing:.5px;text-transform:uppercase;
+}
+.activity textarea,.activity input[type=text]{
+  width:100%;background:rgba(255,255,255,.08);
+  border:1px solid rgba(255,255,255,.15);border-radius:8px;
+  color:#fff;font-family:'Open Sans',sans-serif;font-size:14px;
+  padding:12px 16px;resize:vertical;outline:none;
+  transition:border .2s;
+}
+.activity textarea:focus,.activity input[type=text]:focus{border-color:var(--cms-yellow)}
+.activity textarea::placeholder,.activity input[type=text]::placeholder{color:rgba(255,255,255,.3)}
+.save-note{
+  background:rgba(255,255,255,.1);border:none;color:rgba(255,255,255,.8);
+  border-radius:6px;padding:8px 16px;cursor:pointer;
+  font-family:'Montserrat',sans-serif;font-size:11px;font-weight:700;
+  letter-spacing:1px;text-transform:uppercase;margin-top:10px;
+  transition:background .2s;
+}
+.save-note:hover{background:rgba(255,255,255,.18)}
+.saved-msg{
+  font-size:12px;color:var(--cms-yellow);margin-top:8px;display:none;
+  font-weight:600;
+}
+
+/* CHECKLIST */
+.checklist{list-style:none;margin:16px 0}
+.checklist li{
+  display:flex;align-items:flex-start;gap:12px;
+  padding:12px 16px;border-radius:8px;margin-bottom:6px;
+  background:#fff;border:1px solid var(--cms-border);
+  font-size:14px;cursor:pointer;transition:all .2s;
+  user-select:none;color:var(--cms-ink);
+}
+.checklist li:hover{border-color:var(--cms-blue);background:var(--cms-insight);color:var(--cms-ink)}
+.checklist li.checked{
+  background:var(--cms-success);border-color:var(--cms-success-border);
+  text-decoration:line-through;color:var(--cms-muted);
+}
+.check-box{
+  width:20px;height:20px;border-radius:5px;border:2px solid var(--cms-border);
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;
+  margin-top:1px;transition:all .2s;background:#fff;font-size:12px;
+}
+.checklist li.checked .check-box{background:var(--cms-green);border-color:var(--cms-green);color:#fff}
+
+/* COMPARISON */
+.compare{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:20px 0}
+@media(max-width:600px){.compare{grid-template-columns:1fr}}
+.compare-box{border-radius:10px;padding:20px;border:2px solid}
+.compare-box.bad{background:#FFF1F2;border-color:#FECDD3}
+.compare-box.good{background:#F0FDF4;border-color:#BBF7D0}
+.compare-header{
+  font-family:'Montserrat',sans-serif;font-size:11px;font-weight:800;
+  letter-spacing:1.5px;text-transform:uppercase;margin-bottom:12px;
+}
+.compare-box.bad .compare-header{color:#991B1B}
+.compare-box.good .compare-header{color:#14532D}
+.compare-box pre{
+  font-family:'Open Sans',monospace;font-size:13px;
+  white-space:pre-wrap;line-height:1.65;
+}
+.compare-box.bad pre{color:#7F1D1D}
+.compare-box.good pre{color:#14532D}
+
+/* CODE BOX */
+.code-box{
+  background:var(--cms-navy);border-radius:10px;padding:24px 28px;
+  position:relative;margin:16px 0;
+}
+.code-box pre{
+  font-family:'Open Sans',monospace;font-size:13px;
+  color:rgba(255,255,255,.88);white-space:pre-wrap;line-height:1.75;
+}
+.code-box .tag{color:var(--cms-yellow);font-weight:700}
+.code-label{
+  font-family:'Montserrat',sans-serif;font-size:9px;font-weight:700;
+  letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.35);
+  margin-bottom:12px;
+}
+
+/* QUIZ */
+.quiz-section{
+  background:#fff;border-radius:14px;border:2px solid var(--cms-border);
+  padding:32px;margin:36px 0;
+}
+.quiz-title{
+  font-family:'Montserrat',sans-serif;font-size:18px;font-weight:900;
+  color:var(--cms-navy);margin-bottom:6px;letter-spacing:-.5px;
+}
+.quiz-sub{font-size:13px;color:var(--cms-muted);margin-bottom:24px}
+.quiz-q{margin-bottom:24px}
+.quiz-q p{
+  font-family:'Montserrat',sans-serif;font-size:14px;font-weight:700;
+  color:var(--cms-navy);margin-bottom:12px;
+}
+.quiz-options{display:flex;flex-direction:column;gap:8px}
+.quiz-opt{
+  display:flex;align-items:center;gap:12px;
+  padding:12px 16px;border-radius:8px;border:2px solid var(--cms-border);
+  cursor:pointer;font-size:14px;transition:all .2s;background:#fff;
+  width:100%;text-align:left;
+}
+.quiz-opt:hover{border-color:var(--cms-blue);background:var(--cms-insight)}
+.quiz-opt.selected{border-color:var(--cms-blue);background:var(--cms-insight);font-weight:600}
+.quiz-opt.correct{border-color:var(--cms-green);background:var(--cms-success);font-weight:600}
+.quiz-opt.wrong{border-color:#EF4444;background:var(--cms-error);font-weight:600}
+.quiz-letter{
+  width:28px;height:28px;border-radius:50%;border:2px solid var(--cms-border);
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Montserrat',sans-serif;font-size:11px;font-weight:800;
+  flex-shrink:0;transition:all .2s;
+}
+.quiz-opt.correct .quiz-letter{background:var(--cms-green);border-color:var(--cms-green);color:#fff}
+.quiz-opt.wrong .quiz-letter{background:#EF4444;border-color:#EF4444;color:#fff}
+.quiz-opt.selected:not(.correct):not(.wrong) .quiz-letter{background:var(--cms-blue);border-color:var(--cms-blue);color:#fff}
+.quiz-feedback{
+  font-size:13px;margin-top:8px;padding:10px 14px;
+  border-radius:7px;display:none;line-height:1.55;
+}
+.quiz-feedback.show{display:block}
+.quiz-feedback.ok{background:var(--cms-success);color:#14532D}
+.quiz-feedback.nok{background:var(--cms-error);color:#991B1B}
+.quiz-check-btn{
+  background:var(--cms-blue);color:#fff;border:none;
+  border-radius:8px;padding:12px 24px;cursor:pointer;
+  font-family:'Montserrat',sans-serif;font-size:12px;font-weight:700;
+  letter-spacing:1px;text-transform:uppercase;margin-top:16px;
+  transition:background .2s;
+}
+.quiz-check-btn:hover{background:var(--cms-navy)}
+.quiz-score{
+  background:var(--cms-navy);color:#fff;
+  border-radius:10px;padding:20px 24px;margin-top:20px;display:none;
+}
+.quiz-score-num{
+  font-family:'Montserrat',sans-serif;font-size:40px;font-weight:900;
+  color:var(--cms-yellow);line-height:1;
+}
+.quiz-score p{font-size:14px;color:rgba(255,255,255,.7);margin-top:6px}
+
+/* NAV BUTTONS */
+.nav-actions{
+  display:flex;justify-content:space-between;align-items:center;
+  padding:40px 0 60px;border-top:2px solid var(--cms-border);margin-top:40px;
+}
+.btn{
+  display:inline-flex;align-items:center;gap:8px;
+  padding:14px 28px;border-radius:10px;border:none;cursor:pointer;
+  font-family:'Montserrat',sans-serif;font-size:12px;font-weight:800;
+  letter-spacing:1px;text-transform:uppercase;transition:all .25s;
+  text-decoration:none;
+}
+.btn-primary{background:var(--cms-blue);color:#fff}
+.btn-primary:hover{background:var(--cms-navy);transform:translateY(-1px)}
+.btn-outline{background:#fff;color:var(--cms-navy);border:2px solid var(--cms-border)}
+.btn-outline:hover{border-color:var(--cms-navy)}
+.btn:disabled{opacity:.4;cursor:not-allowed;transform:none}
+.btn-green{background:var(--cms-green);color:#fff}
+.btn-green:hover{background:#156637}
+
+/* CONCEPT MAP */
+.concept-flow{display:flex;align-items:center;gap:0;flex-wrap:wrap;margin:24px 0}
+.concept-node{
+  background:var(--cms-navy);color:#fff;
+  border-radius:10px;padding:14px 20px;min-width:110px;text-align:center;flex:1;
+}
+.concept-node .cn-label{
+  font-family:'Montserrat',sans-serif;font-size:10px;font-weight:700;
+  letter-spacing:1.5px;text-transform:uppercase;color:rgba(255,255,255,.5);margin-bottom:4px;
+}
+.concept-node .cn-term{
+  font-family:'Montserrat',sans-serif;font-size:16px;font-weight:900;color:#fff;
+}
+.concept-node.blue-node{background:var(--cms-blue)}
+.concept-node.green-node{background:var(--cms-green)}
+.concept-node.yellow-node{background:var(--cms-yellow)}
+.concept-node.yellow-node .cn-term,.concept-node.yellow-node .cn-label{color:var(--cms-navy)}
+.concept-arrow{font-size:20px;color:var(--cms-muted);padding:0 6px;flex-shrink:0}
+
+/* COMPLETION SCREEN */
+#screen-complete{display:none;padding:80px 0}
+.complete-inner{text-align:center}
+.complete-badge{
+  width:100px;height:100px;border-radius:50%;
+  background:linear-gradient(135deg,var(--cms-green),#15803d);
+  display:flex;align-items:center;justify-content:center;
+  font-size:48px;margin:0 auto 28px;
+  box-shadow:0 8px 32px rgba(30,138,74,.3);
+}
+.complete-title{
+  font-family:'Montserrat',sans-serif;font-size:36px;font-weight:900;
+  color:var(--cms-navy);letter-spacing:-1.5px;margin-bottom:12px;
+}
+.complete-sub{font-size:16px;color:var(--cms-muted);max-width:480px;margin:0 auto 40px}
+.takeaways{
+  display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;
+  margin:36px 0;text-align:left;
+}
+@media(max-width:600px){.takeaways{grid-template-columns:1fr}}
+.takeaway{
+  background:#fff;border-radius:10px;padding:20px;
+  border:1px solid var(--cms-border);border-top:3px solid var(--cms-blue);
+}
+.takeaway.t-green{border-top-color:var(--cms-green)}
+.takeaway.t-yellow{border-top-color:var(--cms-yellow)}
+.takeaway h4{
+  font-family:'Montserrat',sans-serif;font-size:13px;font-weight:800;
+  color:var(--cms-navy);margin-bottom:8px;
+}
+.takeaway p{font-size:13px;color:var(--cms-muted);line-height:1.6}
+
+/* OBJECTIVES LIST */
+.objectives-list{list-style:none;margin:16px 0 28px}
+.objectives-list li{
+  display:flex;align-items:flex-start;gap:14px;
+  padding:14px 20px;border-radius:8px;margin-bottom:8px;
+  background:#fff;border:1px solid var(--cms-border);
+  font-size:15px;color:var(--cms-ink);line-height:1.5;
+  border-left:3px solid var(--cms-blue);
+}
+.obj-icon{
+  color:var(--cms-blue);font-size:10px;flex-shrink:0;
+  margin-top:4px;
+}
+
+/* PILL TAG */
+.pill{
+  display:inline-block;padding:3px 10px;border-radius:99px;
+  font-family:'Montserrat',sans-serif;font-size:10px;font-weight:700;
+  letter-spacing:1px;text-transform:uppercase;margin:2px;
+}
+.pill-blue{background:#DBEAFE;color:var(--cms-blue)}
+.pill-green{background:#DCFCE7;color:var(--cms-green)}
+.pill-yellow{background:#FEF9C3;color:#92400E}
+.pill-red{background:#FEE2E2;color:#991B1B}
+
+/* STATS ROW */
+.stats-row{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin:24px 0}
+@media(max-width:600px){.stats-row{grid-template-columns:1fr}}
+.stat-card{
+  background:#fff;border-radius:10px;padding:20px;
+  border:1px solid var(--cms-border);text-align:center;
+}
+.stat-num{
+  font-family:'Montserrat',sans-serif;font-size:32px;font-weight:900;
+  color:var(--cms-blue);line-height:1;margin-bottom:6px;
+}
+.stat-desc{font-size:12px;color:var(--cms-muted);line-height:1.4}
+
+/* DIVIDER */
+.divider{height:1px;background:var(--cms-border);margin:32px 0}
+
+/* FOOTER */
+footer{
+  background:var(--cms-navy);color:rgba(255,255,255,.4);
+  text-align:center;padding:28px 40px;
+  font-size:12px;letter-spacing:.5px;
+}
+footer strong{color:rgba(255,255,255,.7)}
+
+/* RESPONSIVE */
+@media(max-width:640px){
+  .topbar{padding:0 16px}
+  .hero{padding:56px 20px 48px}
+  .shell{padding:0 16px}
+  .progress-shell{padding:12px 16px}
+  .nav-actions{flex-direction:column-reverse;gap:12px}
+  .nav-actions .btn{width:100%;justify-content:center}
+}
+
+/* PLAN TABLE */
+.plan-table{width:100%;border-collapse:collapse;margin:16px 0;font-size:14px}
+.plan-table th{
+  background:var(--cms-navy);color:#fff;
+  font-family:'Montserrat',sans-serif;font-size:11px;font-weight:700;
+  letter-spacing:1px;text-transform:uppercase;padding:12px 16px;text-align:left;
+}
+.plan-table td{padding:12px 16px;border-bottom:1px solid var(--cms-border);vertical-align:top}
+.plan-table tr:nth-child(even) td{background:var(--cms-off)}
+.plan-table td:first-child{font-weight:700;color:var(--cms-navy);white-space:nowrap}
+
+/* FLOW DIAGRAM */
+.flow-diagram{margin:24px 0}
+.flow-row{display:flex;align-items:stretch;gap:0;margin-bottom:0}
+.flow-step{
+  flex:1;background:#fff;border:2px solid var(--cms-border);
+  border-radius:10px;padding:16px;text-align:center;
+  position:relative;
+}
+.flow-step h5{
+  font-family:'Montserrat',sans-serif;font-size:11px;font-weight:800;
+  color:var(--cms-navy);margin-bottom:6px;letter-spacing:.5px;text-transform:uppercase;
+}
+.flow-step p{font-size:12px;color:var(--cms-muted);line-height:1.5}
+.flow-arrow{
+  display:flex;align-items:center;justify-content:center;
+  font-size:22px;color:var(--cms-blue);padding:0 6px;flex-shrink:0;
+}
+.flow-step.active-flow{border-color:var(--cms-blue);background:var(--cms-insight)}
+.flow-step.active-flow h5{color:var(--cms-blue)}
+
+/* GLOBAL QUIZ */
+#global-quiz-section{
+  background:var(--cms-navy);color:#fff;
+  padding:60px 0;display:none;
+}
+#global-quiz-section .gq-wrap{max-width:820px;margin:0 auto;padding:0 24px}
+#global-quiz-section .gq-title{
+  font-family:'Montserrat',sans-serif;font-size:32px;font-weight:900;
+  letter-spacing:-1px;margin-bottom:8px;
+}
+#global-quiz-section .gq-sub{color:rgba(255,255,255,.5);margin-bottom:40px;font-size:15px}
+.gq-card{
+  background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);
+  border-radius:12px;padding:28px;margin-bottom:20px;
+}
+.gq-card .gq-q{
+  font-family:'Montserrat',sans-serif;font-size:15px;font-weight:700;
+  margin-bottom:16px;line-height:1.4;
+}
+.gq-opt{
+  display:flex;align-items:center;gap:12px;
+  padding:12px 16px;border-radius:8px;border:1px solid rgba(255,255,255,.15);
+  cursor:pointer;font-size:14px;color:rgba(255,255,255,.8);
+  transition:all .2s;background:rgba(255,255,255,.03);margin-bottom:8px;
+  width:100%;text-align:left;
+}
+.gq-opt:hover{border-color:var(--cms-yellow);background:rgba(245,196,0,.08);color:#fff}
+.gq-opt.selected{border-color:var(--cms-blue);background:rgba(27,108,181,.2);color:#fff}
+.gq-opt.correct{border-color:var(--cms-green);background:rgba(30,138,74,.2);color:#fff}
+.gq-opt.wrong{border-color:#EF4444;background:rgba(239,68,68,.15);color:#fff}
+.gq-letter{
+  width:28px;height:28px;border-radius:50%;border:1px solid rgba(255,255,255,.3);
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Montserrat',sans-serif;font-size:11px;font-weight:800;flex-shrink:0;
+}
+.gq-opt.correct .gq-letter{background:var(--cms-green);border-color:var(--cms-green);color:#fff}
+.gq-opt.wrong .gq-letter{background:#EF4444;border-color:#EF4444;color:#fff}
+.gq-feedback{
+  font-size:13px;margin-top:10px;padding:10px 14px;border-radius:7px;
+  display:none;line-height:1.55;
+}
+.gq-feedback.show{display:block}
+.gq-feedback.ok{background:rgba(30,138,74,.25);color:#86EFAC}
+.gq-feedback.nok{background:rgba(239,68,68,.2);color:#FCA5A5}
+.gq-submit{
+  background:var(--cms-yellow);color:var(--cms-navy);border:none;
+  border-radius:10px;padding:16px 32px;cursor:pointer;
+  font-family:'Montserrat',sans-serif;font-size:13px;font-weight:900;
+  letter-spacing:1px;text-transform:uppercase;margin-top:12px;
+  transition:all .2s;width:100%;
+}
+.gq-submit:hover{transform:translateY(-1px);box-shadow:0 6px 20px rgba(245,196,0,.3)}
+.gq-final-score{
+  background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.15);
+  border-radius:14px;padding:36px;text-align:center;display:none;margin-top:24px;
+}
+.gq-score-big{
+  font-family:'Montserrat',sans-serif;font-size:72px;font-weight:900;
+  color:var(--cms-yellow);line-height:1;
+}
+.gq-score-msg{font-size:18px;margin-top:12px;color:rgba(255,255,255,.7)}
+.gq-score-detail{font-size:14px;color:rgba(255,255,255,.4);margin-top:6px}
+
+/* INSTRUCTION STEPS */
+.steps{list-style:none;margin:16px 0}
+.steps li{
+  display:flex;gap:16px;margin-bottom:20px;
+  padding-bottom:20px;border-bottom:1px solid var(--cms-border);
+}
+.steps li:last-child{border-bottom:none;margin-bottom:0;padding-bottom:0}
+.step-num{
+  background:var(--cms-blue);color:#fff;width:28px;height:28px;
+  border-radius:50%;display:flex;align-items:center;justify-content:center;
+  font-family:'Montserrat',sans-serif;font-size:12px;font-weight:900;flex-shrink:0;margin-top:2px;
+}
+.step-body h5{
+  font-family:'Montserrat',sans-serif;font-size:14px;font-weight:700;
+  color:var(--cms-navy);margin-bottom:4px;
+}
+.step-body p{font-size:13px;color:var(--cms-muted);line-height:1.6}
+
+</style>
+</head>
+<body>
+
+<!-- TOPBAR -->
+<div class="topbar">
+  <div class="topbar-brand">CMS <span>Montes Claros</span></div>
+  <div class="topbar-right">
+    <span class="topbar-tag">Oficina Individual · 2h</span>
+  </div>
+</div>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-inner">
+    <div class="hero-label">Minicurso Prático</div>
+    <h1>IA, Dados e Conhecimento<em>na Saúde Pública</em></h1>
+    <p class="hero-sub">Do caos à estrutura inteligente — sem hype, sem ilusão, com aplicação imediata.</p>
+    <div class="hero-meta">
+      <div class="hero-badge"><span class="dot"></span> 6 Módulos</div>
+      <div class="hero-badge"><span class="dot"></span> Oficina Individual</div>
+      <div class="hero-badge"><span class="dot"></span> Iniciante → Intermediário</div>
+    </div>
+  </div>
+</div>
+
+<!-- PROGRESS BAR -->
+<div class="progress-shell" id="progress-shell" style="display:none">
+  <div class="progress-info">
+    <span class="progress-label" id="progress-module-name">Módulo 1</span>
+    <span class="progress-pct" id="progress-pct">0%</span>
+  </div>
+  <div class="progress-track"><div class="progress-fill" id="progress-fill"></div></div>
+  <div class="module-dots" id="module-dots"></div>
+</div>
+
+<!-- START SCREEN -->
+<div id="screen-start">
+  <div class="shell" style="padding-top:60px;padding-bottom:60px">
+    <div class="mod-eyebrow"><span class="mod-num">✦</span> Antes de começar</div>
+    <h2 class="mod-title">O que você vai <em style="font-style:normal;color:var(--cms-blue)">aprender</em></h2>
+    <p class="mod-subtitle">Esta oficina foi desenhada para profissionais que atuam no campo da saúde pública e querem entender de verdade — não no hype — como dados, informação e inteligência artificial se aplicam ao trabalho institucional.</p>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:40px">
+      <div class="stat-card"><div class="stat-num">6</div><div class="stat-desc">Módulos progressivos</div></div>
+      <div class="stat-card"><div class="stat-num" style="color:var(--cms-green)">2h</div><div class="stat-desc">Duração estimada</div></div>
+    </div>
+
+    <div style="margin-bottom:36px">
+      <h3 class="block-title">O que você vai construir nesta oficina</h3>
+      <ul class="objectives-list">
+        <li><span class="obj-icon">◆</span>Clareza sobre dados, informação e conhecimento institucional</li>
+        <li><span class="obj-icon">◆</span>Entendimento realista e prático do que IA faz (e não faz)</li>
+        <li><span class="obj-icon">◆</span>Capacidade de escrever prompts estruturados</li>
+        <li><span class="obj-icon">◆</span>Visão de automações leves aplicáveis ao seu contexto</li>
+        <li><span class="obj-icon">◆</span>Um plano de ação concreto para aplicar em 24 horas</li>
+      </ul>
+    </div>
+
+    <div class="callout alert">
+      <span class="callout-label">⚠ Aviso importante</span>
+      <p>Esta oficina não é sobre ferramentas. É sobre <strong>lógica</strong>. Ferramentas mudam todo ano. A estrutura de pensamento que você vai desenvolver aqui dura uma carreira.</p>
+    </div>
+
+    <div style="margin-top:36px">
+      <button class="btn btn-primary" onclick="startCourse()" style="font-size:14px;padding:18px 40px">
+        Iniciar a Oficina →
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- MODULES WRAPPER -->
+<div id="modules-wrapper" style="display:none">
+
+  <!-- ══════════════ MÓDULO 1 ══════════════ -->
+  <div class="module-view" id="mod-1">
+    <div class="shell">
+      <div class="mod-eyebrow"><span class="mod-num">1</span> Diagnóstico</div>
+      <h2 class="mod-title">O Problema Real</h2>
+      <p class="mod-subtitle">A maioria das instituições de saúde não tem problema de tecnologia. Tem problema de organização. A tecnologia — inclusive a IA — apenas amplifica o que já existe.</p>
+
+      <div class="content-block">
+        <h3 class="block-title">A Falsa Promessa Tecnológica</h3>
+        <p>Toda vez que uma nova tecnologia surge, existe um padrão previsível: primeiros entusiastas exagerados anunciam que ela vai "revolucionar tudo". Os céticos se fecham. E a maioria das pessoas espera para ver o que acontece.</p>
+        <p>Com a IA generativa não foi diferente. Em 2023-2024, o discurso era simples: "Implemente IA e seus problemas de gestão desaparecem."</p>
+
+        <div class="callout error">
+          <span class="callout-label">✗ O Erro Fatal</span>
+          <p><strong>IA não organiza o que está desorganizado. Ela acelera o caos.</strong> Se seus documentos estão espalhados, seus processos indefinidos e suas decisões não registradas — a IA vai produzir mais documentos espalhados, mais processos indefinidos e mais decisões perdidas, só que mais rápido.</p>
+        </div>
+      </div>
+
+      <div class="content-block">
+        <h3 class="block-title">O Caos Informacional na Saúde Pública</h3>
+        <p>A saúde pública brasileira opera sob pressão permanente: alta demanda, poucos recursos, alta rotatividade de servidores e uma herança de processos informais acumulada por décadas.</p>
+        <p>O resultado é previsível. Veja se você reconhece algum destes cenários:</p>
+
+        <div class="accordion" id="acc-symptoms">
+          <div class="acc-item">
+            <button class="acc-trigger" onclick="toggleAcc(this)">
+              📄 O Documento Morto
+              <span class="acc-arrow">▾</span>
+            </button>
+            <div class="acc-body">
+              <div class="acc-body-inner">
+                <p>Documentos criados e nunca mais consultados. Atas de reunião que ninguém lê. Relatórios que ninguém usa para tomar decisão. Planilhas que existem "para o caso de precisar" e que ninguém sabe como interpretar.</p>
+                <p><strong>O sintoma:</strong> você produz documentação, mas ela não gera conhecimento. É burocracia pura, sem retorno institucional.</p>
+              </div>
+            </div>
+          </div>
+          <div class="acc-item">
+            <button class="acc-trigger" onclick="toggleAcc(this)">
+              🔄 O Retrabalho Crônico
+              <span class="acc-arrow">▾</span>
+            </button>
+            <div class="acc-body">
+              <div class="acc-body-inner">
+                <p>A mesma informação é buscada, digitada e produzida mais de uma vez. Um relatório que poderia ser gerado em 10 minutos leva 3 horas porque os dados estão em lugares diferentes, em formatos incompatíveis.</p>
+                <p><strong>O sintoma:</strong> o trabalho manual substitui um sistema que deveria ser automático. O servidor vira o sistema.</p>
+              </div>
+            </div>
+          </div>
+          <div class="acc-item">
+            <button class="acc-trigger" onclick="toggleAcc(this)">
+              🕳 A Perda de Histórico Institucional
+              <span class="acc-arrow">▾</span>
+            </button>
+            <div class="acc-body">
+              <div class="acc-body-inner">
+                <p>Quando um servidor sai, vai junto com ele: os processos que ele sabia de cabeça, os contatos informais, as exceções não documentadas, o "jeitão" de fazer as coisas.</p>
+                <p><strong>O sintoma:</strong> cada saída é quase um reinício. A instituição não aprende com o tempo — ela repete os mesmos erros em ciclos.</p>
+              </div>
+            </div>
+          </div>
+          <div class="acc-item">
+            <button class="acc-trigger" onclick="toggleAcc(this)">
+              ⚖ Decisões Não Rastreáveis
+              <span class="acc-arrow">▾</span>
+            </button>
+            <div class="acc-body">
+              <div class="acc-body-inner">
+                <p>Uma deliberação foi tomada em reunião. Seis meses depois, ninguém sabe ao certo o que foi decidido, por quem, com base em quê. O registro existe, mas está perdido numa ata de 40 páginas sem índice.</p>
+                <p><strong>O sintoma:</strong> ausência de rastreabilidade é ausência de accountability. E sem accountability, não há controle social real — apenas a forma vazia dele.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="content-block">
+        <h3 class="block-title">O Diagnóstico Honesto</h3>
+        <p>Antes de falar em soluções, precisamos saber onde você está. Responda honestamente ao checklist abaixo. Não é teste — é mapa.</p>
+
+        <div class="activity">
+          <div class="activity-header">
+            <div class="activity-icon">🔍</div>
+            <div class="activity-meta">
+              <div class="activity-tag">Atividade 1</div>
+              <div class="activity-title">Checklist Diagnóstico</div>
+            </div>
+          </div>
+          <p>Marque cada situação que existe ou existiu no seu contexto de trabalho nos últimos 6 meses:</p>
+          <ul class="checklist" id="checklist-diag">
+            <li onclick="toggleCheck(this)"><span class="check-box"></span>Documentos salvos em pastas sem padrão de nomenclatura</li>
+            <li onclick="toggleCheck(this)"><span class="check-box"></span>Decisões tomadas verbalmente sem registro formal posterior</li>
+            <li onclick="toggleCheck(this)"><span class="check-box"></span>Dificuldade de encontrar um documento criado há mais de 3 meses</li>
+            <li onclick="toggleCheck(this)"><span class="check-box"></span>Processos que dependem de uma pessoa específica saber como fazer</li>
+            <li onclick="toggleCheck(this)"><span class="check-box"></span>Relatórios enviados por e-mail que ficam "perdidos" no histórico</li>
+            <li onclick="toggleCheck(this)"><span class="check-box"></span>Reuniões sem pauta estruturada enviada com antecedência</li>
+            <li onclick="toggleCheck(this)"><span class="check-box"></span>Dados que existem mas não estão organizados para consulta rápida</li>
+            <li onclick="toggleCheck(this)"><span class="check-box"></span>Dificuldade de responder: "o que decidimos nessa reunião de 2022?"</li>
+          </ul>
+
+          <div style="margin-top:20px">
+            <label>Qual é, na sua avaliação, o maior problema de gestão da informação no seu contexto?</label>
+            <textarea id="diag-reflection" rows="3" placeholder="Descreva brevemente a situação que mais atrapalha seu trabalho diário..."></textarea>
+            <button class="save-note" onclick="saveNote('diag-reflection','diag-saved')">Salvar reflexão</button>
+            <p class="saved-msg" id="diag-saved">✓ Reflexão registrada</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="callout insight">
+        <span class="callout-label">💡 Insight do Módulo</span>
+        <p>O problema que você está enfrentando não é técnico. É <strong>estrutural</strong>. Tecnologia resolve problemas estruturados. Primeiro estrutura. Depois automatiza. Nunca o contrário.</p>
+      </div>
+
+      <!-- QUIZ M1 -->
+      <div class="quiz-section">
+        <div class="quiz-title">Mini-Quiz — Módulo 1</div>
+        <div class="quiz-sub">2 perguntas · Teste sua compreensão antes de avançar</div>
+
+        <div class="quiz-q" id="q1m1">
+          <p>1. O que acontece quando uma organização desorganizada implementa IA?</p>
+          <div class="quiz-options">
+            <button class="quiz-opt" onclick="selectOpt(this,'q1m1','a')"><span class="quiz-letter">A</span> A IA organiza automaticamente os processos</button>
+            <button class="quiz-opt" onclick="selectOpt(this,'q1m1','b')"><span class="quiz-letter">B</span> A desorganização é amplificada e acelerada</button>
+            <button class="quiz-opt" onclick="selectOpt(this,'q1m1','c')"><span class="quiz-letter">C</span> Nada muda, pois IA não interfere em processos humanos</button>
+            <button class="quiz-opt" onclick="selectOpt(this,'q1m1','d')"><span class="quiz-letter">D</span> A organização melhora gradualmente com o uso</button>
+          </div>
+          <div class="quiz-feedback" id="fb-q1m1"></div>
+        </div>
+
+        <div class="quiz-q" id="q2m1">
+          <p>2. O "documento morto" é um sintoma de qual problema central?</p>
+          <div class="quiz-options">
+            <button class="quiz-opt" onclick="selectOpt(this,'q2m1','a')"><span class="quiz-letter">A</span> Falta de computadores na instituição</button>
+            <button class="quiz-opt" onclick="selectOpt(this,'q2m1','b')"><span class="quiz-letter">B</span> Excesso de reuniões desnecessárias</button>
+            <button class="quiz-opt" onclick="selectOpt(this,'q2m1','c')"><span class="quiz-letter">C</span> Produção de informação sem ciclo de uso ou consulta</button>
+            <button class="quiz-opt" onclick="selectOpt(this,'q2m1','d')"><span class="quiz-letter">D</span> Falta de treinamento em softwares específicos</button>
+          </div>
+          <div class="quiz-feedback" id="fb-q2m1"></div>
+        </div>
+
+        <button class="quiz-check-btn" onclick="checkQuiz('mod1',['b','c'])">Verificar respostas</button>
+        <div class="quiz-score" id="score-mod1"></div>
+      </div>
+
+      <div class="nav-actions">
+        <button class="btn btn-outline" disabled>← Anterior</button>
+        <button class="btn btn-primary" onclick="goModule(2)">Módulo 2: Fundamentos →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════ MÓDULO 2 ══════════════ -->
+  <div class="module-view" id="mod-2">
+    <div class="shell">
+      <div class="mod-eyebrow"><span class="mod-num">2</span> Fundamentos</div>
+      <h2 class="mod-title">O Que Quase Ninguém Domina</h2>
+      <p class="mod-subtitle">Antes de falar em sistemas, automações ou IA, precisamos alinhar os conceitos básicos. Sem essa base, qualquer tecnologia é construída sobre areia.</p>
+
+      <div class="content-block">
+        <h3 class="block-title">Dado ≠ Informação ≠ Conhecimento</h3>
+        <p>Esses três termos são usados como sinônimos no cotidiano. Mas eles são radicalmente diferentes — e confundi-los é uma das raízes do caos informacional.</p>
+
+        <div class="concept-flow">
+          <div class="concept-node">
+            <div class="cn-label">Bruto</div>
+            <div class="cn-term">Dado</div>
+          </div>
+          <div class="concept-arrow">→</div>
+          <div class="concept-node blue-node">
+            <div class="cn-label">Contextualizado</div>
+            <div class="cn-term">Informação</div>
+          </div>
+          <div class="concept-arrow">→</div>
+          <div class="concept-node green-node">
+            <div class="cn-label">Aplicado</div>
+            <div class="cn-term">Conhecimento</div>
+          </div>
+        </div>
+
+        <div class="accordion">
+          <div class="acc-item">
+            <button class="acc-trigger" onclick="toggleAcc(this)">
+              🔢 Dado — o bruto sem forma
+              <span class="acc-arrow">▾</span>
+            </button>
+            <div class="acc-body">
+              <div class="acc-body-inner">
+                <p><strong>Definição:</strong> registro isolado, sem contexto. Por si só, não diz nada.</p>
+                <p><strong>Exemplo na saúde pública:</strong> "47". É um número. Sem contexto, é zero informação.</p>
+                <p><strong>Problema comum:</strong> sistemas de saúde coletam dados em abundância e tratam isso como "ter informação". Não é. Dado não usado é ruído.</p>
+              </div>
+            </div>
+          </div>
+          <div class="acc-item">
+            <button class="acc-trigger" onclick="toggleAcc(this)">
+              📊 Informação — o dado com contexto
+              <span class="acc-arrow">▾</span>
+            </button>
+            <div class="acc-body">
+              <div class="acc-body-inner">
+                <p><strong>Definição:</strong> dado interpretado dentro de um contexto que gera significado.</p>
+                <p><strong>Exemplo:</strong> "47 denúncias de irregularidades em serviços de saúde recebidas pelo Conselho Municipal no mês de março de 2025." Agora o 47 significa algo.</p>
+                <p><strong>Transformação:</strong> dado → informação exige <em>contexto</em> (quem, o quê, quando, onde) e <em>relação</em> com outros dados.</p>
+              </div>
+            </div>
+          </div>
+          <div class="acc-item">
+            <button class="acc-trigger" onclick="toggleAcc(this)">
+              🧠 Conhecimento — a informação que gera ação
+              <span class="acc-arrow">▾</span>
+            </button>
+            <div class="acc-body">
+              <div class="acc-body-inner">
+                <p><strong>Definição:</strong> informação processada, relacionada com experiência e estrutura institucional, que permite <em>decidir e agir</em>.</p>
+                <p><strong>Exemplo:</strong> "Com base nas 47 denúncias de março — um aumento de 38% em relação a fevereiro — e considerando o período pós-férias de servidores, a comissão deliberou por realizar inspeção prioritária em 3 unidades específicas."</p>
+                <p><strong>Isso é raro.</strong> A maioria das instituições fica parada no nível da informação. Raramente ela vira conhecimento aplicado.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="divider"></div>
+
+      <div class="content-block">
+        <h3 class="block-title">O Ciclo da Informação Institucional</h3>
+        <p>Toda informação institucional percorre — ou deveria percorrer — um ciclo de 5 etapas. Quando uma delas falha, o ciclo quebra e a informação se perde.</p>
+
+        <div class="flow-diagram">
+          <div class="flow-row">
+            <div class="flow-step active-flow">
+              <h5>1. Geração</h5>
+              <p>Reunião, formulário, demanda, denúncia, deliberação</p>
+            </div>
+            <div class="flow-arrow">→</div>
+            <div class="flow-step">
+              <h5>2. Registro</h5>
+              <p>Ata, planilha, formulário, e-mail, anotação</p>
+            </div>
+            <div class="flow-arrow">→</div>
+            <div class="flow-step">
+              <h5>3. Organização</h5>
+              <p>Pasta, categoria, tag, índice, padrão de nome</p>
+            </div>
+          </div>
+          <div style="height:12px"></div>
+          <div class="flow-row" style="flex-direction:row-reverse">
+            <div class="flow-step">
+              <h5>4. Acesso</h5>
+              <p>Busca, consulta, compartilhamento com quem precisa</p>
+            </div>
+            <div class="flow-arrow" style="transform:rotate(180deg)">→</div>
+            <div class="flow-step active-flow" style="border-color:var(--cms-green)">
+              <h5>5. Uso</h5>
+              <p>Decisão, relatório, prestação de contas, aprendizado</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="callout alert">
+          <span class="callout-label">⚠ Onde os sistemas públicos quebram</span>
+          <ul>
+            <li><strong>Entre geração e registro:</strong> decisões verbais que nunca são formalizadas</li>
+            <li><strong>Entre registro e organização:</strong> documentos criados sem padrão ou categoria</li>
+            <li><strong>Entre organização e acesso:</strong> arquivos que existem mas ninguém consegue encontrar</li>
+            <li><strong>Entre acesso e uso:</strong> informações disponíveis que nunca viram decisão</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="content-block">
+        <h3 class="block-title">Fluxo Informacional Institucional</h3>
+        <p>Um fluxo informacional institucional é o caminho que uma informação percorre desde seu surgimento até seu impacto em uma decisão. Mapear esse fluxo é o primeiro passo para organizá-lo.</p>
+
+        <div class="activity">
+          <div class="activity-header">
+            <div class="activity-icon">🗺</div>
+            <div class="activity-meta">
+              <div class="activity-tag">Atividade 2</div>
+              <div class="activity-title">Mapeie um Fluxo Real</div>
+            </div>
+          </div>
+          <p>Escolha uma informação recorrente no seu trabalho — uma ata de reunião, uma deliberação do conselho, uma denúncia recebida. Agora descreva o caminho que ela percorre:</p>
+
+          <label>Que informação você escolheu?</label>
+          <input type="text" id="flow-what" placeholder="Ex: ata de plenária ordinária">
+
+          <div style="height:12px"></div>
+          <label>Onde ela é gerada e como é registrada?</label>
+          <textarea id="flow-gen" rows="2" placeholder="Ex: gerada na reunião, registrada em Word no computador do secretário"></textarea>
+
+          <div style="height:10px"></div>
+          <label>Como ela é organizada e acessada?</label>
+          <textarea id="flow-org" rows="2" placeholder="Ex: salva em pasta por ano, sem índice, acesso só presencialmente"></textarea>
+
+          <div style="height:10px"></div>
+          <label>Ela vira decisão ou ação concreta? Como?</label>
+          <textarea id="flow-use" rows="2" placeholder="Ex: raramente consultada após aprovação em reunião seguinte"></textarea>
+
+          <button class="save-note" onclick="saveNote('flow-use','flow-saved')">Salvar mapeamento</button>
+          <p class="saved-msg" id="flow-saved">✓ Mapeamento registrado</p>
+        </div>
+      </div>
+
+      <div class="callout insight">
+        <span class="callout-label">💡 Insight do Módulo</span>
+        <p>A maioria das organizações públicas tem <strong>dados demais e conhecimento de menos</strong>. O problema não é falta de informação — é falta de estrutura para transformar informação em decisão.</p>
+      </div>
+
+      <!-- QUIZ M2 -->
+      <div class="quiz-section">
+        <div class="quiz-title">Mini-Quiz — Módulo 2</div>
+        <div class="quiz-sub">3 perguntas · Fundamentos conceituais</div>
+
+        <div class="quiz-q" id="q1m2">
+          <p>1. Qual a diferença essencial entre dado e informação?</p>
+          <div class="quiz-options">
+            <button class="quiz-opt" onclick="selectOpt(this,'q1m2','a')"><span class="quiz-letter">A</span> Dado é digital, informação é impressa</button>
+            <button class="quiz-opt" onclick="selectOpt(this,'q1m2','b')"><span class="quiz-letter">B</span> Dado é bruto e isolado; informação é dado contextualizado com significado</button>
+            <button class="quiz-opt" onclick="selectOpt(this,'q1m2','c')"><span class="quiz-letter">C</span> Informação é mais antiga que dado</button>
+            <button class="quiz-opt" onclick="selectOpt(this,'q1m2','d')"><span class="quiz-letter">D</span> Não há diferença relevante para fins práticos</button>
+          </div>
+          <div class="quiz-feedback" id="fb-q1m2"></div>
+        </div>
+
+        <div class="quiz-q" id="q2m2">
+          <p>2. Em qual etapa do ciclo da informação os sistemas públicos mais falham?</p>
+          <div class="quiz-options">
+            <button class="quiz-opt" onclick="selectOpt(this,'q2m2','a')"><span class="quiz-letter">A</span> Geração — as instituições produzem poucos dados</button>
+            <button class="quiz-opt" onclick="selectOpt(this,'q2m2','b')"><span class="quiz-letter">B</span> Registro e organização — informação existe mas não é estruturada para uso</button>
+            <button class="quiz-opt" onclick="selectOpt(this,'q2m2','c')"><span class="quiz-letter">C</span> Acesso — os sistemas são muito difíceis de usar</button>
+            <button class="quiz-opt" onclick="selectOpt(this,'q2m2','d')"><span class="quiz-letter">D</span> Todas as etapas funcionam bem</button>
+          </div>
+          <div class="quiz-feedback" id="fb-q2m2"></div>
+        </div>
+
+        <div class="quiz-q" id="q3m2">
+          <p>3. O que transforma informação em conhecimento?</p>
+          <div class="quiz-options">
+            <button class="quiz-opt" onclick="selectOpt(this,'q3m2','a')"><span class="quiz-letter">A</span> Digitalizar os documentos em um sistema</button>
+            <button class="quiz-opt" onclick="selectOpt(this,'q3m2','b')"><span class="quiz-letter">B</span> Ter mais reuniões para discutir os dados</button>
+            <button class="quiz-opt" onclick="selectOpt(this,'q3m2','c')"><span class="quiz-letter">C</span> Relacionar a informação com experiência e usá-la para decidir e agir</button>
+            <button class="quiz-opt" onclick="selectOpt(this,'q3m2','d')"><span class="quiz-letter">D</span> Contratar especialistas externos para análise</button>
+          </div>
+          <div class="quiz-feedback" id="fb-q3m2"></div>
+        </div>
+
+        <button class="quiz-check-btn" onclick="checkQuiz('mod2',['b','b','c'])">Verificar respostas</button>
+        <div class="quiz-score" id="score-mod2"></div>
+      </div>
+
+      <div class="nav-actions">
+        <button class="btn btn-outline" onclick="goModule(1)">← Módulo 1</button>
+        <button class="btn btn-primary" onclick="goModule(3)">Módulo 3: IA na Prática →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════ MÓDULO 3 ══════════════ -->
+  <div class="module-view" id="mod-3">
+    <div class="shell">
+      <div class="mod-eyebrow"><span class="mod-num">3</span> Inteligência Artificial</div>
+      <h2 class="mod-title">IA Sem Ilusão</h2>
+      <p class="mod-subtitle">Vamos falar sobre o que a IA generativa realmente é, o que ela faz de forma excelente e — mais importante — o que ela não faz. Esse equilíbrio é o que separa uso amador de uso consciente.</p>
+
+      <div class="content-block">
+        <h3 class="block-title">O Que É IA Generativa (Na Prática)</h3>
+        <p>IA generativa — como o ChatGPT, Claude, Gemini — é um sistema treinado com uma quantidade gigantesca de texto humano. Ele aprendeu padrões de linguagem: como frases se estruturam, como argumentos se constroem, como diferentes formatos de texto são organizados.</p>
+        <p>Uma metáfora útil: é como um estagiário excepcionalmente eloquente que leu tudo, mas não viveu nada do seu contexto específico. Ele escreve bem, estrutura argumentos, resume documentos — mas não sabe quem é o presidente do seu conselho, quais são as deliberações do seu mandato, ou qual é a briga política que paralisa a Câmara Municipal.</p>
+
+        <div class="callout insight">
+          <span class="callout-label">💡 Como pensar sobre IA</span>
+          <p>IA é um <strong>acelerador de escrita e estruturação</strong>. Ela não pensa por você. Ela não tem contexto institucional. Ela não substitui julgamento. O que ela faz é eliminar o atrito entre você ter uma ideia e ela estar bem escrita, organizada e formatada.</p>
+        </div>
+      </div>
+
+      <div class="content-block">
+        <h3 class="block-title">O Que IA Faz Bem</h3>
+
+        <div class="accordion">
+          <div class="acc-item">
+            <button class="acc-trigger" onclick="toggleAcc(this)">
+              ✅ Organizar texto e estruturar documentos
+              <span class="acc-arrow">▾</span>
+            </button>
+            <div class="acc-body">
+              <div class="acc-body-inner">
+                <p>Você passa um bloco de texto bagunçado — notas de reunião, rascunho de relatório, transcrição de fala — e ela organiza em tópicos, hierarquias, tabelas.</p>
+                <p><strong>Exemplo prático:</strong> transcrição de uma plenária do conselho → ata estruturada com pauta, deliberações numeradas e encaminhamentos listados.</p>
+              </div>
+            </div>
+          </div>
+          <div class="acc-item">
+            <button class="acc-trigger" onclick="toggleAcc(this)">
+              ✅ Resumir documentos extensos
+              <span class="acc-arrow">▾</span>
+            </button>
+            <div class="acc-body">
+              <div class="acc-body-inner">
+                <p>Portaria de 40 páginas → síntese de 1 página com os pontos que afetam seu contexto. Resolução do Conselho Nacional de Saúde → resumo executivo para apresentar à plenária.</p>
+                <p><strong>Cuidado importante:</strong> sempre revisar o resumo. IA pode omitir detalhes críticos ou simplificar em excesso em documentos técnicos complexos.</p>
+              </div>
+            </div>
+          </div>
+          <div class="acc-item">
+            <button class="acc-trigger" onclick="toggleAcc(this)">
+              ✅ Redigir e reformatar documentos
+              <span class="acc-arrow">▾</span>
+            </button>
+            <div class="acc-body">
+              <div class="acc-body-inner">
+                <p>Você dita o conteúdo — IA escreve com linguagem formal, ajusta para tom institucional, adapta para diferentes públicos (técnicos vs. população leiga).</p>
+                <p><strong>Exemplo:</strong> transformar uma deliberação técnica em uma nota de fácil leitura para o site do conselho.</p>
+              </div>
+            </div>
+          </div>
+          <div class="acc-item">
+            <button class="acc-trigger" onclick="toggleAcc(this)">
+              ✅ Gerar padrões e templates
+              <span class="acc-arrow">▾</span>
+            </button>
+            <div class="acc-body">
+              <div class="acc-body-inner">
+                <p>Criar um modelo padrão de ata, um template de ofício, um checklist de inspeção, um formulário de denúncia — a IA gera versões iniciais sólidas que você refina para o seu contexto.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="content-block">
+        <h3 class="block-title">O Que IA NÃO Faz</h3>
+
+        <div class="callout error">
+          <span class="callout-label">✗ Limitações Reais</span>
+          <ul>
+            <li><strong>Não conhece seu contexto institucional</strong> — não sabe quem são seus conselheiros, suas deliberações, seu município</li>
+            <li><strong>Não acessa dados em tempo real</strong> — a menos que você forneça os dados explicitamente</li>
+            <li><strong>Não toma decisões</strong> — ela organiza opções, nunca decide</li>
+            <li><strong>Pode inventar ("alucinar")</strong> — especialmente em dados específicos, números, datas e nomes</li>
+            <li><strong>Não substitui revisão humana</strong> — tudo gerado por IA deve ser revisado antes de uso institucional</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="content-block">
+        <h3 class="block-title">Engenharia de Prompt: A Habilidade Real</h3>
+        <p>A qualidade do que a IA produz depende diretamente da qualidade do que você pede. Isso se chama <strong>engenharia de prompt</strong>. É a habilidade mais importante para usar IA de forma produtiva.</p>
+
+        <p>Um prompt bem construído tem 4 elementos:</p>
+        <ol class="steps">
+          <li>
+            <span class="step-num">1</span>
+            <div class="step-body">
+              <h5>Contexto</h5>
+              <p>Quem você é, qual é o seu papel institucional, para quem o documento se destina.</p>
+            </div>
+          </li>
+          <li>
+            <span class="step-num">2</span>
+            <div class="step-body">
+              <h5>Instrução clara</h5>
+              <p>O que exatamente você quer que seja feito. Uma ação concreta.</p>
+            </div>
+          </li>
+          <li>
+            <span class="step-num">3</span>
+            <div class="step-body">
+              <h5>Formato desejado</h5>
+              <p>Como o resultado deve aparecer: lista, tabela, parágrafo, tópicos, linguagem formal/simples.</p>
+            </div>
+          </li>
+          <li>
+            <span class="step-num">4</span>
+            <div class="step-body">
+              <h5>Restrições</h5>
+              <p>O que você NÃO quer: sem jargão técnico, máximo 300 palavras, sem introdução genérica.</p>
+            </div>
+          </li>
+        </ol>
+
+        <h4 class="block-sub">Comparação: Prompt Ruim vs. Estruturado</h4>
+        <div class="compare">
+          <div class="compare-box bad">
+            <div class="compare-header">✗ Prompt Ruim</div>
+            <pre>"Escreve uma ata de reunião do conselho de saúde."</pre>
+            <br>
+            <p style="font-size:13px;color:#7F1D1D;margin-top:8px">Resultado: texto genérico, sem contexto, sem utilidade real, que precisará de reescrita total.</p>
+          </div>
+          <div class="compare-box good">
+            <div class="compare-header">✓ Prompt Estruturado</div>
+            <pre>"Você é secretário executivo do Conselho Municipal de Saúde de uma cidade de médio porte.
+
+Redija uma ata de plenária ordinária com as seguintes informações:
+- Data: 15/04/2025
+- Local: Secretaria de Saúde
+- Pauta: [lista aqui]
+- Deliberações: [lista aqui]
+- Encaminhamentos: [lista aqui]
+
+Use linguagem formal institucional. Estruture em: abertura, registro de presença, pauta, deliberações numeradas, encaminhamentos e encerramento.
+
+Sem introdução genérica. Máximo 2 páginas A4."</pre>
+          </div>
+        </div>
+      </div>
+
+      <div class="activity">
+        <div class="activity-header">
+          <div class="activity-icon">✍</div>
+          <div class="activity-meta">
+            <div class="activity-tag">Atividade 3</div>
+            <div class="activity-title">Construa seu Primeiro Prompt</div>
+          </div>
+        </div>
+        <p>Escolha uma tarefa real do seu cotidiano e escreva um prompt completo usando os 4 elementos: contexto, instrução, formato e restrições.</p>
+
+        <label>Tarefa escolhida (ex: resumir portaria, redigir ofício, estruturar ata...):</label>
+        <input type="text" id="prompt-task" placeholder="Qual tarefa você quer realizar?">
+
+        <div style="height:12px"></div>
+        <label>Escreva seu prompt completo aqui:</label>
+        <textarea id="prompt-text" rows="6" placeholder="Inclua: contexto (quem você é), instrução (o que fazer), formato (como apresentar) e restrições (o que evitar)..."></textarea>
+
+        <button class="save-note" onclick="saveNote('prompt-text','prompt-saved')">Salvar prompt</button>
+        <p class="saved-msg" id="prompt-saved">✓ Prompt salvo</p>
+      </div>
+
+      <!-- QUIZ M3 -->
+      <div class="quiz-section">
+        <div class="quiz-title">Mini-Quiz — Módulo 3</div>
+        <div class="quiz-sub">3 perguntas · IA na prática</div>
+
+        <div class="quiz-q" id="q1m3">
+          <p>1. Qual a melhor metáfora para descrever o que a IA generativa faz?</p>
+          <div class="quiz-options">
+            <button class="quiz-opt" onclick="selectOpt(this,'q1m3','a')"><span class="quiz-letter">A</span> Um especialista que conhece sua instituição profundamente</button>
+            <button class="quiz-opt" onclick="selectOpt(this,'q1m3','b')"><span class="quiz-letter">B</span> Um estagiário eloquente que leu muito mas não conhece seu contexto</button>
+            <button class="quiz-opt" onclick="selectOpt(this,'q1m3','c')"><span class="quiz-letter">C</span> Uma calculadora avançada para textos</button>
+            <button class="quiz-opt" onclick="selectOpt(this,'q1m3','d')"><span class="quiz-letter">D</span> Um banco de dados com todas as informações do mundo</button>
+          </div>
+          <div class="quiz-feedback" id="fb-q1m3"></div>
+        </div>
+
+        <div class="quiz-q" id="q2m3">
+          <p>2. O que é "alucinação" no contexto da IA?</p>
+          <div class="quiz-options">
+            <button class="quiz-opt" onclick="selectOpt(this,'q2m3','a')"><span class="quiz-letter">A</span> Quando a IA fica em loop e trava o sistema</button>
+            <button class="quiz-opt" onclick="selectOpt(this,'q2m3','b')"><span class="quiz-letter">B</span> Quando a IA inventa dados, nomes ou informações que parecem reais mas são falsas</button>
+            <button class="quiz-opt" onclick="selectOpt(this,'q2m3','c')"><span class="quiz-letter">C</span> Quando o usuário usa IA de forma incorreta</button>
+            <button class="quiz-opt" onclick="selectOpt(this,'q2m3','d')"><span class="quiz-letter">D</span> Quando a IA demora muito para responder</button>
+          </div>
+          <div class="quiz-feedback" id="fb-q2m3"></div>
+        </div>
+
+        <div class="quiz-q" id="q3m3">
+          <p>3. Qual dos 4 elementos de um bom prompt define O QUE você quer que seja feito?</p>
+          <div class="quiz-options">
+            <button class="quiz-opt" onclick="selectOpt(this,'q3m3','a')"><span class="quiz-letter">A</span> Contexto</button>
+            <button class="quiz-opt" onclick="selectOpt(this,'q3m3','b')"><span class="quiz-letter">B</span> Formato</button>
+            <button class="quiz-opt" onclick="selectOpt(this,'q3m3','c')"><span class="quiz-letter">C</span> Instrução clara</button>
+            <button class="quiz-opt" onclick="selectOpt(this,'q3m3','d')"><span class="quiz-letter">D</span> Restrições</button>
+          </div>
+          <div class="quiz-feedback" id="fb-q3m3"></div>
+        </div>
+
+        <button class="quiz-check-btn" onclick="checkQuiz('mod3',['b','b','c'])">Verificar respostas</button>
+        <div class="quiz-score" id="score-mod3"></div>
+      </div>
+
+      <div class="nav-actions">
+        <button class="btn btn-outline" onclick="goModule(2)">← Módulo 2</button>
+        <button class="btn btn-primary" onclick="goModule(4)">Módulo 4: Automações →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════ MÓDULO 4 ══════════════ -->
+  <div class="module-view" id="mod-4">
+    <div class="shell">
+      <div class="mod-eyebrow"><span class="mod-num">4</span> Automações</div>
+      <h2 class="mod-title">Onde Está o Ganho Real</h2>
+      <p class="mod-subtitle">Automação não é robótica nem programação complexa. É eliminar o trabalho manual repetitivo usando ferramentas que você já tem. O ganho real está aqui — não nas grandes implementações de TI.</p>
+
+      <div class="content-block">
+        <h3 class="block-title">O Que É Automação Leve</h3>
+        <p>Automação leve é qualquer solução que elimina tarefas repetitivas usando ferramentas simples e acessíveis — sem necessidade de desenvolvedor, servidor próprio ou orçamento significativo.</p>
+
+        <div class="stats-row">
+          <div class="stat-card">
+            <div class="stat-num">0</div>
+            <div class="stat-desc">Programadores necessários para automações leves</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-num" style="color:var(--cms-green)">R$0</div>
+            <div class="stat-desc">Custo das ferramentas básicas (Google Workspace é gratuito)</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-num" style="color:var(--cms-yellow)">80%</div>
+            <div class="stat-desc">Das tarefas repetitivas são automatizáveis com ferramentas simples</div>
+          </div>
+        </div>
+
+        <div class="callout alert">
+          <span class="callout-label">⚠ Princípio Fundamental</span>
+          <p>Só automatize o que já está <strong>padronizado</strong>. Automação de processo indefinido = automação de caos. Primeiro define o processo. Depois o automatiza.</p>
+        </div>
+      </div>
+
+      <div class="content-block">
+        <h3 class="block-title">O Stack de Automação Leve</h3>
+        <p>Você provavelmente já tem acesso a todas essas ferramentas:</p>
+
+        <div class="accordion">
+          <div class="acc-item">
+            <button class="acc-trigger" onclick="toggleAcc(this)">
+              📊 Google Sheets — o banco de dados do povo
+              <span class="acc-arrow">▾</span>
+            </button>
+            <div class="acc-body">
+              <div class="acc-body-inner">
+                <p>Uma planilha bem estruturada é um banco de dados funcional. Conselheiros, deliberações, denúncias, frequências — tudo pode ser armazenado em Sheets e consultado rapidamente.</p>
+                <p><strong>Automação possível:</strong> planilha de controle de deliberações → filtro automático por status (pendente/cumprida) → relatório mensal gerado com um clique.</p>
+              </div>
+            </div>
+          </div>
+          <div class="acc-item">
+            <button class="acc-trigger" onclick="toggleAcc(this)">
+              📋 Google Forms — coleta estruturada
+              <span class="acc-arrow">▾</span>
+            </button>
+            <div class="acc-body">
+              <div class="acc-body-inner">
+                <p>Formulários substituem e-mails, planilhas paralelas e coleta verbal de informações. O dado entra estruturado desde a origem.</p>
+                <p><strong>Automação possível:</strong> formulário de registro de presença em reunião → alimenta planilha automaticamente → frequência calculada automaticamente por conselheiro.</p>
+              </div>
+            </div>
+          </div>
+          <div class="acc-item">
+            <button class="acc-trigger" onclick="toggleAcc(this)">
+              🤖 IA Integrada — o acelerador
+              <span class="acc-arrow">▾</span>
+            </button>
+            <div class="acc-body">
+              <div class="acc-body-inner">
+                <p>Com as ferramentas anteriores organizadas, a IA entra como acelerador de escrita e estruturação — não como solução mágica.</p>
+                <p><strong>Automação possível:</strong> você alimenta a IA com os dados da planilha + pauta da reunião → ela gera um rascunho de ata em 2 minutos → você revisa e finaliza.</p>
+              </div>
+            </div>
+          </div>
+          <div class="acc-item">
+            <button class="acc-trigger" onclick="toggleAcc(this)">
+              📁 Drive estruturado — o arquivo que funciona
+              <span class="acc-arrow">▾</span>
+            </button>
+            <div class="acc-body">
+              <div class="acc-body-inner">
+                <p>Um Google Drive com estrutura de pastas padronizada por ano/tipo/status é um arquivo de verdade. Com a busca do Drive, qualquer documento é encontrado em segundos.</p>
+                <p><strong>Estrutura sugerida:</strong> <code>ANO → TIPO (atas/ofícios/deliberações) → MÊS</code> com nomenclatura padrão nos arquivos.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="content-block">
+        <h3 class="block-title">Casos Reais de Automação Leve na Saúde Pública</h3>
+
+        <div class="accordion">
+          <div class="acc-item">
+            <button class="acc-trigger" onclick="toggleAcc(this)">
+              📝 Caso 1: Atas Estruturadas com IA
+              <span class="acc-arrow">▾</span>
+            </button>
+            <div class="acc-body">
+              <div class="acc-body-inner">
+                <p><strong>Situação antes:</strong> secretário(a) anota durante a reunião → digita tudo depois → formata manualmente → 4-6 horas de trabalho pós-reunião.</p>
+                <p><strong>Com automação leve:</strong></p>
+                <ol style="padding-left:20px;margin-top:8px">
+                  <li>Reunião gravada (áudio) ou anotações estruturadas no formulário</li>
+                  <li>Dados (presença, pauta, deliberações) inseridos em formulário padrão</li>
+                  <li>IA recebe dados e gera rascunho de ata</li>
+                  <li>Revisão e aprovação: 20-30 minutos</li>
+                </ol>
+                <p><strong>Ganho:</strong> de 4-6 horas para 30-40 minutos. Consistência garantida em todas as atas.</p>
+              </div>
+            </div>
+          </div>
+          <div class="acc-item">
+            <button class="acc-trigger" onclick="toggleAcc(this)">
+              📊 Caso 2: Painel de Deliberações
+              <span class="acc-arrow">▾</span>
+            </button>
+            <div class="acc-body">
+              <div class="acc-body-inner">
+                <p><strong>Situação antes:</strong> ninguém sabe exatamente quais deliberações foram cumpridas. Conselheiros perguntam sobre decisões de 6 meses atrás. Pesquisa manual em atas.</p>
+                <p><strong>Com automação leve:</strong></p>
+                <ol style="padding-left:20px;margin-top:8px">
+                  <li>Planilha com todas as deliberações: data, número, responsável, prazo, status</li>
+                  <li>Status atualizado mensalmente (pendente/em andamento/cumprida/arquivada)</li>
+                  <li>Filtro automático por status e responsável</li>
+                  <li>Relatório de situação gerado com CTRL+C e IA formatando o texto</li>
+                </ol>
+                <p><strong>Ganho:</strong> rastreabilidade total, prestação de contas objetiva, memória institucional.</p>
+              </div>
+            </div>
+          </div>
+          <div class="acc-item">
+            <button class="acc-trigger" onclick="toggleAcc(this)">
+              📨 Caso 3: Triagem de Demandas e Denúncias
+              <span class="acc-arrow">▾</span>
+            </button>
+            <div class="acc-body">
+              <div class="acc-body-inner">
+                <p><strong>Situação antes:</strong> demandas chegam por e-mail, WhatsApp, balcão, telefone. Ninguém sabe o volume, os temas, os prazos. Algumas se perdem.</p>
+                <p><strong>Com automação leve:</strong></p>
+                <ol style="padding-left:20px;margin-top:8px">
+                  <li>QR Code / link para formulário padrão de demandas</li>
+                  <li>Formulário com campos: tipo, unidade de saúde, descrição, urgência</li>
+                  <li>Planilha centraliza tudo automaticamente com data/hora</li>
+                  <li>Filtros por tipo e status permitem acompanhamento em tempo real</li>
+                </ol>
+                <p><strong>Ganho:</strong> visibilidade total do volume, padrão de temas (para pautas), rastreabilidade de cada demanda.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="activity">
+        <div class="activity-header">
+          <div class="activity-icon">⚙</div>
+          <div class="activity-meta">
+            <div class="activity-tag">Atividade 4</div>
+            <div class="activity-title">Desenhe sua Primeira Automação</div>
+          </div>
+        </div>
+        <p>Escolha uma tarefa repetitiva no seu trabalho e desenhe como seria a automação leve dela. Não precisa ser técnico — pense no fluxo.</p>
+
+        <label>Qual tarefa repetitiva você quer automatizar?</label>
+        <input type="text" id="auto-task" placeholder="Ex: registro de presença nas reuniões">
+
+        <div style="height:12px"></div>
+        <label>Como essa tarefa funciona hoje (o processo manual)?</label>
+        <textarea id="auto-before" rows="3" placeholder="Descreva o passo a passo atual..."></textarea>
+
+        <div style="height:10px"></div>
+        <label>Como seria com automação leve? (Ferramentas: Forms, Sheets, IA, Drive)</label>
+        <textarea id="auto-after" rows="3" placeholder="Descreva o novo fluxo com automação..."></textarea>
+
+        <div style="height:10px"></div>
+        <label>Qual seria o ganho estimado de tempo por semana?</label>
+        <input type="text" id="auto-gain" placeholder="Ex: 3 horas por semana">
+
+        <button class="save-note" onclick="saveNote('auto-gain','auto-saved')">Salvar automação</button>
+        <p class="saved-msg" id="auto-saved">✓ Automação desenhada e salva</p>
+      </div>
+
+      <!-- QUIZ M4 -->
+      <div class="quiz-section">
+        <div class="quiz-title">Mini-Quiz — Módulo 4</div>
+        <div class="quiz-sub">2 perguntas · Automações leves</div>
+
+        <div class="quiz-q" id="q1m4">
+          <p>1. Qual é o pré-requisito essencial ANTES de automatizar um processo?</p>
+          <div class="quiz-options">
+            <button class="quiz-opt" onclick="selectOpt(this,'q1m4','a')"><span class="quiz-letter">A</span> Ter um desenvolvedor de software disponível</button>
+            <button class="quiz-opt" onclick="selectOpt(this,'q1m4','b')"><span class="quiz-letter">B</span> O processo precisa estar padronizado e definido</button>
+            <button class="quiz-opt" onclick="selectOpt(this,'q1m4','c')"><span class="quiz-letter">C</span> Ter aprovação da gestão superior</button>
+            <button class="quiz-opt" onclick="selectOpt(this,'q1m4','d')"><span class="quiz-letter">D</span> Treinamento intensivo em TI</button>
+          </div>
+          <div class="quiz-feedback" id="fb-q1m4"></div>
+        </div>
+
+        <div class="quiz-q" id="q2m4">
+          <p>2. No caso da geração de atas com IA, o que garante a qualidade do resultado?</p>
+          <div class="quiz-options">
+            <button class="quiz-opt" onclick="selectOpt(this,'q2m4','a')"><span class="quiz-letter">A</span> Usar a IA mais avançada disponível</button>
+            <button class="quiz-opt" onclick="selectOpt(this,'q2m4','b')"><span class="quiz-letter">B</span> Alimentar a IA com dados estruturados + revisão humana do resultado</button>
+            <button class="quiz-opt" onclick="selectOpt(this,'q2m4','c')"><span class="quiz-letter">C</span> Pedir para a IA gravar a reunião automaticamente</button>
+            <button class="quiz-opt" onclick="selectOpt(this,'q2m4','d')"><span class="quiz-letter">D</span> Publicar o resultado sem revisão para ganhar tempo</button>
+          </div>
+          <div class="quiz-feedback" id="fb-q2m4"></div>
+        </div>
+
+        <button class="quiz-check-btn" onclick="checkQuiz('mod4',['b','b'])">Verificar respostas</button>
+        <div class="quiz-score" id="score-mod4"></div>
+      </div>
+
+      <div class="nav-actions">
+        <button class="btn btn-outline" onclick="goModule(3)">← Módulo 3</button>
+        <button class="btn btn-primary" onclick="goModule(5)">Módulo 5: Framework →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════ MÓDULO 5 ══════════════ -->
+  <div class="module-view" id="mod-5">
+    <div class="shell">
+      <div class="mod-eyebrow"><span class="mod-num">5</span> Framework</div>
+      <h2 class="mod-title">Gestão Inteligente da Informação</h2>
+      <p class="mod-subtitle">Um framework não é um software. É uma estrutura de princípios e práticas que transforma informação em ativo institucional duradouro.</p>
+
+      <div class="content-block">
+        <h3 class="block-title">A Estrutura Mínima Viável</h3>
+        <p>Você não precisa de um sistema perfeito para começar. Precisa de uma estrutura mínima funcional — que pode crescer com o tempo. Três elementos são inegociáveis:</p>
+
+        <div class="compare" style="grid-template-columns:1fr 1fr 1fr">
+          <div class="compare-box good" style="border-color:#BBF7D0">
+            <div class="compare-header" style="color:var(--cms-green)">🗂 Padrão</div>
+            <p style="font-size:13px;color:var(--cms-ink)">Todo documento, pasta e campo segue o mesmo padrão. Nomenclatura, estrutura, localização — tudo consistente.</p>
+          </div>
+          <div class="compare-box good" style="border-color:#BFDBFE;background:#EFF6FF">
+            <div class="compare-header" style="color:var(--cms-blue)">🏷 Categoria</div>
+            <p style="font-size:13px;color:var(--cms-ink)">Toda informação é classificada. Tipo, status, data, responsável. Sem categorização, não há busca eficiente.</p>
+          </div>
+          <div class="compare-box good" style="border-color:#FEF08A;background:#FEFCE8">
+            <div class="compare-header" style="color:#92400E">🔗 Rastreabilidade</div>
+            <p style="font-size:13px;color:var(--cms-ink)">É possível saber quem fez o quê, quando, com base em qual decisão. Histórico preservado e consultável.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="content-block">
+        <h3 class="block-title">Organização em 3 Camadas</h3>
+
+        <div class="accordion">
+          <div class="acc-item">
+            <button class="acc-trigger" onclick="toggleAcc(this)">
+              🗃 Camada 1: Documentos
+              <span class="acc-arrow">▾</span>
+            </button>
+            <div class="acc-body">
+              <div class="acc-body-inner">
+                <h5 style="font-family:'Montserrat',sans-serif;font-weight:700;margin-bottom:8px">Princípio: um lugar para cada coisa, cada coisa no seu lugar</h5>
+                <p><strong>Estrutura de pastas:</strong> <code>Ano → Categoria → Mês</code></p>
+                <p><strong>Nomenclatura padrão:</strong> <code>AAAA-MM-DD_TIPO_DESCRIÇÃO</code></p>
+                <p><strong>Exemplo:</strong> <code>2025-04-15_ATA_Plenaria-Ordinaria-462</code></p>
+                <p style="margin-top:10px"><strong>Tipos de documentos a categorizar:</strong></p>
+                <ul>
+                  <li>Atas de reunião (plenária, comissão, extraordinária)</li>
+                  <li>Deliberações e resoluções</li>
+                  <li>Ofícios recebidos e enviados</li>
+                  <li>Relatórios e pareceres</li>
+                  <li>Documentos normativos (leis, portarias, resoluções)</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          <div class="acc-item">
+            <button class="acc-trigger" onclick="toggleAcc(this)">
+              ⚖ Camada 2: Decisões
+              <span class="acc-arrow">▾</span>
+            </button>
+            <div class="acc-body">
+              <div class="acc-body-inner">
+                <h5 style="font-family:'Montserrat',sans-serif;font-weight:700;margin-bottom:8px">Princípio: toda decisão registrada, rastreada e com status</h5>
+                <p>Uma planilha de deliberações com as seguintes colunas:</p>
+                <table class="plan-table" style="margin-top:10px">
+                  <thead><tr><th>Campo</th><th>Descrição</th></tr></thead>
+                  <tbody>
+                    <tr><td>Nº</td><td>Número sequencial da deliberação</td></tr>
+                    <tr><td>Data</td><td>Data da reunião em que foi aprovada</td></tr>
+                    <tr><td>Descrição</td><td>O que foi deliberado (resumo)</td></tr>
+                    <tr><td>Responsável</td><td>Quem deve executar</td></tr>
+                    <tr><td>Prazo</td><td>Data-limite para cumprimento</td></tr>
+                    <tr><td>Status</td><td>Pendente / Em andamento / Cumprida / Arquivada</td></tr>
+                    <tr><td>Observações</td><td>Atualizações de acompanhamento</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+          <div class="acc-item">
+            <button class="acc-trigger" onclick="toggleAcc(this)">
+              🔄 Camada 3: Fluxos
+              <span class="acc-arrow">▾</span>
+            </button>
+            <div class="acc-body">
+              <div class="acc-body-inner">
+                <h5 style="font-family:'Montserrat',sans-serif;font-weight:700;margin-bottom:8px">Princípio: processos documentados independem de pessoa</h5>
+                <p>Para cada processo recorrente, existe um documento descrevendo:</p>
+                <ul>
+                  <li><strong>O que é:</strong> nome e descrição do processo</li>
+                  <li><strong>Quando ocorre:</strong> frequência ou gatilho</li>
+                  <li><strong>Quem faz:</strong> responsável e substituto</li>
+                  <li><strong>Como faz:</strong> passo a passo</li>
+                  <li><strong>O que gera:</strong> documento ou ação resultante</li>
+                </ul>
+                <p style="margin-top:10px"><strong>Exemplos de processos a documentar:</strong> convocação de plenária, registro de denúncia, encaminhamento de ofício, renovação de mandato de conselheiros.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="content-block">
+        <h3 class="block-title">Os 3 Princípios Invioláveis</h3>
+
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;margin:16px 0">
+          <div style="background:var(--cms-navy);color:#fff;border-radius:12px;padding:24px;text-align:center">
+            <div style="font-size:36px;margin-bottom:12px">♿</div>
+            <div style="font-family:'Montserrat',sans-serif;font-weight:800;font-size:15px;margin-bottom:8px">Acessibilidade</div>
+            <p style="font-size:13px;color:rgba(255,255,255,.6)">Informação útil só existe se quem precisa consegue encontrá-la rapidamente</p>
+          </div>
+          <div style="background:var(--cms-blue);color:#fff;border-radius:12px;padding:24px;text-align:center">
+            <div style="font-size:36px;margin-bottom:12px">📐</div>
+            <div style="font-family:'Montserrat',sans-serif;font-weight:800;font-size:15px;margin-bottom:8px">Padronização</div>
+            <p style="font-size:13px;color:rgba(255,255,255,.7)">Padrão é o que permite escala sem dependência de uma pessoa específica</p>
+          </div>
+          <div style="background:var(--cms-green);color:#fff;border-radius:12px;padding:24px;text-align:center">
+            <div style="font-size:36px;margin-bottom:12px">♾</div>
+            <div style="font-family:'Montserrat',sans-serif;font-weight:800;font-size:15px;margin-bottom:8px">Continuidade</div>
+            <p style="font-size:13px;color:rgba(255,255,255,.7)">O sistema deve sobreviver à saída de qualquer pessoa, inclusive de você</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="activity">
+        <div class="activity-header">
+          <div class="activity-icon">🏗</div>
+          <div class="activity-meta">
+            <div class="activity-tag">Atividade 5</div>
+            <div class="activity-title">Crie um Modelo Estruturado</div>
+          </div>
+        </div>
+        <p>Escolha um documento que você produz regularmente e defina a estrutura padrão que ele deve sempre ter. Isso é criar um template institucional.</p>
+
+        <label>Qual documento você vai padronizar?</label>
+        <input type="text" id="tmpl-doc" placeholder="Ex: ata de comissão, ofício de encaminhamento, relatório mensal">
+
+        <div style="height:12px"></div>
+        <label>Quais seções/campos esse documento SEMPRE deve ter?</label>
+        <textarea id="tmpl-fields" rows="4" placeholder="Ex: 1. Identificação (data, local, presentes) 2. Pauta 3. Deliberações numeradas 4. Encaminhamentos 5. Encerramento..."></textarea>
+
+        <div style="height:10px"></div>
+        <label>Qual é a nomenclatura padrão que você vai usar para salvar esse arquivo?</label>
+        <input type="text" id="tmpl-name" placeholder="Ex: AAAA-MM-DD_ATA_Comissao-Nome">
+
+        <button class="save-note" onclick="saveNote('tmpl-name','tmpl-saved')">Salvar modelo</button>
+        <p class="saved-msg" id="tmpl-saved">✓ Modelo estruturado salvo</p>
+      </div>
+
+      <!-- QUIZ M5 -->
+      <div class="quiz-section">
+        <div class="quiz-title">Mini-Quiz — Módulo 5</div>
+        <div class="quiz-sub">3 perguntas · Gestão inteligente</div>
+
+        <div class="quiz-q" id="q1m5">
+          <p>1. Qual dos três princípios garante que o sistema funciona mesmo quando uma pessoa-chave sai?</p>
+          <div class="quiz-options">
+            <button class="quiz-opt" onclick="selectOpt(this,'q1m5','a')"><span class="quiz-letter">A</span> Acessibilidade</button>
+            <button class="quiz-opt" onclick="selectOpt(this,'q1m5','b')"><span class="quiz-letter">B</span> Padronização</button>
+            <button class="quiz-opt" onclick="selectOpt(this,'q1m5','c')"><span class="quiz-letter">C</span> Continuidade</button>
+            <button class="quiz-opt" onclick="selectOpt(this,'q1m5','d')"><span class="quiz-letter">D</span> Tecnologia</button>
+          </div>
+          <div class="quiz-feedback" id="fb-q1m5"></div>
+        </div>
+
+        <div class="quiz-q" id="q2m5">
+          <p>2. Por que a rastreabilidade de deliberações é fundamental para um Conselho de Saúde?</p>
+          <div class="quiz-options">
+            <button class="quiz-opt" onclick="selectOpt(this,'q2m5','a')"><span class="quiz-letter">A</span> Apenas para cumprir exigência burocrática</button>
+            <button class="quiz-opt" onclick="selectOpt(this,'q2m5','b')"><span class="quiz-letter">B</span> Para permitir accountability real e controle social efetivo</button>
+            <button class="quiz-opt" onclick="selectOpt(this,'q2m5','c')"><span class="quiz-letter">C</span> Para impressionar auditores externos</button>
+            <button class="quiz-opt" onclick="selectOpt(this,'q2m5','d')"><span class="quiz-letter">D</span> Não é fundamental, apenas conveniente</button>
+          </div>
+          <div class="quiz-feedback" id="fb-q2m5"></div>
+        </div>
+
+        <div class="quiz-q" id="q3m5">
+          <p>3. O que é um template institucional e por que ele importa?</p>
+          <div class="quiz-options">
+            <button class="quiz-opt" onclick="selectOpt(this,'q3m5','a')"><span class="quiz-letter">A</span> Um design bonito para documentos de apresentação</button>
+            <button class="quiz-opt" onclick="selectOpt(this,'q3m5','b')"><span class="quiz-letter">B</span> Um software específico para gestão documental</button>
+            <button class="quiz-opt" onclick="selectOpt(this,'q3m5','c')"><span class="quiz-letter">C</span> Uma estrutura padrão que garante consistência e reduz retrabalho em documentos recorrentes</button>
+            <button class="quiz-opt" onclick="selectOpt(this,'q3m5','d')"><span class="quiz-letter">D</span> Uma lista de aprovados para usar documentos oficiais</button>
+          </div>
+          <div class="quiz-feedback" id="fb-q3m5"></div>
+        </div>
+
+        <button class="quiz-check-btn" onclick="checkQuiz('mod5',['c','b','c'])">Verificar respostas</button>
+        <div class="quiz-score" id="score-mod5"></div>
+      </div>
+
+      <div class="nav-actions">
+        <button class="btn btn-outline" onclick="goModule(4)">← Módulo 4</button>
+        <button class="btn btn-primary" onclick="goModule(6)">Módulo 6: Plano de Ação →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════ MÓDULO 6 ══════════════ -->
+  <div class="module-view" id="mod-6">
+    <div class="shell">
+      <div class="mod-eyebrow"><span class="mod-num">6</span> Aplicação Imediata</div>
+      <h2 class="mod-title">Plano de Ação em 24 Horas</h2>
+      <p class="mod-subtitle">Nenhum conhecimento vale sem aplicação. Este módulo não é mais conteúdo — é execução. Você vai sair desta oficina com três ações concretas para implementar amanhã.</p>
+
+      <div class="content-block">
+        <h3 class="block-title">Primeiro: Pare de Fazer</h3>
+        <p>Antes de adicionar novas práticas, algumas precisam parar. Comportamentos que parecem produtivos mas geram caos informacional:</p>
+
+        <ul class="checklist" id="stop-list">
+          <li onclick="toggleCheck(this)"><span class="check-box"></span>Tomar decisões verbais sem registro imediato</li>
+          <li onclick="toggleCheck(this)"><span class="check-box"></span>Salvar documentos sem nomenclatura padrão</li>
+          <li onclick="toggleCheck(this)"><span class="check-box"></span>Usar e-mail como sistema de gestão de demandas</li>
+          <li onclick="toggleCheck(this)"><span class="check-box"></span>Criar documentos paralelos para a mesma informação</li>
+          <li onclick="toggleCheck(this)"><span class="check-box"></span>Depender da memória de uma pessoa para processos institucionais</li>
+          <li onclick="toggleCheck(this)"><span class="check-box"></span>Implementar novas ferramentas sem padronizar o processo antes</li>
+        </ul>
+      </div>
+
+      <div class="content-block">
+        <h3 class="block-title">Segundo: Mantenha o Que Funciona</h3>
+        <p>Não existe reinvenção do zero. Toda organização tem práticas que funcionam — mesmo que imperfeitas. Identificá-las é o primeiro passo antes de qualquer mudança.</p>
+
+        <div class="activity" style="padding:20px 24px;margin:16px 0">
+          <div class="activity-tag" style="margin-bottom:8px">Reflexão</div>
+          <label>O que você já faz que funciona bem e deve continuar (ou ser formalizado)?</label>
+          <textarea id="keep-what" rows="3" placeholder="Liste práticas atuais que você já faz e que valem a pena manter ou formalizar..."></textarea>
+          <button class="save-note" onclick="saveNote('keep-what','keep-saved')">Salvar</button>
+          <p class="saved-msg" id="keep-saved">✓ Salvo</p>
+        </div>
+      </div>
+
+      <div class="content-block">
+        <h3 class="block-title">O Plano das 3 Ações</h3>
+        <p>Você vai definir três ações específicas. Não uma lista de 20 ideias — três. O que é prioridade real tem espaço. O que não entra no top 3 não é prioridade.</p>
+
+        <div class="activity">
+          <div class="activity-header">
+            <div class="activity-icon">🎯</div>
+            <div class="activity-meta">
+              <div class="activity-tag">Atividade Final</div>
+              <div class="activity-title">Seu Plano de Ação</div>
+            </div>
+          </div>
+
+          <div style="margin-bottom:24px">
+            <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">
+              <div style="background:var(--cms-yellow);color:var(--cms-navy);width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Montserrat',sans-serif;font-weight:900;font-size:14px;flex-shrink:0">1</div>
+              <div style="font-family:'Montserrat',sans-serif;font-size:13px;font-weight:700;color:#fff">UMA MELHORIA IMEDIATA — algo que você vai mudar hoje</div>
+            </div>
+            <label>Qual é a melhoria mais simples e impactante que você pode implementar HOJE?</label>
+            <textarea id="action1" rows="2" placeholder="Ex: criar uma pasta padrão no Drive com estrutura ANO/TIPO/MÊS e mover os documentos da última plenária"></textarea>
+          </div>
+
+          <div style="margin-bottom:24px">
+            <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">
+              <div style="background:var(--cms-blue);color:#fff;width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Montserrat',sans-serif;font-weight:900;font-size:14px;flex-shrink:0">2</div>
+              <div style="font-family:'Montserrat',sans-serif;font-size:13px;font-weight:700;color:#fff">UMA AUTOMAÇÃO SIMPLES — algo que você vai montar esta semana</div>
+            </div>
+            <label>Qual automação leve você vai implementar nos próximos 7 dias?</label>
+            <textarea id="action2" rows="2" placeholder="Ex: criar formulário Google para registro de presença nas reuniões vinculado a uma planilha de controle"></textarea>
+          </div>
+
+          <div>
+            <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">
+              <div style="background:var(--cms-green);color:#fff;width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Montserrat',sans-serif;font-weight:900;font-size:14px;flex-shrink:0">3</div>
+              <div style="font-family:'Montserrat',sans-serif;font-size:13px;font-weight:700;color:#fff">UMA PADRONIZAÇÃO — um padrão que você vai estabelecer este mês</div>
+            </div>
+            <label>Qual padrão você vai criar e documentar no próximo mês?</label>
+            <textarea id="action3" rows="2" placeholder="Ex: criar template padrão de ata com campos fixos e nomenclatura padronizada para todos os tipos de reunião"></textarea>
+          </div>
+
+          <div style="height:16px"></div>
+          <label>Qual é o seu maior obstáculo para implementar essas ações? (honestidade total)</label>
+          <textarea id="obstacle" rows="2" placeholder="Tempo, resistência da equipe, falta de acesso a ferramentas, outro..."></textarea>
+
+          <button class="save-note" onclick="saveNote('obstacle','plan-saved')">Salvar plano completo</button>
+          <p class="saved-msg" id="plan-saved">✓ Plano salvo — agora é executar</p>
+        </div>
+      </div>
+
+      <div class="callout success">
+        <span class="callout-label">✓ Lembre-se</span>
+        <p>Você não vai transformar tudo de uma vez. O objetivo é <strong>criar um primeiro ciclo completo</strong> — uma melhoria que funcione, que você possa mostrar, e que gere confiança para o próximo passo. Progresso consistente bate transformação radical que nunca acontece.</p>
+      </div>
+
+      <div class="callout insight">
+        <span class="callout-label">💡 O Diferencial Real desta Oficina</span>
+        <p>Você não aprendeu <em>ferramentas</em>. Você aprendeu <em>lógica</em>. As ferramentas mudam. A estrutura de pensamento que você construiu aqui — dado → informação → conhecimento → decisão → ação — essa dura. É isso que separa gestão inteligente de gestão reativa.</p>
+      </div>
+
+      <!-- QUIZ M6 -->
+      <div class="quiz-section">
+        <div class="quiz-title">Mini-Quiz — Módulo 6</div>
+        <div class="quiz-sub">2 perguntas · Aplicação prática</div>
+
+        <div class="quiz-q" id="q1m6">
+          <p>1. Por que é importante "parar de fazer" algumas coisas antes de implementar novas práticas?</p>
+          <div class="quiz-options">
+            <button class="quiz-opt" onclick="selectOpt(this,'q1m6','a')"><span class="quiz-letter">A</span> Para ter mais tempo livre no trabalho</button>
+            <button class="quiz-opt" onclick="selectOpt(this,'q1m6','b')"><span class="quiz-letter">B</span> Práticas antigas que geram caos continuarão gerando caos mesmo com novas ferramentas</button>
+            <button class="quiz-opt" onclick="selectOpt(this,'q1m6','c')"><span class="quiz-letter">C</span> Por exigência de auditoria</button>
+            <button class="quiz-opt" onclick="selectOpt(this,'q1m6','d')"><span class="quiz-letter">D</span> Para impressionar a gestão</button>
+          </div>
+          <div class="quiz-feedback" id="fb-q1m6"></div>
+        </div>
+
+        <div class="quiz-q" id="q2m6">
+          <p>2. Por que o plano define TRÊS ações e não uma lista maior?</p>
+          <div class="quiz-options">
+            <button class="quiz-opt" onclick="selectOpt(this,'q2m6','a')"><span class="quiz-letter">A</span> Porque a metodologia é inflexível</button>
+            <button class="quiz-opt" onclick="selectOpt(this,'q2m6','b')"><span class="quiz-letter">B</span> Porque três é um número simbólico na gestão</button>
+            <button class="quiz-opt" onclick="selectOpt(this,'q2m6','c')"><span class="quiz-letter">C</span> Prioridade real tem espaço; lista longa é fuga da priorização</button>
+            <button class="quiz-opt" onclick="selectOpt(this,'q2m6','d')"><span class="quiz-letter">D</span> Para facilitar a memorização</button>
+          </div>
+          <div class="quiz-feedback" id="fb-q2m6"></div>
+        </div>
+
+        <button class="quiz-check-btn" onclick="checkQuiz('mod6',['b','c'])">Verificar respostas</button>
+        <div class="quiz-score" id="score-mod6"></div>
+      </div>
+
+      <div class="nav-actions">
+        <button class="btn btn-outline" onclick="goModule(5)">← Módulo 5</button>
+        <button class="btn btn-green" onclick="finishCourse()">Concluir Oficina e Ver Quiz Final →</button>
+      </div>
+    </div>
+  </div>
+
+</div><!-- end modules-wrapper -->
+
+<!-- GLOBAL QUIZ -->
+<div id="global-quiz-section">
+  <div class="gq-wrap">
+    <div class="gq-title">Quiz Final Completo</div>
+    <div class="gq-sub">12 questões abrangendo todos os módulos — avalie seu aprendizado</div>
+
+    <!-- Q1 -->
+    <div class="gq-card">
+      <div class="gq-q">1. Qual é o erro fundamental ao implementar IA em uma organização desorganizada?</div>
+      <button class="gq-opt" onclick="gqSelect(this,'gq1','a')"><span class="gq-letter">A</span> Usar IA muito cedo</button>
+      <button class="gq-opt" onclick="gqSelect(this,'gq1','b')"><span class="gq-letter">B</span> A IA amplifica e acelera o caos existente em vez de organizá-lo</button>
+      <button class="gq-opt" onclick="gqSelect(this,'gq1','c')"><span class="gq-letter">C</span> Custo elevado da tecnologia</button>
+      <button class="gq-opt" onclick="gqSelect(this,'gq1','d')"><span class="gq-letter">D</span> Resistência da equipe</button>
+      <div class="gq-feedback" id="gqfb-gq1"></div>
+    </div>
+
+    <!-- Q2 -->
+    <div class="gq-card">
+      <div class="gq-q">2. "47 denúncias recebidas no mês de março" é um exemplo de:</div>
+      <button class="gq-opt" onclick="gqSelect(this,'gq2','a')"><span class="gq-letter">A</span> Dado bruto</button>
+      <button class="gq-opt" onclick="gqSelect(this,'gq2','b')"><span class="gq-letter">B</span> Informação contextualizada</button>
+      <button class="gq-opt" onclick="gqSelect(this,'gq2','c')"><span class="gq-letter">C</span> Conhecimento aplicado</button>
+      <button class="gq-opt" onclick="gqSelect(this,'gq2','d')"><span class="gq-letter">D</span> Automação de dados</button>
+      <div class="gq-feedback" id="gqfb-gq2"></div>
+    </div>
+
+    <!-- Q3 -->
+    <div class="gq-card">
+      <div class="gq-q">3. O ciclo da informação tem 5 etapas. Qual sequência está correta?</div>
+      <button class="gq-opt" onclick="gqSelect(this,'gq3','a')"><span class="gq-letter">A</span> Uso → Acesso → Organização → Registro → Geração</button>
+      <button class="gq-opt" onclick="gqSelect(this,'gq3','b')"><span class="gq-letter">B</span> Geração → Registro → Organização → Acesso → Uso</button>
+      <button class="gq-opt" onclick="gqSelect(this,'gq3','c')"><span class="gq-letter">C</span> Registro → Uso → Geração → Acesso → Organização</button>
+      <button class="gq-opt" onclick="gqSelect(this,'gq3','d')"><span class="gq-letter">D</span> Organização → Geração → Uso → Registro → Acesso</button>
+      <div class="gq-feedback" id="gqfb-gq3"></div>
+    </div>
+
+    <!-- Q4 -->
+    <div class="gq-card">
+      <div class="gq-q">4. O que é "alucinação" em IA generativa e como isso impacta o uso institucional?</div>
+      <button class="gq-opt" onclick="gqSelect(this,'gq4','a')"><span class="gq-letter">A</span> É quando o sistema trava — sem impacto prático</button>
+      <button class="gq-opt" onclick="gqSelect(this,'gq4','b')"><span class="gq-letter">B</span> É a invenção de dados, nomes ou fatos falsos com aparência real — exige revisão obrigatória antes de uso institucional</button>
+      <button class="gq-opt" onclick="gqSelect(this,'gq4','c')"><span class="gq-letter">C</span> É uma funcionalidade criativa da IA</button>
+      <button class="gq-opt" onclick="gqSelect(this,'gq4','d')"><span class="gq-letter">D</span> É um erro de conexão com a internet</button>
+      <div class="gq-feedback" id="gqfb-gq4"></div>
+    </div>
+
+    <!-- Q5 -->
+    <div class="gq-card">
+      <div class="gq-q">5. Qual é a estrutura correta de um prompt bem construído?</div>
+      <button class="gq-opt" onclick="gqSelect(this,'gq5','a')"><span class="gq-letter">A</span> Pergunta direta e curta</button>
+      <button class="gq-opt" onclick="gqSelect(this,'gq5','b')"><span class="gq-letter">B</span> Contexto + Instrução clara + Formato desejado + Restrições</button>
+      <button class="gq-opt" onclick="gqSelect(this,'gq5','c')"><span class="gq-letter">C</span> Apenas o formato desejado é suficiente</button>
+      <button class="gq-opt" onclick="gqSelect(this,'gq5','d')"><span class="gq-letter">D</span> Quanto mais longo melhor, sem estrutura definida</button>
+      <div class="gq-feedback" id="gqfb-gq5"></div>
+    </div>
+
+    <!-- Q6 -->
+    <div class="gq-card">
+      <div class="gq-q">6. Automação leve exige programador e orçamento significativo?</div>
+      <button class="gq-opt" onclick="gqSelect(this,'gq6','a')"><span class="gq-letter">A</span> Sim, sempre é necessário um desenvolvedor</button>
+      <button class="gq-opt" onclick="gqSelect(this,'gq6','b')"><span class="gq-letter">B</span> Não — Google Forms, Sheets, Drive e IA são gratuitos e não exigem programação</button>
+      <button class="gq-opt" onclick="gqSelect(this,'gq6','c')"><span class="gq-letter">C</span> Depende do tipo de organização</button>
+      <button class="gq-opt" onclick="gqSelect(this,'gq6','d')"><span class="gq-letter">D</span> Sim, automação sempre requer investimento em TI</button>
+      <div class="gq-feedback" id="gqfb-gq6"></div>
+    </div>
+
+    <!-- Q7 -->
+    <div class="gq-card">
+      <div class="gq-q">7. O que define a diferença entre dado bruto e conhecimento aplicado?</div>
+      <button class="gq-opt" onclick="gqSelect(this,'gq7','a')"><span class="gq-letter">A</span> O formato do arquivo (digital vs papel)</button>
+      <button class="gq-opt" onclick="gqSelect(this,'gq7','b')"><span class="gq-letter">B</span> O volume de dados coletados</button>
+      <button class="gq-opt" onclick="gqSelect(this,'gq7','c')"><span class="gq-letter">C</span> O contexto, a relação com outros dados e sua transformação em decisão ou ação</button>
+      <button class="gq-opt" onclick="gqSelect(this,'gq7','d')"><span class="gq-letter">D</span> A qualidade do sistema tecnológico utilizado</button>
+      <div class="gq-feedback" id="gqfb-gq7"></div>
+    </div>
+
+    <!-- Q8 -->
+    <div class="gq-card">
+      <div class="gq-q">8. Por que padronização de nomenclatura de arquivos é estratégica?</div>
+      <button class="gq-opt" onclick="gqSelect(this,'gq8','a')"><span class="gq-letter">A</span> Por estética e organização visual</button>
+      <button class="gq-opt" onclick="gqSelect(this,'gq8','b')"><span class="gq-letter">B</span> Porque é exigência legal</button>
+      <button class="gq-opt" onclick="gqSelect(this,'gq8','c')"><span class="gq-letter">C</span> Porque permite busca eficiente, rastreabilidade e independência de pessoa para encontrar documentos</button>
+      <button class="gq-opt" onclick="gqSelect(this,'gq8','d')"><span class="gq-letter">D</span> Não tem impacto estratégico relevante</button>
+      <div class="gq-feedback" id="gqfb-gq8"></div>
+    </div>
+
+    <!-- Q9 -->
+    <div class="gq-card">
+      <div class="gq-q">9. Um Conselho Municipal de Saúde quer usar IA para gerar atas. Qual é a sequência correta?</div>
+      <button class="gq-opt" onclick="gqSelect(this,'gq9','a')"><span class="gq-letter">A</span> Pedir para a IA gravar a reunião → publicar sem revisar</button>
+      <button class="gq-opt" onclick="gqSelect(this,'gq9','b')"><span class="gq-letter">B</span> Estruturar dados da reunião → alimentar IA com prompt específico → revisar resultado → publicar</button>
+      <button class="gq-opt" onclick="gqSelect(this,'gq9','c')"><span class="gq-letter">C</span> Comprar um sistema de IA específico para conselhos</button>
+      <button class="gq-opt" onclick="gqSelect(this,'gq9','d')"><span class="gq-letter">D</span> Substituir o secretário executivo pela IA</button>
+      <div class="gq-feedback" id="gqfb-gq9"></div>
+    </div>
+
+    <!-- Q10 -->
+    <div class="gq-card">
+      <div class="gq-q">10. Qual é o maior risco do "documento morto" para o controle social?</div>
+      <button class="gq-opt" onclick="gqSelect(this,'gq10','a')"><span class="gq-letter">A</span> Ocupar espaço desnecessário no servidor</button>
+      <button class="gq-opt" onclick="gqSelect(this,'gq10','b')"><span class="gq-letter">B</span> Elevar o custo de impressão</button>
+      <button class="gq-opt" onclick="gqSelect(this,'gq10','c')"><span class="gq-letter">C</span> Produzir a aparência de transparência sem que a informação seja de fato consultável ou utilizada</button>
+      <button class="gq-opt" onclick="gqSelect(this,'gq10','d')"><span class="gq-letter">D</span> Dificultar o trabalho da área jurídica</button>
+      <div class="gq-feedback" id="gqfb-gq10"></div>
+    </div>
+
+    <!-- Q11 -->
+    <div class="gq-card">
+      <div class="gq-q">11. Qual dos três princípios do framework garante que a informação chegue a quem precisa?</div>
+      <button class="gq-opt" onclick="gqSelect(this,'gq11','a')"><span class="gq-letter">A</span> Continuidade</button>
+      <button class="gq-opt" onclick="gqSelect(this,'gq11','b')"><span class="gq-letter">B</span> Padronização</button>
+      <button class="gq-opt" onclick="gqSelect(this,'gq11','c')"><span class="gq-letter">C</span> Acessibilidade</button>
+      <button class="gq-opt" onclick="gqSelect(this,'gq11','d')"><span class="gq-letter">D</span> Automatização</button>
+      <div class="gq-feedback" id="gqfb-gq11"></div>
+    </div>
+
+    <!-- Q12 -->
+    <div class="gq-card">
+      <div class="gq-q">12. O que diferencia esta oficina da maioria dos cursos sobre IA?</div>
+      <button class="gq-opt" onclick="gqSelect(this,'gq12','a')"><span class="gq-letter">A</span> Ensina mais ferramentas e softwares</button>
+      <button class="gq-opt" onclick="gqSelect(this,'gq12','b')"><span class="gq-letter">B</span> Tem certificado reconhecido pelo MEC</button>
+      <button class="gq-opt" onclick="gqSelect(this,'gq12','c')"><span class="gq-letter">C</span> Foca em lógica e estrutura de pensamento em vez de dependência de ferramentas específicas</button>
+      <button class="gq-opt" onclick="gqSelect(this,'gq12','d')"><span class="gq-letter">D</span> É mais curto e fácil que os outros</button>
+      <div class="gq-feedback" id="gqfb-gq12"></div>
+    </div>
+
+    <button class="gq-submit" onclick="submitGlobalQuiz()">Calcular Resultado Final</button>
+
+    <div class="gq-final-score" id="gq-final-score">
+      <div class="gq-score-big" id="gq-score-num">—</div>
+      <div class="gq-score-msg" id="gq-score-msg"></div>
+      <div class="gq-score-detail" id="gq-score-detail"></div>
+      <div style="margin-top:24px">
+        <button class="btn btn-green" onclick="showCompletion()" style="margin:0 auto;display:inline-flex">Ver Certificado de Conclusão →</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- COMPLETION SCREEN -->
+<div id="screen-complete">
+  <div class="shell">
+    <div class="complete-inner">
+      <div class="complete-badge">🎓</div>
+      <h2 class="complete-title">Oficina Concluída</h2>
+      <p class="complete-sub">Você completou "IA, Dados e Conhecimento na Saúde Pública — do caos à estrutura inteligente". Agora é executar.</p>
+
+      <div class="takeaways">
+        <div class="takeaway">
+          <h4>Clareza Conceitual</h4>
+          <p>Você distingue dado, informação e conhecimento — e sabe como um vira o outro.</p>
+        </div>
+        <div class="takeaway t-green">
+          <h4>IA Consciente</h4>
+          <p>Você sabe o que IA faz bem, o que ela não faz, e como escrever prompts eficazes.</p>
+        </div>
+        <div class="takeaway t-yellow">
+          <h4>Plano de Ação</h4>
+          <p>Você tem 3 ações concretas para implementar nos próximos 30 dias.</p>
+        </div>
+      </div>
+
+      <div class="callout success" style="text-align:left;margin:32px 0">
+        <span class="callout-label">✓ Princípio Central</span>
+        <p style="font-size:15px"><strong>Tecnologia resolve problemas estruturados. Primeiro estrutura. Depois automatiza. Nunca o contrário.</strong></p>
+        <p style="margin-top:8px">Este princípio vai acompanhar você em qualquer implementação tecnológica nos próximos anos.</p>
+      </div>
+
+      <div style="margin-top:36px;padding:24px;background:var(--cms-navy);border-radius:14px;color:#fff;text-align:left">
+        <div style="font-family:'Montserrat',sans-serif;font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--cms-yellow);margin-bottom:12px">Conselho Municipal de Saúde · Montes Claros</div>
+        <p style="font-size:14px;color:rgba(255,255,255,.6);line-height:1.7">Esta oficina foi produzida pela Secretaria Executiva do CMS-MOC como parte do compromisso com processos inteligentes, organização, transparência e participação social.</p>
+      </div>
+
+      <div style="margin-top:32px">
+        <button class="btn btn-outline" onclick="restartCourse()" style="margin-right:12px">↺ Reiniciar Oficina</button>
+        <button class="btn btn-primary" onclick="window.print()">🖨 Imprimir Registro</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <strong>CMS Montes Claros</strong> · Secretaria Executiva · Oficina Individual — IA, Dados e Conhecimento na Saúde Pública
+</footer>
+
+<script>
+// ── STATE ──
+const MODULES = 6;
+const moduleNames = [
+  'Módulo 1 — O Problema Real',
+  'Módulo 2 — Fundamentos',
+  'Módulo 3 — IA Sem Ilusão',
+  'Módulo 4 — Automações Leves',
+  'Módulo 5 — Framework',
+  'Módulo 6 — Plano de Ação'
+];
+let currentModule = 0;
+let completedModules = new Set();
+
+// Quiz state
+const quizAnswers = {};
+const gqAnswers = {};
+
+// ── COURSE FLOW ──
+function startCourse() {
+  document.getElementById('screen-start').style.display = 'none';
+  document.getElementById('modules-wrapper').style.display = 'block';
+  document.getElementById('progress-shell').style.display = 'block';
+  buildDots();
+  goModule(1);
+}
+
+function buildDots() {
+  const container = document.getElementById('module-dots');
+  for(let i=1;i<=MODULES;i++){
+    const d = document.createElement('button');
+    d.className = 'module-dot';
+    d.id = `dot-${i}`;
+    d.textContent = i;
+    d.title = moduleNames[i-1];
+    d.onclick = ()=>goModule(i);
+    container.appendChild(d);
+  }
+}
+
+function goModule(n) {
+  if(currentModule>0) {
+    const prev = document.getElementById(`mod-${currentModule}`);
+    if(prev){ prev.classList.remove('active'); prev.style.display='none'; }
+    const prevDot = document.getElementById(`dot-${currentModule}`);
+    if(prevDot) { prevDot.classList.remove('active'); prevDot.classList.add('done'); }
+    completedModules.add(currentModule);
+  }
+  currentModule = n;
+  const cur = document.getElementById(`mod-${n}`);
+  if(cur){ cur.style.display='block'; cur.classList.add('active'); }
+  const dot = document.getElementById(`dot-${n}`);
+  if(dot) { dot.classList.remove('done'); dot.classList.add('active'); }
+  updateProgress(n);
+  window.scrollTo({top:56,behavior:'smooth'});
+}
+
+function updateProgress(n) {
+  const pct = Math.round(((n-1)/MODULES)*100);
+  document.getElementById('progress-fill').style.width = pct+'%';
+  document.getElementById('progress-pct').textContent = pct+'%';
+  document.getElementById('progress-module-name').textContent = moduleNames[n-1];
+}
+
+function finishCourse() {
+  document.getElementById('modules-wrapper').style.display = 'none';
+  document.getElementById('global-quiz-section').style.display = 'block';
+  document.getElementById('progress-shell').style.display = 'none';
+  document.getElementById('progress-fill').style.width = '100%';
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function showCompletion() {
+  document.getElementById('global-quiz-section').style.display = 'none';
+  document.getElementById('screen-complete').style.display = 'block';
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function restartCourse() {
+  currentModule = 0;
+  completedModules.clear();
+  document.getElementById('screen-complete').style.display = 'none';
+  document.getElementById('screen-start').style.display = 'block';
+  document.getElementById('module-dots').innerHTML = '';
+  document.getElementById('progress-fill').style.width = '0%';
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+// ── CHECKLIST ──
+function toggleCheck(el) {
+  el.classList.toggle('checked');
+  const box = el.querySelector('.check-box');
+  box.textContent = el.classList.contains('checked') ? '✓' : '';
+}
+
+// ── ACCORDION ──
+function toggleAcc(trigger) {
+  const item = trigger.parentElement;
+  const body = item.querySelector('.acc-body');
+  const isOpen = item.classList.contains('open');
+  // close siblings
+  trigger.closest('.accordion').querySelectorAll('.acc-item.open').forEach(i=>{
+    i.classList.remove('open');
+    i.querySelector('.acc-body').style.maxHeight = '0';
+  });
+  if(!isOpen){
+    item.classList.add('open');
+    body.style.maxHeight = body.scrollHeight + 'px';
+  }
+}
+
+// ── SAVE NOTE ──
+function saveNote(inputId, msgId) {
+  const val = document.getElementById(inputId)?.value?.trim();
+  const msg = document.getElementById(msgId);
+  if(msg){ msg.style.display='block'; setTimeout(()=>msg.style.display='none',3000); }
+}
+
+// ── MODULE QUIZ ──
+function selectOpt(btn, qId, letter) {
+  const container = document.getElementById(qId);
+  container.querySelectorAll('.quiz-opt').forEach(b=>b.classList.remove('selected'));
+  btn.classList.add('selected');
+  if(!quizAnswers[qId]) quizAnswers[qId] = {};
+  quizAnswers[qId].selected = letter;
+}
+
+const quizCorrect = {
+  mod1: { q1m1:'b', q2m1:'c' },
+  mod2: { q1m2:'b', q2m2:'b', q3m2:'c' },
+  mod3: { q1m3:'b', q2m3:'b', q3m3:'c' },
+  mod4: { q1m4:'b', q2m4:'b' },
+  mod5: { q1m5:'c', q2m5:'b', q3m5:'c' },
+  mod6: { q1m6:'b', q2m6:'c' }
+};
+
+const quizFeedbacks = {
+  q1m1:{b:"Correto! IA amplifica o que já existe — organização ou caos. Nunca corrige estrutura.",c:"Pense no ciclo da informação: onde está a quebra mais comum?"},
+  q2m1:{c:"Correto! Documento morto é informação que não percorre o ciclo até o uso.",a:"Isso seria sintoma de falta de infraestrutura, não de documento morto."},
+  q1m2:{b:"Correto! Dado é bruto e isolado; informação é dado que ganhou contexto e significado.",a:"Essa distinção não é técnica (digital/papel), é conceitual."},
+  q2m2:{b:"Correto! Sistemas públicos geram dados mas frequentemente falham em registrar e organizar para uso.",a:"Na verdade, o problema costuma ser excesso de dados sem organização, não falta."},
+  q3m2:{c:"Correto! Conhecimento é informação que, combinada com experiência, gera decisão e ação.",a:"Digitalizar documentos não transforma informação em conhecimento por si só."},
+  q1m3:{b:"Exato! Estagiário eloquente: escreve muito bem, mas não conhece seu contexto específico.",a:"IA não tem acesso ao contexto institucional específico sem você fornecer."},
+  q2m3:{b:"Correto! Alucinação é a invenção de dados com aparência de verdade — daí a necessidade de revisão.",a:"Não é questão de travamento técnico."},
+  q3m3:{c:"Correto! A instrução define a ação concreta: o que você quer que a IA faça.",a:"Contexto define quem você é — importante, mas não o 'o que fazer'."},
+  q1m4:{b:"Correto! Automatizar processo não definido é automatizar caos. Primeiro padroniza, depois automatiza.",a:"Automação leve não precisa de desenvolvedor."},
+  q2m4:{b:"Correto! Dados estruturados + prompt preciso + revisão humana = resultado de qualidade.",d:"Jamais publique documentos institucionais sem revisão — especialmente gerados por IA."},
+  q1m5:{c:"Correto! Continuidade é o princípio que garante que o sistema sobrevive à saída de qualquer pessoa.",a:"Acessibilidade garante que quem precisa encontra — não a sobrevivência institucional."},
+  q2m5:{b:"Correto! Rastreabilidade é a base do accountability e do controle social real — não apenas formal.",a:"Vai muito além da exigência burocrática: é a substância do controle social."},
+  q3m5:{c:"Correto! Template garante consistência, reduz retrabalho e permite que qualquer pessoa produza documentos no padrão certo.",a:"Design é importante, mas a função do template vai além da estética."},
+  q1m6:{b:"Correto! Novas ferramentas não eliminam práticas ruins — elas as perpetuam com mais velocidade.",a:"O objetivo não é ter mais tempo livre, é eliminar fontes de caos."},
+  q2m6:{c:"Correto! Priorizar é excluir. Lista longa de ações é lista de nenhuma ação. Três forçam escolha real.",a:"É uma escolha metodológica baseada em foco e execução real."}
+};
+
+function checkQuiz(modId, correctArr) {
+  const map = quizCorrect[modId];
+  let correct = 0;
+  let total = Object.keys(map).length;
+
+  Object.entries(map).forEach(([qId, ans], idx)=>{
+    const container = document.getElementById(qId);
+    const selected = quizAnswers[qId]?.selected;
+    const fb = document.getElementById(`fb-${qId}`);
+    container.querySelectorAll('.quiz-opt').forEach(btn=>{
+      const letter = btn.querySelector('.quiz-letter').textContent.toLowerCase();
+      if(letter===ans) btn.classList.add('correct');
+      else if(letter===selected && selected!==ans) btn.classList.add('wrong');
+    });
+    if(selected===ans) {
+      correct++;
+      if(fb){ fb.className='quiz-feedback show ok'; fb.textContent='✓ '+(quizFeedbacks[qId]?.[ans]||'Correto!'); }
+    } else {
+      if(fb){ fb.className='quiz-feedback show nok'; fb.textContent='✗ '+(quizFeedbacks[qId]?.[ans]||`A resposta correta é ${ans.toUpperCase()}.`); }
+    }
+    container.querySelectorAll('.quiz-opt').forEach(b=>b.disabled=true);
+  });
+
+  const scoreEl = document.getElementById(`score-${modId}`);
+  if(scoreEl){
+    scoreEl.style.display='block';
+    scoreEl.innerHTML=`<div class="quiz-score-num">${correct}/${total}</div><p style="font-size:14px;color:rgba(255,255,255,.65);margin-top:8px">${correct===total?'Perfeito! Módulo dominado.':correct>0?`Bom. Revise os pontos marcados com ✗.`:'Revise o módulo e tente novamente.'}</p>`;
+  }
+}
+
+// ── GLOBAL QUIZ ──
+const gqCorrectAnswers = {
+  gq1:'b', gq2:'b', gq3:'b', gq4:'b', gq5:'b',
+  gq6:'b', gq7:'c', gq8:'c', gq9:'b', gq10:'c',
+  gq11:'c', gq12:'c'
+};
+
+const gqFeedbackTexts = {
+  gq1:{b:"Correto! IA amplifica a realidade existente — não a transforma por conta própria."},
+  gq2:{b:"Correto! '47 denúncias em março' tem contexto (quem, o quê, quando) = informação."},
+  gq3:{b:"Correto! Geração → Registro → Organização → Acesso → Uso."},
+  gq4:{b:"Correto! Alucinação exige revisão obrigatória em documentos institucionais."},
+  gq5:{b:"Correto! Os 4 elementos garantem precisão e qualidade no resultado."},
+  gq6:{b:"Correto! Google Workspace é gratuito e não exige programação."},
+  gq7:{c:"Correto! Contexto + relação + transformação em decisão = conhecimento."},
+  gq8:{c:"Correto! Nomenclatura padrão é rastreabilidade e independência de pessoa."},
+  gq9:{b:"Correto! A sequência correta garante qualidade e segurança institucional."},
+  gq10:{c:"Correto! A aparência de transparência sem uso real é o risco central para o controle social."},
+  gq11:{c:"Correto! Acessibilidade garante que a informação chegue a quem precisa, quando precisa."},
+  gq12:{c:"Correto! Lógica e estrutura de pensamento duram uma carreira. Ferramentas ficam obsoletas."}
+};
+
+function gqSelect(btn, qId, letter) {
+  const card = btn.closest('.gq-card');
+  card.querySelectorAll('.gq-opt').forEach(b=>b.classList.remove('selected'));
+  btn.classList.add('selected');
+  gqAnswers[qId] = letter;
+}
+
+function submitGlobalQuiz() {
+  let correct = 0;
+  const total = Object.keys(gqCorrectAnswers).length;
+
+  Object.entries(gqCorrectAnswers).forEach(([qId, ans])=>{
+    const card = document.querySelector(`[onclick*="${qId}"]`)?.closest('.gq-card') ||
+      [...document.querySelectorAll('.gq-card')].find(c=>c.querySelector(`[onclick*="${qId}"]`));
+    if(!card) return;
+    const selected = gqAnswers[qId];
+    const fb = document.getElementById(`gqfb-${qId}`);
+
+    card.querySelectorAll('.gq-opt').forEach(btn=>{
+      const letter = btn.querySelector('.gq-letter').textContent.toLowerCase();
+      if(letter===ans) btn.classList.add('correct');
+      else if(letter===selected && selected!==ans) btn.classList.add('wrong');
+      btn.disabled=true;
+    });
+
+    if(selected===ans){
+      correct++;
+      if(fb){ fb.className='gq-feedback show ok'; fb.textContent='✓ '+(gqFeedbackTexts[qId]?.[ans]||'Correto!'); }
+    } else {
+      if(fb){ fb.className='gq-feedback show nok'; fb.textContent=`✗ Resposta correta: ${ans.toUpperCase()}. `+(gqFeedbackTexts[qId]?.[ans]||''); }
+    }
+  });
+
+  const pct = Math.round((correct/total)*100);
+  let msg, detail;
+  if(pct===100){ msg='Excelência total. Conceitos dominados.'; detail='Você está pronto para transformar sua gestão.'; }
+  else if(pct>=75){ msg='Resultado sólido. Base conceitual estabelecida.'; detail='Revise os pontos marcados e reaplique.'; }
+  else if(pct>=50){ msg='Base em formação. Continue.'; detail='Releia os módulos com menor aproveitamento.'; }
+  else { msg='Revisite a oficina com calma.'; detail='A base conceitual precisa de consolidação antes da prática.'; }
+
+  const scoreEl = document.getElementById('gq-final-score');
+  document.getElementById('gq-score-num').textContent = `${correct}/${total}`;
+  document.getElementById('gq-score-msg').textContent = msg;
+  document.getElementById('gq-score-detail').textContent = detail;
+  scoreEl.style.display='block';
+  scoreEl.scrollIntoView({behavior:'smooth',block:'center'});
+  document.querySelector('.gq-submit').disabled=true;
+}
+
+// ── INIT ──
+document.addEventListener('DOMContentLoaded', ()=>{
+  // modules are hidden via CSS .module-view{display:none}
+  // nothing else needed here
+});
+</script>
+</body>
+</html>
