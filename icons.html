@@ -1,110 +1,479 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-<meta charset="UTF-8">
-<title>Galeria de Ícones</title>
-<style>
-  body {
-    font-family: Arial, sans-serif;
-    padding: 20px;
-    background: #f5f5f5;
-  }
-  h1 {
-    margin-bottom: 20px;
-  }
-  .grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-    gap: 15px;
-  }
-  .item {
-    background: #fff;
-    border-radius: 10px;
-    padding: 12px;
-    text-align: center;
-    cursor: pointer;
-    transition: 0.2s;
-    border: 1px solid #ddd;
-  }
-  .item:hover {
-    background: #eaeaea;
-  }
-  .icon {
-    font-size: 28px;
-    margin-bottom: 8px;
-  }
-  .combo {
-    font-size: 12px;
-    color: #555;
-    border-top: 1px solid #eee;
-    margin-top: 8px;
-    padding-top: 6px;
-  }
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Galeria Master de Ícones e Referências</title>
+  
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet" />
+
+  <style>
+    :root {
+      --bg-color: #f8fafc;
+      --card-bg: #ffffff;
+      --text-main: #334155;
+      --text-muted: #64748b;
+      --border-color: #e2e8f0;
+      --hover-bg: #f1f5f9;
+      --primary: #3b82f6;
+    }
+
+    body {
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      padding: 20px;
+      background: var(--bg-color);
+      color: var(--text-main);
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .header-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+
+    h1 {
+      margin-bottom: 10px;
+      font-size: 2rem;
+      color: #0f172a;
+    }
+
+    .tab-description {
+      font-size: 14px;
+      color: var(--text-muted);
+      margin-bottom: 20px;
+      max-width: 600px;
+    }
+
+    /* Sistema de Abas */
+    .tabs {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 20px;
+      background: #e2e8f0;
+      padding: 5px;
+      border-radius: 30px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .tab-btn {
+      padding: 10px 20px;
+      border: none;
+      background: transparent;
+      border-radius: 25px;
+      cursor: pointer;
+      font-weight: 600;
+      color: var(--text-muted);
+      transition: all 0.3s;
+      font-size: 14px;
+    }
+
+    .tab-btn:hover {
+      color: var(--text-main);
+    }
+
+    .tab-btn.active {
+      background: var(--card-bg);
+      color: var(--primary);
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+
+    /* Barra de Pesquisa */
+    .search-bar {
+      width: 100%;
+      max-width: 500px;
+      padding: 12px 20px;
+      font-size: 16px;
+      border: 2px solid var(--border-color);
+      border-radius: 30px;
+      outline: none;
+      transition: all 0.3s ease;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+      margin-bottom: 20px;
+    }
+
+    .search-bar:focus {
+      border-color: var(--primary);
+      box-shadow: 0 4px 10px rgba(59, 130, 246, 0.15);
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+      gap: 16px;
+    }
+
+    .item {
+      background: var(--card-bg);
+      border-radius: 12px;
+      padding: 16px 12px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      border: 1px solid var(--border-color);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .item:hover {
+      background: var(--hover-bg);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 6px rgba(0,0,0,0.08);
+      border-color: #cbd5e1;
+    }
+
+    .icon {
+      font-size: 32px;
+      margin-bottom: 10px;
+      transition: transform 0.2s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    /* Ajustes específicos para SVG */
+    .icon svg {
+      width: 36px;
+      height: 36px;
+      stroke: var(--text-main);
+    }
+
+    /* Ajustes específicos para Material Symbols */
+    .material-symbols-outlined {
+      font-size: 36px;
+      color: var(--text-main);
+    }
+
+    .item:hover .icon {
+      transform: scale(1.1);
+    }
+
+    .combo {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text-muted);
+      border-top: 1px solid var(--border-color);
+      margin-top: 5px;
+      padding-top: 10px;
+      width: 100%;
+      word-break: break-word;
+    }
+
+    /* Notificação Toast */
+    #toast {
+      visibility: hidden;
+      min-width: 250px;
+      background-color: #1e293b;
+      color: #fff;
+      text-align: center;
+      border-radius: 8px;
+      padding: 16px;
+      position: fixed;
+      z-index: 1000;
+      left: 50%;
+      bottom: 30px;
+      transform: translateX(-50%);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      font-weight: 500;
+      opacity: 0;
+      transition: opacity 0.3s, bottom 0.3s;
+    }
+
+    #toast.show {
+      visibility: visible;
+      opacity: 1;
+      bottom: 50px;
+    }
+  </style>
 </head>
 <body>
 
-<h1>📋 Galeria de Ícones</h1>
+  <div class="header-container">
+    <h1>📋 Galeria Master</h1>
+    
+    <div class="tabs">
+      <button class="tab-btn active" onclick="switchTab(1)">1. Emojis + Tags</button>
+      <button class="tab-btn" onclick="switchTab(2)">2. Símbolos + Tags</button>
+      <button class="tab-btn" onclick="switchTab(3)">3. Fontes (Material)</button>
+      <button class="tab-btn" onclick="switchTab(4)">4. SVGs (Referência)</button>
+    </div>
 
-<div class="grid" id="grid"></div>
+    <p id="tab-desc" class="tab-description">Clique no ícone para copiar apenas ele, ou no cartão para copiar a tag completa.</p>
 
-<script>
-const items = [
-  ["❓","[IDEIA]"], ["❓","[DUVIDA]"], ["❓","[REFLEXAO]"],
-  ["💻","[DEV]"], ["💻","[SCRIPT]"], ["💻","[AUTOMACAO]"], ["💻","[FERRAMENTA]"],
-  ["⚙️","[SISTEMA]"], ["⚙️","[PROCESSO]"], ["⚙️","[CONFIG]"],
-  ["📊","[SLIDES]"], ["📊","[APRESENTACAO]"], ["📊","[PALESTRA]"],
-  ["🎤","[FALA]"], ["🎤","[ROTEIRO]"],
-  ["📚","[GUIA]"], ["📚","[CARTILHA]"], ["📚","[MATERIAL]"], ["📚","[FORMAÇÃO]"],
-  ["🎓","[CAPACITACAO]"], ["🎓","[TREINAMENTO]"],
-  ["🏛️","[GESTAO]"], ["🏛️","[ADM]"], ["🏛️","[ORGANIZACAO]"],
-  ["🗂️","[FLUXO]"], ["🗂️","[ESTRUTURA]"],
-  ["📄","[DOC]"], ["📄","[ATA]"], ["📄","[MEMO]"], ["📄","[OFICIO]"],
-  ["🖋️","[REDACAO]"], ["🖋️","[MINUTA]"],
-  ["📌","[IMPORTANTE]"], ["📌","[PRIORIDADE]"],
-  ["🚀","[PROJETO]"], ["🚀","[IMPLEMENTACAO]"],
-  ["🧠","[ANALISE]"], ["🧠","[ESTUDO]"],
-  ["🔍","[REVISAO]"], ["🔍","[AUDITORIA]"],
-  ["📅","[PLANEJAMENTO]"], ["📅","[CRONOGRAMA]"],
-  ["📈","[ESTRATEGIA]"], ["📈","[INDICADORES]"],
-  ["🧩","[INTEGRACAO]"], ["🧩","[ARTICULACAO]"],
-  ["💡","[INSIGHT]"], ["💡","[IDEIA_BRUTA]"],
-  ["⚠️","[ATENCAO]"], ["⚠️","[PENDENTE]"],
-  ["✅","[CHECK]"], ["✅","[CONCLUIDO]"]
-];
+    <input type="text" id="searchInput" class="search-bar" placeholder="Pesquisar..." oninput="filterItems()">
+  </div>
 
-const grid = document.getElementById("grid");
+  <div class="grid" id="grid"></div>
 
-items.forEach(([icon, text]) => {
-  const item = document.createElement("div");
-  item.className = "item";
+  <div id="toast">Copiado!</div>
 
-  const iconDiv = document.createElement("div");
-  iconDiv.className = "icon";
-  iconDiv.innerText = icon;
-  iconDiv.onclick = (e) => {
-    e.stopPropagation();
-    copy(icon);
-  };
+  <script>
+    let currentTab = 1;
 
-  const comboDiv = document.createElement("div");
-  comboDiv.className = "combo";
-  comboDiv.innerText = `${icon} ${text}`;
-  comboDiv.onclick = (e) => {
-    e.stopPropagation();
-    copy(`${icon} ${text}`);
-  };
+    // ==========================================
+    // DADOS DA ABA 1: EMOJIS (Uso Diário / Tags)
+    // ==========================================
+    const tab1Data = [
+      // Originais (Essenciais / Reuniões / Docs)
+      ["❓","[IDEIA]"], ["❓","[DUVIDA]"], ["❓","[REFLEXAO]"],
+      ["💻","[DEV]"], ["💻","[SCRIPT]"], ["💻","[AUTOMACAO]"], ["💻","[FERRAMENTA]"],
+      ["⚙️","[SISTEMA]"], ["⚙️","[PROCESSO]"], ["⚙️","[CONFIG]"],
+      ["📊","[SLIDES]"], ["📊","[APRESENTACAO]"], ["📊","[PALESTRA]"],
+      ["🎤","[FALA]"], ["🎤","[ROTEIRO]"],
+      ["📚","[GUIA]"], ["📚","[CARTILHA]"], ["📚","[MATERIAL]"], ["📚","[FORMAÇÃO]"],
+      ["🎓","[CAPACITACAO]"], ["🎓","[TREINAMENTO]"],
+      ["🏛️","[GESTAO]"], ["🏛️","[ADM]"], ["🏛️","[ORGANIZACAO]"],
+      ["🗂️","[FLUXO]"], ["🗂️","[ESTRUTURA]"],
+      ["📄","[DOC]"], ["📄","[ATA]"], ["📄","[MEMO]"], ["📄","[OFICIO]"],
+      ["🖋️","[REDACAO]"], ["🖋️","[MINUTA]"],
+      ["📌","[IMPORTANTE]"], ["📌","[PRIORIDADE]"],
+      ["🚀","[PROJETO]"], ["🚀","[IMPLEMENTACAO]"],
+      ["🧠","[ANALISE]"], ["🧠","[ESTUDO]"],
+      ["🔍","[REVISAO]"], ["🔍","[AUDITORIA]"],
+      ["📅","[PLANEJAMENTO]"], ["📅","[CRONOGRAMA]"],
+      ["📈","[ESTRATEGIA]"], ["📈","[INDICADORES]"],
+      ["🧩","[INTEGRACAO]"], ["🧩","[ARTICULACAO]"],
+      ["💡","[INSIGHT]"], ["💡","[IDEIA_BRUTA]"],
+      
+      // Inteligência Artificial & Prompts
+      ["🤖","[PROMPT]"], ["⚡","[GERACAO]"], ["🧪","[EXPERIMENTO]"], 
+      ["🎯","[RESULTADO]"], ["🔄","[ITERACAO]"], ["🪄","[REFINAMENTO]"],
+      ["🧠","[CONTEXTO]"], ["🎭","[PERSONA]"], ["📏","[PARAMETROS]"],
 
-  item.appendChild(iconDiv);
-  item.appendChild(comboDiv);
-  grid.appendChild(item);
-});
+      // Desenvolvimento & Bugs
+      ["🐛","[BUG]"], ["🔧","[FIX]"], ["🩹","[CORRECAO]"], 
+      ["📦","[RELEASE]"], ["🗄️","[BANCO_DE_DADOS]"], ["🌐","[API]"], 
+      ["🛡️","[SEGURANCA]"], ["🏗️","[ARQUITETURA]"], ["🧹","[CLEAN_CODE]"],
 
-function copy(text) {
-  navigator.clipboard.writeText(text);
-  alert("Copiado: " + text);
-}
-</script>
+      // Mídia & Design
+      ["📝","[ARTIGO]"], ["🎨","[DESIGN]"], ["🖼️","[IMAGEM]"], 
+      ["🎬","[VIDEO]"], ["🔊","[AUDIO]"], ["📱","[SOCIAL]"],
+      ["✍️","[COPY]"], ["🖌️","[UI_UX]"],
 
+      // Comunicação & Contatos
+      ["💬","[FEEDBACK]"], ["📧","[EMAIL]"], ["🤝","[REUNIAO]"], 
+      ["📞","[CALL]"], ["👥","[EQUIPE]"], ["👤","[PERFIL]"],
+
+      // Finanças & Negócios
+      ["💰","[ORCAMENTO]"], ["💳","[PAGAMENTO]"], ["📈","[VENDAS]"], 
+      ["🛒","[COMPRAS]"], ["🧾","[NOTA_FISCAL]"], ["💼","[CONTRATO]"],
+
+      // Links, Acessos e Locais
+      ["🔑","[ACESSO]"], ["🔒","[SENHA]"], ["📍","[LOCAL]"], 
+      ["🔗","[LINK]"], ["🏷️","[REFERENCIA]"],
+
+      // Status & Urgência
+      ["🔥","[URGENTE]"], ["🚨","[CRITICO]"], ["⏳","[EM_ANDAMENTO]"], 
+      ["🛑","[BLOQUEADO]"], ["♻️","[RETRABALHO]"], ["🧊","[GELADEIRA]"],
+      ["🚧","[EM_CONSTRUCAO]"], ["🗑️","[DESCARTADO]"], ["🎉","[SUCESSO]"],
+      ["⚠️","[ATENCAO]"], ["⚠️","[PENDENTE]"], ["✅","[CHECK]"], ["✅","[CONCLUIDO]"]
+    ];
+
+    // ==========================================
+    // DADOS DA ABA 2: SÍMBOLOS DE TEXTO (Minimalistas)
+    // ==========================================
+    const tab2Data = [
+      // Setas e Direções
+      ["➔","[SETA_DIR]"], ["➤","[BULLET]"], ["↻","[RELOAD]"], ["⬇","[DOWNLOAD]"], ["⮞","[AVANCAR]"],
+      // Matemática e Lógica
+      ["∑","[SOMA_TOTAL]"], ["∆","[DIFERENCA]"], ["∞","[LOOP]"], ["≈","[APROXIMADO]"], ["≠","[CONFLITO]"],
+      // Marcações e Interface
+      ["★","[FAVORITO]"], ["✓","[CHECK_SIMPLES]"], ["✗","[ERRO]"], ["☐","[TODO]"], ["☑","[FEITO]"],
+      // Miscelânea
+      ["⚡","[RAPIDO]"], ["⚠","[ALERTA]"], ["⚙","[ENGRENAGEM]"], ["✂","[CORTAR]"], ["✎","[EDITAR]"],
+      ["©","[COPYRIGHT]"], ["®","[REGISTRADO]"], ["¶","[PARAGRAFO]"], ["§","[SECAO]"], ["☘","[NATURAL]"]
+    ];
+
+    // ==========================================
+    // DADOS DA ABA 3: FONT ICONS (Material Symbols)
+    // ==========================================
+    // O array tem [nome_do_icone, Categoria/Descricao para busca]
+    const tab3Data = [
+      ["home", "Início / Casa"], ["settings", "Configurações"], ["search", "Pesquisa"], 
+      ["favorite", "Coração / Favorito"], ["shopping_cart", "Carrinho / Loja"], 
+      ["visibility", "Olho / Ver"], ["delete", "Lixeira / Excluir"], ["edit", "Lápis / Editar"],
+      ["add_circle", "Adicionar / Mais"], ["check_circle", "Sucesso / Check"], 
+      ["account_circle", "Usuário / Perfil"], ["lock", "Cadeado / Segurança"], 
+      ["mail", "Email / Contato"], ["description", "Documento / Arquivo"], 
+      ["calendar_month", "Calendário / Data"], ["bolt", "Raio / Energia / Rápido"], 
+      ["build", "Chave / Ferramenta / Dev"], ["language", "Globo / Web / Idioma"],
+      ["database", "Banco de dados"], ["code", "Código / Tag"]
+    ];
+
+    // ==========================================
+    // DADOS DA ABA 4: SVGs LIMPOS (Para pedir em prompts)
+    // ==========================================
+    // Array: [Nome_Referencia, Codigo_SVG_Limpo]
+    const tab4Data = [
+      ["Pasta (Folder)", `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h6l2 2h8a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V6c0-1.1.9-2 2-2z"></path></svg>`],
+      ["Usuário (User)", `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>`],
+      ["Código (Code)", `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></svg>`],
+      ["Enviar (Send)", `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>`],
+      ["Menu (Hamburguer)", `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>`],
+      ["Link (URL)", `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>`],
+      ["Dashboard", `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="9"></rect><rect x="14" y="3" width="7" height="5"></rect><rect x="14" y="12" width="7" height="9"></rect><rect x="3" y="16" width="7" height="5"></rect></svg>`],
+      ["Upload (Nuvem)", `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>`]
+    ];
+
+
+    // Controle de Abas
+    function switchTab(tabId) {
+      currentTab = tabId;
+      
+      // Atualiza botões
+      document.querySelectorAll('.tab-btn').forEach((btn, index) => {
+        if (index + 1 === tabId) {
+          btn.classList.add('active');
+        } else {
+          btn.classList.remove('active');
+        }
+      });
+
+      // Atualiza o texto descritivo
+      const desc = document.getElementById('tab-desc');
+      if (tabId === 1 || tabId === 2) {
+        desc.innerText = "Clique no ícone para copiar apenas ele, ou no cartão para copiar a tag completa.";
+      } else if (tabId === 3) {
+        desc.innerText = "REFERÊNCIA: Clique para copiar o nome oficial do Material Design e pedir para a IA.";
+      } else if (tabId === 4) {
+        desc.innerText = "REFERÊNCIA: Clique no cartão para copiar o código SVG limpo diretamente para o seu projeto/prompt.";
+      }
+
+      // Limpa barra de pesquisa e renderiza
+      document.getElementById("searchInput").value = "";
+      renderItems();
+    }
+
+
+    const grid = document.getElementById("grid");
+
+    function renderItems(filterText = "") {
+      grid.innerHTML = ""; 
+      const termo = filterText.toLowerCase();
+      let dataToRender = [];
+
+      // Seleciona a fonte de dados baseada na aba
+      if (currentTab === 1) dataToRender = tab1Data;
+      else if (currentTab === 2) dataToRender = tab2Data;
+      else if (currentTab === 3) dataToRender = tab3Data;
+      else if (currentTab === 4) dataToRender = tab4Data;
+
+      // Filtra os dados
+      const itensFiltrados = dataToRender.filter(([icon, text]) => {
+        return text.toLowerCase().includes(termo) || icon.toLowerCase().includes(termo);
+      });
+
+      if (itensFiltrados.length === 0) {
+        grid.innerHTML = "<p style='grid-column: 1 / -1; text-align: center; color: #64748b;'>Nenhum item encontrado.</p>";
+        return;
+      }
+
+      // Renderiza conforme a aba
+      itensFiltrados.forEach(([icon, text]) => {
+        const item = document.createElement("div");
+        item.className = "item";
+
+        // ABAS 1 E 2: Copiar/Colar Padrão
+        if (currentTab === 1 || currentTab === 2) {
+          const iconDiv = document.createElement("div");
+          iconDiv.className = "icon";
+          iconDiv.innerText = icon;
+          iconDiv.onclick = (e) => {
+            e.stopPropagation();
+            copyToClipboard(icon, `Símbolo ${icon} copiado!`);
+          };
+
+          const comboDiv = document.createElement("div");
+          comboDiv.className = "combo";
+          comboDiv.innerText = `${icon} ${text}`;
+          
+          item.onclick = () => copyToClipboard(`${icon} ${text}`, `${icon} ${text} copiado!`);
+          
+          item.appendChild(iconDiv);
+          item.appendChild(comboDiv);
+        }
+
+        // ABA 3: FONTES (Material Symbols)
+        else if (currentTab === 3) {
+          const iconDiv = document.createElement("span");
+          iconDiv.className = "material-symbols-outlined icon";
+          iconDiv.innerText = icon; // "home", "settings", etc.
+
+          const comboDiv = document.createElement("div");
+          comboDiv.className = "combo";
+          comboDiv.innerText = text; // Descrição em português
+          
+          const codigoParaPrompt = `Material Symbol: "${icon}"`;
+          item.onclick = () => copyToClipboard(codigoParaPrompt, `Nome copiado: ${icon}`);
+          item.title = "Copiar instrução para a IA";
+
+          item.appendChild(iconDiv);
+          item.appendChild(comboDiv);
+        }
+
+        // ABA 4: SVGs
+        else if (currentTab === 4) {
+          const iconDiv = document.createElement("div");
+          iconDiv.className = "icon";
+          iconDiv.innerHTML = text; // Insere o código HTML do SVG
+
+          const comboDiv = document.createElement("div");
+          comboDiv.className = "combo";
+          comboDiv.innerText = icon; // Nome do SVG
+          
+          item.onclick = () => copyToClipboard(text, `Código SVG de ${icon} copiado!`);
+          item.title = "Copiar código <svg> puro";
+
+          item.appendChild(iconDiv);
+          item.appendChild(comboDiv);
+        }
+
+        grid.appendChild(item);
+      });
+    }
+
+    // Função de pesquisa
+    function filterItems() {
+      renderItems(document.getElementById("searchInput").value);
+    }
+
+    // Função de Cópia
+    function copyToClipboard(text, msg) {
+      const el = document.createElement('textarea');
+      el.value = text;
+      el.setAttribute('readonly', '');
+      el.style.position = 'absolute';
+      el.style.left = '-9999px';
+      document.body.appendChild(el);
+      el.select();
+      try {
+        document.execCommand('copy');
+        showToast(msg);
+      } catch (err) {
+        showToast("Erro ao copiar :(");
+      }
+      document.body.removeChild(el);
+    }
+
+    // Notificação
+    let toastTimeout;
+    function showToast(message) {
+      const toast = document.getElementById("toast");
+      toast.innerText = message;
+      toast.className = "show";
+      clearTimeout(toastTimeout);
+      toastTimeout = setTimeout(() => { toast.className = toast.className.replace("show", ""); }, 2500);
+    }
+
+    // Inicializa
+    renderItems();
+  </script>
 </body>
 </html>
