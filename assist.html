@@ -1044,20 +1044,108 @@
             <strong>2.</strong> Crie um novo projeto e cole o código abaixo<br>
             <strong>3.</strong> Implante como Web App (Executar como: eu; Quem pode acessar: qualquer pessoa)<br>
             <strong>4.</strong> Copie a URL gerada e cole no campo acima<br><br>
-            <strong>Código GAS (doPost):</strong>
-            <pre id="gasCode" style="background:var(--navy);color:#a8d8a8;padding:1rem;border-radius:6px;margin-top:0.5rem;font-size:12px;overflow:auto;white-space:pre-wrap;">function doPost(e) {
-  var data = JSON.parse(e.postData.contents);
+            <strong>Código GAS completo — cole tudo no editor:</strong>
+            <pre id="gasCode" style="background:var(--navy);color:#a8d8a8;padding:1rem;border-radius:6px;margin-top:0.5rem;font-size:12px;overflow:auto;white-space:pre-wrap;">// ─────────────────────────────────────────────
+// PASSO 1 — Rode setupPlanilha() UMA VEZ
+//   Menu: Executar > setupPlanilha
+//   Isso cria as abas e cabeçalhos automaticamente.
+// ─────────────────────────────────────────────
+
+var CAMPOS_P1 = [
+  'timestamp','orgao','responsavel','periodoInicio','periodoFim','dataApresentacao',
+  'problemas','gestaoInfo','processos','limitacoes',
+  'diretrizes','objetivos','focos',
+  'digitalDesc','digitalNum','dadosDesc','dadosNum',
+  'reunioesDesc','reunioesNum','confDesc','confNum',
+  'kpiReunioes','kpiDocs','kpiForms','kpiParticipantes',
+  'kpiDigital','kpiOutro','kpiContext',
+  'eficienciaAntes','eficienciaDepois','transAntes','transDepois',
+  'orgAntes','orgDepois','sintese'
+];
+
+var CAMPOS_P2 = [
+  'timestamp','p2Processos','p2Melhorias','p2Ganhos',
+  'p2Bases','p2Paineis','p2Stack',
+  'p2DocsTec','p2Comunicacao',
+  'p2Automacao','p2Fluxos',
+  'p2BemFeito','p2NaoFuncionou','p2Ajustes',
+  'p2Gargalos','p2LimitacoesInst',
+  'p2Proximos','p2Expansoes'
+];
+
+function setupPlanilha() {
   var ss = SpreadsheetApp.getActiveSpreadsheet();
-  var tab = ss.getSheetByName(data.aba) || ss.insertSheet(data.aba);
-  
-  if (tab.getLastRow() === 0) {
-    tab.appendRow(Object.keys(data.campos));
-  }
-  tab.appendRow(Object.values(data.campos));
-  
+
+  var abas = [
+    { nome: 'parte_1_essencial',    campos: CAMPOS_P1 },
+    { nome: 'parte_2_complementar', campos: CAMPOS_P2 }
+  ];
+
+  abas.forEach(function(cfg) {
+    var aba = ss.getSheetByName(cfg.nome);
+    if (!aba) {
+      aba = ss.insertSheet(cfg.nome);
+    }
+    if (aba.getLastRow() === 0) {
+      aba.appendRow(cfg.campos);
+      aba.getRange(1, 1, 1, cfg.campos.length)
+        .setBackground('#0D2E5A')
+        .setFontColor('#FFFFFF')
+        .setFontWeight('bold');
+      aba.setFrozenRows(1);
+    }
+  });
+
+  SpreadsheetApp.getUi().alert(
+    'Planilha configurada!\n\nAbas criadas:\n- parte_1_essencial\n- parte_2_complementar\n\nAgora publique este script como Web App e cole a URL no assistente.'
+  );
+}
+
+// ─────────────────────────────────────────────
+// PASSO 2 — Publish > Deploy as Web App
+//   Execute as: Me
+//   Who has access: Anyone
+// ─────────────────────────────────────────────
+
+function doGet(e) {
   return ContentService
-    .createTextOutput(JSON.stringify({ok: true}))
+    .createTextOutput(JSON.stringify({ ok: true, status: 'online' }))
     .setMimeType(ContentService.MimeType.JSON);
+}
+
+function doPost(e) {
+  try {
+    var raw = e.postData.contents;
+    var data = JSON.parse(raw);
+    var ss = SpreadsheetApp.getActiveSpreadsheet();
+
+    var camposDef = data.aba === 'parte_2_complementar' ? CAMPOS_P2 : CAMPOS_P1;
+    var aba = ss.getSheetByName(data.aba);
+
+    if (!aba) {
+      aba = ss.insertSheet(data.aba);
+      aba.appendRow(camposDef);
+      aba.getRange(1, 1, 1, camposDef.length)
+        .setBackground('#0D2E5A')
+        .setFontColor('#FFFFFF')
+        .setFontWeight('bold');
+      aba.setFrozenRows(1);
+    }
+
+    var linha = camposDef.map(function(col) {
+      return data.campos[col] !== undefined ? data.campos[col] : '';
+    });
+    aba.appendRow(linha);
+
+    return ContentService
+      .createTextOutput(JSON.stringify({ ok: true }))
+      .setMimeType(ContentService.MimeType.JSON);
+
+  } catch(err) {
+    return ContentService
+      .createTextOutput(JSON.stringify({ ok: false, erro: err.toString() }))
+      .setMimeType(ContentService.MimeType.JSON);
+  }
 }</pre>
           </div>
         </div>
@@ -1285,16 +1373,19 @@ async function saveToSheets(){
 
   try{
     showToast('Salvando...', '');
+    // no-cors + text/plain evita o preflight OPTIONS que o GAS bloqueia
     await fetch(url, {
       method:'POST',
-      headers:{'Content-Type':'application/json'},
+      mode:'no-cors',
+      headers:{'Content-Type':'text/plain'},
       body: JSON.stringify({ aba:'parte_1_essencial', campos: {timestamp: new Date().toISOString(), ...parte1} })
     });
     const p2filled = PARTE2_FIELDS.some(id => val(id).length > 0);
     if(p2filled){
       await fetch(url, {
         method:'POST',
-        headers:{'Content-Type':'application/json'},
+        mode:'no-cors',
+        headers:{'Content-Type':'text/plain'},
         body: JSON.stringify({ aba:'parte_2_complementar', campos: {timestamp: new Date().toISOString(), ...parte2} })
       });
     }
@@ -1309,12 +1400,14 @@ async function testSheetsConnection(){
   if(!url){ showToast('Cole a URL do GAS primeiro.', 'error'); return; }
   try{
     showToast('Testando conexão...', '');
-    const r = await fetch(url, {
+    await fetch(url, {
       method:'POST',
-      headers:{'Content-Type':'application/json'},
+      mode:'no-cors',
+      headers:{'Content-Type':'text/plain'},
       body: JSON.stringify({ aba:'teste_conexao', campos: {timestamp: new Date().toISOString(), status: 'ping'} })
     });
-    showToast('Conexão OK!', 'success');
+    // com no-cors a resposta é opaque — se não jogou exceção, chegou
+    showToast('Conexão OK! (verifique a aba teste_conexao na planilha)', 'success');
   } catch(err){
     showToast('Falha na conexão. Verifique a URL.', 'error');
   }
