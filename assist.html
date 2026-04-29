@@ -1,0 +1,1515 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Assistente de Relatório — Secretaria Executiva CMS</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #0D2E5A;
+    --blue: #1B6CB5;
+    --blue-light: #E8F1FB;
+    --blue-mid: #4A90D9;
+    --green: #1E8A4A;
+    --green-light: #E6F4EC;
+    --yellow: #F5C400;
+    --yellow-light: #FFFBE6;
+    --gray-50: #F7F8FA;
+    --gray-100: #EFF1F5;
+    --gray-200: #DDE1EA;
+    --gray-400: #9BA3B4;
+    --gray-600: #5A6478;
+    --gray-800: #2C3347;
+    --white: #ffffff;
+    --border: #DDE1EA;
+    --shadow-sm: 0 1px 3px rgba(13,46,90,0.08);
+    --shadow-md: 0 4px 16px rgba(13,46,90,0.10);
+    --radius: 10px;
+    --radius-lg: 16px;
+    --font-head: 'Syne', sans-serif;
+    --font-body: 'DM Sans', sans-serif;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: var(--font-body);
+    background: var(--gray-50);
+    color: var(--gray-800);
+    font-size: 15px;
+    line-height: 1.6;
+    min-height: 100vh;
+  }
+
+  /* ── HEADER ── */
+  .app-header {
+    background: var(--navy);
+    color: white;
+    padding: 0 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 64px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.18);
+  }
+  .app-header .brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .brand-icon {
+    width: 36px; height: 36px;
+    background: var(--blue);
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .brand-icon svg { width: 20px; height: 20px; fill: white; }
+  .brand-text h1 {
+    font-family: var(--font-head);
+    font-size: 15px;
+    font-weight: 600;
+    color: white;
+    letter-spacing: 0.02em;
+  }
+  .brand-text p {
+    font-size: 11px;
+    color: rgba(255,255,255,0.55);
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+  }
+  .header-actions {
+    display: flex;
+    gap: 8px;
+  }
+  .btn-header {
+    padding: 7px 16px;
+    border-radius: 7px;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    font-family: var(--font-body);
+    border: none;
+    transition: all 0.15s;
+  }
+  .btn-save {
+    background: rgba(255,255,255,0.12);
+    color: white;
+    border: 1px solid rgba(255,255,255,0.2);
+  }
+  .btn-save:hover { background: rgba(255,255,255,0.2); }
+  .btn-generate {
+    background: var(--yellow);
+    color: var(--navy);
+    font-weight: 600;
+  }
+  .btn-generate:hover { background: #e6b800; }
+
+  /* ── TABS ── */
+  .tabs-container {
+    background: var(--white);
+    border-bottom: 1px solid var(--border);
+    padding: 0 2rem;
+    display: flex;
+    align-items: flex-end;
+    gap: 2px;
+  }
+  .tab-btn {
+    padding: 14px 20px 12px;
+    font-size: 13.5px;
+    font-weight: 500;
+    font-family: var(--font-body);
+    color: var(--gray-400);
+    background: none;
+    border: none;
+    border-bottom: 2.5px solid transparent;
+    cursor: pointer;
+    transition: all 0.15s;
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    white-space: nowrap;
+  }
+  .tab-btn:hover { color: var(--blue); }
+  .tab-btn.active {
+    color: var(--navy);
+    border-bottom-color: var(--blue);
+  }
+  .tab-badge {
+    background: var(--green-light);
+    color: var(--green);
+    font-size: 10px;
+    font-weight: 600;
+    padding: 2px 7px;
+    border-radius: 20px;
+    letter-spacing: 0.03em;
+  }
+  .tab-badge.opt {
+    background: var(--yellow-light);
+    color: #8B6800;
+  }
+
+  /* ── LAYOUT ── */
+  .app-body {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 2rem;
+  }
+
+  /* ── PROGRESS ── */
+  .mvr-status {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 1.25rem 1.5rem;
+    margin-bottom: 2rem;
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+  }
+  .mvr-label {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--gray-600);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+  .progress-wrap { flex: 1; }
+  .progress-bar-bg {
+    background: var(--gray-100);
+    border-radius: 100px;
+    height: 8px;
+    overflow: hidden;
+  }
+  .progress-bar-fill {
+    height: 100%;
+    border-radius: 100px;
+    background: linear-gradient(90deg, var(--blue) 0%, var(--green) 100%);
+    transition: width 0.4s ease;
+    width: 0%;
+  }
+  .progress-pct {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--navy);
+    margin-top: 4px;
+  }
+  .mvr-ready {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12.5px;
+    font-weight: 500;
+    color: var(--gray-400);
+    white-space: nowrap;
+    transition: all 0.3s;
+  }
+  .mvr-ready.active { color: var(--green); }
+  .mvr-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: var(--gray-200);
+    transition: background 0.3s;
+  }
+  .mvr-ready.active .mvr-dot { background: var(--green); }
+
+  /* ── SECTION BLOCKS ── */
+  .section-block {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    margin-bottom: 1.25rem;
+    overflow: hidden;
+  }
+  .section-header {
+    padding: 1.1rem 1.5rem;
+    background: var(--gray-50);
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    user-select: none;
+    transition: background 0.15s;
+  }
+  .section-header:hover { background: var(--gray-100); }
+  .section-num {
+    width: 26px; height: 26px;
+    border-radius: 50%;
+    background: var(--navy);
+    color: white;
+    font-size: 12px;
+    font-weight: 700;
+    font-family: var(--font-head);
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .section-num.done { background: var(--green); }
+  .section-title {
+    font-size: 14px;
+    font-weight: 600;
+    font-family: var(--font-head);
+    color: var(--navy);
+    flex: 1;
+  }
+  .section-chevron {
+    font-size: 12px;
+    color: var(--gray-400);
+    transition: transform 0.2s;
+  }
+  .section-block.collapsed .section-chevron { transform: rotate(-90deg); }
+  .section-body {
+    padding: 1.5rem;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.25rem;
+  }
+  .section-block.collapsed .section-body { display: none; }
+
+  /* ── FORM FIELDS ── */
+  .field-group { display: flex; flex-direction: column; gap: 5px; }
+  .field-group.half { flex-direction: row; gap: 1rem; }
+  .field-group.half > .field-item { flex: 1; }
+
+  .field-item { display: flex; flex-direction: column; gap: 5px; }
+  label {
+    font-size: 12.5px;
+    font-weight: 600;
+    color: var(--gray-600);
+    letter-spacing: 0.02em;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  label .hint {
+    font-size: 11px;
+    font-weight: 400;
+    color: var(--gray-400);
+    font-style: italic;
+    letter-spacing: 0;
+  }
+  input[type="text"],
+  input[type="number"],
+  input[type="date"],
+  select,
+  textarea {
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 9px 13px;
+    font-family: var(--font-body);
+    font-size: 14px;
+    color: var(--gray-800);
+    background: var(--white);
+    transition: border 0.15s, box-shadow 0.15s;
+    outline: none;
+    width: 100%;
+  }
+  input:focus, select:focus, textarea:focus {
+    border-color: var(--blue);
+    box-shadow: 0 0 0 3px rgba(27,108,181,0.1);
+  }
+  input::placeholder, textarea::placeholder { color: var(--gray-400); font-style: italic; font-size: 13px; }
+  textarea { resize: vertical; min-height: 90px; line-height: 1.6; }
+  textarea.tall { min-height: 130px; }
+
+  /* ── INDICATORS GRID ── */
+  .indicators-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 1rem;
+  }
+  .indicator-card {
+    background: var(--gray-50);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .indicator-card label { font-size: 11.5px; color: var(--gray-600); }
+  .indicator-card input {
+    font-size: 22px;
+    font-weight: 600;
+    font-family: var(--font-head);
+    color: var(--navy);
+    border: none;
+    background: none;
+    padding: 0;
+    box-shadow: none;
+  }
+  .indicator-card input:focus { box-shadow: none; border-bottom: 1.5px solid var(--blue); border-radius: 0; }
+  .indicator-card input::placeholder { font-size: 22px; color: var(--gray-200); font-style: normal; }
+
+  /* ── BEFORE/AFTER ── */
+  .ba-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+  }
+  .ba-col-header {
+    font-size: 11.5px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    padding: 6px 12px;
+    border-radius: 6px;
+    margin-bottom: 6px;
+  }
+  .ba-before .ba-col-header { background: #FEF0ED; color: #8B3A20; }
+  .ba-after .ba-col-header { background: var(--green-light); color: #145A30; }
+
+  /* ── TOAST ── */
+  .toast {
+    position: fixed;
+    bottom: 2rem;
+    right: 2rem;
+    background: var(--navy);
+    color: white;
+    padding: 12px 20px;
+    border-radius: var(--radius);
+    font-size: 13.5px;
+    font-weight: 500;
+    box-shadow: var(--shadow-md);
+    transform: translateY(80px);
+    opacity: 0;
+    transition: all 0.25s cubic-bezier(.34,1.56,.64,1);
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .toast.show { transform: translateY(0); opacity: 1; }
+  .toast.success { background: var(--green); }
+  .toast.error { background: #C0392B; }
+
+  /* ── MODAL ── */
+  .modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(13,46,90,0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s;
+  }
+  .modal-overlay.open { opacity: 1; pointer-events: all; }
+  .modal {
+    background: white;
+    border-radius: var(--radius-lg);
+    padding: 2rem;
+    max-width: 540px;
+    width: 90%;
+    box-shadow: var(--shadow-md);
+    transform: scale(0.95);
+    transition: transform 0.2s;
+  }
+  .modal-overlay.open .modal { transform: scale(1); }
+  .modal h2 {
+    font-family: var(--font-head);
+    font-size: 17px;
+    color: var(--navy);
+    margin-bottom: 1rem;
+  }
+  .modal p { font-size: 13.5px; color: var(--gray-600); margin-bottom: 1rem; line-height: 1.6; }
+  .modal-actions { display: flex; gap: 8px; margin-top: 1.5rem; justify-content: flex-end; }
+
+  .btn {
+    padding: 9px 20px;
+    border-radius: 8px;
+    font-size: 13.5px;
+    font-weight: 500;
+    cursor: pointer;
+    font-family: var(--font-body);
+    border: none;
+    transition: all 0.15s;
+  }
+  .btn-primary { background: var(--navy); color: white; }
+  .btn-primary:hover { background: #0a2347; }
+  .btn-secondary { background: var(--gray-100); color: var(--gray-800); border: 1px solid var(--border); }
+  .btn-secondary:hover { background: var(--gray-200); }
+  .btn-danger { background: #C0392B; color: white; }
+  .btn-yellow { background: var(--yellow); color: var(--navy); font-weight: 600; }
+  .btn-yellow:hover { background: #e6b800; }
+  .btn-green { background: var(--green); color: white; font-weight: 600; }
+  .btn-green:hover { background: #17723c; }
+
+  /* ── EXPORT BUTTONS ── */
+  .export-bar {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-top: 1rem;
+    padding: 1.25rem 1.5rem;
+    background: var(--yellow-light);
+    border: 1px solid #f0d44d;
+    border-radius: var(--radius-lg);
+    align-items: center;
+  }
+  .export-bar-label {
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: #7A5F00;
+    margin-right: 6px;
+  }
+
+  /* ── SHEETS CONFIG ── */
+  .sheets-config {
+    background: var(--blue-light);
+    border: 1px solid #c0d8f0;
+    border-radius: var(--radius);
+    padding: 1rem 1.25rem;
+    margin-bottom: 1.5rem;
+    display: flex;
+    gap: 1rem;
+    align-items: flex-end;
+  }
+  .sheets-config .field-item { flex: 1; }
+  .sheets-config label { color: var(--blue); }
+
+  /* ── TAB CONTENT ── */
+  .tab-pane { display: none; }
+  .tab-pane.active { display: block; }
+
+  /* ── SECTION PART 2 ── */
+  .part2-intro {
+    background: var(--yellow-light);
+    border: 1px solid #f0d44d;
+    border-radius: var(--radius);
+    padding: 1rem 1.25rem;
+    margin-bottom: 1.5rem;
+    font-size: 13.5px;
+    color: #7A5F00;
+    line-height: 1.6;
+  }
+
+  @media (max-width: 640px) {
+    .indicators-grid { grid-template-columns: 1fr 1fr; }
+    .ba-grid { grid-template-columns: 1fr; }
+    .field-group.half { flex-direction: column; }
+    .app-body { padding: 1rem; }
+    .header-actions .btn-save { display: none; }
+  }
+
+  .divider-label {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--gray-400);
+    margin: 0.5rem 0 0.75rem;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .divider-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  .field-hint-block {
+    font-size: 12px;
+    color: var(--gray-400);
+    font-style: italic;
+    margin-top: -3px;
+  }
+
+  .completion-dot {
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    background: var(--gray-200);
+    display: inline-block;
+    transition: background 0.2s;
+  }
+  .completion-dot.done { background: var(--green); }
+</style>
+</head>
+<body>
+
+<!-- ── HEADER ── -->
+<header class="app-header">
+  <div class="brand">
+    <div class="brand-icon">
+      <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14H9V8h2v8zm4 0h-2V8h2v8z"/></svg>
+    </div>
+    <div class="brand-text">
+      <h1>Assistente de Relatório</h1>
+      <p>Secretaria Executiva — CMS</p>
+    </div>
+  </div>
+  <div class="header-actions">
+    <button class="btn-header btn-save" onclick="saveToSheets()">↑ Salvar na Planilha</button>
+    <button class="btn-header btn-generate" onclick="openExportModal()">⬇ Gerar Relatório .md</button>
+  </div>
+</header>
+
+<!-- ── TABS ── -->
+<div class="tabs-container">
+  <button class="tab-btn active" onclick="switchTab('parte1', this)">
+    Parte 1 — Núcleo do Relatório
+    <span class="tab-badge">Essencial</span>
+  </button>
+  <button class="tab-btn" onclick="switchTab('parte2', this)">
+    Parte 2 — Detalhamento
+    <span class="tab-badge opt">Opcional</span>
+  </button>
+  <button class="tab-btn" onclick="switchTab('config', this)">
+    ⚙ Configurações
+  </button>
+</div>
+
+<!-- ── APP BODY ── -->
+<div class="app-body">
+
+  <!-- ══════════════════ PARTE 1 ══════════════════ -->
+  <div class="tab-pane active" id="pane-parte1">
+
+    <div class="mvr-status">
+      <span class="mvr-label">Progresso MVR</span>
+      <div class="progress-wrap">
+        <div class="progress-bar-bg"><div class="progress-bar-fill" id="progressBar"></div></div>
+        <div class="progress-pct" id="progressPct">0% preenchido</div>
+      </div>
+      <div class="mvr-ready" id="mvrReady">
+        <div class="mvr-dot"></div>
+        Pronto para gerar
+      </div>
+    </div>
+
+    <!-- BLOCO 1 — IDENTIFICAÇÃO -->
+    <div class="section-block" id="sec1">
+      <div class="section-header" onclick="toggleSection('sec1')">
+        <div class="section-num" id="sn1">1</div>
+        <span class="section-title">Identificação do Relatório</span>
+        <span class="section-chevron">▾</span>
+      </div>
+      <div class="section-body">
+        <div class="field-group half">
+          <div class="field-item">
+            <label>Nome do Órgão</label>
+            <input type="text" id="orgao" placeholder="Ex: Conselho Municipal de Saúde de Montes Claros" oninput="updateProgress()">
+          </div>
+          <div class="field-item">
+            <label>Responsável pelo Relatório</label>
+            <input type="text" id="responsavel" placeholder="Nome completo e cargo" oninput="updateProgress()">
+          </div>
+        </div>
+        <div class="field-group half">
+          <div class="field-item">
+            <label>Período do Relatório <span class="hint">início</span></label>
+            <input type="date" id="periodoInicio" oninput="updateProgress()">
+          </div>
+          <div class="field-item">
+            <label>Período do Relatório <span class="hint">fim</span></label>
+            <input type="date" id="periodoFim" oninput="updateProgress()">
+          </div>
+        </div>
+        <div class="field-item">
+          <label>Data de Apresentação</label>
+          <input type="date" id="dataApresentacao" oninput="updateProgress()">
+        </div>
+      </div>
+    </div>
+
+    <!-- BLOCO 2 — DIAGNÓSTICO -->
+    <div class="section-block" id="sec2">
+      <div class="section-header" onclick="toggleSection('sec2')">
+        <div class="section-num" id="sn2">2</div>
+        <span class="section-title">Diagnóstico Inicial — Situação Antes</span>
+        <span class="section-chevron">▾</span>
+      </div>
+      <div class="section-body">
+        <p class="field-hint-block">Descreva o cenário encontrado antes das intervenções. Seja específico: o que estava ausente, precário ou ineficiente?</p>
+        <div class="field-item">
+          <label>Principais Problemas Identificados</label>
+          <textarea id="problemas" class="tall" placeholder="Ex: Ausência de sistema de gestão documental; atas produzidas em prazo médio de 30 dias; nenhum indicador de acompanhamento..." oninput="updateProgress()"></textarea>
+        </div>
+        <div class="field-group half">
+          <div class="field-item">
+            <label>Situação da Gestão da Informação</label>
+            <textarea id="gestaoInfo" placeholder="Como a informação era armazenada, acessada e compartilhada?" oninput="updateProgress()"></textarea>
+          </div>
+          <div class="field-item">
+            <label>Situação dos Processos Internos</label>
+            <textarea id="processos" placeholder="Descreva os fluxos existentes (ou sua ausência)..." oninput="updateProgress()"></textarea>
+          </div>
+        </div>
+        <div class="field-item">
+          <label>Principais Limitações e Condicionantes</label>
+          <textarea id="limitacoes" placeholder="Ex: ausência de infraestrutura tecnológica, quadro reduzido, resistência institucional, ausência de regulamentação interna..." oninput="updateProgress()"></textarea>
+        </div>
+      </div>
+    </div>
+
+    <!-- BLOCO 3 — ESTRATÉGIA -->
+    <div class="section-block" id="sec3">
+      <div class="section-header" onclick="toggleSection('sec3')">
+        <div class="section-num" id="sn3">3</div>
+        <span class="section-title">Estratégia Adotada</span>
+        <span class="section-chevron">▾</span>
+      </div>
+      <div class="section-body">
+        <div class="field-item">
+          <label>Diretrizes e Metodologias Utilizadas</label>
+          <textarea id="diretrizes" placeholder="Ex: BPM (gerenciamento de processos), digitalização documental, gestão orientada a dados, design de comunicação institucional, automação via GAS..." oninput="updateProgress()"></textarea>
+        </div>
+        <div class="field-item">
+          <label>Objetivos Estratégicos Definidos</label>
+          <textarea id="objetivos" placeholder="Liste os objetivos que orientaram o período. Ex: 1. Criar infraestrutura digital do Conselho do zero; 2. Digitalizar 100% dos processos de registro; 3. Implantar transparência ativa..." oninput="updateProgress()"></textarea>
+        </div>
+        <div class="field-item">
+          <label>Focos Prioritários de Atuação</label>
+          <textarea id="focos" placeholder="Ex: transformação digital, organização institucional, participação social, comunicação..." oninput="updateProgress()"></textarea>
+        </div>
+      </div>
+    </div>
+
+    <!-- BLOCO 4 — ENTREGAS -->
+    <div class="section-block" id="sec4">
+      <div class="section-header" onclick="toggleSection('sec4')">
+        <div class="section-num" id="sn4">4</div>
+        <span class="section-title">Principais Entregas</span>
+        <span class="section-chevron">▾</span>
+      </div>
+      <div class="section-body">
+        <p class="field-hint-block">Para cada eixo, descreva o que foi entregue e informe números sempre que possível.</p>
+
+        <div class="divider-label">Transformação Digital</div>
+        <div class="field-group half">
+          <div class="field-item">
+            <label>Descrição das Entregas Digitais</label>
+            <textarea id="digitalDesc" placeholder="Ex: Desenvolvimento da PWA institucional SerTão Conselheiro (v3.1), 42 endpoints GAS, sistema de gestão de reuniões, painel de indicadores..." oninput="updateProgress()"></textarea>
+          </div>
+          <div class="field-item">
+            <label>Indicadores / Números</label>
+            <textarea id="digitalNum" placeholder="Ex: 42 endpoints criados; 3 sistemas integrados; 1 PWA instalável; cobertura de 100% das reuniões..." oninput="updateProgress()"></textarea>
+          </div>
+        </div>
+
+        <div class="divider-label">Organização e Gestão de Dados</div>
+        <div class="field-group half">
+          <div class="field-item">
+            <label>Descrição</label>
+            <textarea id="dadosDesc" placeholder="Ex: Criação de base de dados de delegados, propostas, presença; TSV acumulativo; estruturação de planilhas-mestras..." oninput="updateProgress()"></textarea>
+          </div>
+          <div class="field-item">
+            <label>Indicadores / Números</label>
+            <textarea id="dadosNum" placeholder="Ex: 133 delegados cadastrados; 328 propostas registradas; 15 planilhas estruturadas..." oninput="updateProgress()"></textarea>
+          </div>
+        </div>
+
+        <div class="divider-label">Apoio às Reuniões e Documentação</div>
+        <div class="field-group half">
+          <div class="field-item">
+            <label>Descrição</label>
+            <textarea id="reunioesDesc" placeholder="Ex: Produção de atas virtuais em HTML, sistema de presença, calendário institucional..." oninput="updateProgress()"></textarea>
+          </div>
+          <div class="field-item">
+            <label>Indicadores / Números</label>
+            <textarea id="reunioesNum" placeholder="Ex: 15 atas produzidas; tempo médio reduzido de 30 para 5 dias..." oninput="updateProgress()"></textarea>
+          </div>
+        </div>
+
+        <div class="divider-label">Conferência de Saúde / Eventos</div>
+        <div class="field-group half">
+          <div class="field-item">
+            <label>Descrição</label>
+            <textarea id="confDesc" placeholder="Ex: Coordenação técnica da 11ª Conferência Municipal de Saúde; hub de pré-conferências; sistema de cadastro de delegados..." oninput="updateProgress()"></textarea>
+          </div>
+          <div class="field-item">
+            <label>Indicadores / Números</label>
+            <textarea id="confNum" placeholder="Ex: 15 pré-conferências coordenadas; X participantes; Y propostas coletadas..." oninput="updateProgress()"></textarea>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- BLOCO 5 — INDICADORES -->
+    <div class="section-block" id="sec5">
+      <div class="section-header" onclick="toggleSection('sec5')">
+        <div class="section-num" id="sn5">5</div>
+        <span class="section-title">Indicadores-Chave do Período</span>
+        <span class="section-chevron">▾</span>
+      </div>
+      <div class="section-body">
+        <p class="field-hint-block">Preencha os campos numéricos que representam o volume de trabalho do período.</p>
+        <div class="indicators-grid">
+          <div class="indicator-card">
+            <label>Nº de Reuniões</label>
+            <input type="number" id="kpiReunioes" placeholder="—" oninput="updateProgress()">
+          </div>
+          <div class="indicator-card">
+            <label>Nº de Documentos Produzidos</label>
+            <input type="number" id="kpiDocs" placeholder="—" oninput="updateProgress()">
+          </div>
+          <div class="indicator-card">
+            <label>Nº de Formulários / Sistemas</label>
+            <input type="number" id="kpiForms" placeholder="—" oninput="updateProgress()">
+          </div>
+          <div class="indicator-card">
+            <label>Participantes / Beneficiários</label>
+            <input type="number" id="kpiParticipantes" placeholder="—" oninput="updateProgress()">
+          </div>
+          <div class="indicator-card">
+            <label>% Processos Digitalizados</label>
+            <input type="number" id="kpiDigital" placeholder="—" min="0" max="100" oninput="updateProgress()">
+          </div>
+          <div class="indicator-card">
+            <label>Outro Indicador Relevante</label>
+            <input type="text" id="kpiOutro" placeholder="—" oninput="updateProgress()" style="font-size:15px;font-weight:500;">
+          </div>
+        </div>
+        <div class="field-item" style="margin-top:0.5rem">
+          <label>Legenda / Contextualização dos Indicadores <span class="hint">opcional</span></label>
+          <textarea id="kpiContext" placeholder="Explique ou contextualize os números acima, se necessário..." oninput="updateProgress()"></textarea>
+        </div>
+      </div>
+    </div>
+
+    <!-- BLOCO 6 — RESULTADOS ANTES/DEPOIS -->
+    <div class="section-block" id="sec6">
+      <div class="section-header" onclick="toggleSection('sec6')">
+        <div class="section-num" id="sn6">6</div>
+        <span class="section-title">Resultados — Comparativo Antes × Depois</span>
+        <span class="section-chevron">▾</span>
+      </div>
+      <div class="section-body">
+        <p class="field-hint-block">Explicite as transformações concretas. Quanto mais específico e mensurável, mais forte o relatório.</p>
+        <div class="divider-label">Eficiência e Produtividade</div>
+        <div class="ba-grid">
+          <div class="ba-before field-item">
+            <div class="ba-col-header">Antes</div>
+            <textarea id="eficienciaAntes" placeholder="Descreva como era: tempo gasto, retrabalho, gargalos..." oninput="updateProgress()"></textarea>
+          </div>
+          <div class="ba-after field-item">
+            <div class="ba-col-header">Depois</div>
+            <textarea id="eficienciaDepois" placeholder="Descreva como ficou: ganhos de tempo, automação, escala..." oninput="updateProgress()"></textarea>
+          </div>
+        </div>
+
+        <div class="divider-label">Transparência e Acesso à Informação</div>
+        <div class="ba-grid">
+          <div class="ba-before field-item">
+            <div class="ba-col-header">Antes</div>
+            <textarea id="transAntes" placeholder="Ex: informações inacessíveis, sem publicação sistemática..." oninput="updateProgress()"></textarea>
+          </div>
+          <div class="ba-after field-item">
+            <div class="ba-col-header">Depois</div>
+            <textarea id="transDepois" placeholder="Ex: portal público, dados abertos, atas online..." oninput="updateProgress()"></textarea>
+          </div>
+        </div>
+
+        <div class="divider-label">Organização Institucional</div>
+        <div class="ba-grid">
+          <div class="ba-before field-item">
+            <div class="ba-col-header">Antes</div>
+            <textarea id="orgAntes" placeholder="Ex: processos informais, sem identidade visual, sem documentação..." oninput="updateProgress()"></textarea>
+          </div>
+          <div class="ba-after field-item">
+            <div class="ba-col-header">Depois</div>
+            <textarea id="orgDepois" placeholder="Ex: processos mapeados, identidade visual, manual institucional..." oninput="updateProgress()"></textarea>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- BLOCO 7 — SÍNTESE FINAL -->
+    <div class="section-block" id="sec7">
+      <div class="section-header" onclick="toggleSection('sec7')">
+        <div class="section-num" id="sn7">7</div>
+        <span class="section-title">Síntese Final</span>
+        <span class="section-chevron">▾</span>
+      </div>
+      <div class="section-body">
+        <div class="field-item">
+          <label>Texto de Encerramento Institucional</label>
+          <textarea id="sintese" class="tall" placeholder="Redija o parágrafo final do relatório. Deve sintetizar o período, o impacto gerado e o posicionamento estratégico da Secretaria Executiva para os próximos ciclos..." oninput="updateProgress()"></textarea>
+        </div>
+      </div>
+    </div>
+
+    <!-- EXPORT BAR -->
+    <div class="export-bar">
+      <span class="export-bar-label">Exportar</span>
+      <button class="btn btn-yellow" onclick="generateMD('full')">⬇ Relatório Completo (.md)</button>
+      <button class="btn btn-secondary" onclick="generateMD('resumido')">⬇ Versão Resumida</button>
+      <button class="btn btn-secondary" onclick="generateMD('bullets')">⬇ Versão Apresentação (bullets)</button>
+      <button class="btn btn-primary" onclick="saveToSheets()">↑ Salvar na Planilha</button>
+    </div>
+
+  </div><!-- /parte1 -->
+
+  <!-- ══════════════════ PARTE 2 ══════════════════ -->
+  <div class="tab-pane" id="pane-parte2">
+
+    <div class="part2-intro">
+      <strong>Camada de detalhamento opcional.</strong> Preencha após concluir a Parte 1. Todos os dados preenchidos aqui serão automaticamente incorporados ao relatório final nas seções 8 a 13.
+    </div>
+
+    <!-- P2 BLOCO 1 — PROCESSOS BPM -->
+    <div class="section-block" id="sec-p2-1">
+      <div class="section-header" onclick="toggleSection('sec-p2-1')">
+        <div class="section-num">8</div>
+        <span class="section-title">Detalhamento de Processos (BPM)</span>
+        <span class="section-chevron">▾</span>
+      </div>
+      <div class="section-body">
+        <div class="field-item">
+          <label>Processos Mapeados e Modelados</label>
+          <textarea id="p2Processos" placeholder="Liste os processos formalizados: Ex: Fluxo de elaboração de atas; Processo de convocação de reunião; Processo de acompanhamento de deliberações..." oninput="updateProgress()"></textarea>
+        </div>
+        <div class="field-group half">
+          <div class="field-item">
+            <label>Melhorias Implementadas</label>
+            <textarea id="p2Melhorias" placeholder="Quais mudanças foram feitas nos fluxos?" oninput="updateProgress()"></textarea>
+          </div>
+          <div class="field-item">
+            <label>Ganhos Observados</label>
+            <textarea id="p2Ganhos" placeholder="Resultados concretos das melhorias de processo..." oninput="updateProgress()"></textarea>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- P2 BLOCO 2 — GESTÃO DE DADOS -->
+    <div class="section-block" id="sec-p2-2">
+      <div class="section-header" onclick="toggleSection('sec-p2-2')">
+        <div class="section-num">9</div>
+        <span class="section-title">Gestão de Dados e Infraestrutura Digital</span>
+        <span class="section-chevron">▾</span>
+      </div>
+      <div class="section-body">
+        <div class="field-item">
+          <label>Bases de Dados Criadas ou Estruturadas</label>
+          <textarea id="p2Bases" placeholder="Ex: Base de conselheiros titulares e suplentes; Base de propostas da conferência; Base de frequências..." oninput="updateProgress()"></textarea>
+        </div>
+        <div class="field-group half">
+          <div class="field-item">
+            <label>Painéis, Dashboards ou Controles</label>
+            <textarea id="p2Paineis" placeholder="Descreva os painéis de monitoramento criados..." oninput="updateProgress()"></textarea>
+          </div>
+          <div class="field-item">
+            <label>Ferramentas e Stack Técnico</label>
+            <textarea id="p2Stack" placeholder="Ex: Google Apps Script, Google Sheets, GitHub Pages, PWA, HTML/CSS/JS..." oninput="updateProgress()"></textarea>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- P2 BLOCO 3 — MATERIAIS -->
+    <div class="section-block" id="sec-p2-3">
+      <div class="section-header" onclick="toggleSection('sec-p2-3')">
+        <div class="section-num">10</div>
+        <span class="section-title">Materiais Produzidos</span>
+        <span class="section-chevron">▾</span>
+      </div>
+      <div class="section-body">
+        <div class="field-group half">
+          <div class="field-item">
+            <label>Documentos Técnicos e Institucionais</label>
+            <textarea id="p2DocsTec" placeholder="Ex: Manual do Conselheiro; Regimento Interno revisado; Guia de uso da plataforma..." oninput="updateProgress()"></textarea>
+          </div>
+          <div class="field-item">
+            <label>Materiais de Comunicação</label>
+            <textarea id="p2Comunicacao" placeholder="Ex: Cartilhas, infográficos, posts, apresentações, guias visuais..." oninput="updateProgress()"></textarea>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- P2 BLOCO 4 — AUTOMAÇÃO -->
+    <div class="section-block" id="sec-p2-4">
+      <div class="section-header" onclick="toggleSection('sec-p2-4')">
+        <div class="section-num">11</div>
+        <span class="section-title">Ferramentas e Automações</span>
+        <span class="section-chevron">▾</span>
+      </div>
+      <div class="section-body">
+        <div class="field-item">
+          <label>Tipos de Automação Implementadas</label>
+          <textarea id="p2Automacao" placeholder="Ex: Geração automática de atas via GAS; Sistema de envio de notificações; Integração Forms → Sheets → Dashboard..." oninput="updateProgress()"></textarea>
+        </div>
+        <div class="field-item">
+          <label>Fluxos Automatizados</label>
+          <textarea id="p2Fluxos" placeholder="Descreva os fluxos que antes eram manuais e hoje são total ou parcialmente automáticos..." oninput="updateProgress()"></textarea>
+        </div>
+      </div>
+    </div>
+
+    <!-- P2 BLOCO 5 — LIÇÕES -->
+    <div class="section-block" id="sec-p2-5">
+      <div class="section-header" onclick="toggleSection('sec-p2-5')">
+        <div class="section-num">12</div>
+        <span class="section-title">Lições Aprendidas</span>
+        <span class="section-chevron">▾</span>
+      </div>
+      <div class="section-body">
+        <div class="field-group half">
+          <div class="field-item">
+            <label>O que funcionou bem</label>
+            <textarea id="p2BemFeito" placeholder="Práticas, decisões ou abordagens que trouxeram resultado..." oninput="updateProgress()"></textarea>
+          </div>
+          <div class="field-item">
+            <label>O que não funcionou / desafios</label>
+            <textarea id="p2NaoFuncionou" placeholder="Tentativas que falharam, aprendizados negativos, ajustes necessários..." oninput="updateProgress()"></textarea>
+          </div>
+        </div>
+        <div class="field-item">
+          <label>Ajustes e Correções Realizadas</label>
+          <textarea id="p2Ajustes" placeholder="Como o plano foi adaptado ao longo do período?" oninput="updateProgress()"></textarea>
+        </div>
+      </div>
+    </div>
+
+    <!-- P2 BLOCO 6 — DESAFIOS -->
+    <div class="section-block" id="sec-p2-6">
+      <div class="section-header" onclick="toggleSection('sec-p2-6')">
+        <div class="section-num">13</div>
+        <span class="section-title">Desafios Atuais</span>
+        <span class="section-chevron">▾</span>
+      </div>
+      <div class="section-body">
+        <div class="field-group half">
+          <div class="field-item">
+            <label>Gargalos Operacionais</label>
+            <textarea id="p2Gargalos" placeholder="Quais processos ainda são lentos, manuais ou problemáticos?" oninput="updateProgress()"></textarea>
+          </div>
+          <div class="field-item">
+            <label>Limitações Institucionais</label>
+            <textarea id="p2LimitacoesInst" placeholder="Ex: ausência de equipe, falta de decisão política, resistência..." oninput="updateProgress()"></textarea>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- P2 BLOCO 7 — PRÓXIMOS PASSOS -->
+    <div class="section-block" id="sec-p2-7">
+      <div class="section-header" onclick="toggleSection('sec-p2-7')">
+        <div class="section-num">14</div>
+        <span class="section-title">Próximos Passos e Planejamento</span>
+        <span class="section-chevron">▾</span>
+      </div>
+      <div class="section-body">
+        <div class="field-item">
+          <label>Planejamento para o Próximo Ciclo</label>
+          <textarea id="p2Proximos" class="tall" placeholder="O que está previsto para os próximos meses? Quais são as prioridades? Quais projetos serão iniciados ou expandidos?" oninput="updateProgress()"></textarea>
+        </div>
+        <div class="field-item">
+          <label>Expansões e Escaladas Previstas</label>
+          <textarea id="p2Expansoes" placeholder="Ex: Migrar para plataforma própria; Implantar BI de saúde; Expandir para outros órgãos do SUS local..." oninput="updateProgress()"></textarea>
+        </div>
+      </div>
+    </div>
+
+    <div class="export-bar">
+      <span class="export-bar-label">Exportar com Parte 2</span>
+      <button class="btn btn-yellow" onclick="generateMD('full')">⬇ Relatório Completo (.md)</button>
+      <button class="btn btn-primary" onclick="saveToSheets()">↑ Salvar na Planilha</button>
+    </div>
+
+  </div><!-- /parte2 -->
+
+  <!-- ══════════════════ CONFIGURAÇÕES ══════════════════ -->
+  <div class="tab-pane" id="pane-config">
+
+    <div class="section-block">
+      <div class="section-header">
+        <div class="section-num" style="background:var(--blue);">⚙</div>
+        <span class="section-title">Integração com Google Sheets</span>
+      </div>
+      <div class="section-body">
+        <p class="field-hint-block" style="margin:0 0 1rem;">Configure o endpoint do Google Apps Script (GAS) para salvar os dados automaticamente na planilha. O GAS deve aceitar POST com JSON.</p>
+
+        <div class="field-item">
+          <label>URL do Web App (Google Apps Script)</label>
+          <input type="text" id="gasUrl" placeholder="https://script.google.com/macros/s/XXXXXXXXXX/exec" style="font-size:13px;">
+          <p class="field-hint-block" style="margin-top:4px;">Cole aqui a URL gerada ao publicar o GAS como Web App.</p>
+        </div>
+
+        <div class="field-item" style="margin-top:1rem;">
+          <label>Como Configurar o GAS</label>
+          <div style="background:var(--gray-50);border:1px solid var(--border);border-radius:var(--radius);padding:1rem;font-size:13px;color:var(--gray-600);line-height:1.8;">
+            <strong>1.</strong> Abra o Google Apps Script (script.google.com)<br>
+            <strong>2.</strong> Crie um novo projeto e cole o código abaixo<br>
+            <strong>3.</strong> Implante como Web App (Executar como: eu; Quem pode acessar: qualquer pessoa)<br>
+            <strong>4.</strong> Copie a URL gerada e cole no campo acima<br><br>
+            <strong>Código GAS (doPost):</strong>
+            <pre id="gasCode" style="background:var(--navy);color:#a8d8a8;padding:1rem;border-radius:6px;margin-top:0.5rem;font-size:12px;overflow:auto;white-space:pre-wrap;">function doPost(e) {
+  var data = JSON.parse(e.postData.contents);
+  var ss = SpreadsheetApp.getActiveSpreadsheet();
+  var tab = ss.getSheetByName(data.aba) || ss.insertSheet(data.aba);
+  
+  if (tab.getLastRow() === 0) {
+    tab.appendRow(Object.keys(data.campos));
+  }
+  tab.appendRow(Object.values(data.campos));
+  
+  return ContentService
+    .createTextOutput(JSON.stringify({ok: true}))
+    .setMimeType(ContentService.MimeType.JSON);
+}</pre>
+          </div>
+        </div>
+
+        <div style="margin-top:1rem;display:flex;gap:8px;">
+          <button class="btn btn-primary" onclick="testSheetsConnection()">Testar Conexão</button>
+          <button class="btn btn-secondary" onclick="saveConfig()">Salvar Configuração</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-block">
+      <div class="section-header">
+        <div class="section-num" style="background:var(--gray-400);">!</div>
+        <span class="section-title">Dados Locais</span>
+      </div>
+      <div class="section-body">
+        <p class="field-hint-block">Os dados do formulário são salvos automaticamente no seu navegador (localStorage). Use as opções abaixo para gerenciar.</p>
+        <div style="display:flex;gap:8px;margin-top:0.5rem;flex-wrap:wrap;">
+          <button class="btn btn-secondary" onclick="exportLocalJSON()">⬇ Exportar dados locais (.json)</button>
+          <button class="btn btn-secondary" onclick="importLocalJSON()">↑ Importar dados (.json)</button>
+          <button class="btn btn-danger" onclick="confirmClear()">Limpar todos os dados</button>
+        </div>
+        <input type="file" id="importFile" accept=".json" style="display:none" onchange="handleImport(event)">
+      </div>
+    </div>
+
+  </div><!-- /config -->
+
+</div><!-- /app-body -->
+
+<!-- ── MODAL EXPORT ── -->
+<div class="modal-overlay" id="exportModal">
+  <div class="modal">
+    <h2>Gerar Relatório Institucional</h2>
+    <p>Escolha o formato de exportação desejado. O arquivo será baixado automaticamente como <strong>.md</strong>.</p>
+    <div style="display:flex;flex-direction:column;gap:8px;">
+      <button class="btn btn-primary" onclick="generateMD('full');closeExportModal()">📄 Relatório Completo</button>
+      <button class="btn btn-secondary" onclick="generateMD('resumido');closeExportModal()">📋 Versão Resumida (síntese executiva)</button>
+      <button class="btn btn-secondary" onclick="generateMD('bullets');closeExportModal()">🎯 Versão Apresentação (bullet points)</button>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-secondary" onclick="closeExportModal()">Cancelar</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── TOAST ── -->
+<div class="toast" id="toast"></div>
+
+<script>
+// ── FIELD IDs ──
+const PARTE1_FIELDS = [
+  'orgao','responsavel','periodoInicio','periodoFim','dataApresentacao',
+  'problemas','gestaoInfo','processos','limitacoes',
+  'diretrizes','objetivos','focos',
+  'digitalDesc','digitalNum','dadosDesc','dadosNum','reunioesDesc','reunioesNum','confDesc','confNum',
+  'kpiReunioes','kpiDocs','kpiForms','kpiParticipantes','kpiDigital','kpiOutro','kpiContext',
+  'eficienciaAntes','eficienciaDepois','transAntes','transDepois','orgAntes','orgDepois',
+  'sintese'
+];
+
+const PARTE2_FIELDS = [
+  'p2Processos','p2Melhorias','p2Ganhos',
+  'p2Bases','p2Paineis','p2Stack',
+  'p2DocsTec','p2Comunicacao',
+  'p2Automacao','p2Fluxos',
+  'p2BemFeito','p2NaoFuncionou','p2Ajustes',
+  'p2Gargalos','p2LimitacoesInst',
+  'p2Proximos','p2Expansoes'
+];
+
+const REQUIRED_FIELDS = ['orgao','responsavel','periodoInicio','periodoFim','problemas','diretrizes','sintese'];
+
+// ── UTILS ──
+function g(id){ return document.getElementById(id); }
+function val(id){ return (g(id)?g(id).value.trim():''); }
+
+function showToast(msg, type=''){
+  const t = g('toast');
+  t.textContent = msg;
+  t.className = 'toast show ' + type;
+  setTimeout(()=>{ t.className='toast'; }, 3000);
+}
+
+// ── TABS ──
+function switchTab(name, btn){
+  document.querySelectorAll('.tab-pane').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+  g('pane-'+name).classList.add('active');
+  btn.classList.add('active');
+}
+
+// ── SECTION TOGGLE ──
+function toggleSection(id){
+  const s = g(id);
+  s.classList.toggle('collapsed');
+}
+
+// ── PROGRESS ──
+function updateProgress(){
+  autoSave();
+  const filled = PARTE1_FIELDS.filter(id => val(id).length > 0).length;
+  const total = PARTE1_FIELDS.length;
+  const pct = Math.round((filled/total)*100);
+  const bar = g('progressBar');
+  const lbl = g('progressPct');
+  const mvr = g('mvrReady');
+  if(bar) bar.style.width = pct+'%';
+  if(lbl) lbl.textContent = pct+'% preenchido ('+filled+'/'+total+' campos)';
+
+  const requiredFilled = REQUIRED_FIELDS.filter(id => val(id).length > 0).length;
+  const isReady = requiredFilled >= REQUIRED_FIELDS.length * 0.7;
+  if(mvr) mvr.className = 'mvr-ready' + (isReady ? ' active' : '');
+
+  // Update section numbers
+  updateSectionDots();
+}
+
+function updateSectionDots(){
+  const groups = {
+    sn1: ['orgao','responsavel','periodoInicio','periodoFim'],
+    sn2: ['problemas','gestaoInfo'],
+    sn3: ['diretrizes','objetivos'],
+    sn4: ['digitalDesc','reunioesDesc'],
+    sn5: ['kpiReunioes','kpiDocs'],
+    sn6: ['eficienciaAntes','eficienciaDepois'],
+    sn7: ['sintese']
+  };
+  for(const [numId, fields] of Object.entries(groups)){
+    const el = g(numId);
+    if(!el) continue;
+    const done = fields.every(f => val(f).length > 0);
+    el.className = 'section-num' + (done ? ' done' : '');
+  }
+}
+
+// ── LOCAL STORAGE ──
+function autoSave(){
+  const data = {};
+  [...PARTE1_FIELDS, ...PARTE2_FIELDS].forEach(id=>{
+    const el = g(id);
+    if(el) data[id] = el.value;
+  });
+  data['gasUrl'] = val('gasUrl');
+  localStorage.setItem('cms_relatorio_v1', JSON.stringify(data));
+}
+
+function loadSaved(){
+  const raw = localStorage.getItem('cms_relatorio_v1');
+  if(!raw) return;
+  try{
+    const data = JSON.parse(raw);
+    [...PARTE1_FIELDS, ...PARTE2_FIELDS].forEach(id=>{
+      const el = g(id);
+      if(el && data[id] !== undefined) el.value = data[id];
+    });
+    if(data.gasUrl && g('gasUrl')) g('gasUrl').value = data.gasUrl;
+    updateProgress();
+  } catch(e){ console.warn('Erro ao carregar dados:', e); }
+}
+
+function saveConfig(){
+  autoSave();
+  showToast('Configuração salva localmente.', 'success');
+}
+
+function exportLocalJSON(){
+  const raw = localStorage.getItem('cms_relatorio_v1') || '{}';
+  const blob = new Blob([raw], {type:'application/json'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'cms-relatorio-backup.json';
+  a.click();
+}
+
+function importLocalJSON(){
+  g('importFile').click();
+}
+
+function handleImport(e){
+  const file = e.target.files[0];
+  if(!file) return;
+  const reader = new FileReader();
+  reader.onload = (ev)=>{
+    try{
+      const data = JSON.parse(ev.target.result);
+      [...PARTE1_FIELDS, ...PARTE2_FIELDS].forEach(id=>{
+        const el = g(id);
+        if(el && data[id] !== undefined) el.value = data[id];
+      });
+      if(data.gasUrl && g('gasUrl')) g('gasUrl').value = data.gasUrl;
+      updateProgress();
+      showToast('Dados importados com sucesso!', 'success');
+    } catch(err){
+      showToast('Erro ao importar arquivo.', 'error');
+    }
+  };
+  reader.readAsText(file);
+}
+
+function confirmClear(){
+  if(confirm('Isso apagará todos os dados preenchidos. Tem certeza?')){
+    localStorage.removeItem('cms_relatorio_v1');
+    [...PARTE1_FIELDS, ...PARTE2_FIELDS].forEach(id=>{
+      const el = g(id);
+      if(el) el.value = '';
+    });
+    updateProgress();
+    showToast('Dados limpos.', '');
+  }
+}
+
+// ── GOOGLE SHEETS ──
+async function saveToSheets(){
+  const url = val('gasUrl') || localStorage.getItem('cms_gas_url');
+  if(!url){
+    showToast('Configure a URL do GAS nas Configurações.', 'error');
+    return;
+  }
+  const parte1 = {};
+  PARTE1_FIELDS.forEach(id => parte1[id] = val(id));
+  const parte2 = {};
+  PARTE2_FIELDS.forEach(id => parte2[id] = val(id));
+
+  try{
+    showToast('Salvando...', '');
+    await fetch(url, {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ aba:'parte_1_essencial', campos: {timestamp: new Date().toISOString(), ...parte1} })
+    });
+    const p2filled = PARTE2_FIELDS.some(id => val(id).length > 0);
+    if(p2filled){
+      await fetch(url, {
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body: JSON.stringify({ aba:'parte_2_complementar', campos: {timestamp: new Date().toISOString(), ...parte2} })
+      });
+    }
+    showToast('Dados salvos na planilha!', 'success');
+  } catch(err){
+    showToast('Erro ao salvar. Verifique a URL do GAS.', 'error');
+  }
+}
+
+async function testSheetsConnection(){
+  const url = val('gasUrl');
+  if(!url){ showToast('Cole a URL do GAS primeiro.', 'error'); return; }
+  try{
+    showToast('Testando conexão...', '');
+    const r = await fetch(url, {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ aba:'teste_conexao', campos: {timestamp: new Date().toISOString(), status: 'ping'} })
+    });
+    showToast('Conexão OK!', 'success');
+  } catch(err){
+    showToast('Falha na conexão. Verifique a URL.', 'error');
+  }
+}
+
+// ── MODALS ──
+function openExportModal(){ g('exportModal').classList.add('open'); }
+function closeExportModal(){ g('exportModal').classList.remove('open'); }
+
+g('exportModal').addEventListener('click', function(e){
+  if(e.target === this) closeExportModal();
+});
+
+// ── MARKDOWN GENERATOR ──
+function fmtDate(d){ if(!d) return '—'; try{ return new Date(d+'T00:00:00').toLocaleDateString('pt-BR'); } catch(e){ return d; } }
+function fmtField(v){ return v || '_(não preenchido)_'; }
+function fmtBA(antes, depois){
+  return `| Antes | Depois |\n|---|---|\n| ${antes||'—'} | ${depois||'—'} |`;
+}
+
+function generateMD(mode){
+  const orgao = val('orgao') || 'Secretaria Executiva';
+  const responsavel = val('responsavel') || '—';
+  const periodo = `${fmtDate(val('periodoInicio'))} a ${fmtDate(val('periodoFim'))}`;
+  const dataApres = fmtDate(val('dataApresentacao'));
+  const hasP2 = PARTE2_FIELDS.some(id => val(id).length > 0);
+
+  let md = '';
+
+  if(mode === 'bullets'){
+    md = generateBullets(orgao, responsavel, periodo, dataApres);
+  } else if(mode === 'resumido'){
+    md = generateResumo(orgao, responsavel, periodo, dataApres);
+  } else {
+    md = generateFull(orgao, responsavel, periodo, dataApres, hasP2);
+  }
+
+  const blob = new Blob([md], {type:'text/markdown'});
+  const a = document.createElement('a');
+  const suffix = mode === 'bullets' ? '-apresentacao' : mode === 'resumido' ? '-resumido' : '-completo';
+  a.download = `relatorio-gestao-${orgao.replace(/\s+/g,'-').toLowerCase()}${suffix}.md`;
+  a.href = URL.createObjectURL(blob);
+  a.click();
+  showToast('Relatório gerado!', 'success');
+}
+
+function generateFull(orgao, responsavel, periodo, dataApres, hasP2){
+  let md = `# Relatório de Gestão — Secretaria Executiva\n\n`;
+  md += `> **Órgão:** ${orgao}  \n`;
+  md += `> **Responsável:** ${responsavel}  \n`;
+  md += `> **Período:** ${periodo}  \n`;
+  md += `> **Data de Apresentação:** ${dataApres}  \n\n`;
+  md += `---\n\n`;
+
+  md += `## 1. Apresentação\n\n`;
+  md += `Este relatório apresenta o balanço das ações desenvolvidas pela Secretaria Executiva do **${orgao}** no período de ${periodo}. O documento foi elaborado com base nos registros institucionais, sistemas de informação e acompanhamento contínuo dos processos ao longo do ciclo de gestão.\n\n`;
+
+  md += `---\n\n## 2. Diagnóstico Inicial\n\n`;
+  md += `### 2.1 Principais Problemas Identificados\n\n${fmtField(val('problemas'))}\n\n`;
+  md += `### 2.2 Situação da Gestão da Informação\n\n${fmtField(val('gestaoInfo'))}\n\n`;
+  md += `### 2.3 Situação dos Processos Internos\n\n${fmtField(val('processos'))}\n\n`;
+  md += `### 2.4 Limitações e Condicionantes\n\n${fmtField(val('limitacoes'))}\n\n`;
+
+  md += `---\n\n## 3. Estratégia Adotada\n\n`;
+  md += `### 3.1 Diretrizes e Metodologias\n\n${fmtField(val('diretrizes'))}\n\n`;
+  md += `### 3.2 Objetivos Estratégicos\n\n${fmtField(val('objetivos'))}\n\n`;
+  md += `### 3.3 Focos Prioritários\n\n${fmtField(val('focos'))}\n\n`;
+
+  md += `---\n\n## 4. Principais Entregas\n\n`;
+  md += `### 4.1 Transformação Digital\n\n`;
+  if(val('digitalDesc')) md += `**Descrição:** ${val('digitalDesc')}\n\n`;
+  if(val('digitalNum')) md += `**Indicadores:** ${val('digitalNum')}\n\n`;
+  md += `### 4.2 Organização e Gestão de Dados\n\n`;
+  if(val('dadosDesc')) md += `**Descrição:** ${val('dadosDesc')}\n\n`;
+  if(val('dadosNum')) md += `**Indicadores:** ${val('dadosNum')}\n\n`;
+  md += `### 4.3 Apoio às Reuniões e Documentação\n\n`;
+  if(val('reunioesDesc')) md += `**Descrição:** ${val('reunioesDesc')}\n\n`;
+  if(val('reunioesNum')) md += `**Indicadores:** ${val('reunioesNum')}\n\n`;
+  md += `### 4.4 Conferência de Saúde e Eventos\n\n`;
+  if(val('confDesc')) md += `**Descrição:** ${val('confDesc')}\n\n`;
+  if(val('confNum')) md += `**Indicadores:** ${val('confNum')}\n\n`;
+
+  md += `---\n\n## 5. Indicadores-Chave do Período\n\n`;
+  md += `| Indicador | Resultado |\n|---|---|\n`;
+  if(val('kpiReunioes')) md += `| Reuniões realizadas | ${val('kpiReunioes')} |\n`;
+  if(val('kpiDocs')) md += `| Documentos produzidos | ${val('kpiDocs')} |\n`;
+  if(val('kpiForms')) md += `| Formulários / Sistemas | ${val('kpiForms')} |\n`;
+  if(val('kpiParticipantes')) md += `| Participantes / Beneficiários | ${val('kpiParticipantes')} |\n`;
+  if(val('kpiDigital')) md += `| Processos digitalizados | ${val('kpiDigital')}% |\n`;
+  if(val('kpiOutro')) md += `| Outro | ${val('kpiOutro')} |\n`;
+  md += `\n`;
+  if(val('kpiContext')) md += `> ${val('kpiContext')}\n\n`;
+
+  md += `---\n\n## 6. Resultados — Comparativo Antes × Depois\n\n`;
+  md += `### 6.1 Eficiência e Produtividade\n\n`;
+  md += fmtBA(val('eficienciaAntes'), val('eficienciaDepois')) + `\n\n`;
+  md += `### 6.2 Transparência e Acesso à Informação\n\n`;
+  md += fmtBA(val('transAntes'), val('transDepois')) + `\n\n`;
+  md += `### 6.3 Organização Institucional\n\n`;
+  md += fmtBA(val('orgAntes'), val('orgDepois')) + `\n\n`;
+
+  md += `---\n\n## 7. Síntese Final\n\n${fmtField(val('sintese'))}\n\n`;
+
+  if(hasP2){
+    md += `---\n\n## 8. Detalhamento de Processos (BPM)\n\n`;
+    if(val('p2Processos')) md += `**Processos mapeados:**\n\n${val('p2Processos')}\n\n`;
+    if(val('p2Melhorias')) md += `**Melhorias implementadas:**\n\n${val('p2Melhorias')}\n\n`;
+    if(val('p2Ganhos')) md += `**Ganhos observados:**\n\n${val('p2Ganhos')}\n\n`;
+
+    md += `---\n\n## 9. Gestão de Dados e Infraestrutura Digital\n\n`;
+    if(val('p2Bases')) md += `**Bases criadas/estruturadas:**\n\n${val('p2Bases')}\n\n`;
+    if(val('p2Paineis')) md += `**Painéis e controles:**\n\n${val('p2Paineis')}\n\n`;
+    if(val('p2Stack')) md += `**Stack tecnológico:**\n\n${val('p2Stack')}\n\n`;
+
+    md += `---\n\n## 10. Materiais Produzidos\n\n`;
+    if(val('p2DocsTec')) md += `**Documentos técnicos:**\n\n${val('p2DocsTec')}\n\n`;
+    if(val('p2Comunicacao')) md += `**Materiais de comunicação:**\n\n${val('p2Comunicacao')}\n\n`;
+
+    md += `---\n\n## 11. Ferramentas e Automações\n\n`;
+    if(val('p2Automacao')) md += `**Automações implementadas:**\n\n${val('p2Automacao')}\n\n`;
+    if(val('p2Fluxos')) md += `**Fluxos automatizados:**\n\n${val('p2Fluxos')}\n\n`;
+
+    md += `---\n\n## 12. Lições Aprendidas\n\n`;
+    if(val('p2BemFeito')) md += `**O que funcionou bem:**\n\n${val('p2BemFeito')}\n\n`;
+    if(val('p2NaoFuncionou')) md += `**Desafios e o que não funcionou:**\n\n${val('p2NaoFuncionou')}\n\n`;
+    if(val('p2Ajustes')) md += `**Ajustes realizados:**\n\n${val('p2Ajustes')}\n\n`;
+
+    md += `---\n\n## 13. Desafios Atuais\n\n`;
+    if(val('p2Gargalos')) md += `**Gargalos operacionais:**\n\n${val('p2Gargalos')}\n\n`;
+    if(val('p2LimitacoesInst')) md += `**Limitações institucionais:**\n\n${val('p2LimitacoesInst')}\n\n`;
+
+    md += `---\n\n## 14. Próximos Passos\n\n`;
+    if(val('p2Proximos')) md += `**Planejamento:**\n\n${val('p2Proximos')}\n\n`;
+    if(val('p2Expansoes')) md += `**Expansões previstas:**\n\n${val('p2Expansoes')}\n\n`;
+  }
+
+  md += `---\n\n*Relatório gerado automaticamente pelo Assistente de Relatório — Secretaria Executiva CMS.*  \n*Gerado em: ${new Date().toLocaleDateString('pt-BR')}*\n`;
+  return md;
+}
+
+function generateResumo(orgao, responsavel, periodo, dataApres){
+  let md = `# Síntese Executiva — Secretaria Executiva\n\n`;
+  md += `**${orgao}** | ${responsavel} | ${periodo}\n\n---\n\n`;
+  md += `## Contexto\n\n${val('problemas')||'—'}\n\n`;
+  md += `## Estratégia\n\n${val('diretrizes')||'—'}\n\n`;
+  md += `## Principais Entregas\n\n`;
+  if(val('digitalDesc')) md += `- **Digital:** ${val('digitalDesc')}\n`;
+  if(val('dadosDesc')) md += `- **Dados:** ${val('dadosDesc')}\n`;
+  if(val('reunioesDesc')) md += `- **Reuniões:** ${val('reunioesDesc')}\n`;
+  if(val('confDesc')) md += `- **Conferência:** ${val('confDesc')}\n`;
+  md += `\n## Indicadores\n\n`;
+  if(val('kpiReunioes')) md += `- **Reuniões:** ${val('kpiReunioes')}\n`;
+  if(val('kpiDocs')) md += `- **Documentos:** ${val('kpiDocs')}\n`;
+  if(val('kpiParticipantes')) md += `- **Participantes:** ${val('kpiParticipantes')}\n`;
+  if(val('kpiDigital')) md += `- **Digitalização:** ${val('kpiDigital')}%\n`;
+  md += `\n## Conclusão\n\n${val('sintese')||'—'}\n`;
+  return md;
+}
+
+function generateBullets(orgao, responsavel, periodo, dataApres){
+  let md = `# ${orgao} — Relatório de Gestão\n`;
+  md += `## ${periodo}\n\n`;
+  md += `---\n\n`;
+  md += `## 🔴 Situação Inicial\n\n`;
+  const probs = val('problemas');
+  if(probs) probs.split('\n').filter(l=>l.trim()).forEach(l=>{ md += `- ${l.replace(/^[-•]/,'').trim()}\n`; });
+  else md += `- _(não preenchido)_\n`;
+
+  md += `\n## 🎯 Estratégia\n\n`;
+  const dirs = val('diretrizes');
+  if(dirs) dirs.split('\n').filter(l=>l.trim()).forEach(l=>{ md += `- ${l.replace(/^[-•]/,'').trim()}\n`; });
+
+  md += `\n## ✅ Entregas\n\n`;
+  if(val('digitalDesc')) md += `- **Digital:** ${val('digitalDesc').split('\n')[0]}\n`;
+  if(val('dadosDesc')) md += `- **Dados:** ${val('dadosDesc').split('\n')[0]}\n`;
+  if(val('reunioesDesc')) md += `- **Reuniões/Docs:** ${val('reunioesDesc').split('\n')[0]}\n`;
+  if(val('confDesc')) md += `- **Conferência:** ${val('confDesc').split('\n')[0]}\n`;
+
+  md += `\n## 📊 Números\n\n`;
+  if(val('kpiReunioes')) md += `- **${val('kpiReunioes')}** reuniões\n`;
+  if(val('kpiDocs')) md += `- **${val('kpiDocs')}** documentos\n`;
+  if(val('kpiForms')) md += `- **${val('kpiForms')}** sistemas/formulários\n`;
+  if(val('kpiParticipantes')) md += `- **${val('kpiParticipantes')}** participantes\n`;
+  if(val('kpiDigital')) md += `- **${val('kpiDigital')}%** de processos digitalizados\n`;
+
+  md += `\n## 💡 Síntese\n\n> ${val('sintese')||'—'}\n`;
+  return md;
+}
+
+// ── INIT ──
+document.addEventListener('DOMContentLoaded', ()=>{
+  loadSaved();
+  updateProgress();
+});
+</script>
+
+</body>
+</html>
