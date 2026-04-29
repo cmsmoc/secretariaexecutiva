@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Guia de Levantamento — CMS</title>
+<style>
+:root {
+  --navy:   #0D2E5A;
+  --blue:   #1B6CB5;
+  --green:  #1E8A4A;
+  --yellow: #F5C400;
+  --red:    #C0392B;
+  --gray-50:  #F7F8FA;
+  --gray-100: #EFF1F5;
+  --gray-200: #DDE1EA;
+  --gray-400: #9BA3B4;
+  --gray-600: #5A6478;
+  --gray-800: #2C3347;
+  --border: #DDE1EA;
+  --radius: 8px;
+  --font: -apple-system, 'Segoe UI', sans-serif;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: var(--font); font-size: 13px; color: var(--gray-800); background: var(--gray-50); padding-bottom: 80px; }
+.header { background: var(--navy); color: white; padding: 14px 16px 10px; position: sticky; top: 0; z-index: 50; }
+.header h1 { font-size: 14px; font-weight: 600; }
+.header p  { font-size: 11px; opacity: 0.6; margin-top: 2px; }
+.progress-wrap { padding: 8px 16px; background: white; border-bottom: 1px solid var(--border); position: sticky; top: 52px; z-index: 49; }
+.progress-bar-bg { background: var(--gray-100); border-radius: 100px; height: 5px; overflow: hidden; }
+.progress-bar-fill { height: 100%; background: linear-gradient(90deg, var(--blue), var(--green)); border-radius: 100px; transition: width 0.4s; width: 0%; }
+.progress-label { font-size: 10.5px; color: var(--gray-400); margin-top: 4px; display: flex; justify-content: space-between; }
+.bloco-nav { display: flex; gap: 4px; padding: 8px 16px; overflow-x: auto; background: white; border-bottom: 1px solid var(--border); scrollbar-width: none; }
+.bloco-nav::-webkit-scrollbar { display: none; }
+.nav-btn { flex-shrink: 0; padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 500; cursor: pointer; border: 1px solid var(--border); background: white; color: var(--gray-600); transition: all 0.15s; }
+.nav-btn:hover { border-color: var(--blue); color: var(--blue); }
+.nav-btn.active { background: var(--navy); color: white; border-color: var(--navy); }
+.nav-btn.done   { background: var(--green); color: white; border-color: var(--green); }
+.content { padding: 12px 16px; }
+.bloco { background: white; border: 1px solid var(--border); border-radius: var(--radius); margin-bottom: 12px; overflow: hidden; display: none; }
+.bloco.active { display: block; }
+.bloco-header { padding: 12px 14px 10px; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 10px; }
+.bloco-num { width: 24px; height: 24px; border-radius: 50%; background: var(--navy); color: white; font-size: 11px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.bloco-titulo { font-size: 13px; font-weight: 600; color: var(--navy); }
+.bloco-subtitulo { font-size: 11px; color: var(--gray-400); margin-top: 1px; }
+.bloco-body { padding: 14px; display: flex; flex-direction: column; gap: 12px; }
+.field { display: flex; flex-direction: column; gap: 5px; }
+label.field-label { font-size: 11.5px; font-weight: 600; color: var(--gray-600); line-height: 1.4; }
+label.field-label .dica { font-weight: 400; font-style: italic; color: var(--gray-400); font-size: 10.5px; display: block; margin-top: 1px; }
+input[type="text"], input[type="number"], textarea, select { border: 1px solid var(--border); border-radius: 6px; padding: 7px 10px; font-family: var(--font); font-size: 13px; color: var(--gray-800); background: white; outline: none; width: 100%; transition: border 0.15s, box-shadow 0.15s; }
+input:focus, textarea:focus { border-color: var(--blue); box-shadow: 0 0 0 2px rgba(27,108,181,0.12); }
+input::placeholder, textarea::placeholder { color: var(--gray-400); font-style: italic; }
+textarea { resize: vertical; min-height: 70px; line-height: 1.5; }
+.check-group { display: flex; flex-direction: column; gap: 6px; }
+.check-item { display: flex; align-items: flex-start; gap: 8px; cursor: pointer; padding: 6px 8px; border-radius: 6px; border: 1px solid var(--border); background: var(--gray-50); transition: background 0.15s, border 0.15s; }
+.check-item:hover { background: #EBF2FA; border-color: #B5D4F4; }
+.check-item.checked { background: #EAF4EC; border-color: #9FD4B4; }
+.check-item input[type="checkbox"] { width: 14px; height: 14px; flex-shrink: 0; margin-top: 1px; cursor: pointer; border: none; padding: 0; box-shadow: none; }
+.check-item span { font-size: 12.5px; color: var(--gray-800); line-height: 1.4; }
+.calc-row { display: flex; align-items: center; gap: 8px; background: var(--gray-50); border: 1px dashed var(--border); border-radius: 6px; padding: 8px 10px; }
+.calc-label { font-size: 11.5px; color: var(--gray-600); flex: 1; }
+.calc-value { font-size: 18px; font-weight: 700; color: var(--navy); min-width: 40px; text-align: right; }
+.calc-badge { font-size: 10px; background: var(--yellow); color: var(--navy); padding: 2px 7px; border-radius: 20px; font-weight: 600; }
+.row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.nav-bottom { position: fixed; bottom: 0; left: 0; right: 0; background: white; border-top: 1px solid var(--border); padding: 10px 16px; display: flex; gap: 8px; align-items: center; }
+.btn { flex: 1; padding: 9px 14px; border-radius: 7px; font-size: 12.5px; font-weight: 600; cursor: pointer; border: none; font-family: var(--font); transition: all 0.15s; }
+.btn-nav { background: var(--gray-100); color: var(--gray-800); border: 1px solid var(--border); }
+.btn-nav:hover { background: var(--gray-200); }
+.btn-primary { background: var(--navy); color: white; }
+.btn-primary:hover { background: #0a2347; }
+.btn-save { background: var(--green); color: white; }
+.btn-save:hover { background: #166e3c; }
+.btn-small { flex: 0; padding: 9px 12px; }
+.toast { position: fixed; top: 12px; left: 50%; transform: translateX(-50%) translateY(-60px); background: var(--navy); color: white; padding: 8px 18px; border-radius: 20px; font-size: 12px; font-weight: 500; box-shadow: 0 4px 12px rgba(0,0,0,0.2); transition: transform 0.25s cubic-bezier(.34,1.56,.64,1); z-index: 999; white-space: nowrap; }
+.toast.show { transform: translateX(-50%) translateY(0); }
+.toast.ok  { background: var(--green); }
+.toast.err { background: var(--red); }
+.sessao-bar { padding: 6px 16px; background: #FFFBE6; border-bottom: 1px solid #f0d44d; font-size: 11px; color: #7A5F00; display: flex; align-items: center; justify-content: space-between; }
+.sessao-id { font-weight: 600; font-family: monospace; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>📋 Guia de Levantamento Institucional</h1>
+  <p>Conselho Municipal de Saúde — Secretaria Executiva</p>
+</div>
+
+<div class="progress-wrap">
+  <div class="progress-bar-bg"><div class="progress-bar-fill" id="progressFill"></div></div>
+  <div class="progress-label">
+    <span id="progressLabel">0 de 6 blocos preenchidos</span>
+    <span id="progressPct">0%</span>
+  </div>
+</div>
+
+<div class="bloco-nav" id="blocoNav">
+  <button class="nav-btn active" onclick="irPara(1, this)">1 · Identidade</button>
+  <button class="nav-btn" onclick="irPara(2, this)">2 · Documentos</button>
+  <button class="nav-btn" onclick="irPara(3, this)">3 · Reuniões</button>
+  <button class="nav-btn" onclick="irPara(4, this)">4 · Declarações</button>
+  <button class="nav-btn" onclick="irPara(5, this)">5 · Eventos</button>
+  <button class="nav-btn" onclick="irPara(6, this)">6 · Diagnóstico</button>
+</div>
+
+<div class="sessao-bar">
+  <span>Sessão: <span class="sessao-id" id="sessaoId">—</span></span>
+  <span id="totalSalvos">0 registros salvos</span>
+</div>
+
+<div class="content">
+
+  <!-- BLOCO 1 — IDENTIDADE VISUAL -->
+  <div class="bloco active" id="bloco-1">
+    <div class="bloco-header">
+      <div class="bloco-num">1</div>
+      <div><div class="bloco-titulo">Identidade Visual</div><div class="bloco-subtitulo">Arquivos, marca e sistema visual do CMS</div></div>
+    </div>
+    <div class="bloco-body">
+      <div class="field">
+        <label class="field-label">Arquivos disponíveis da identidade visual<span class="dica">Marque todos que você já possui ou tem acesso</span></label>
+        <div class="check-group">
+          <label class="check-item" id="ci-logo_principal"><input type="checkbox" id="logo_principal" onchange="onCheck(this)"><span>Logo principal (arquivo editável ou PNG/SVG)</span></label>
+          <label class="check-item" id="ci-logo_horizontal"><input type="checkbox" id="logo_horizontal" onchange="onCheck(this)"><span>Versão horizontal</span></label>
+          <label class="check-item" id="ci-logo_vertical"><input type="checkbox" id="logo_vertical" onchange="onCheck(this)"><span>Versão vertical</span></label>
+          <label class="check-item" id="ci-logo_mono"><input type="checkbox" id="logo_mono" onchange="onCheck(this)"><span>Versão monocromática</span></label>
+          <label class="check-item" id="ci-paleta"><input type="checkbox" id="paleta" onchange="onCheck(this)"><span>Paleta de cores documentada (códigos HEX/RGB)</span></label>
+          <label class="check-item" id="ci-tipografia"><input type="checkbox" id="tipografia" onchange="onCheck(this)"><span>Tipografia definida (fontes utilizadas)</span></label>
+          <label class="check-item" id="ci-manual_marca"><input type="checkbox" id="manual_marca" onchange="onCheck(this)"><span>Manual ou guia de marca</span></label>
+        </div>
+      </div>
+      <div class="field">
+        <label class="field-label" for="id_outros">Outros arquivos ou observações<span class="dica">Templates, mockups, fontes instaladas, etc.</span></label>
+        <textarea id="id_outros" placeholder="Descreva outros arquivos disponíveis..." oninput="autoSave()"></textarea>
+      </div>
+      <div class="field">
+        <label class="field-label" for="id_localizacao">Onde estão armazenados os arquivos?<span class="dica">Google Drive, servidor local, HD externo…</span></label>
+        <input type="text" id="id_localizacao" placeholder="Ex: Google Drive > CMS > Identidade Visual" oninput="autoSave()">
+      </div>
+    </div>
+  </div>
+
+  <!-- BLOCO 2 — DOCUMENTOS -->
+  <div class="bloco" id="bloco-2">
+    <div class="bloco-header">
+      <div class="bloco-num">2</div>
+      <div><div class="bloco-titulo">Documentos Padronizados</div><div class="bloco-subtitulo">Modelos e templates institucionais criados</div></div>
+    </div>
+    <div class="bloco-body">
+      <div class="field">
+        <label class="field-label">Modelos existentes<span class="dica">Marque os que já foram criados e estão disponíveis para uso</span></label>
+        <div class="check-group">
+          <label class="check-item" id="ci-doc_ata"><input type="checkbox" id="doc_ata" onchange="onCheck(this)"><span>Modelo de Ata (Reunião Ordinária)</span></label>
+          <label class="check-item" id="ci-doc_ata_re"><input type="checkbox" id="doc_ata_re" onchange="onCheck(this)"><span>Modelo de Ata (Reunião Extraordinária)</span></label>
+          <label class="check-item" id="ci-doc_oficio"><input type="checkbox" id="doc_oficio" onchange="onCheck(this)"><span>Ofício</span></label>
+          <label class="check-item" id="ci-doc_resolucao"><input type="checkbox" id="doc_resolucao" onchange="onCheck(this)"><span>Resolução</span></label>
+          <label class="check-item" id="ci-doc_declaracao"><input type="checkbox" id="doc_declaracao" onchange="onCheck(this)"><span>Declaração de comparecimento / participação</span></label>
+          <label class="check-item" id="ci-doc_relatorio"><input type="checkbox" id="doc_relatorio" onchange="onCheck(this)"><span>Relatório de gestão</span></label>
+          <label class="check-item" id="ci-doc_convocacao"><input type="checkbox" id="doc_convocacao" onchange="onCheck(this)"><span>Convocação de reunião</span></label>
+          <label class="check-item" id="ci-doc_pauta"><input type="checkbox" id="doc_pauta" onchange="onCheck(this)"><span>Modelo de Pauta</span></label>
+        </div>
+      </div>
+      <div class="field">
+        <label class="field-label" for="doc_outros">Outros documentos padronizados</label>
+        <textarea id="doc_outros" placeholder="Ex: Portaria, Memorando, Certidão..." oninput="autoSave()"></textarea>
+      </div>
+      <div class="field">
+        <label class="field-label" for="doc_localizacao">Onde estão armazenados?<span class="dica">Link para pasta, repositório ou localização</span></label>
+        <input type="text" id="doc_localizacao" placeholder="Ex: GitHub Pages / Google Drive / servidor…" oninput="autoSave()">
+      </div>
+    </div>
+  </div>
+
+  <!-- BLOCO 3 — REUNIÕES -->
+  <div class="bloco" id="bloco-3">
+    <div class="bloco-header">
+      <div class="bloco-num">3</div>
+      <div><div class="bloco-titulo">Atas e Reuniões</div><div class="bloco-subtitulo">Numeração, totais e cobertura documental</div></div>
+    </div>
+    <div class="bloco-body">
+      <div class="field">
+        <label class="field-label">Reuniões Ordinárias (RO)<span class="dica">Informe os números da primeira e da última RO do período</span></label>
+        <div class="row-2">
+          <div><label class="field-label">Primeira RO</label><input type="number" id="ro_primeira" placeholder="Ex: 444" min="1" oninput="calcularReunioes(); autoSave()"></div>
+          <div><label class="field-label">Última RO</label><input type="number" id="ro_ultima" placeholder="Ex: 464" min="1" oninput="calcularReunioes(); autoSave()"></div>
+        </div>
+      </div>
+      <div class="calc-row">
+        <span class="calc-label">Total de Reuniões Ordinárias</span>
+        <span class="calc-badge">calculado</span>
+        <span class="calc-value" id="ro_total">—</span>
+      </div>
+      <div class="field">
+        <label class="field-label">Reuniões Extraordinárias (RE)<span class="dica">Informe os números da primeira e da última RE do período</span></label>
+        <div class="row-2">
+          <div><label class="field-label">Primeira RE</label><input type="number" id="re_primeira" placeholder="Ex: 244" min="1" oninput="calcularReunioes(); autoSave()"></div>
+          <div><label class="field-label">Última RE</label><input type="number" id="re_ultima" placeholder="Ex: 264" min="1" oninput="calcularReunioes(); autoSave()"></div>
+        </div>
+      </div>
+      <div class="calc-row">
+        <span class="calc-label">Total de Reuniões Extraordinárias</span>
+        <span class="calc-badge">calculado</span>
+        <span class="calc-value" id="re_total">—</span>
+      </div>
+      <div class="calc-row" style="background:#EAF4EC; border-color:#9FD4B4;">
+        <span class="calc-label" style="font-weight:600;">TOTAL GERAL DE REUNIÕES</span>
+        <span class="calc-badge" style="background:#1E8A4A;color:white;">total</span>
+        <span class="calc-value" id="reunioes_total_geral" style="color:#1E8A4A;">—</span>
+      </div>
+      <div class="field">
+        <label class="field-label" for="reunioes_atas_digitais">Atas digitalizadas / publicadas online<span class="dica">Quantas atas estão disponíveis em formato digital/HTML</span></label>
+        <input type="number" id="reunioes_atas_digitais" placeholder="Número de atas" min="0" oninput="autoSave()">
+      </div>
+      <div class="field">
+        <label class="field-label" for="reunioes_obs">Observações sobre o período<span class="dica">Reuniões canceladas, suspensas, remotas, etc.</span></label>
+        <textarea id="reunioes_obs" placeholder="Ex: 3 reuniões foram realizadas de forma híbrida; 1 RO foi cancelada por falta de quórum..." oninput="autoSave()"></textarea>
+      </div>
+    </div>
+  </div>
+
+  <!-- BLOCO 4 — DECLARAÇÕES -->
+  <div class="bloco" id="bloco-4">
+    <div class="bloco-header">
+      <div class="bloco-num">4</div>
+      <div><div class="bloco-titulo">Declarações</div><div class="bloco-subtitulo">Volume e perfil das declarações emitidas</div></div>
+    </div>
+    <div class="bloco-body">
+      <div class="field">
+        <label class="field-label" for="decl_total">Estimativa de declarações emitidas no período<span class="dica">Se não tiver o número exato, informe uma estimativa</span></label>
+        <input type="number" id="decl_total" placeholder="Ex: 150" min="0" oninput="autoSave()">
+      </div>
+      <div class="field">
+        <label class="field-label">Tipos de declarações emitidas<span class="dica">Marque os que foram emitidos</span></label>
+        <div class="check-group">
+          <label class="check-item" id="ci-decl_comparecimento"><input type="checkbox" id="decl_comparecimento" onchange="onCheck(this)"><span>Declaração de comparecimento em reunião</span></label>
+          <label class="check-item" id="ci-decl_participacao"><input type="checkbox" id="decl_participacao" onchange="onCheck(this)"><span>Declaração de participação em evento</span></label>
+          <label class="check-item" id="ci-decl_mandato"><input type="checkbox" id="decl_mandato" onchange="onCheck(this)"><span>Declaração de mandato / vínculo ao Conselho</span></label>
+          <label class="check-item" id="ci-decl_conferencia"><input type="checkbox" id="decl_conferencia" onchange="onCheck(this)"><span>Declaração de delegado em conferência</span></label>
+        </div>
+      </div>
+      <div class="field">
+        <label class="field-label" for="decl_obs">Observações<span class="dica">Processo atual de emissão, formato, controle</span></label>
+        <textarea id="decl_obs" placeholder="Ex: emitidas manualmente via Word; sem numeração sequencial; sem registro formal..." oninput="autoSave()"></textarea>
+      </div>
+    </div>
+  </div>
+
+  <!-- BLOCO 5 — EVENTOS -->
+  <div class="bloco" id="bloco-5">
+    <div class="bloco-header">
+      <div class="bloco-num">5</div>
+      <div><div class="bloco-titulo">Eventos e Atividades</div><div class="bloco-subtitulo">Conferências, capacitações e participações institucionais</div></div>
+    </div>
+    <div class="bloco-body">
+      <div class="field">
+        <label class="field-label" for="eventos_organizados">Eventos organizados pelo CMS<span class="dica">Nome, data estimada, nº de participantes se souber</span></label>
+        <textarea id="eventos_organizados" style="min-height:90px" placeholder="Ex:&#10;• 11ª Conferência Municipal de Saúde (abr/2026) — 300 participantes&#10;• 15 Pré-conferências distritais (jan-abr/2026)" oninput="autoSave()"></textarea>
+      </div>
+      <div class="field">
+        <label class="field-label" for="eventos_participacao">Eventos de participação institucional<span class="dica">Eventos de terceiros nos quais o CMS participou</span></label>
+        <textarea id="eventos_participacao" placeholder="Ex: Conferência Estadual de Saúde (BH, set/2025); Fórum Regional..." oninput="autoSave()"></textarea>
+      </div>
+      <div class="field">
+        <label class="field-label" for="eventos_capacitacoes">Capacitações e formações<span class="dica">Para conselheiros, secretaria executiva, equipe técnica</span></label>
+        <textarea id="eventos_capacitacoes" placeholder="Ex: Curso de Controle Social (CONASEMS); Treinamento interno GAS..." oninput="autoSave()"></textarea>
+      </div>
+      <div class="field">
+        <label class="field-label" for="eventos_total">Total estimado de eventos no período</label>
+        <input type="number" id="eventos_total" placeholder="Número total" min="0" oninput="autoSave()">
+      </div>
+    </div>
+  </div>
+
+  <!-- BLOCO 6 — DIAGNÓSTICO -->
+  <div class="bloco" id="bloco-6">
+    <div class="bloco-header">
+      <div class="bloco-num">6</div>
+      <div><div class="bloco-titulo">Diagnóstico e Lacunas</div><div class="bloco-subtitulo">O que ainda é desconhecido, incompleto ou problemático</div></div>
+    </div>
+    <div class="bloco-body">
+      <div class="field">
+        <label class="field-label" for="diag_nao_encontrado">O que você NÃO sabe ou NÃO encontrou?<span class="dica">Informações buscadas mas não localizadas; dados inexistentes ou perdidos</span></label>
+        <textarea id="diag_nao_encontrado" style="min-height:90px" placeholder="Ex:&#10;• Não foi possível localizar as atas das ROs 450 a 455&#10;• Sem registro do número de declarações antes de 2023" oninput="autoSave()"></textarea>
+      </div>
+      <div class="field">
+        <label class="field-label" for="diag_lacunas">Lacunas de processo ou estrutura<span class="dica">Processos que deveriam existir mas não existem</span></label>
+        <textarea id="diag_lacunas" placeholder="Ex: Ausência de sistema de monitoramento de deliberações; sem registro de presença padronizado..." oninput="autoSave()"></textarea>
+      </div>
+      <div class="field">
+        <label class="field-label" for="diag_acoes">Próximas ações para preencher as lacunas</label>
+        <textarea id="diag_acoes" placeholder="Ex: Buscar atas em arquivo físico na SMS; criar planilha de controle de declarações..." oninput="autoSave()"></textarea>
+      </div>
+      <div class="field">
+        <label class="field-label" for="diag_prioridade">Prioridade máxima de resolução<span class="dica">Se pudesse resolver só uma coisa agora, qual seria?</span></label>
+        <input type="text" id="diag_prioridade" placeholder="Ex: Recuperar histórico de atas 2020-2022" oninput="autoSave()">
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div class="nav-bottom">
+  <button class="btn btn-nav btn-small" id="btnAnterior" onclick="navegar(-1)" disabled>◀</button>
+  <button class="btn btn-save" id="btnSalvarBloco" onclick="salvarBlocoAtual()">↑ Salvar bloco</button>
+  <button class="btn btn-primary" id="btnProximo" onclick="navegar(1)">Próximo ▶</button>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+var blocoAtual = 1;
+var totalBlocos = 6;
+var sessaoId = 'guia_' + Date.now();
+var blocosSalvos = {};
+
+document.getElementById('sessaoId').textContent = sessaoId.slice(-8);
+carregarRascunho();
+atualizarNavBtns();
+atualizarProgresso();
+
+try {
+  google.script.run
+    .withSuccessHandler(function(m){ if(m){ document.getElementById('totalSalvos').textContent = m.totalRespostas + ' registros salvos'; } })
+    .getMetadados();
+} catch(e) {}
+
+function irPara(num, btn) {
+  document.querySelectorAll('.bloco').forEach(function(b){ b.classList.remove('active'); });
+  document.getElementById('bloco-'+num).classList.add('active');
+  blocoAtual = num;
+  document.querySelectorAll('.nav-btn').forEach(function(b){ b.classList.remove('active'); });
+  if(btn) btn.classList.add('active');
+  atualizarNavBtns();
+  window.scrollTo(0,0);
+}
+
+function navegar(dir) {
+  var prox = blocoAtual + dir;
+  if(prox < 1 || prox > totalBlocos) return;
+  var navBtns = document.querySelectorAll('.nav-btn');
+  irPara(prox, navBtns[prox-1]);
+}
+
+function atualizarNavBtns() {
+  document.getElementById('btnAnterior').disabled = (blocoAtual === 1);
+  var btnProx = document.getElementById('btnProximo');
+  if(blocoAtual === totalBlocos) {
+    btnProx.textContent = '✓ Finalizar';
+    btnProx.onclick = function(){ salvarTudo(); };
+  } else {
+    btnProx.textContent = 'Próximo ▶';
+    btnProx.onclick = function(){ navegar(1); };
+  }
+}
+
+function onCheck(el) {
+  var item = document.getElementById('ci-' + el.id);
+  if(item) item.classList.toggle('checked', el.checked);
+  autoSave();
+}
+
+function calcularReunioes() {
+  var roPri = parseInt(document.getElementById('ro_primeira').value) || 0;
+  var roUlt = parseInt(document.getElementById('ro_ultima').value)   || 0;
+  var rePri = parseInt(document.getElementById('re_primeira').value) || 0;
+  var reUlt = parseInt(document.getElementById('re_ultima').value)   || 0;
+  var roTotal = (roPri && roUlt && roUlt >= roPri) ? (roUlt - roPri + 1) : null;
+  var reTotal = (rePri && reUlt && reUlt >= rePri) ? (reUlt - rePri + 1) : null;
+  var total   = (roTotal !== null || reTotal !== null) ? ((roTotal||0) + (reTotal||0)) : null;
+  document.getElementById('ro_total').textContent             = roTotal !== null ? roTotal : '—';
+  document.getElementById('re_total').textContent             = reTotal !== null ? reTotal : '—';
+  document.getElementById('reunioes_total_geral').textContent = total   !== null ? total   : '—';
+}
+
+function atualizarProgresso() {
+  var preenchidos = 0;
+  for(var b=1; b<=totalBlocos; b++) { if(blocoTemDados(b)) preenchidos++; }
+  var pct = Math.round((preenchidos/totalBlocos)*100);
+  document.getElementById('progressFill').style.width = pct+'%';
+  document.getElementById('progressLabel').textContent = preenchidos + ' de ' + totalBlocos + ' blocos preenchidos';
+  document.getElementById('progressPct').textContent = pct+'%';
+  document.querySelectorAll('.nav-btn').forEach(function(btn, i){
+    if(blocosSalvos[i+1]) { btn.classList.add('done'); btn.classList.remove('active'); }
+  });
+  var cur = document.querySelectorAll('.nav-btn')[blocoAtual-1];
+  if(cur) cur.classList.add('active');
+}
+
+function blocoTemDados(num) {
+  var bloco = document.getElementById('bloco-'+num);
+  if(!bloco) return false;
+  var inputs = bloco.querySelectorAll('input[type="text"],input[type="number"],textarea');
+  for(var i=0; i<inputs.length; i++){ if(inputs[i].value.trim()) return true; }
+  return bloco.querySelectorAll('input[type="checkbox"]:checked').length > 0;
+}
+
+function autoSave() {
+  try {
+    var dados = coletarTodos();
+    localStorage.setItem('guia_rascunho_ultimo', JSON.stringify(dados));
+    atualizarProgresso();
+  } catch(e) {}
+}
+
+function carregarRascunho() {
+  try {
+    var raw = localStorage.getItem('guia_rascunho_ultimo');
+    if(!raw) return;
+    var dados = JSON.parse(raw);
+    if(dados.sessaoId) sessaoId = dados.sessaoId;
+    var campos = dados.campos || {};
+    Object.keys(campos).forEach(function(id) {
+      var el = document.getElementById(id);
+      if(!el) return;
+      if(el.type === 'checkbox') { el.checked = !!campos[id]; onCheck(el); }
+      else { el.value = campos[id]; }
+    });
+    calcularReunioes();
+    atualizarProgresso();
+    showToast('Rascunho carregado', 'ok');
+  } catch(e) {}
+}
+
+function coletarBloco(num) {
+  var blocoEl = document.getElementById('bloco-'+num);
+  if(!blocoEl) return [];
+  var nomesBloco = {1:'Identidade Visual',2:'Documentos Padronizados',3:'Atas e Reuniões',4:'Declarações',5:'Eventos e Atividades',6:'Diagnóstico e Lacunas'};
+  var respostas = [];
+  blocoEl.querySelectorAll('input[type="checkbox"]').forEach(function(el){
+    var label = el.closest('.check-item') ? el.closest('.check-item').querySelector('span').textContent : el.id;
+    respostas.push({ bloco_num:num, bloco_nome:nomesBloco[num], campo_id:el.id, pergunta:label, tipo:'checkbox', resposta:el.checked?'Sim':'Não' });
+  });
+  blocoEl.querySelectorAll('input[type="text"],input[type="number"],textarea').forEach(function(el){
+    if(!el.id) return;
+    var lbl = document.querySelector('label[for="'+el.id+'"]');
+    var pergunta = lbl ? lbl.childNodes[0].textContent.trim() : el.id;
+    respostas.push({ bloco_num:num, bloco_nome:nomesBloco[num], campo_id:el.id, pergunta:pergunta, tipo:el.type==='number'?'número':'texto', resposta:el.value });
+  });
+  if(num===3) {
+    ['ro_total','re_total','reunioes_total_geral'].forEach(function(id){
+      var el = document.getElementById(id);
+      if(el) respostas.push({ bloco_num:3, bloco_nome:'Atas e Reuniões', campo_id:id, pergunta:el.closest('.calc-row').querySelector('.calc-label').textContent, tipo:'calculado', resposta:el.textContent });
+    });
+  }
+  return respostas;
+}
+
+function coletarTodos() {
+  var todas = [];
+  for(var b=1; b<=totalBlocos; b++) { todas = todas.concat(coletarBloco(b)); }
+  return { sessaoId:sessaoId, campos:_camposObj(), respostas:todas };
+}
+
+function _camposObj() {
+  var obj = {};
+  document.querySelectorAll('input[type="text"],input[type="number"],textarea,input[type="checkbox"]').forEach(function(el){
+    if(!el.id) return;
+    obj[el.id] = el.type==='checkbox' ? el.checked : el.value;
+  });
+  return obj;
+}
+
+function salvarBlocoAtual() {
+  var respostas = coletarBloco(blocoAtual);
+  var payload = { sessao_id:sessaoId, respostas:respostas };
+  showToast('Salvando...', '');
+  try {
+    google.script.run
+      .withSuccessHandler(function(r){
+        if(r && r.ok) {
+          blocosSalvos[blocoAtual] = true;
+          localStorage.setItem('guia_rascunho_ultimo', JSON.stringify(coletarTodos()));
+          atualizarProgresso();
+          showToast('Bloco '+blocoAtual+' salvo! ('+r.registros+' registros)', 'ok');
+          document.getElementById('totalSalvos').textContent = 'Bloco salvo ✓';
+        } else { showToast('Erro: '+(r?r.erro:'?'), 'err'); }
+      })
+      .withFailureHandler(function(e){ showToast('Erro: '+e.message, 'err'); })
+      .salvarRespostasGuia(payload);
+  } catch(e) {
+    blocosSalvos[blocoAtual] = true;
+    localStorage.setItem('guia_rascunho_ultimo', JSON.stringify(coletarTodos()));
+    atualizarProgresso();
+    showToast('Salvo localmente (modo preview)', 'ok');
+  }
+}
+
+function salvarTudo() {
+  var dados = coletarTodos();
+  localStorage.setItem('guia_rascunho_ultimo', JSON.stringify(dados));
+  showToast('Salvando todos os blocos...', '');
+  try {
+    google.script.run
+      .withSuccessHandler(function(r){
+        if(r && r.ok) {
+          for(var b=1; b<=totalBlocos; b++) blocosSalvos[b] = true;
+          atualizarProgresso();
+          showToast('Levantamento completo salvo! ('+r.registros+' registros)', 'ok');
+        } else { showToast('Erro: '+(r?r.erro:'?'), 'err'); }
+      })
+      .withFailureHandler(function(e){ showToast('Erro: '+e.message, 'err'); })
+      .salvarRespostasGuia(dados);
+  } catch(e) {
+    for(var b=1; b<=totalBlocos; b++) blocosSalvos[b] = true;
+    atualizarProgresso();
+    showToast('Salvo localmente (modo preview)', 'ok');
+  }
+}
+
+function showToast(msg, tipo) {
+  var t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast show '+(tipo||'');
+  setTimeout(function(){ t.className='toast'; }, 2800);
+}
+</script>
+</body>
+</html>
