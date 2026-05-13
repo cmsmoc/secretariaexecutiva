@@ -5,10 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Escuta Institucional - CMS Montes Claros</title>
     
-    <!-- Tailwind CSS para layout fluido -->
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     
-    <!-- Google Fonts: Montserrat (Display/Headings) e Open Sans (Body) -->
+    <!-- Google Fonts: Montserrat & Open Sans -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;900&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
@@ -22,6 +22,7 @@
             --ink: #111827;
             --offwhite: #F7F8FA;
             --white: #FFFFFF;
+            --error: #DC2626;
         }
 
         body {
@@ -34,144 +35,80 @@
             min-height: 100vh;
         }
 
-        /* Tipografia rigorosa conforme diretrizes */
-        .font-hero {
-            font-family: 'Montserrat', sans-serif;
-            font-weight: 900;
-            text-transform: uppercase;
-            letter-spacing: -2px;
-            line-height: 1.1;
-        }
+        /* Tipografia */
+        .font-hero { font-family: 'Montserrat', sans-serif; font-weight: 900; text-transform: uppercase; letter-spacing: -2px; line-height: 1.1; }
+        .font-heading { font-family: 'Montserrat', sans-serif; font-weight: 700; line-height: 1.3; }
+        .font-eyebrow { font-family: 'Montserrat', sans-serif; font-weight: 700; text-transform: uppercase; letter-spacing: 3px; font-size: 11px; color: var(--blue); }
+        .font-body { font-size: 16px; line-height: 1.75; }
 
-        .font-heading {
-            font-family: 'Montserrat', sans-serif;
-            font-weight: 700;
-            line-height: 1.3;
-        }
-
-        .font-eyebrow {
-            font-family: 'Montserrat', sans-serif;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 3px;
-            font-size: 11px;
-            color: var(--blue);
-        }
-
-        .font-body {
-            font-size: 16px;
-            line-height: 1.75;
-        }
-
-        /* Custom Checkbox/Radio Cards - Swiss Design (Limpo, sem sombras pesadas) */
-        .option-wrapper {
-            position: relative;
-            display: block;
-            margin-bottom: 0.75rem;
-        }
-
-        .option-input {
-            position: absolute;
-            opacity: 0;
-            cursor: pointer;
-            height: 0;
-            width: 0;
-        }
-
+        /* Custom Checkbox/Radio Cards */
+        .option-wrapper { position: relative; display: block; margin-bottom: 0.75rem; }
+        .option-input { position: absolute; opacity: 0; cursor: pointer; height: 0; width: 0; }
         .option-card {
-            display: flex;
-            align-items: center;
-            padding: 1.25rem 1.5rem;
-            background-color: var(--white);
-            border: 2px solid #E5E7EB;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            font-weight: 600;
-            color: var(--ink);
+            display: flex; align-items: center; padding: 1.25rem 1.5rem; background-color: var(--white);
+            border: 2px solid #E5E7EB; border-radius: 8px; cursor: pointer; transition: all 0.2s ease;
+            font-weight: 600; color: var(--ink);
         }
-
-        .option-wrapper:hover .option-card {
-            border-color: #CBD5E1;
-            background-color: #F8FAFC;
-        }
-
-        .option-input:checked ~ .option-card {
-            border-color: var(--blue);
-            background-color: rgba(27, 108, 181, 0.05); /* Fundo sutil azul */
-            color: var(--navy);
-        }
-
+        .option-wrapper:hover .option-card { border-color: #CBD5E1; background-color: #F8FAFC; }
+        .option-input:checked ~ .option-card { border-color: var(--blue); background-color: rgba(27, 108, 181, 0.05); color: var(--navy); }
+        
         .check-indicator {
-            height: 20px;
-            width: 20px;
-            border: 2px solid #CBD5E1;
-            border-radius: 4px; /* Quadrado para checkbox, redondo para radio */
-            margin-right: 1rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.2s ease;
+            height: 20px; width: 20px; border: 2px solid #CBD5E1; border-radius: 4px;
+            margin-right: 1rem; display: flex; align-items: center; justify-content: center; transition: all 0.2s ease;
         }
-
-        .option-input[type="radio"] ~ .option-card .check-indicator {
-            border-radius: 50%;
-        }
-
-        .option-input:checked ~ .option-card .check-indicator {
-            background-color: var(--blue);
-            border-color: var(--blue);
-        }
-
+        .option-input[type="radio"] ~ .option-card .check-indicator { border-radius: 50%; }
+        .option-input:checked ~ .option-card .check-indicator { background-color: var(--blue); border-color: var(--blue); }
+        
         .check-indicator::after {
-            content: "";
-            display: none;
-            width: 5px;
-            height: 10px;
-            border: solid white;
-            border-width: 0 2px 2px 0;
-            transform: rotate(45deg);
-            margin-bottom: 2px;
+            content: ""; display: none; width: 5px; height: 10px; border: solid white;
+            border-width: 0 2px 2px 0; transform: rotate(45deg); margin-bottom: 2px;
         }
+        .option-input:checked ~ .option-card .check-indicator::after { display: block; }
 
-        .option-input:checked ~ .option-card .check-indicator::after {
-            display: block;
-        }
-
-        /* Textarea customizado */
+        /* Inputs Customizados */
         .custom-textarea {
-            width: 100%;
-            padding: 1.25rem;
-            border: 2px solid #E5E7EB;
-            border-radius: 8px;
-            font-family: 'Open Sans', sans-serif;
-            font-size: 16px;
-            resize: vertical;
-            min-height: 120px;
-            transition: border-color 0.2s;
-            outline: none;
+            width: 100%; padding: 1.25rem; border: 2px solid #E5E7EB; border-radius: 8px;
+            font-family: 'Open Sans', sans-serif; font-size: 16px; resize: vertical;
+            min-height: 120px; transition: border-color 0.2s; outline: none;
         }
+        .custom-textarea:focus { border-color: var(--blue); }
+        
+        .custom-select {
+            width: 100%; padding: 1.25rem; border: 2px solid #E5E7EB; border-radius: 8px;
+            font-family: 'Open Sans', sans-serif; font-size: 16px; font-weight: 600;
+            color: var(--ink); background-color: var(--white); appearance: none; cursor: pointer;
+            transition: border-color 0.2s; outline: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23111827'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
+            background-repeat: no-repeat; background-position: right 1.5rem center; background-size: 1.5rem;
+        }
+        .custom-select:focus { border-color: var(--blue); }
+        .custom-select:disabled { background-color: #F3F4F6; cursor: not-allowed; color: #6B7280; }
 
-        .custom-textarea:focus {
-            border-color: var(--blue);
+        /* Erros de Validação */
+        .has-error { border-color: var(--error) !important; animation: shake 0.4s ease; }
+        .error-message { color: var(--error); font-size: 0.875rem; font-weight: 600; margin-top: 0.5rem; display: none; }
+        .has-error ~ .error-message, .error-active { display: block; }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            50% { transform: translateX(5px); }
+            75% { transform: translateX(-5px); }
         }
 
         /* Utilities */
-        .step {
-            display: none;
-            animation: fadeIn 0.4s ease forwards;
-        }
-        
-        .step.active {
-            display: block;
-        }
+        .step { display: none; animation: fadeIn 0.4s ease forwards; }
+        .step.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
+        /* Modal */
+        #modal-overlay {
+            display: none; position: fixed; inset: 0; background: rgba(17, 24, 39, 0.8);
+            backdrop-filter: blur(4px); z-index: 50; align-items: center; justify-content: center;
+            animation: fadeIn 0.3s ease;
         }
+        #modal-overlay.active { display: flex; }
 
-        /* Scrollbar suave para a página inteira */
         ::-webkit-scrollbar { width: 8px; }
         ::-webkit-scrollbar-track { background: var(--offwhite); }
         ::-webkit-scrollbar-thumb { background: #CBD5E1; border-radius: 4px; }
@@ -181,272 +118,405 @@
 <body class="bg-[#F7F8FA] antialiased text-[#111827]">
 
     <header class="w-full bg-[#0D2E5A] py-6 px-4 md:px-8 flex justify-center">
-        <!-- Uso do logo horizontal branco para fundo escuro -->
         <img src="https://cmsmoc.github.io/secretariaexecutiva/logo/logohwh.png" alt="Conselho Municipal de Saúde Montes Claros" class="h-12 md:h-16 object-contain">
     </header>
 
     <main class="flex-grow flex items-center justify-center p-4 md:p-8 w-full">
-        <div class="bg-white w-full max-w-3xl rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+        <div class="bg-white w-full max-w-3xl rounded-xl shadow-sm border border-gray-100 overflow-hidden relative">
             
             <!-- Barra de Progresso -->
             <div class="w-full bg-gray-100 h-1.5">
                 <div id="progress-bar" class="bg-[#1B6CB5] h-1.5 transition-all duration-500 ease-out" style="width: 0%;"></div>
             </div>
 
-            <!-- Área de Conteúdo do Formulário -->
             <div class="p-6 sm:p-10 md:p-14">
-                
                 <form id="survey-form" onsubmit="return false;">
 
+                    <!-- Passo 0: Intro -->
                     <div class="step active" id="step-0">
                         <span class="font-eyebrow mb-4 block">Ciclo de Gestão</span>
                         <h1 class="font-hero text-4xl md:text-5xl text-[#0D2E5A] mb-6">Construção do<br>Plano de Trabalho<br>do Novo Triênio</h1>
-                        
                         <div class="font-body text-gray-600 space-y-4 mb-10">
                             <p>O Conselho está iniciando um novo ciclo de gestão e precisamos da sua visão.</p>
                             <p>Este mecanismo tem o objetivo de ouvir sugestões, identificar prioridades, dificuldades e oportunidades de melhoria para fortalecer nossa atuação institucional.</p>
                             <div class="bg-blue-50 p-4 rounded-lg border border-blue-100 mt-6">
                                 <ul class="list-disc list-inside text-[#1B6CB5] font-semibold space-y-2 text-sm">
-                                    <li>As respostas são 100% anônimas.</li>
-                                    <li>Tempo estimado: 5 minutos.</li>
+                                    <li>Seu progresso é salvo automaticamente.</li>
+                                    <li>Tempo estimado: 5 a 8 minutos.</li>
                                     <li>Sua contribuição orientará o plano do triênio.</li>
                                 </ul>
                             </div>
                         </div>
-
                         <button type="button" onclick="nextStep()" class="w-full sm:w-auto bg-[#1B6CB5] hover:bg-[#0D2E5A] text-white font-heading py-4 px-10 rounded-lg transition-colors text-lg flex items-center justify-center gap-2 group">
                             Começar
                             <svg class="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
                         </button>
                     </div>
 
-                    <div class="step" id="step-1">
-                        <span class="font-eyebrow mb-4 block text-gray-400">Contexto (Opcional)</span>
-                        <h2 class="font-heading text-2xl md:text-3xl text-[#0D2E5A] mb-8">Qual segmento você representa atualmente?</h2>
-                        
-                        <div class="space-y-3 mb-8">
-                            <label class="option-wrapper">
-                                <input type="radio" name="segmento" value="usuario" class="option-input">
-                                <div class="option-card">
-                                    <div class="check-indicator"></div> Usuário
-                                </div>
-                            </label>
-                            <label class="option-wrapper">
-                                <input type="radio" name="segmento" value="trabalhador" class="option-input">
-                                <div class="option-card">
-                                    <div class="check-indicator"></div> Trabalhador
-                                </div>
-                            </label>
-                            <label class="option-wrapper">
-                                <input type="radio" name="segmento" value="gestao" class="option-input">
-                                <div class="option-card">
-                                    <div class="check-indicator"></div> Gestão
-                                </div>
-                            </label>
-                            <label class="option-wrapper">
-                                <input type="radio" name="segmento" value="prestador" class="option-input">
-                                <div class="option-card">
-                                    <div class="check-indicator"></div> Prestador
-                                </div>
-                            </label>
+                    <!-- Passo 1: Identificação -->
+                    <div class="step" id="step-1" data-validation="conselheiro_id">
+                        <span class="font-eyebrow mb-4 block text-[#1B6CB5]">Identificação</span>
+                        <h2 class="font-heading text-2xl md:text-3xl text-[#0D2E5A] mb-8">Selecione o seu nome</h2>
+                        <div class="mb-8 relative">
+                            <p class="text-sm text-gray-500 mb-4">Esta lista é alimentada diretamente pelo banco de dados de conselheiros do CMS.</p>
+                            <select name="conselheiro_id" id="conselheiro_id" class="custom-select" required>
+                                <option value="" disabled selected>Carregando lista de conselheiros...</option>
+                            </select>
+                            <p class="error-message" id="error-conselheiro_id">Por favor, identifique-se selecionando seu nome na lista.</p>
                         </div>
                     </div>
 
-                    <div class="step" id="step-2">
+                    <!-- Passo 2: Avaliação Geral -->
+                    <div class="step" id="step-2" data-validation="q1_avaliacao">
                         <span class="font-eyebrow mb-4 block">Diagnóstico Rápido</span>
                         <h2 class="font-heading text-2xl md:text-3xl text-[#0D2E5A] mb-8">Como você avalia atualmente o funcionamento geral do Conselho?</h2>
-                        
-                        <div class="space-y-3 mb-8">
-                            <label class="option-wrapper">
-                                <input type="radio" name="q1_avaliacao" value="muito_bom" class="option-input">
-                                <div class="option-card">
-                                    <div class="check-indicator"></div> Muito bom
-                                </div>
-                            </label>
-                            <label class="option-wrapper">
-                                <input type="radio" name="q1_avaliacao" value="bom" class="option-input">
-                                <div class="option-card">
-                                    <div class="check-indicator"></div> Bom
-                                </div>
-                            </label>
-                            <label class="option-wrapper">
-                                <input type="radio" name="q1_avaliacao" value="regular" class="option-input">
-                                <div class="option-card">
-                                    <div class="check-indicator"></div> Regular
-                                </div>
-                            </label>
-                            <label class="option-wrapper">
-                                <input type="radio" name="q1_avaliacao" value="precisa_melhorar" class="option-input">
-                                <div class="option-card">
-                                    <div class="check-indicator"></div> Precisa melhorar bastante
-                                </div>
-                            </label>
+                        <div class="space-y-3 mb-4" id="group-q1_avaliacao">
+                            <label class="option-wrapper"><input type="radio" name="q1_avaliacao" value="Muito bom" class="option-input"><div class="option-card"><div class="check-indicator"></div> Muito bom</div></label>
+                            <label class="option-wrapper"><input type="radio" name="q1_avaliacao" value="Bom" class="option-input"><div class="option-card"><div class="check-indicator"></div> Bom</div></label>
+                            <label class="option-wrapper"><input type="radio" name="q1_avaliacao" value="Regular" class="option-input"><div class="option-card"><div class="check-indicator"></div> Regular</div></label>
+                            <label class="option-wrapper"><input type="radio" name="q1_avaliacao" value="Precisa melhorar bastante" class="option-input"><div class="option-card"><div class="check-indicator"></div> Precisa melhorar bastante</div></label>
+                        </div>
+                        <p class="error-message mb-6" id="error-q1_avaliacao">Por favor, selecione uma avaliação.</p>
+                        <div class="mb-8 border-t border-gray-100 pt-6 mt-6">
+                            <label class="font-heading text-sm text-[#0D2E5A] block mb-2">Observações (opcional):</label>
+                            <textarea name="q1_obs" class="custom-textarea" style="min-height: 80px;" placeholder="Gostaria de detalhar o motivo da sua avaliação?"></textarea>
                         </div>
                     </div>
 
+                    <!-- Passo 3: Áreas de Fortalecimento -->
                     <div class="step" id="step-3">
                         <span class="font-eyebrow mb-4 block">Diagnóstico Rápido</span>
                         <h2 class="font-heading text-2xl md:text-3xl text-[#0D2E5A] mb-2">Quais áreas precisam de mais fortalecimento?</h2>
                         <p class="text-sm text-gray-500 mb-8">Selecione quantas opções julgar necessário.</p>
-                        
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-3 mb-8">
-                            <label class="option-wrapper mb-0"><input type="checkbox" name="q2_areas" value="comunicacao" class="option-input"><div class="option-card"><div class="check-indicator"></div> Comunicação</div></label>
-                            <label class="option-wrapper mb-0"><input type="checkbox" name="q2_areas" value="capacitacao" class="option-input"><div class="option-card"><div class="check-indicator"></div> Capacitação</div></label>
-                            <label class="option-wrapper mb-0"><input type="checkbox" name="q2_areas" value="fiscalizacao" class="option-input"><div class="option-card"><div class="check-indicator"></div> Fiscalização</div></label>
-                            <label class="option-wrapper mb-0"><input type="checkbox" name="q2_areas" value="participacao" class="option-input"><div class="option-card"><div class="check-indicator"></div> Participação popular</div></label>
-                            <label class="option-wrapper mb-0"><input type="checkbox" name="q2_areas" value="organizacao" class="option-input"><div class="option-card"><div class="check-indicator"></div> Organização interna</div></label>
-                            <label class="option-wrapper mb-0"><input type="checkbox" name="q2_areas" value="transparencia" class="option-input"><div class="option-card"><div class="check-indicator"></div> Transparência</div></label>
-                            <label class="option-wrapper mb-0"><input type="checkbox" name="q2_areas" value="reunioes" class="option-input"><div class="option-card"><div class="check-indicator"></div> Reuniões</div></label>
-                            <label class="option-wrapper mb-0"><input type="checkbox" name="q2_areas" value="comissoes" class="option-input"><div class="option-card"><div class="check-indicator"></div> Comissões</div></label>
+                            <label class="option-wrapper mb-0"><input type="checkbox" name="q2_areas" value="Comunicação" class="option-input"><div class="option-card"><div class="check-indicator"></div> Comunicação</div></label>
+                            <label class="option-wrapper mb-0"><input type="checkbox" name="q2_areas" value="Capacitação dos conselheiros" class="option-input"><div class="option-card"><div class="check-indicator"></div> Capacitação</div></label>
+                            <label class="option-wrapper mb-0"><input type="checkbox" name="q2_areas" value="Fiscalização" class="option-input"><div class="option-card"><div class="check-indicator"></div> Fiscalização</div></label>
+                            <label class="option-wrapper mb-0"><input type="checkbox" name="q2_areas" value="Participação popular" class="option-input"><div class="option-card"><div class="check-indicator"></div> Participação popular</div></label>
+                            <label class="option-wrapper mb-0"><input type="checkbox" name="q2_areas" value="Organização interna" class="option-input"><div class="option-card"><div class="check-indicator"></div> Organização interna</div></label>
+                            <label class="option-wrapper mb-0"><input type="checkbox" name="q2_areas" value="Transparência" class="option-input"><div class="option-card"><div class="check-indicator"></div> Transparência</div></label>
+                            <label class="option-wrapper mb-0"><input type="checkbox" name="q2_areas" value="Reuniões" class="option-input"><div class="option-card"><div class="check-indicator"></div> Reuniões</div></label>
+                            <label class="option-wrapper mb-0"><input type="checkbox" name="q2_areas" value="Comissões" class="option-input"><div class="option-card"><div class="check-indicator"></div> Comissões</div></label>
+                            <label class="option-wrapper mb-0"><input type="checkbox" name="q2_areas" value="Acompanhamento das deliberações" class="option-input"><div class="option-card"><div class="check-indicator"></div> Acompanhamento</div></label>
+                            <label class="option-wrapper mb-0"><input type="checkbox" name="q2_areas" value="Relação com gestão" class="option-input"><div class="option-card"><div class="check-indicator"></div> Relação com gestão</div></label>
+                        </div>
+                        <div class="mb-8 border-t border-gray-100 pt-6">
+                            <label class="font-heading text-sm text-[#0D2E5A] block mb-2">Outras áreas ou observações (opcional):</label>
+                            <textarea name="q2_obs" class="custom-textarea" style="min-height: 80px;" placeholder="Especifique outras áreas ou adicione comentários..."></textarea>
                         </div>
                     </div>
 
+                    <!-- Passo 4: Dificuldades -->
                     <div class="step" id="step-4">
                         <span class="font-eyebrow mb-4 block">Diagnóstico Rápido</span>
                         <h2 class="font-heading text-2xl md:text-3xl text-[#0D2E5A] mb-8">Hoje, qual é a maior dificuldade enfrentada pelo Conselho?</h2>
-                        
                         <div class="mb-8">
                             <textarea name="q3_dificuldade" class="custom-textarea" placeholder="Descreva brevemente a principal dificuldade na sua visão..."></textarea>
                         </div>
                     </div>
 
+                    <!-- Passo 5: Prioridades do Triênio -->
                     <div class="step" id="step-5">
                         <span class="font-eyebrow mb-4 block text-[#1E8A4A]">O Núcleo Estratégico</span>
                         <h2 class="font-heading text-2xl md:text-3xl text-[#0D2E5A] mb-2">Quais temas deveriam ser prioridade no próximo triênio?</h2>
                         <p class="text-sm text-gray-500 mb-8">Selecione as pautas essenciais para a nova gestão.</p>
-                        
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-3 mb-8">
-                            <label class="option-wrapper mb-0"><input type="checkbox" name="q4_prioridades" value="controle" class="option-input"><div class="option-card"><div class="check-indicator"></div> Controle social</div></label>
-                            <label class="option-wrapper mb-0"><input type="checkbox" name="q4_prioridades" value="modernizacao" class="option-input"><div class="option-card"><div class="check-indicator"></div> Modernização admin.</div></label>
-                            <label class="option-wrapper mb-0"><input type="checkbox" name="q4_prioridades" value="execucao" class="option-input"><div class="option-card"><div class="check-indicator"></div> Fiscalizar execução</div></label>
-                            <label class="option-wrapper mb-0"><input type="checkbox" name="q4_prioridades" value="dados" class="option-input"><div class="option-card"><div class="check-indicator"></div> Transparência/Dados</div></label>
-                            <label class="option-wrapper mb-0"><input type="checkbox" name="q4_prioridades" value="integracao" class="option-input"><div class="option-card"><div class="check-indicator"></div> Integração conselheiros</div></label>
-                            <label class="option-wrapper mb-0"><input type="checkbox" name="q4_prioridades" value="planejamento" class="option-input"><div class="option-card"><div class="check-indicator"></div> Planejamento inst.</div></label>
+                            <label class="option-wrapper mb-0"><input type="checkbox" name="q4_prioridades" value="Fortalecimento do controle social" class="option-input"><div class="option-card"><div class="check-indicator"></div> Controle social</div></label>
+                            <label class="option-wrapper mb-0"><input type="checkbox" name="q4_prioridades" value="Modernização administrativa" class="option-input"><div class="option-card"><div class="check-indicator"></div> Modernização admin.</div></label>
+                            <label class="option-wrapper mb-0"><input type="checkbox" name="q4_prioridades" value="Fiscalização da execução das políticas" class="option-input"><div class="option-card"><div class="check-indicator"></div> Fiscalizar execução</div></label>
+                            <label class="option-wrapper mb-0"><input type="checkbox" name="q4_prioridades" value="Transparência e dados" class="option-input"><div class="option-card"><div class="check-indicator"></div> Transparência/Dados</div></label>
+                            <label class="option-wrapper mb-0"><input type="checkbox" name="q4_prioridades" value="Integração entre conselheiros" class="option-input"><div class="option-card"><div class="check-indicator"></div> Integração conselheiros</div></label>
+                            <label class="option-wrapper mb-0"><input type="checkbox" name="q4_prioridades" value="Planejamento institucional" class="option-input"><div class="option-card"><div class="check-indicator"></div> Planejamento inst.</div></label>
+                        </div>
+                        <div class="mb-8 border-t border-gray-100 pt-6">
+                            <label class="font-heading text-sm text-[#0D2E5A] block mb-2">Outras prioridades ou observações (opcional):</label>
+                            <textarea name="q4_obs" class="custom-textarea" style="min-height: 80px;" placeholder="Adicione outros temas ou observações sobre as prioridades..."></textarea>
                         </div>
                     </div>
 
+                    <!-- Passo 6: Sugestão -->
                     <div class="step" id="step-6">
                         <span class="font-eyebrow mb-4 block text-[#1E8A4A]">O Núcleo Estratégico</span>
                         <h2 class="font-heading text-2xl md:text-3xl text-[#0D2E5A] mb-8">Existe alguma ação, projeto ou iniciativa que você gostaria de sugerir?</h2>
-                        
                         <div class="mb-8">
                             <textarea name="q5_sugestao" class="custom-textarea h-40" placeholder="Use este espaço para propor ideias estruturais, projetos ou melhorias práticas..."></textarea>
                         </div>
                     </div>
 
+                    <!-- Passo 7: Capacitação -->
                     <div class="step" id="step-7">
                         <span class="font-eyebrow mb-4 block text-[#F5C400]">Desenvolvimento</span>
                         <h2 class="font-heading text-2xl md:text-3xl text-[#0D2E5A] mb-8">Sobre quais temas você gostaria de receber mais capacitação?</h2>
-                        
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-3 mb-8">
-                            <label class="option-wrapper mb-0"><input type="checkbox" name="q6_capacitacao" value="legislacao" class="option-input"><div class="option-card"><div class="check-indicator"></div> Legislação do SUS</div></label>
-                            <label class="option-wrapper mb-0"><input type="checkbox" name="q6_capacitacao" value="competencias" class="option-input"><div class="option-card"><div class="check-indicator"></div> Competências do CMS</div></label>
-                            <label class="option-wrapper mb-0"><input type="checkbox" name="q6_capacitacao" value="orcamento" class="option-input"><div class="option-card"><div class="check-indicator"></div> Fiscalização e orçamento</div></label>
-                            <label class="option-wrapper mb-0"><input type="checkbox" name="q6_capacitacao" value="instrumentos" class="option-input"><div class="option-card"><div class="check-indicator"></div> Instrumentos de gestão</div></label>
-                            <label class="option-wrapper mb-0"><input type="checkbox" name="q6_capacitacao" value="deliberativo" class="option-input"><div class="option-card"><div class="check-indicator"></div> Processo deliberativo</div></label>
+                            <label class="option-wrapper mb-0"><input type="checkbox" name="q6_capacitacao" value="Legislação do SUS" class="option-input"><div class="option-card"><div class="check-indicator"></div> Legislação do SUS</div></label>
+                            <label class="option-wrapper mb-0"><input type="checkbox" name="q6_capacitacao" value="Competências do Conselho" class="option-input"><div class="option-card"><div class="check-indicator"></div> Competências do CMS</div></label>
+                            <label class="option-wrapper mb-0"><input type="checkbox" name="q6_capacitacao" value="Fiscalização e orçamento" class="option-input"><div class="option-card"><div class="check-indicator"></div> Fiscalização e orçamento</div></label>
+                            <label class="option-wrapper mb-0"><input type="checkbox" name="q6_capacitacao" value="Instrumentos de gestão" class="option-input"><div class="option-card"><div class="check-indicator"></div> Instrumentos de gestão</div></label>
+                            <label class="option-wrapper mb-0"><input type="checkbox" name="q6_capacitacao" value="Processo deliberativo" class="option-input"><div class="option-card"><div class="check-indicator"></div> Processo deliberativo</div></label>
+                            <label class="option-wrapper mb-0"><input type="checkbox" name="q6_capacitacao" value="Comunicação institucional" class="option-input"><div class="option-card"><div class="check-indicator"></div> Comunicação inst.</div></label>
+                        </div>
+                        <div class="mb-8 border-t border-gray-100 pt-6">
+                            <label class="font-heading text-sm text-[#0D2E5A] block mb-2">Outras capacitações ou observações (opcional):</label>
+                            <textarea name="q6_obs" class="custom-textarea" style="min-height: 80px;" placeholder="Quais outros temas você sugere para formação?"></textarea>
                         </div>
                     </div>
 
+                    <!-- Passo 8: Dificuldades de Participação -->
                     <div class="step" id="step-8">
                         <span class="font-eyebrow mb-4 block text-[#F5C400]">Desenvolvimento</span>
                         <h2 class="font-heading text-2xl md:text-3xl text-[#0D2E5A] mb-8">Quais dificuldades você enfrenta na participação das atividades do Conselho?</h2>
-                        
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-3 mb-8">
-                            <label class="option-wrapper mb-0"><input type="checkbox" name="q7_dificuldades" value="horarios" class="option-input"><div class="option-card"><div class="check-indicator"></div> Horários</div></label>
-                            <label class="option-wrapper mb-0"><input type="checkbox" name="q7_dificuldades" value="informacoes" class="option-input"><div class="option-card"><div class="check-indicator"></div> Acesso às informações</div></label>
-                            <label class="option-wrapper mb-0"><input type="checkbox" name="q7_dificuldades" value="documentos" class="option-input"><div class="option-card"><div class="check-indicator"></div> Excesso de documentos</div></label>
-                            <label class="option-wrapper mb-0"><input type="checkbox" name="q7_dificuldades" value="deslocamento" class="option-input"><div class="option-card"><div class="check-indicator"></div> Deslocamento</div></label>
+                            <label class="option-wrapper mb-0"><input type="checkbox" name="q7_dificuldades" value="Horários" class="option-input"><div class="option-card"><div class="check-indicator"></div> Horários</div></label>
+                            <label class="option-wrapper mb-0"><input type="checkbox" name="q7_dificuldades" value="Acesso às informações" class="option-input"><div class="option-card"><div class="check-indicator"></div> Acesso às informações</div></label>
+                            <label class="option-wrapper mb-0"><input type="checkbox" name="q7_dificuldades" value="Excesso de documentos" class="option-input"><div class="option-card"><div class="check-indicator"></div> Excesso de documentos</div></label>
+                            <label class="option-wrapper mb-0"><input type="checkbox" name="q7_dificuldades" value="Deslocamento" class="option-input"><div class="option-card"><div class="check-indicator"></div> Deslocamento</div></label>
+                            <label class="option-wrapper mb-0"><input type="checkbox" name="q7_dificuldades" value="Falta de capacitação" class="option-input"><div class="option-card"><div class="check-indicator"></div> Falta de capacitação</div></label>
+                        </div>
+                        <div class="mb-8 border-t border-gray-100 pt-6">
+                            <label class="font-heading text-sm text-[#0D2E5A] block mb-2">Outras dificuldades ou observações (opcional):</label>
+                            <textarea name="q7_obs" class="custom-textarea" style="min-height: 80px;" placeholder="Relate outras dificuldades que não estão na lista ou explique melhor as suas escolhas..."></textarea>
                         </div>
                     </div>
 
+                    <!-- Passo 9: Escuta Livre -->
                     <div class="step" id="step-9">
                         <span class="font-eyebrow mb-4 block">Considerações Finais</span>
                         <h2 class="font-heading text-2xl md:text-3xl text-[#0D2E5A] mb-8">Há algo que você considera importante registrar e que não foi perguntado?</h2>
-                        
                         <div class="mb-8">
                             <textarea name="q8_livre" class="custom-textarea h-32" placeholder="Espaço livre para críticas, elogios ou observações gerais..."></textarea>
                         </div>
                     </div>
 
+                    <!-- Passo Final -->
                     <div class="step text-center py-10" id="step-10">
                         <div class="w-20 h-20 bg-[#1E8A4A] bg-opacity-10 rounded-full flex items-center justify-center mx-auto mb-6">
                             <svg class="w-10 h-10 text-[#1E8A4A]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
                         </div>
                         <h2 class="font-hero text-3xl md:text-4xl text-[#0D2E5A] mb-4">Agradecemos sua contribuição.</h2>
-                        <p class="font-body text-gray-600 mb-8 max-w-lg mx-auto">As respostas serão consolidadas e utilizadas estrategicamente na construção do plano de trabalho do novo triênio.<br><br>Fortalecer o Conselho é uma construção coletiva.</p>
+                        <p class="font-body text-gray-600 mb-8 max-w-lg mx-auto">As respostas foram consolidadas com sucesso e serão utilizadas estrategicamente na construção do plano de trabalho do novo triênio.<br><br>Fortalecer o Conselho é uma construção coletiva.</p>
                         
-                        <!-- Logo Sec Executiva no final conforme diretrizes institucionais -->
                         <img src="https://cmsmoc.github.io/secretariaexecutiva/logo/sectag.png" alt="Secretaria Executiva CMSMOC" class="h-10 mx-auto mt-12 opacity-80 mix-blend-multiply">
                     </div>
 
+                    <!-- Controles -->
                     <div id="navigation-controls" class="hidden border-t border-gray-100 pt-6 flex justify-between items-center mt-4">
                         <button type="button" onclick="prevStep()" id="btn-prev" class="text-gray-500 hover:text-[#0D2E5A] font-semibold py-2 px-4 transition-colors flex items-center gap-2">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
-                            Voltar
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg> Voltar
                         </button>
-                        
                         <span id="step-counter" class="text-sm font-bold text-gray-400 font-heading tracking-widest uppercase">1 / 9</span>
-
                         <button type="button" onclick="nextStep()" id="btn-next" class="bg-[#0D2E5A] hover:bg-[#1B6CB5] text-white font-heading py-3 px-8 rounded-lg transition-colors shadow-sm flex items-center gap-2">
-                            Próximo
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                            Próximo <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
                         </button>
-
                         <button type="button" onclick="submitForm()" id="btn-submit" class="hidden bg-[#1E8A4A] hover:bg-green-800 text-white font-heading py-3 px-8 rounded-lg transition-colors shadow-sm flex items-center gap-2">
-                            Enviar Respostas
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                            <span>Enviar Respostas</span> <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
                         </button>
                     </div>
-
                 </form>
             </div>
         </div>
     </main>
 
     <footer class="w-full text-center py-6 text-xs text-gray-400 font-body">
-        &copy; 2026 Conselho Municipal de Saúde de Montes Claros. Escuta Institucional Anônima.
+        &copy; 2026 Conselho Municipal de Saúde de Montes Claros. Escuta Institucional.
     </footer>
 
+    <!-- Modal de Sistema -->
+    <div id="modal-overlay">
+        <div class="bg-white rounded-xl shadow-xl max-w-md w-full mx-4 p-8 text-center border-t-4 border-[#0D2E5A]">
+            <h3 class="font-heading text-2xl text-[#0D2E5A] mb-3" id="modal-title">Aviso</h3>
+            <p class="font-body text-gray-600 mb-8" id="modal-msg"></p>
+            <button onclick="closeModal()" class="w-full bg-[#0D2E5A] hover:bg-[#1B6CB5] text-white font-heading py-3 px-6 rounded-lg transition-colors">Entendi</button>
+        </div>
+    </div>
+
     <script>
+        // CONFIGURAÇÕES
+        const GAS_URL = 'https://script.google.com/macros/s/AKfycbzqmyIICIQ_w2JmpBpEa4TgUXglPYbhjuuc6mwNvXlUslI1MszkWJUPhTt1ol2QS8mk/exec'; // <- INSIRA SUA URL DO GOOGLE APPS SCRIPT AQUI
+        const DRAFT_KEY = 'cms_escuta_draft';
+        
         let currentStepIndex = 0;
         const steps = document.querySelectorAll('.step');
+        const totalQuestionSteps = steps.length - 2; 
+        const form = document.getElementById('survey-form');
+
+        // ELEMENTOS UI
         const progressBar = document.getElementById('progress-bar');
         const navControls = document.getElementById('navigation-controls');
         const btnPrev = document.getElementById('btn-prev');
         const btnNext = document.getElementById('btn-next');
         const btnSubmit = document.getElementById('btn-submit');
         const stepCounter = document.getElementById('step-counter');
-        
-        // Total de steps ignorando a intro (0) e a tela final (last) para o cálculo de progresso
-        const totalQuestionSteps = steps.length - 2; 
+        const selectConselheiro = document.getElementById('conselheiro_id');
+        const modalOverlay = document.getElementById('modal-overlay');
 
-        function updateUI() {
-            // Esconde todos
-            steps.forEach(step => step.classList.remove('active'));
+        // 1. INICIALIZAÇÃO
+        function init() {
+            updateUI();
+            loadConselheiros();
+            restoreDraft();
             
-            // Mostra atual
+            // Listeners para Auto Save e Limpeza de Erros
+            form.addEventListener('input', (e) => {
+                saveDraft();
+                clearErrorHighlight(e.target);
+            });
+            form.addEventListener('change', (e) => {
+                saveDraft();
+                clearErrorHighlight(e.target);
+            });
+        }
+
+        // 2. CARREGAMENTO DINÂMICO
+        async function loadConselheiros() {
+            try {
+                if(GAS_URL === 'COLE_AQUI') {
+                    setSelectState('Simulação: Insira a URL do GAS no código', false);
+                    return; // Aborta tentativa real se a URL não foi inserida
+                }
+
+                const response = await fetch(GAS_URL);
+                const result = await response.json();
+
+                if (result.success && result.data) {
+                    selectConselheiro.innerHTML = ''; // Limpa options usando innerHTML (seguro aqui, preenchido via createElement abaixo)
+                    
+                    const defaultOpt = document.createElement('option');
+                    defaultOpt.value = '';
+                    defaultOpt.disabled = true;
+                    defaultOpt.selected = true;
+                    defaultOpt.textContent = 'Clique para buscar seu nome na lista...';
+                    selectConselheiro.appendChild(defaultOpt);
+
+                    // Garante a ordenação alfabética e renderiza apenas o nome em MAIÚSCULAS
+                    const sortedConselheiros = result.data.sort((a, b) => a.nome.localeCompare(b.nome, 'pt-BR'));
+                    
+                    sortedConselheiros.forEach(c => {
+                        const opt = document.createElement('option');
+                        opt.value = c.id;
+                        opt.textContent = c.nome.toUpperCase();
+                        selectConselheiro.appendChild(opt);
+                    });
+                    
+                    selectConselheiro.disabled = false;
+                    
+                    // Se o draft restaurou um ID, reaplica ele agora que a lista carregou
+                    const draft = JSON.parse(localStorage.getItem(DRAFT_KEY) || '{}');
+                    if(draft.conselheiro_id) selectConselheiro.value = draft.conselheiro_id;
+
+                } else {
+                    setSelectState('Erro ao carregar lista de conselheiros.', true);
+                }
+            } catch (error) {
+                console.error("Erro fetch GET:", error);
+                setSelectState('Erro de conexão. Verifique sua internet.', true);
+            }
+        }
+
+        function setSelectState(message, disabled) {
+            selectConselheiro.innerHTML = '';
+            const opt = document.createElement('option');
+            opt.textContent = message;
+            selectConselheiro.appendChild(opt);
+            selectConselheiro.disabled = disabled;
+        }
+
+        // 3. AUTO SAVE E RESTAURAÇÃO
+        function saveDraft() {
+            const formData = new FormData(form);
+            const draft = {};
+            for (let [key, value] of formData.entries()) {
+                if (draft[key]) {
+                    if (!Array.isArray(draft[key])) draft[key] = [draft[key]];
+                    draft[key].push(value);
+                } else {
+                    draft[key] = value;
+                }
+            }
+            localStorage.setItem(DRAFT_KEY, JSON.stringify(draft));
+        }
+
+        function restoreDraft() {
+            const draftText = localStorage.getItem(DRAFT_KEY);
+            if (!draftText) return;
+            try {
+                const draft = JSON.parse(draftText);
+                Object.keys(draft).forEach(key => {
+                    const value = draft[key];
+                    if (Array.isArray(value)) {
+                        value.forEach(val => {
+                            const el = form.querySelector(`[name="${key}"][value="${val}"]`);
+                            if (el) el.checked = true;
+                        });
+                    } else {
+                        const els = form.querySelectorAll(`[name="${key}"]`);
+                        if (els.length > 0) {
+                            if (els[0].type === 'radio' || els[0].type === 'checkbox') {
+                                const el = form.querySelector(`[name="${key}"][value="${value}"]`);
+                                if (el) el.checked = true;
+                            } else {
+                                els[0].value = value;
+                            }
+                        }
+                    }
+                });
+            } catch (e) {
+                console.error("Erro ao restaurar draft.", e);
+            }
+        }
+
+        // 4. VALIDAÇÃO DE PASSO
+        function validateStep() {
+            const currentStep = steps[currentStepIndex];
+            const validationTarget = currentStep.getAttribute('data-validation');
+            
+            if (!validationTarget) return true; // Passo não obrigatório
+
+            if (validationTarget === 'conselheiro_id') {
+                if (!selectConselheiro.value) {
+                    selectConselheiro.classList.add('has-error');
+                    return false;
+                }
+            }
+
+            if (validationTarget === 'q1_avaliacao') {
+                const radios = form.querySelectorAll('input[name="q1_avaliacao"]:checked');
+                if (radios.length === 0) {
+                    document.getElementById('error-q1_avaliacao').classList.add('error-active');
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        function clearErrorHighlight(element) {
+            if (element.name === 'conselheiro_id') {
+                selectConselheiro.classList.remove('has-error');
+            } else if (element.name === 'q1_avaliacao') {
+                document.getElementById('error-q1_avaliacao').classList.remove('error-active');
+            }
+        }
+
+        // 5. NAVEGAÇÃO E UI
+        function updateUI() {
+            steps.forEach(step => step.classList.remove('active'));
             steps[currentStepIndex].classList.add('active');
 
-            // Lógica da Barra de Progresso e Navegação
             if (currentStepIndex === 0) {
                 navControls.classList.add('hidden');
                 progressBar.style.width = '0%';
             } else if (currentStepIndex === steps.length - 1) {
-                // Tela Final de sucesso
                 navControls.classList.add('hidden');
                 progressBar.style.width = '100%';
-                progressBar.classList.replace('bg-[#1B6CB5]', 'bg-[#1E8A4A]'); // Fica verde no final
+                progressBar.classList.replace('bg-[#1B6CB5]', 'bg-[#1E8A4A]');
             } else {
-                // Telas de Perguntas
                 navControls.classList.remove('hidden');
                 navControls.classList.add('flex');
                 
                 let progressPct = (currentStepIndex / totalQuestionSteps) * 100;
                 progressBar.style.width = progressPct + '%';
-                
                 stepCounter.innerText = `${currentStepIndex} / ${totalQuestionSteps}`;
 
-                // Controla botões Voltar/Próximo/Enviar
                 btnPrev.style.visibility = (currentStepIndex === 1) ? 'hidden' : 'visible';
                 
                 if (currentStepIndex === totalQuestionSteps) {
@@ -458,14 +528,11 @@
                 }
             }
 
-            // Scroll suave para o topo do card a cada mudança de step
-            if(currentStepIndex > 0) {
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-            }
+            if(currentStepIndex > 0) window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
         function nextStep() {
-            if (currentStepIndex < steps.length - 1) {
+            if (validateStep() && currentStepIndex < steps.length - 1) {
                 currentStepIndex++;
                 updateUI();
             }
@@ -478,19 +545,100 @@
             }
         }
 
-        function submitForm() {
-            // Em um ambiente real, aqui entraria o fetch() para o Google Apps Script
-            // Para a simulação, avançamos para a tela de sucesso.
-            btnSubmit.innerHTML = `<svg class="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg> Enviando...`;
-            
-            setTimeout(() => {
-                currentStepIndex++;
-                updateUI();
-            }, 800); // Simula o tempo de rede
+        // 6. COLETA DE DADOS (PAYLOAD EXATO)
+        function collectFormData() {
+            const fd = new FormData(form);
+            return {
+                conselheiro_id: fd.get('conselheiro_id'),
+                q1_avaliacao: fd.get('q1_avaliacao'),
+                q1_obs: fd.get('q1_obs'),
+                q2_areas: fd.getAll('q2_areas'),
+                q2_obs: fd.get('q2_obs'),
+                q3_dificuldade: fd.get('q3_dificuldade'),
+                q4_prioridades: fd.getAll('q4_prioridades'),
+                q4_obs: fd.get('q4_obs'),
+                q5_sugestao: fd.get('q5_sugestao'),
+                q6_capacitacao: fd.getAll('q6_capacitacao'),
+                q6_obs: fd.get('q6_obs'),
+                q7_dificuldades: fd.getAll('q7_dificuldades'),
+                q7_obs: fd.get('q7_obs'),
+                q8_livre: fd.get('q8_livre'),
+                user_agent: navigator.userAgent,
+                origem: window.location.href,
+                ip_hint: Intl.DateTimeFormat().resolvedOptions().timeZone
+            };
         }
 
-        // Inicializa a UI
-        updateUI();
+        // 7. SUBMISSÃO
+        async function submitForm() {
+            if (!validateStep()) return;
+
+            const payload = collectFormData();
+
+            // Setup estado de loading visual
+            btnSubmit.disabled = true;
+            btnSubmit.classList.add('opacity-75', 'cursor-not-allowed');
+            const originalText = btnSubmit.innerHTML;
+            btnSubmit.innerHTML = `<svg class="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg> <span>Enviando...</span>`;
+
+            try {
+                if(GAS_URL === 'COLE_AQUI') {
+                    throw new Error("Simulação: A URL do Google Apps Script não foi configurada. Finalizando simuladamente...");
+                }
+
+                const response = await fetch(GAS_URL, {
+                    method: 'POST',
+                    body: JSON.stringify(payload) // Plain text post for Google Apps Script to parse contents
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    // Sucesso: limpar e ir para tela final
+                    localStorage.removeItem(DRAFT_KEY);
+                    form.reset();
+                    currentStepIndex++;
+                    updateUI();
+                } else if (result.duplicated) {
+                    showModal("Registro Duplicado", "Já existe uma resposta registrada para o seu conselheiro neste ciclo. Se isso for um erro, contate a Secretaria Executiva.");
+                } else {
+                    showModal("Erro Interno", result.message || "Ocorreu um problema ao registrar as respostas.");
+                }
+
+            } catch (error) {
+                console.error("Erro na submissão:", error);
+                
+                // FALLBACK DE SIMULAÇÃO (Remova isso em produção se desejar erro rígido)
+                if(GAS_URL === 'COLE_AQUI') {
+                    setTimeout(() => {
+                        localStorage.removeItem(DRAFT_KEY);
+                        currentStepIndex++;
+                        updateUI();
+                    }, 1000);
+                } else {
+                    showModal("Erro de Conexão", "Não foi possível enviar os dados. Verifique sua conexão e tente novamente.");
+                }
+            } finally {
+                // Restaura botão
+                btnSubmit.disabled = false;
+                btnSubmit.classList.remove('opacity-75', 'cursor-not-allowed');
+                btnSubmit.innerHTML = originalText;
+            }
+        }
+
+        // 8. MODAL HELPERS
+        function showModal(title, message) {
+            document.getElementById('modal-title').innerText = title;
+            document.getElementById('modal-msg').innerText = message;
+            modalOverlay.classList.add('active');
+        }
+
+        function closeModal() {
+            modalOverlay.classList.remove('active');
+        }
+
+        // START
+        document.addEventListener('DOMContentLoaded', init);
     </script>
 </body>
 </html>
