@@ -209,7 +209,7 @@
                     <!-- Passo 4: Dificuldades -->
                     <div class="step" id="step-4">
                         <span class="font-eyebrow mb-4 block">Diagnóstico Rápido</span>
-                        <h2 class="font-heading text-2xl md:text-3xl text-[#0D2E5A] mb-8">Hoje, qual é a maior dificuldade enfrentada pelo Conselho?</h2>
+                        <h2 class="font-heading text-2xl md:text-3xl text-[#0D2E5A] mb-8">Quais maiores dificuldades do controle social?</h2>
                         <div class="mb-8">
                             <textarea name="q3_dificuldade" class="custom-textarea" placeholder="Descreva brevemente a principal dificuldade na sua visão..."></textarea>
                         </div>
@@ -218,7 +218,7 @@
                     <!-- Passo 5: Prioridades do Triênio -->
                     <div class="step" id="step-5">
                         <span class="font-eyebrow mb-4 block text-[#1E8A4A]">O Núcleo Estratégico</span>
-                        <h2 class="font-heading text-2xl md:text-3xl text-[#0D2E5A] mb-2">Quais temas deveriam ser prioridade no próximo triênio?</h2>
+                        <h2 class="font-heading text-2xl md:text-3xl text-[#0D2E5A] mb-2">Qual a pauta você quer propor?</h2>
                         <p class="text-sm text-gray-500 mb-8">Selecione as pautas essenciais para a nova gestão.</p>
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-3 mb-8">
                             <label class="option-wrapper mb-0"><input type="checkbox" name="q4_prioridades" value="Fortalecimento do controle social" class="option-input"><div class="option-card"><div class="check-indicator"></div> Controle social</div></label>
@@ -265,16 +265,8 @@
                     <div class="step" id="step-8">
                         <span class="font-eyebrow mb-4 block text-[#F5C400]">Desenvolvimento</span>
                         <h2 class="font-heading text-2xl md:text-3xl text-[#0D2E5A] mb-8">Quais dificuldades você enfrenta na participação das atividades do Conselho?</h2>
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-3 mb-8">
-                            <label class="option-wrapper mb-0"><input type="checkbox" name="q7_dificuldades" value="Horários" class="option-input"><div class="option-card"><div class="check-indicator"></div> Horários</div></label>
-                            <label class="option-wrapper mb-0"><input type="checkbox" name="q7_dificuldades" value="Acesso às informações" class="option-input"><div class="option-card"><div class="check-indicator"></div> Acesso às informações</div></label>
-                            <label class="option-wrapper mb-0"><input type="checkbox" name="q7_dificuldades" value="Excesso de documentos" class="option-input"><div class="option-card"><div class="check-indicator"></div> Excesso de documentos</div></label>
-                            <label class="option-wrapper mb-0"><input type="checkbox" name="q7_dificuldades" value="Deslocamento" class="option-input"><div class="option-card"><div class="check-indicator"></div> Deslocamento</div></label>
-                            <label class="option-wrapper mb-0"><input type="checkbox" name="q7_dificuldades" value="Falta de capacitação" class="option-input"><div class="option-card"><div class="check-indicator"></div> Falta de capacitação</div></label>
-                        </div>
-                        <div class="mb-8 border-t border-gray-100 pt-6">
-                            <label class="font-heading text-sm text-[#0D2E5A] block mb-2">Outras dificuldades ou observações (opcional):</label>
-                            <textarea name="q7_obs" class="custom-textarea" style="min-height: 80px;" placeholder="Relate outras dificuldades que não estão na lista ou explique melhor as suas escolhas..."></textarea>
+                        <div class="mb-8">
+                            <textarea name="q7_dificuldades" class="custom-textarea h-32" placeholder="Relate de forma aberta as dificuldades que você enfrenta..."></textarea>
                         </div>
                     </div>
 
@@ -560,7 +552,7 @@
                 q5_sugestao: fd.get('q5_sugestao'),
                 q6_capacitacao: fd.getAll('q6_capacitacao'),
                 q6_obs: fd.get('q6_obs'),
-                q7_dificuldades: fd.getAll('q7_dificuldades'),
+                q7_dificuldades: fd.get('q7_dificuldades'),
                 q7_obs: fd.get('q7_obs'),
                 q8_livre: fd.get('q8_livre'),
                 user_agent: navigator.userAgent,
